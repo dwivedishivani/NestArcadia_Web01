@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import 'tailwindcss';
+
+@theme inline {
+  --font-display: 'Playfair Display', serif;
+  --font-sans: 'DM Sans', sans-serif;
+
+  /* NestArcadia's single, consistent colour hierarchy */
+  --color-cream: #F2EDE4;
+  --color-olive: #1C3A5A;
+  --color-amber: #C4915A; /* reserved for small craft details only */
+  --color-charcoal: #1C3A5A;
+  --color-muted: #52677E;
+  --color-tan: #B8D8D1;
+  --color-card: #EAE4DA;
+
+  /* NestArcadia brand palette (from logo) */
+  --color-brand-navy: #1C3A5A;
+  --color-brand-teal: #2D8C7E;
+  --color-brand-mint: #6DC0AE;
+  --color-brand-grey: #A0AABA;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: #F2EDE4;
+  color: #1C3A5A;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
+}
+
+.font-display {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Slightly increased body text readability */
+p, li, label, input, textarea, select {
+  font-size: 16px;
+}
+
+::selection { background: #6DC0AE; color: #1C3A5A; }
+
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #6DC0AE;
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 140, 126, 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 140, 126, 0.6);
+}
+
+/* Teal focus ring for inputs */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+}

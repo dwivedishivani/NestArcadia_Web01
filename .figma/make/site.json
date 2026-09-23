@@ -1,0 +1,21 @@
+{
+  "title": "NestArcadia Interiors",
+  "description": "This web application streamlines navigation by linking all pages cohesively, ensuring a user-friendly experience with ample breathing space for optimal usability.",
+  "language": "En",
+  "robots": {
+    "index": false
+  },
+  "icons": {
+    "icon": "/.figma/make/favicon.png"
+  },
+  "openGraph": {
+    "image": "/.figma/make/social-image.png"
+  },
+  "analytics": {
+    "googleAnalyticsId": "G-LDM2YL1MP5"
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
