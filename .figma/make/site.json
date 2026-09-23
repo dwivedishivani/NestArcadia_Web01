@@ -1,9 +1,9 @@
 {
-  "title": "NestArcadia Interiors",
-  "description": "This web application streamlines navigation by linking all pages cohesively, ensuring a user-friendly experience with ample breathing space for optimal usability.",
+  "title": "NestArcadia | Interior Designers in Noida & Greater Noida",
+  "description": "Heritage-inspired interior design for 2BHK, 3BHK, 4BHK homes, villas and farmhouses in Noida, Greater Noida, Greater Noida West and NCR.",
   "language": "En",
   "robots": {
-    "index": false
+    "index": true
   },
   "icons": {
     "icon": "/.figma/make/favicon.png"
