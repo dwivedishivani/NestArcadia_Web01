@@ -98,7 +98,7 @@ export default function Homes({ setPage }: Props) {
     return (
       <div className="pt-[72px]">
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
-          <img src={selected.img} alt={selected.name} className="absolute inset-0 w-full h-full object-cover" />
+          <img src={selected.img} alt={`NestArcadia ${selected.type} interior design project in ${selected.location}`} width="800" height="620" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
         </div>
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
@@ -137,7 +137,7 @@ export default function Homes({ setPage }: Props) {
             <div className="flex flex-col gap-4">
               {[u('photo-1686569860484-b0b79f5d7959', 600, 400), u('photo-1713192707550-8748c992fc7c', 600, 400)].map((img, i) => (
                 <div key={i} className="overflow-hidden bg-[#D4CBBB]" style={{ aspectRatio: '16/9' }}>
-                  <img src={img} alt="detail" className="w-full h-full object-cover" />
+                  <img src={img} alt={`NestArcadia ${selected.type} joinery and material detail for ${selected.location}`} loading="lazy" width="600" height="400" className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -196,7 +196,10 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.img}
-                    alt={h.name}
+                    alt={`NestArcadia ${h.type} interior design project in ${h.location}`}
+                    loading="lazy"
+                    width="800"
+                    height="620"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>

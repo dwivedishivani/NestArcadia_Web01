@@ -66,7 +66,9 @@ export default function DesignCultures({ setPage }: Props) {
       <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '380px' }}>
         <img
           src={u('photo-1788612994420-36d5696585ca', 1440, 500)}
-          alt="Design Cultures"
+          alt="Indian design cultures interpreted for modern Noida and Greater Noida homes"
+          width="1440"
+          height="500"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C3A5A]/60" />
@@ -95,7 +97,10 @@ export default function DesignCultures({ setPage }: Props) {
             >
               <img
                 src={c.img}
-                alt={c.name}
+                alt={`${c.name} Indian heritage interior design for Noida and Greater Noida homes`}
+                loading="lazy"
+                width="1200"
+                height="800"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
@@ -141,7 +146,10 @@ export default function DesignCultures({ setPage }: Props) {
               <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                 <img
                   src={t.img}
-                  alt={t.name}
+                  alt={`${t.name} detail for heritage-inspired interiors in Noida and Greater Noida`}
+                  loading="lazy"
+                  width="600"
+                  height="400"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

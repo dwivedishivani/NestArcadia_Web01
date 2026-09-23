@@ -9,11 +9,13 @@ import DesignCultures from './pages/DesignCultures/DesignCultures';
 import Services from './pages/Services/Services';
 import OurStory from './pages/OurStory/OurStory';
 import Journal from './pages/Journal/Journal';
+import { getJournalArticle } from './pages/Journal/Journal';
 import Homes from './pages/Homes/Homes';
 import StartProject from './pages/StartProject/StartProject';
 import FAQs from './pages/FAQs/FAQs';
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
+import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 
 export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq';
 
@@ -66,9 +68,13 @@ function SeoManager({ page }: { page: Page }) {
   const location = useLocation();
 
   useEffect(() => {
-    const meta = pageMeta[page];
-    const canonical = `${SITE_URL}${location.pathname}`;
-    document.title = `${meta.title} | NestArcadia`;
+    const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
+    const article = page === 'journal' ? getJournalArticle(pathname.match(/^\/journal\/([^/]+)$/)?.[1]) : undefined;
+    const meta = article
+      ? { title: `${article.title} | NestArcadia Journal`, description: article.excerpt, image: article.img, type: 'article' }
+      : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
+    const canonical = `${SITE_URL}${pathname}`;
+    document.title = meta.title;
     const setMeta = (name: string, content: string, property = false) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let element = document.head.querySelector(selector) as HTMLMetaElement | null;
@@ -83,25 +89,34 @@ function SeoManager({ page }: { page: Page }) {
     setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     setMeta('og:title', meta.title, true);
     setMeta('og:description', meta.description, true);
-    setMeta('og:type', page === 'journal' && location.pathname !== '/journal' ? 'article' : 'website', true);
+    setMeta('og:type', meta.type, true);
     setMeta('og:url', canonical, true);
-    setMeta('og:image', SOCIAL_IMAGE, true);
-    setMeta('og:image:alt', 'NestArcadia heritage-inspired modern interior', true);
+    setMeta('og:image', meta.image, true);
+    setMeta('og:image:alt', article ? `${article.title} — NestArcadia Journal` : 'NestArcadia heritage-inspired modern interior', true);
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', meta.title);
     setMeta('twitter:description', meta.description);
-    setMeta('twitter:image', SOCIAL_IMAGE);
+    setMeta('twitter:image', meta.image);
     let link = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!link) { link = document.createElement('link'); link.rel = 'canonical'; document.head.appendChild(link); }
     link.href = canonical;
     let schema = document.getElementById('nestarcadia-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
-    schema.textContent = JSON.stringify((page === 'home' || page === 'faq')
+    const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
+    const articleSchema = article && { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: article.title, description: article.excerpt, image: article.img, author: { '@type': 'Organization', name: 'NestArcadia' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, about: [article.category, 'Interior Design', 'Noida', 'Greater Noida', 'Greater Noida West'] };
+    schema.textContent = JSON.stringify(articleSchema ?? ((page === 'home' || page === 'faq')
       ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: faqSchema.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
-      : { '@context': 'https://schema.org', ...businessSchema });
+      : { '@context': 'https://schema.org', ...businessSchema }));
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'page_view', page_path: location.pathname, page_title: document.title });
+    window.dataLayer.push({
+      event: 'page_view',
+      page_path: pathname,
+      page_location: window.location.href,
+      page_title: document.title,
+      page_type: page,
+      content_group: page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page,
+    });
   }, [location.pathname, page]);
   return null;
 }

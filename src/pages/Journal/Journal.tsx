@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Page } from '../../App';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 const u = (id: string, w: number, h: number) =>
   `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
-const articles = [
+export const articles = [
   {
     id: 'rattan',
     category: 'Materials',
@@ -371,6 +371,8 @@ const articles = [
   },
 ];
 
+export const getJournalArticle = (slug?: string) => articles.find((article) => article.id === slug);
+
 const categories = ['All', 'Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
 
 const categoryDeepDives: Record<string, string[]> = {
@@ -434,24 +436,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
 
   const filtered = active === 'All' ? articles : articles.filter(a => a.category === active);
-  const selected = articleId ? articles.find(a => a.id === articleId) : null;
-
-  useEffect(() => {
-    const existing = document.getElementById('nestarcadia-article-schema');
-    if (!selected) { existing?.remove(); return; }
-    const schema = existing ?? document.createElement('script');
-    schema.id = 'nestarcadia-article-schema';
-    schema.setAttribute('type', 'application/ld+json');
-    schema.textContent = JSON.stringify({
-      '@context': 'https://schema.org', '@type': 'BlogPosting', headline: selected.title,
-      description: selected.excerpt, image: selected.img,
-      author: { '@type': 'Person', name: selected.author },
-      publisher: { '@type': 'Organization', name: 'NestArcadia', url: 'https://nestarcadia.com' },
-      mainEntityOfPage: `https://nestarcadia.com/journal/${selected.id}`,
-      about: [selected.category, 'Interior Design', 'Noida', 'Greater Noida', 'Greater Noida West'],
-    });
-    if (!existing) document.head.appendChild(schema);
-  }, [selected]);
+  const selected = getJournalArticle(articleId);
 
   // Article detail view
   if (selected) {
