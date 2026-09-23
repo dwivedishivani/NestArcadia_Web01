@@ -9,10 +9,7 @@
     "icon": "/.figma/make/favicon.png"
   },
   "openGraph": {
-    "image": "/.figma/make/social-image.png"
-  },
-  "analytics": {
-    "googleAnalyticsId": "G-LDM2YL1MP5"
+    "image": "https://www.nestarcadia.com/assets/social-image-ByGhOH0S.png"
   },
   "accessibility": {
     "addBypassLinks": false,
