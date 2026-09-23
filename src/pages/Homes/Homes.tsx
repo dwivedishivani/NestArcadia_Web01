@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Page } from '../../App';
+import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -137,7 +138,7 @@ export default function Homes({ setPage }: Props) {
             <div className="flex flex-col gap-4">
               {[u('photo-1686569860484-b0b79f5d7959', 600, 400), u('photo-1713192707550-8748c992fc7c', 600, 400)].map((img, i) => (
                 <div key={i} className="overflow-hidden bg-[#D4CBBB]" style={{ aspectRatio: '16/9' }}>
-                  <img src={img} alt={`NestArcadia ${selected.type} joinery and material detail for ${selected.location}`} loading="lazy" width="600" height="400" className="w-full h-full object-cover" />
+                  <img src={img} alt={`NestArcadia ${selected.type} joinery and material detail for ${selected.location}`} loading="lazy" decoding="async" width="600" height="400" className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -198,6 +199,7 @@ export default function Homes({ setPage }: Props) {
                     src={h.img}
                     alt={`NestArcadia ${h.type} interior design project in ${h.location}`}
                     loading="lazy"
+                    decoding="async"
                     width="800"
                     height="620"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -211,6 +213,8 @@ export default function Homes({ setPage }: Props) {
           </div>
         )}
       </div>
+
+      <FeaturedResidences />
 
       {/* CTA */}
       <div className="bg-[#1C3A5A] py-16 px-6 lg:px-20">

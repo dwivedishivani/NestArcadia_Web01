@@ -29,7 +29,7 @@ export default function Footer({ setPage }: FooterProps) {
 
           {/* Logo + tagline */}
           <button onClick={() => setPage('home')} className="text-left">
-            <img src={logoImg} alt="NestArcadia — heritage Indian interiors" className="h-24 w-auto object-contain" />
+            <img src={logoImg} alt="NestArcadia — heritage Indian interiors" width="180" height="96" loading="lazy" decoding="async" className="h-24 w-auto object-contain" />
             <p className="text-[13px] text-[#6B5E4E] mt-4 leading-relaxed max-w-[220px]">
               Heritage-inspired interiors, thoughtfully designed for the way modern India lives.
             </p>

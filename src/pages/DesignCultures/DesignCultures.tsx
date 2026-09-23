@@ -99,6 +99,7 @@ export default function DesignCultures({ setPage }: Props) {
                 src={c.img}
                 alt={`${c.name} Indian heritage interior design for Noida and Greater Noida homes`}
                 loading="lazy"
+                decoding="async"
                 width="1200"
                 height="800"
                 className="absolute inset-0 w-full h-full object-cover"
@@ -148,6 +149,7 @@ export default function DesignCultures({ setPage }: Props) {
                   src={t.img}
                   alt={`${t.name} detail for heritage-inspired interiors in Noida and Greater Noida`}
                   loading="lazy"
+                  decoding="async"
                   width="600"
                   height="400"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Page } from '../../App';
+import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -127,7 +128,7 @@ export default function Home({ setPage }: Props) {
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
         <div className="absolute inset-0 bg-[#1C3A5A]">
-          <img src={currentHero.image} alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes" width="1920" height="1080" className="w-full h-full object-cover transition-opacity duration-700" />
+          <img src={currentHero.image} alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes" width="1920" height="1080" loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover transition-opacity duration-700" />
         </div>
         <div
           className={heroSlide === 1
@@ -224,6 +225,7 @@ export default function Home({ setPage }: Props) {
                 src={IMG[c.img]}
                 alt={`${c.name} Indian interior design inspiration for Noida and Greater Noida homes`}
                 loading="lazy"
+                decoding="async"
                 width="600"
                 height="760"
                 className="absolute inset-0 w-full h-full object-cover opacity-75 transition-all duration-700 group-hover:opacity-90 group-hover:scale-105"
@@ -242,7 +244,7 @@ export default function Home({ setPage }: Props) {
       <section className="grid lg:grid-cols-2">
         {/* Left */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '520px' }}>
-          <img src={IMG.classics} alt="Heritage-inspired wood and craft interior design for Noida homes" loading="lazy" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
+          <img src={IMG.classics} alt="Heritage-inspired wood and craft interior design for Noida homes" loading="lazy" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A1714]/65 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-10 lg:p-16 text-white min-h-[520px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -306,6 +308,7 @@ export default function Home({ setPage }: Props) {
                     src={t.img}
                     alt={`${t.name} interior design trend for Greater Noida West homes`}
                     loading="lazy"
+                    decoding="async"
                     width="600"
                     height="450"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -369,7 +372,7 @@ export default function Home({ setPage }: Props) {
       {/* ── Modern Homes. Deeper Roots. ──────────────── */}
       <section className="grid lg:grid-cols-2">
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '460px' }}>
-          <img src={IMG.modern} alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={IMG.modern} alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/60 to-transparent" />
           <div className="relative flex flex-col justify-end p-10 lg:p-16 text-white min-h-[460px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -416,7 +419,7 @@ export default function Home({ setPage }: Props) {
           {homes.map(h => (
             <button key={h.name} onClick={() => setPage('homes')} className="text-left group">
               <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '4/3' }}>
-                <img src={IMG[h.img]} alt={`NestArcadia ${h.name} ${h.loc} home interior design`} loading="lazy" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={IMG[h.img]} alt={`NestArcadia ${h.name} ${h.loc} home interior design`} loading="lazy" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714]">{h.name}</p>
               <p className="text-[13px] text-[#2D8C7E] mt-1 mb-1.5">{h.loc}</p>
@@ -443,6 +446,9 @@ export default function Home({ setPage }: Props) {
           </div>
         </div>
       </section>
+
+      {/* ── FAQs ────────────────────────────────────── */}
+      <FeaturedResidences />
 
       {/* ── FAQs ────────────────────────────────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
@@ -472,7 +478,7 @@ export default function Home({ setPage }: Props) {
 
       {/* ── CTA ──────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '340px' }}>
-        <img src={IMG.cta} alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <img src={IMG.cta} alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 py-20 grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <h2 className="font-display text-[clamp(1.75rem,4vw,3rem)] text-white leading-tight mb-3">

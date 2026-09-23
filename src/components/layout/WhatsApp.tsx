@@ -1,28 +1,13 @@
-import { useState } from 'react';
-
-const PHONE = '918448061997';
-const MESSAGE = encodeURIComponent(
-  'Hello NestArcadia, I would like to discuss my interior design project.'
-);
-const WA_URL = `https://wa.me/${PHONE}?text=${MESSAGE}`;
+const WA_URL = 'https://wa.me/918448061997?text=Hi%20NestArcadia%2C%20I%20would%20like%20to%20discuss%20interior%20design%20for%20my%20home%20in%20Noida%2FGreater%20Noida.';
 
 export default function WhatsApp() {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <a
       href={WA_URL}
       target="_blank"
       rel="noopener noreferrer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      aria-label="WhatsApp NestArcadia"
-      className="fixed bottom-6 right-6 z-50 hidden items-center gap-3 shadow-lg transition-all duration-300 sm:flex"
-      style={{
-        background: '#1C3A5A',
-        padding: hovered ? '12px 20px 12px 16px' : '14px',
-        borderRadius: '2px',
-      }}
+      aria-label="Chat with a NestArcadia designer on WhatsApp"
+      className="group fixed bottom-[88px] right-6 z-50 flex items-center gap-2.5 bg-[#25D366] px-3.5 py-3 text-white shadow-[0_10px_26px_rgba(37,211,102,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(37,211,102,0.4)] sm:bottom-6 sm:right-6"
     >
       {/* WhatsApp SVG icon */}
       <svg
@@ -36,13 +21,8 @@ export default function WhatsApp() {
         <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.93 1.395 5.6L0 24l6.585-1.371A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.373l-.36-.213-3.712.974.991-3.625-.235-.373A9.818 9.818 0 012.182 12c0-5.421 4.397-9.818 9.818-9.818 5.421 0 9.818 4.397 9.818 9.818 0 5.421-4.397 9.818-9.818 9.818z" />
       </svg>
 
-      {/* Label — slides in on hover */}
-      <span
-        className="text-white text-[14px] font-semibold overflow-hidden transition-all duration-300 whitespace-nowrap"
-        style={{ maxWidth: hovered ? '120px' : '0', opacity: hovered ? 1 : 0 }}
-      >
-        Talk to NestArcadia
-      </span>
+      <span className="hidden max-w-0 overflow-hidden whitespace-nowrap text-[13px] font-semibold opacity-0 transition-all duration-300 group-hover:max-w-36 group-hover:opacity-100 sm:block">Chat with Designer</span>
+      <span className="sr-only">Chat with Designer</span>
     </a>
   );
 }

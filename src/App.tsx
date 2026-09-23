@@ -1,21 +1,22 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router';
 import Nav from './components/navigation/Nav';
 import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
 import MobileConversionBar from './components/layout/MobileConversionBar';
 import Home from './pages/Home/Home';
-import DesignCultures from './pages/DesignCultures/DesignCultures';
-import Services from './pages/Services/Services';
-import OurStory from './pages/OurStory/OurStory';
-import Journal from './pages/Journal/Journal';
-import { getJournalArticle } from './pages/Journal/Journal';
-import Homes from './pages/Homes/Homes';
-import StartProject from './pages/StartProject/StartProject';
-import FAQs from './pages/FAQs/FAQs';
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
+
+const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
+const Services = lazy(() => import('./pages/Services/Services'));
+const OurStory = lazy(() => import('./pages/OurStory/OurStory'));
+const Journal = lazy(() => import('./pages/Journal/Journal'));
+const JournalArticle = lazy(() => import('./pages/Journal/Journal'));
+const Homes = lazy(() => import('./pages/Homes/Homes'));
+const StartProject = lazy(() => import('./pages/StartProject/StartProject'));
+const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
 
 export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq';
 
@@ -66,12 +67,23 @@ function pageFromPath(pathname: string): Page {
 
 function SeoManager({ page }: { page: Page }) {
   const location = useLocation();
+  const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
+  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    if (!articleSlug) { setArticle(null); return; }
+    import('./pages/Journal/Journal').then(({ getJournalArticle }) => {
+      if (active) setArticle(getJournalArticle(articleSlug) ?? null);
+    });
+    return () => { active = false; };
+  }, [articleSlug]);
 
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
-    const article = page === 'journal' ? getJournalArticle(pathname.match(/^\/journal\/([^/]+)$/)?.[1]) : undefined;
-    const meta = article
-      ? { title: `${article.title} | NestArcadia Journal`, description: article.excerpt, image: article.img, type: 'article' }
+    const activeArticle = article?.id === articleSlug ? article : undefined;
+    const meta = activeArticle
+      ? { title: `${activeArticle.title} | NestArcadia Journal`, description: activeArticle.excerpt, image: activeArticle.img, type: 'article' }
       : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
     const canonical = `${SITE_URL}${pathname}`;
     document.title = meta.title;
@@ -92,7 +104,7 @@ function SeoManager({ page }: { page: Page }) {
     setMeta('og:type', meta.type, true);
     setMeta('og:url', canonical, true);
     setMeta('og:image', meta.image, true);
-    setMeta('og:image:alt', article ? `${article.title} — NestArcadia Journal` : 'NestArcadia heritage-inspired modern interior', true);
+    setMeta('og:image:alt', activeArticle ? `${activeArticle.title} — NestArcadia Journal` : 'NestArcadia heritage-inspired modern interior', true);
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', meta.title);
     setMeta('twitter:description', meta.description);
@@ -104,7 +116,7 @@ function SeoManager({ page }: { page: Page }) {
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
-    const articleSchema = article && { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: article.title, description: article.excerpt, image: article.img, author: { '@type': 'Organization', name: 'NestArcadia' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, about: [article.category, 'Interior Design', 'Noida', 'Greater Noida', 'Greater Noida West'] };
+    const articleSchema = activeArticle && { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Organization', name: 'NestArcadia' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, about: [activeArticle.category, 'Interior Design', 'Noida', 'Greater Noida', 'Greater Noida West'] };
     schema.textContent = JSON.stringify(articleSchema ?? ((page === 'home' || page === 'faq')
       ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: faqSchema.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
       : { '@context': 'https://schema.org', ...businessSchema }));
@@ -117,11 +129,15 @@ function SeoManager({ page }: { page: Page }) {
       page_type: page,
       content_group: page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page,
     });
-  }, [location.pathname, page]);
+  }, [location.pathname, page, article, articleSlug]);
   return null;
 }
 
 declare global { interface Window { dataLayer?: Record<string, unknown>[] } }
+
+function RouteFallback() {
+  return <div className="min-h-[52vh] animate-pulse bg-[#F2EDE4] px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-[#D4CBBB]" /><div className="mx-auto mt-6 h-12 max-w-xl bg-[#EAE4DA]" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-[#EAE4DA]" /></div>;
+}
 
 function SiteShell() {
   const location = useLocation();
@@ -136,13 +152,15 @@ function SiteShell() {
       <Nav page={page} setPage={setPage} />
       <main className="flex-1 pb-16 sm:pb-0">
         {page === 'home' && <Home setPage={setPage} />}
-        {page === 'cultures' && <DesignCultures setPage={setPage} />}
-        {page === 'services' && <Services setPage={setPage} />}
-        {page === 'story' && <OurStory setPage={setPage} />}
-        {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />}
-        {page === 'homes' && <Homes setPage={setPage} />}
-        {page === 'project' && <StartProject setPage={setPage} />}
-        {page === 'faq' && <FAQs setPage={setPage} />}
+        <Suspense fallback={<RouteFallback />}>
+          {page === 'cultures' && <DesignCultures setPage={setPage} />}
+          {page === 'services' && <Services setPage={setPage} />}
+          {page === 'story' && <OurStory setPage={setPage} />}
+          {page === 'journal' && (articleId ? <JournalArticle setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} /> : <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />)}
+          {page === 'homes' && <Homes setPage={setPage} />}
+          {page === 'project' && <StartProject setPage={setPage} />}
+          {page === 'faq' && <FAQs setPage={setPage} />}
+        </Suspense>
         <EditorialContext page={page} />
         <ConversionBanner page={page} setPage={setPage} />
       </main>

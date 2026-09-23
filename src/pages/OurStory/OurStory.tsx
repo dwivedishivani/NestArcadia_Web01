@@ -26,6 +26,9 @@ export default function OurStory({ setPage }: Props) {
         <img
           src={u('photo-1735568958809-82f7696a276a', 1440, 600)}
           alt="Our Story"
+          width="1440"
+          height="600"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C3A5A]/50" />
@@ -66,6 +69,10 @@ export default function OurStory({ setPage }: Props) {
         <img
           src={u('photo-1766128867730-b10474e59f1b', 1440, 600)}
           alt="NestArcadia studio"
+          loading="lazy"
+          decoding="async"
+          width="1440"
+          height="600"
           className="w-full h-full object-cover"
           style={{ maxHeight: '480px' }}
         />
@@ -109,6 +116,10 @@ export default function OurStory({ setPage }: Props) {
           <img
             src={u('photo-1746439326918-845e0486040d', 800, 600)}
             alt="Craft and making"
+            loading="lazy"
+            decoding="async"
+            width="800"
+            height="600"
             className="absolute inset-0 w-full h-full object-cover"
           />
         </div>

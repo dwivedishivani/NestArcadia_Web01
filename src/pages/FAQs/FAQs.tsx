@@ -65,7 +65,7 @@ export default function FAQs({ setPage }: Props) {
 
       <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-10 lg:pt-14">
         <div className="relative overflow-hidden bg-[#1C3A5A] min-h-52">
-          <img src="https://images.unsplash.com/photo-1682418460518-848f7aa242bb?w=1440&h=420&fit=crop&auto=format&q=85" alt="Modern apartment dining area for a new-home interior planning consultation" width="1440" height="420" loading="eager" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+          <img src="https://images.unsplash.com/photo-1682418460518-848f7aa242bb?w=1440&h=420&fit=crop&auto=format&q=85" alt="Modern apartment dining area for a new-home interior planning consultation" width="1440" height="420" loading="eager" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/85 via-[#1C3A5A]/50 to-transparent" />
           <div className="relative flex min-h-52 max-w-2xl flex-col justify-center px-7 py-8 lg:px-12">
             <p className="text-[10px] uppercase tracking-[0.28em] text-white/60 mb-3">Before possession</p>

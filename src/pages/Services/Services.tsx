@@ -72,6 +72,9 @@ export default function Services({ setPage }: Props) {
         <img
           src={u('photo-1774940122986-47dc6c7c575b', 1440, 500)}
           alt="Our Services"
+          width="1440"
+          height="500"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[360px] pb-14">
@@ -94,7 +97,7 @@ export default function Services({ setPage }: Props) {
             >
               {i % 2 === 1 && (
                 <div className="relative overflow-hidden bg-[#D4CBBB] min-h-[320px] order-last lg:order-none">
-                  <img src={s.img} alt={s.name} className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
               <div className={`flex flex-col justify-center px-0 ${i % 2 === 1 ? 'lg:px-16' : 'lg:pr-16'} py-4`}>
@@ -116,7 +119,7 @@ export default function Services({ setPage }: Props) {
               </div>
               {i % 2 === 0 && (
                 <div className="relative overflow-hidden bg-[#D4CBBB] min-h-[320px]">
-                  <img src={s.img} alt={s.name} className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
             </div>

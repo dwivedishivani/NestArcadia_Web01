@@ -19,7 +19,7 @@ export default function ConversionBanner({ page, setPage }: Props) {
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
       <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
-        <img src={source} alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+        <img src={source} alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/90 via-[#1C3A5A]/65 to-[#1C3A5A]/20" />
         <div className="relative flex min-h-72 max-w-2xl flex-col justify-center px-7 py-10 lg:px-14">
           <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/60">{item.eyebrow}</p>

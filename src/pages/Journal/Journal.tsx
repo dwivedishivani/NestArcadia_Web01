@@ -450,7 +450,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       <div className="pt-[72px]">
         {/* Hero */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ height: '55vh', minHeight: '360px' }}>
-          <img src={selected.img} alt={selected.title} className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={selected.img} alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/60 to-transparent" />
           <div className="relative h-full max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end pb-12">
             <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">{selected.category}</p>
@@ -528,7 +528,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               {relatedArticles.map(a => (
                 <button key={a.id} onClick={() => { setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
                   <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
-                    <img src={a.thumb} alt={a.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={a.thumb} alt={a.title} loading="lazy" decoding="async" width="800" height="560" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-[#2D8C7E] mb-2">{a.category}</p>
                   <p className="font-display text-xl text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">{a.title}</p>
@@ -584,7 +584,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group"
           >
             <div className="overflow-hidden bg-[#D4CBBB]" style={{ minHeight: '380px' }}>
-              <img src={featured.thumb} alt={featured.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ minHeight: '380px' }} />
+              <img src={featured.thumb} alt={featured.title} loading="lazy" decoding="async" width="800" height="560" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ minHeight: '380px' }} />
             </div>
             <div className="flex flex-col justify-center p-10 lg:p-14" style={{ background: '#EAE4DA' }}>
               <div className="flex items-center gap-3 mb-5">
@@ -618,7 +618,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                 className="text-left group"
               >
                 <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
-                  <img src={a.thumb} alt={a.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={a.thumb} alt={a.title} loading="lazy" decoding="async" width="800" height="560" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E]">{a.category}</span>
