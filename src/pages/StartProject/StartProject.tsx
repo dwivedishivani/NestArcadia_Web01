@@ -83,7 +83,7 @@ export default function StartProject({ setPage }: Props) {
     if (isSubmitting) return;
 
     const validationErrors = validateForm(form);
-    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true });
+    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true, message: true });
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
       setSubmissionError('Please correct the highlighted fields before submitting your brief.');
