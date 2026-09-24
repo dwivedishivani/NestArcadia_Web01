@@ -469,12 +469,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
         {/* Article body */}
         <div className="max-w-[780px] mx-auto px-6 py-16">
-          <button
-            onClick={() => setArticleId(null)}
+          <a
+            href="/journal"
+            onClick={(event) => { event.preventDefault(); setArticleId(null); }}
             className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
           >
             ← Back to Journal
-          </button>
+          </a>
           <p className="text-[#1A1714] text-[16px] leading-[1.9] mb-10 font-semibold">
             {selected.excerpt}
           </p>
@@ -509,12 +510,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           <div className="mt-16 p-8 border border-[#D4CBBB] text-center" style={{ background: '#EAE4DA' }}>
             <h3 className="font-display text-2xl text-[#1A1714] mb-2">Want to bring this into your home?</h3>
             <p className="text-[#6B5E4E] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
-            <button
-              onClick={() => setPage('project')}
+            <a
+              href="/start-your-project"
+              onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
             >
               Start Your Project →
-            </button>
+            </a>
           </div>
         </div>
 
@@ -526,13 +528,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </p>
             <div className="grid sm:grid-cols-2 gap-8">
               {relatedArticles.map(a => (
-                <button key={a.id} onClick={() => { setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
+                <a key={a.id} href={`/journal/${a.id}`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
                   <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                     <img src={a.thumb} alt={a.title} loading="lazy" decoding="async" width="800" height="560" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-[#2D8C7E] mb-2">{a.category}</p>
                   <p className="font-display text-xl text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">{a.title}</p>
-                </button>
+                </a>
               ))}
             </div>
           </div>

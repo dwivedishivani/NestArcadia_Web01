@@ -8,9 +8,6 @@
   "openGraph": {
     "image": "/.figma/make/social-image.png"
   },
-  "analytics": {
-    "googleAnalyticsId": "G-LDM2YL1MP5"
-  },
   "accessibility": {
     "addBypassLinks": false,
     "ignoreReducedMotion": false

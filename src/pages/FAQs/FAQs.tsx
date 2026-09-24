@@ -3,7 +3,7 @@ import type { Page } from '../../App';
 
 interface Props { setPage: (p: Page) => void; }
 
-const groups = [
+export const faqGroups = [
   {
     label: 'Working with NestArcadia',
     items: [
@@ -77,7 +77,7 @@ export default function FAQs({ setPage }: Props) {
 
       <main className="max-w-[1120px] mx-auto px-6 lg:px-20 py-20 lg:py-24">
         <div className="space-y-14">
-          {groups.map(group => (
+          {faqGroups.map(group => (
             <section key={group.label} aria-labelledby={group.label.replace(/\s+/g, '-').toLowerCase()}>
               <h2 id={group.label.replace(/\s+/g, '-').toLowerCase()} className="font-display text-3xl text-[#1A1714] mb-6">{group.label}</h2>
               <div className="border-t border-[#D4CBBB]">

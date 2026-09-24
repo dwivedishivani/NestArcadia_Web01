@@ -22,14 +22,19 @@ export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'hom
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
-const faqSchema = [
+const monthNumbers: Record<string, string> = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
+
+function schemaMonthYear(value: string) {
+  const [month, year] = value.split(' ');
+  return monthNumbers[month] && /^\d{4}$/.test(year) ? `${year}-${monthNumbers[month]}` : undefined;
+}
+type FaqItem = [string, string];
+
+const homeFaqSchema: FaqItem[] = [
   ['Which areas does NestArcadia serve?', 'NestArcadia serves Noida, Greater Noida, Greater Noida West, Delhi, Gurgaon, Faridabad and Ghaziabad for residential and commercial interior design projects.'],
-  ['Do you design 2BHK, 3BHK and 4BHK interiors?', 'Yes. NestArcadia plans and executes interiors for 2BHK, 3BHK and 4BHK apartments, villas, farmhouses and commercial offices.'],
+  ['Do you design 2BHK, 3BHK and 4BHK interiors?', 'Yes. We plan and execute interiors for 2BHK, 3BHK and 4BHK apartments, as well as villas, farmhouses and commercial offices. Every project is tailored to the layout, lifestyle and budget.'],
   ['What services are included in a turnkey interior project?', 'Turnkey projects can include space planning, 3D visualisation, material selection, modular and custom furniture, lighting, decor, site coordination and final handover.'],
-  ['When should I contact an interior designer?', 'Contact NestArcadia before possession or before civil work begins for the most flexibility with planning, lighting, storage and materials.'],
-  ['I am buying a flat in Greater Noida West. When should I plan the interiors?', 'Start the interior conversation before possession, ideally while finalising the purchase or reviewing the builder layout, so storage, electrical points, kitchen layout and furniture clearances can be planned early.'],
-  ['Can you help plan interiors for a newly purchased shop or commercial space?', 'Yes. NestArcadia plans customer flow, display or work zones, storage, lighting, signage, billing or reception points and future flexibility for shops, studios and offices.'],
-  ['What should I budget for before taking possession of a new flat?', 'Keep separate allowances for interior scope, appliances, loose furniture, window treatments, moving and contingency. Interior cost depends on carpet area, materials, hardware, false ceiling, lighting and custom work.'],
+  ['When should I contact an interior designer?', 'Ideally, contact us before possession or before any civil work begins. Early planning gives more flexibility for electrical points, storage, lighting, kitchen layout and material decisions.'],
 ];
 
 const pagePaths: Record<Page, string> = {
@@ -68,7 +73,8 @@ function pageFromPath(pathname: string): Page {
 function SeoManager({ page }: { page: Page }) {
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
-  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string } | null>(null);
+  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; date: string } | null>(null);
+  const [faqItems, setFaqItems] = useState<FaqItem[]>(homeFaqSchema);
 
   useEffect(() => {
     let active = true;
@@ -78,6 +84,15 @@ function SeoManager({ page }: { page: Page }) {
     });
     return () => { active = false; };
   }, [articleSlug]);
+
+  useEffect(() => {
+    let active = true;
+    if (page !== 'faq') { setFaqItems(homeFaqSchema); return; }
+    import('./pages/FAQs/FAQs').then(({ faqGroups }) => {
+      if (active) setFaqItems(faqGroups.flatMap((group) => group.items) as FaqItem[]);
+    });
+    return () => { active = false; };
+  }, [page]);
 
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
@@ -94,7 +109,6 @@ function SeoManager({ page }: { page: Page }) {
       element.content = content;
     };
     setMeta('description', meta.description);
-    setMeta('keywords', 'interior designers in Noida, interior designers Greater Noida, interior designers Greater Noida West, 2BHK interior design, 3BHK interior design, 4BHK interior design, turnkey interior design, commercial office interior design, modular kitchen Noida');
     setMeta('author', 'NestArcadia');
     setMeta('geo.region', 'IN-UP');
     setMeta('geo.placename', 'Greater Noida West, Noida, Greater Noida');
@@ -116,10 +130,19 @@ function SeoManager({ page }: { page: Page }) {
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
-    const articleSchema = activeArticle && { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Organization', name: 'NestArcadia' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, about: [activeArticle.category, 'Interior Design', 'Noida', 'Greater Noida', 'Greater Noida West'] };
-    schema.textContent = JSON.stringify(articleSchema ?? ((page === 'home' || page === 'faq')
-      ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: faqSchema.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
-      : { '@context': 'https://schema.org', ...businessSchema }));
+    const articleDatePublished = activeArticle ? schemaMonthYear(activeArticle.date) : undefined;
+    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(articleDatePublished ? { datePublished: articleDatePublished } : {}) };
+    const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
+      { '@type': 'ListItem', position: 3, name: activeArticle.title, item: canonical },
+    ] };
+    const visibleFaqs = page === 'home' ? homeFaqSchema : faqItems;
+    schema.textContent = JSON.stringify(articleSchema
+      ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema] }
+      : ((page === 'home' || page === 'faq')
+        ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
+        : { '@context': 'https://schema.org', ...businessSchema }));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
@@ -129,7 +152,7 @@ function SeoManager({ page }: { page: Page }) {
       page_type: page,
       content_group: page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page,
     });
-  }, [location.pathname, page, article, articleSlug]);
+  }, [location.pathname, page, article, articleSlug, faqItems]);
   return null;
 }
 
