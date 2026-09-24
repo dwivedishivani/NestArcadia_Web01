@@ -22,12 +22,6 @@ export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'hom
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
-const monthNumbers: Record<string, string> = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
-
-function schemaMonthYear(value: string) {
-  const [month, year] = value.split(' ');
-  return monthNumbers[month] && /^\d{4}$/.test(year) ? `${year}-${monthNumbers[month]}` : undefined;
-}
 type FaqItem = [string, string];
 
 const homeFaqSchema: FaqItem[] = [
@@ -73,7 +67,7 @@ function pageFromPath(pathname: string): Page {
 function SeoManager({ page }: { page: Page }) {
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
-  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; date: string } | null>(null);
+  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string } | null>(null);
   const [faqItems, setFaqItems] = useState<FaqItem[]>(homeFaqSchema);
 
   useEffect(() => {
@@ -130,8 +124,7 @@ function SeoManager({ page }: { page: Page }) {
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
-    const articleDatePublished = activeArticle ? schemaMonthYear(activeArticle.date) : undefined;
-    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(articleDatePublished ? { datePublished: articleDatePublished } : {}) };
+    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category };
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
