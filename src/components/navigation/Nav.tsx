@@ -67,7 +67,7 @@ export default function Nav({ page, setPage }: NavProps) {
                     ? '#2D8C7E'
                     : transparent
                     ? 'rgba(255,255,255,0.85)'
-                    : transparent ? 'rgba(255,255,255,0.88)' : '#1C3A5A',
+                    : '#1C3A5A',
                   fontWeight: page === l.page ? 700 : 600,
                 }}
               >
