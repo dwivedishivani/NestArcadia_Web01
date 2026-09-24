@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { projectId, publicAnonKey } from './info';
+import { projectId, publicSupabaseKey } from './info';
 
 export const supabase = createClient(
   `https://${projectId}.supabase.co`,
