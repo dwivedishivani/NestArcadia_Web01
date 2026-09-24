@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Page } from '../../App';
-import { supabase } from '../../../utils/supabase/client';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -48,7 +48,6 @@ function validateForm(form: FormState): FormErrors {
   if (!form.budget) errors.budget = 'Please choose a budget range.';
   if (!form.timeline) errors.timeline = 'Please choose a timeline.';
   if (!form.style) errors.style = 'Please choose a design preference.';
-  if (form.message.trim().length > 5000) errors.message = 'Please keep your message under 5000 characters.';
   return errors;
 }
 
@@ -83,7 +82,7 @@ export default function StartProject({ setPage }: Props) {
     if (isSubmitting) return;
 
     const validationErrors = validateForm(form);
-    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true, message: true });
+    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true });
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
       setSubmissionError('Please correct the highlighted fields before submitting your brief.');
@@ -94,29 +93,35 @@ export default function StartProject({ setPage }: Props) {
     setSubmissionError('');
 
     try {
-      const phoneDigits = form.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
-      const { error } = await supabase.from('enquiries').insert({
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: phoneDigits,
-        city: form.city.trim(),
-        project_type: form.projectType,
-        configuration: form.configuration || null,
-        budget: form.budget,
-        timeline: form.timeline,
-        design_style: form.style,
-        message: form.message.trim() || null,
-        source: 'start-your-project',
-        status: 'new',
-        form_answers: {},
-        notes: null,
+      // Enquiries use Supabase's Data API directly. The table's public-insert
+      // RLS policy is the permission boundary; this avoids relying on the
+      // generated Make Edge Function and a separately deployed route.
+      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${publicAnonKey}`,
+          apikey: publicAnonKey,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          city: form.city,
+          project_type: form.projectType,
+          configuration: form.configuration,
+          budget: form.budget,
+          timeline: form.timeline,
+          design_style: form.style,
+          message: form.message,
+          source: 'start-your-project',
+        }),
       });
 
-      if (error) {
-        console.error('NestArcadia enquiry submission failed:', error);
+      if (!response.ok) {
         throw new Error('We could not submit your brief right now. Please try again or WhatsApp us directly.');
       }
-
       setSubmitted(true);
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
@@ -290,11 +295,7 @@ export default function StartProject({ setPage }: Props) {
                     placeholder="E.g. We want South Indian traditional influence with modern storage solutions. Work-from-home area needed. Vastu compliance important..."
                     value={form.message}
                     onChange={setField('message')}
-                    onBlur={() => markTouched('message')}
-                    aria-invalid={Boolean(errors.message)}
-                    maxLength={5000}
                   />
-                  {errors.message && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.message}</p>}
                 </div>
               </div>
 
