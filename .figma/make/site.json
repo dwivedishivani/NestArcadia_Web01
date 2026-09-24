@@ -1,18 +1,21 @@
 {
-  "title": "NestArcadia | Interior Designers in Noida & Greater Noida",
-  "description": "Heritage-inspired interior design for 2BHK, 3BHK, 4BHK homes, villas and farmhouses in Noida, Greater Noida, Greater Noida West and NCR.",
+  "title": "NestArcadia Interiors",
+  "description": "Best interior designers in Noida & Greater Noida for apartments, flats, and villas. Complete turnkey home interior design. Contact NestArcadia for a quote.",
   "language": "En",
-  "robots": {
-    "index": true
-  },
   "icons": {
     "icon": "/.figma/make/favicon.png"
   },
   "openGraph": {
-    "image": "https://www.nestarcadia.com/assets/social-image-ByGhOH0S.png"
+    "image": "/.figma/make/social-image.png"
+  },
+  "analytics": {
+    "googleAnalyticsId": "G-LDM2YL1MP5"
   },
   "accessibility": {
     "addBypassLinks": false,
     "ignoreReducedMotion": false
+  },
+  "robots": {
+    "index": true
   }
 }

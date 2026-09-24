@@ -96,7 +96,6 @@ export default function StartProject({ setPage }: Props) {
       const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-078be9eb/enquiries`, {
         method: 'POST',
         headers: {
-          apikey: publicAnonKey,
           Authorization: `Bearer ${publicAnonKey}`,
           'Content-Type': 'application/json',
         },
