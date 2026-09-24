@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Page } from '../../App';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
@@ -27,27 +27,67 @@ const stylePrefs = [
   'Japandi / Wabi-sabi', 'Modern Indian', 'Mix & Match',
 ];
 
+const initialForm = {
+  name: '', email: '', phone: '', city: '', projectType: '',
+  configuration: '', budget: '', timeline: '', style: '', message: '',
+};
+
+type FormState = typeof initialForm;
+type FormField = keyof FormState;
+type FormErrors = Partial<Record<FormField, string>>;
+
+function validateForm(form: FormState): FormErrors {
+  const errors: FormErrors = {};
+  const phoneDigits = form.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
+  if (form.name.trim().length < 2) errors.name = 'Please enter your full name.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = 'Enter a valid email address.';
+  if (!/^[6-9]\d{9}$/.test(phoneDigits)) errors.phone = 'Enter a valid 10-digit Indian mobile number.';
+  if (!form.city) errors.city = 'Please select your city.';
+  if (!form.projectType) errors.projectType = 'Please choose a project type.';
+  if ((form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex') && !form.configuration) errors.configuration = 'Please choose a home configuration.';
+  if (!form.budget) errors.budget = 'Please choose a budget range.';
+  if (!form.timeline) errors.timeline = 'Please choose a timeline.';
+  if (!form.style) errors.style = 'Please choose a design preference.';
+  return errors;
+}
+
 export default function StartProject({ setPage }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState('');
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '', city: '', projectType: '',
-    configuration: '', budget: '', timeline: '', style: '', message: '',
-  });
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [touched, setTouched] = useState<Partial<Record<FormField, boolean>>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const showConfig = form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex';
 
-  const setField = (key: keyof typeof form) =>
+  useEffect(() => {
+    const nextErrors = validateForm(form);
+    setErrors(Object.fromEntries(Object.keys(touched).filter((key) => touched[key as FormField]).map((key) => [key, nextErrors[key as FormField]]).filter(([, error]) => error)) as FormErrors);
+  }, [form, touched]);
+
+  const setField = (key: FormField) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm(f => ({ ...f, [key]: e.target.value }));
 
-  const toggle = (key: keyof typeof form, val: string) =>
+  const markTouched = (key: FormField) => setTouched(current => ({ ...current, [key]: true }));
+
+  const toggle = (key: FormField, val: string) => {
+    markTouched(key);
     setForm(f => ({ ...f, [key]: f[key] === val ? '' : val }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+
+    const validationErrors = validateForm(form);
+    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true });
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      setSubmissionError('Please correct the highlighted fields before submitting your brief.');
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmissionError('');
@@ -75,16 +115,20 @@ export default function StartProject({ setPage }: Props) {
         }),
       });
 
-      if (!response.ok) throw new Error('Unable to submit your project brief. Please try again.');
+      if (!response.ok) {
+        throw new Error(response.status === 404
+          ? 'Our enquiry service is still being deployed. Please WhatsApp us directly for now.'
+          : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
+      }
       setSubmitted(true);
-    } catch {
-      setSubmissionError('We could not submit your brief right now. Please try again or WhatsApp us directly.');
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const inputClass = `w-full bg-transparent border border-[#D4CBBB] px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none focus:border-[#2D8C7E] transition-colors`;
+  const inputClass = (error?: string) => `w-full bg-transparent border px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
   const chipClass = (active: boolean) =>
     `text-[13px] px-4 py-2 border cursor-pointer transition-all select-none ${
       active
@@ -144,20 +188,23 @@ export default function StartProject({ setPage }: Props) {
               <div>
                 <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Details</h2>
                 <div className="flex flex-col gap-4">
-                  <input className={inputClass} placeholder="Full Name *" value={form.name} onChange={setField('name')} required />
-                  <input className={inputClass} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} required />
-                  <input className={inputClass} placeholder="Phone Number *" type="tel" value={form.phone} onChange={setField('phone')} required />
+                  <div><input className={inputClass(errors.name)} placeholder="Full Name *" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} required />{errors.name && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.name}</p>}</div>
+                  <div><input className={inputClass(errors.email)} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} required />{errors.email && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.email}</p>}</div>
+                  <div><input className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} required />{errors.phone && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.phone}</p>}</div>
 
                   {/* City dropdown */}
                   <select
-                    className={`${inputClass} appearance-none cursor-pointer`}
+                    className={`${inputClass(errors.city)} appearance-none cursor-pointer`}
                     value={form.city}
                     onChange={setField('city')}
+                    onBlur={() => markTouched('city')}
+                    aria-invalid={Boolean(errors.city)}
                     required
                   >
                     <option value="" disabled>Select City</option>
                     {cities.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
+                  {errors.city && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.city}</p>}
                 </div>
               </div>
 
@@ -171,6 +218,7 @@ export default function StartProject({ setPage }: Props) {
                     </button>
                   ))}
                 </div>
+                {errors.projectType && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.projectType}</p>}
               </div>
 
               {/* Configuration — only for apartment/penthouse */}
@@ -184,6 +232,7 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
+                  {errors.configuration && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.configuration}</p>}
                 </div>
               )}
 
@@ -197,6 +246,7 @@ export default function StartProject({ setPage }: Props) {
                     </button>
                   ))}
                 </div>
+                {errors.budget && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.budget}</p>}
               </div>
             </div>
 
@@ -215,6 +265,7 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
+                  {errors.timeline && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.timeline}</p>}
                 </div>
 
                 {/* Style preference */}
@@ -227,6 +278,7 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
+                  {errors.style && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.style}</p>}
                 </div>
 
                 {/* Open message */}
@@ -236,7 +288,7 @@ export default function StartProject({ setPage }: Props) {
                     Vastu requirements, specific materials, a reference image, a feeling you want to capture — anything helps.
                   </p>
                   <textarea
-                    className={`${inputClass} resize-none`}
+                    className={`${inputClass()} resize-none`}
                     rows={6}
                     placeholder="E.g. We want South Indian traditional influence with modern storage solutions. Work-from-home area needed. Vastu compliance important..."
                     value={form.message}
