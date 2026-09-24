@@ -3,7 +3,7 @@ import { projectId, publicSupabaseKey } from './info';
 
 export const supabase = createClient(
   `https://${projectId}.supabase.co`,
-  publicAnonKey,
+  publicSupabaseKey,
   {
     auth: {
       autoRefreshToken: false,
