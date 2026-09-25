@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+import ImageUpload from '../../components/ImageUpload';
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/server/make-server-078be9eb`;
 
@@ -32,7 +33,7 @@ export default function HomeForm({ home, headers, onSave, onCancel }: Props) {
     area: home?.area || '',
     style: home?.style || 'North',
     description: home?.description || '',
-    gallery_images: home?.gallery_images?.join('\n') || '',
+    gallery_images: home?.gallery_images || ['', '', '', '', '', '', '', '', '', ''],
     status: home?.status || 'published',
     display_order: home?.display_order || 0,
   });
@@ -49,8 +50,14 @@ export default function HomeForm({ home, headers, onSave, onCancel }: Props) {
 
     try {
       const payload = {
-        ...form,
-        gallery_images: form.gallery_images.split('\n').map((url) => url.trim()).filter(Boolean),
+        name: form.name,
+        location: form.location,
+        type: form.type,
+        area: form.area,
+        style: form.style,
+        description: form.description,
+        gallery_images: form.gallery_images.filter((url) => url.trim()),
+        status: form.status,
         display_order: Number(form.display_order),
       };
 
@@ -167,15 +174,26 @@ export default function HomeForm({ home, headers, onSave, onCancel }: Props) {
             />
           </div>
 
-          <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Gallery Images (one URL per line)</label>
-            <textarea
-              className={inputClass}
-              rows={6}
-              value={form.gallery_images}
-              onChange={(e) => setForm({ ...form, gallery_images: e.target.value })}
-              placeholder="https://images.unsplash.com/photo-123...&#10;https://images.unsplash.com/photo-456..."
-            />
+          <div className="space-y-4">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E]">Gallery Images (up to 10)</p>
+            <div className="grid gap-6">
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+                <ImageUpload
+                  key={index}
+                  value={form.gallery_images[index] || ''}
+                  onChange={(url) => {
+                    const newGallery = [...form.gallery_images];
+                    newGallery[index] = url;
+                    setForm({ ...form, gallery_images: newGallery });
+                  }}
+                  aspectRatio={1600 / 1060}
+                  targetWidth={1600}
+                  targetHeight={1060}
+                  label={`Image ${index + 1}`}
+                  placeholder="Paste URL or upload image"
+                />
+              ))}
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">

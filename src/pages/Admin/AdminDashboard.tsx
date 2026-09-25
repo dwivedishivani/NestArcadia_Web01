@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import HomeForm from './HomeForm';
+import ImageUpload from '../../components/ImageUpload';
 
 interface Props {
   adminPassword: string;
@@ -334,7 +335,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                         {blogs.map((blog) => (
                           <tr key={blog.id} className="border-b border-[#D4CBBB] last:border-b-0">
                             <td className="px-6 py-4">
-                              <p className="text-[14px] text-[#1A1714] font-medium">{blog.title}</p>
+                              <p className="text-[14px] text-[#1A1714] font-medium line-clamp-2">{blog.title}</p>
                               <p className="text-[12px] text-[#6B5E4E] mt-0.5">{blog.author}</p>
                             </td>
                             <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">{blog.category}</td>
@@ -709,15 +710,15 @@ function BlogForm({
             </div>
           </div>
 
-          <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Image URL</label>
-            <input
-              className={inputClass}
-              value={form.image_url}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-              placeholder="https://images.unsplash.com/..."
-            />
-          </div>
+          <ImageUpload
+            value={form.image_url}
+            onChange={(url) => setForm({ ...form, image_url: url })}
+            aspectRatio={1200 / 700}
+            targetWidth={1200}
+            targetHeight={700}
+            label="Article Image"
+            placeholder="Paste image URL or upload file"
+          />
 
           <div>
             <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Excerpt *</label>
