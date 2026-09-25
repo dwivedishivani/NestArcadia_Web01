@@ -49,7 +49,7 @@ const pagePaths: Record<Page, string> = {
 };
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
-  home: { title: 'Heritage-Inspired Interior Designers in Noida & Greater Noida', description: 'NestArcadia creates heritage-inspired, contemporary interiors for 2BHK, 3BHK, 4BHK apartments, villas and farmhouses in Noida, Greater Noida, Greater Noida West and NCR.' },
+  home: { title: 'NestArcadia | Interior Designers in Noida & Greater Noida', description: 'NestArcadia creates heritage-inspired, contemporary interiors for 2BHK, 3BHK, 4BHK apartments, villas and farmhouses in Noida, Greater Noida, Greater Noida West and NCR.' },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design & Turnkey Services in Noida', description: 'Interior design, turnkey execution, custom furniture, Vastu-led planning and decor services for homes in Noida, Greater Noida West, Delhi, Gurgaon, Faridabad and Ghaziabad.' },
   story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India’s material heritage into homes made for modern living.' },
