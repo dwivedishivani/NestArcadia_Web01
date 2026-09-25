@@ -658,7 +658,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                   <span className="text-[#D4CBBB] text-xs">·</span>
                   <span className="text-[13px] text-[#6B5E4E]">{a.date}</span>
                 </div>
-                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors">
+                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors line-clamp-2">
                   {a.title}
                 </h3>
                 <p className="text-[13px] text-[#6B5E4E] leading-relaxed mb-4">{a.excerpt}</p>

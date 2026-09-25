@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 interface ImageUploadProps {
   value: string;
@@ -28,9 +28,13 @@ export default function ImageUpload({
     height: number;
   } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [dragMode, setDragMode] = useState<'move' | 'resize' | null>(null);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
+  const [displayScale, setDisplayScale] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const cropContainerRef = useRef<HTMLDivElement>(null);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -68,6 +72,68 @@ export default function ImageUpload({
     };
     reader.readAsDataURL(file);
   };
+
+  useEffect(() => {
+    if (cropping && cropContainerRef.current && imageRef.current) {
+      const containerWidth = cropContainerRef.current.offsetWidth;
+      const scale = containerWidth / imageRef.current.width;
+      setDisplayScale(scale);
+    }
+  }, [cropping]);
+
+  const handleCropMouseDown = (e: React.MouseEvent, mode: 'move' | 'resize') => {
+    e.preventDefault();
+    setDragMode(mode);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleCropMouseMove = useCallback((e: MouseEvent) => {
+    if (!dragMode || !dragStart || !cropData || !imageRef.current) return;
+
+    const deltaX = (e.clientX - dragStart.x) / displayScale;
+    const deltaY = (e.clientY - dragStart.y) / displayScale;
+
+    if (dragMode === 'move') {
+      const newX = Math.max(0, Math.min(imageRef.current.width - cropData.width, cropData.x + deltaX));
+      const newY = Math.max(0, Math.min(imageRef.current.height - cropData.height, cropData.y + deltaY));
+      
+      setCropData({
+        ...cropData,
+        x: newX,
+        y: newY,
+      });
+    } else if (dragMode === 'resize') {
+      const newWidth = Math.max(100, cropData.width + deltaX);
+      const newHeight = newWidth / aspectRatio;
+      
+      if (cropData.x + newWidth <= imageRef.current.width && 
+          cropData.y + newHeight <= imageRef.current.height) {
+        setCropData({
+          ...cropData,
+          width: newWidth,
+          height: newHeight,
+        });
+      }
+    }
+
+    setDragStart({ x: e.clientX, y: e.clientY });
+  }, [dragMode, dragStart, cropData, displayScale, aspectRatio]);
+
+  const handleCropMouseUp = useCallback(() => {
+    setDragMode(null);
+    setDragStart(null);
+  }, []);
+
+  useEffect(() => {
+    if (dragMode) {
+      window.addEventListener('mousemove', handleCropMouseMove);
+      window.addEventListener('mouseup', handleCropMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleCropMouseMove);
+        window.removeEventListener('mouseup', handleCropMouseUp);
+      };
+    }
+  }, [dragMode, handleCropMouseMove, handleCropMouseUp]);
 
   const handleCrop = useCallback(() => {
     if (!imageRef.current || !cropData || !canvasRef.current) return;
@@ -189,14 +255,63 @@ export default function ImageUpload({
         </div>
       ) : (
         <div className="border border-[#D4CBBB] p-6" style={{ background: '#FDFCFA' }}>
-          <div className="relative max-w-2xl mx-auto">
-            <img
-              src={preview}
-              alt="Crop preview"
-              className="max-w-full h-auto"
-            />
+          <div className="max-w-2xl mx-auto">
+            <div 
+              ref={cropContainerRef}
+              className="relative inline-block max-w-full"
+              style={{ userSelect: 'none' }}
+            >
+              <img
+                src={preview}
+                alt="Crop preview"
+                className="max-w-full h-auto block"
+                draggable={false}
+              />
+              {cropData && imageRef.current && (
+                <>
+                  <div 
+                    className="absolute inset-0 bg-black/50"
+                    style={{
+                      clipPath: `polygon(
+                        0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+                        ${(cropData.x / imageRef.current.width) * 100}% ${(cropData.y / imageRef.current.height) * 100}%,
+                        ${(cropData.x / imageRef.current.width) * 100}% ${((cropData.y + cropData.height) / imageRef.current.height) * 100}%,
+                        ${((cropData.x + cropData.width) / imageRef.current.width) * 100}% ${((cropData.y + cropData.height) / imageRef.current.height) * 100}%,
+                        ${((cropData.x + cropData.width) / imageRef.current.width) * 100}% ${(cropData.y / imageRef.current.height) * 100}%,
+                        ${(cropData.x / imageRef.current.width) * 100}% ${(cropData.y / imageRef.current.height) * 100}%
+                      )`
+                    }}
+                  />
+                  <div
+                    className="absolute border-2 border-white cursor-move"
+                    style={{
+                      left: `${(cropData.x / imageRef.current.width) * 100}%`,
+                      top: `${(cropData.y / imageRef.current.height) * 100}%`,
+                      width: `${(cropData.width / imageRef.current.width) * 100}%`,
+                      height: `${(cropData.height / imageRef.current.height) * 100}%`,
+                      boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)'
+                    }}
+                    onMouseDown={(e) => handleCropMouseDown(e, 'move')}
+                  >
+                    <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                      {[...Array(9)].map((_, i) => (
+                        <div key={i} className="border border-white/30" />
+                      ))}
+                    </div>
+                    <div
+                      className="absolute bottom-0 right-0 w-6 h-6 bg-white border-2 border-[#1C3A5A] cursor-nwse-resize"
+                      style={{ transform: 'translate(50%, 50%)' }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        handleCropMouseDown(e, 'resize');
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
             <p className="text-[12px] text-[#6B5E4E] mt-4 text-center">
-              Image will be cropped to {targetWidth}×{targetHeight} maintaining the aspect ratio
+              Drag to reposition • Drag corner handle to resize • Final output: {targetWidth}×{targetHeight}
             </p>
           </div>
 
