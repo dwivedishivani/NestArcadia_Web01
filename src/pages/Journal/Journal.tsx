@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Page } from '../../App';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
 interface Props {
   setPage: (p: Page) => void;
@@ -10,7 +11,9 @@ interface Props {
 const u = (id: string, w: number, h: number) =>
   `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
-export const articles = [
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/server/make-server-078be9eb`;
+
+const fallbackArticles = [
   {
     id: 'rattan',
     category: 'Materials',
@@ -371,7 +374,7 @@ export const articles = [
   },
 ];
 
-export const getJournalArticle = (slug?: string) => articles.find((article) => article.id === slug);
+export const getJournalArticle = (slug: string | undefined, articlesData: typeof fallbackArticles) => articlesData.find((article) => article.id === slug);
 
 const categories = ['All', 'Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
 
@@ -434,9 +437,46 @@ const categoryDeepDives: Record<string, string[]> = {
 
 export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
+  const [articles, setArticles] = useState<typeof fallbackArticles>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/blogs`, {
+          headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+        });
+        const data = await res.json();
+        if (data.data && data.data.length > 0) {
+          const formattedArticles = data.data.map((b: any) => ({
+            id: b.slug,
+            category: b.category,
+            title: b.title,
+            excerpt: b.excerpt,
+            author: b.author,
+            date: new Date(b.published_at || b.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+            readTime: b.read_time,
+            img: b.image_url,
+            thumb: b.image_url,
+            body: b.content ? b.content.split('\n\n') : [],
+            related: [],
+          }));
+          setArticles(formattedArticles);
+        } else {
+          setArticles(fallbackArticles);
+        }
+      } catch (err) {
+        console.log('Using fallback articles data');
+        setArticles(fallbackArticles);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   const filtered = active === 'All' ? articles : articles.filter(a => a.category === active);
-  const selected = getJournalArticle(articleId);
+  const selected = getJournalArticle(articleId, articles);
 
   // Article detail view
   if (selected) {
@@ -444,7 +484,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
     const conclusion = 'conclusion' in selected ? selected.conclusion : null;
     const relatedArticles = selected.related
       .map(id => articles.find(a => a.id === id))
-      .filter(Boolean) as typeof articles;
+      .filter(Boolean) as typeof fallbackArticles;
 
     return (
       <div className="pt-[72px]">
@@ -491,15 +531,6 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               </div>
             ))}
           </div>
-          <section className="mt-14 border-t border-[#D4CBBB] pt-10" aria-labelledby="practical-guide">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">NestArcadia practical guide</p>
-            <h2 id="practical-guide" className="font-display text-3xl text-[#1A1714] mb-7">Planning this well in a real home</h2>
-            <div className="flex flex-col gap-6">
-              {(categoryDeepDives[selected.category] ?? []).map((para, i) => (
-                <p key={i} className="text-[#1A1714] text-[15px] leading-[1.9]">{para}</p>
-              ))}
-            </div>
-          </section>
           {conclusion && (
             <p className="mt-10 border-t border-[#D4CBBB] pt-8 text-[15px] leading-[1.9] text-[#1A1714]">
               <strong>Conclusion.</strong> {conclusion}
@@ -627,7 +658,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                   <span className="text-[#D4CBBB] text-xs">·</span>
                   <span className="text-[13px] text-[#6B5E4E]">{a.date}</span>
                 </div>
-                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors">
+                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors line-clamp-2">
                   {a.title}
                 </h3>
                 <p className="text-[13px] text-[#6B5E4E] leading-relaxed mb-4">{a.excerpt}</p>

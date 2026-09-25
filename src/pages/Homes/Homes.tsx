@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Page } from '../../App';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -9,7 +10,9 @@ const u = (id: string, w: number, h: number) =>
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
 
-const homes = [
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/server/make-server-078be9eb`;
+
+const fallbackHomes = [
   {
     name: 'The Calm Retreat',
     location: 'Noida, UP',
@@ -90,10 +93,37 @@ const types = ['All Types', '2BHK Apartment', '3BHK Apartment', '4BHK Apartment'
 export default function Homes({ setPage }: Props) {
   const [style, setStyle] = useState('All Regions');
   const [type, setType] = useState('All Types');
-  const [selected, setSelected] = useState<typeof homes[number] | null>(null);
+  const [homes, setHomes] = useState<typeof fallbackHomes>(fallbackHomes);
+  const [selected, setSelected] = useState<typeof fallbackHomes[number] | null>(null);
   const [activeImage, setActiveImage] = useState(0);
 
-  const filtered = homes.filter(h =>
+  useEffect(() => {
+    const fetchHomes = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/homes`, {
+          headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+        });
+        const data = await res.json();
+        if (data.data && data.data.length > 0) {
+          const formattedHomes = data.data.map((h: any) => ({
+            name: h.name,
+            location: h.location,
+            type: h.type,
+            area: h.area,
+            style: h.style,
+            desc: h.description,
+            gallery: h.gallery_images || [],
+          }));
+          setHomes(formattedHomes);
+        }
+      } catch (err) {
+        console.log('Using fallback homes data');
+      }
+    };
+    fetchHomes();
+  }, []);
+
+  const filtered = homes.filter((h: any) =>
     (style === 'All Regions' || h.style === style) &&
     (type === 'All Types' || h.type === type)
   );
@@ -101,8 +131,8 @@ export default function Homes({ setPage }: Props) {
   if (selected) {
     return (
       <div className="pt-[72px]">
-        <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
-          <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design project in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ aspectRatio: '1600/1060', maxHeight: '70vh' }}>
+          <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design project in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
           <p className="absolute right-6 bottom-5 lg:right-20 text-[11px] tracking-[0.2em] text-white/80">{String(activeImage + 1).padStart(2, '0')} / {String(selected.gallery.length).padStart(2, '0')}</p>
         </div>
@@ -114,8 +144,8 @@ export default function Homes({ setPage }: Props) {
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
               {selected.gallery.map((img, i) => (
-                <button key={img} type="button" onClick={() => setActiveImage(i)} aria-label={`View gallery image ${i + 1} of ${selected.gallery.length}`} aria-pressed={activeImage === i} className={`shrink-0 overflow-hidden bg-[#D4CBBB] h-20 w-24 sm:h-24 sm:w-32 transition-all ${activeImage === i ? 'ring-2 ring-[#2D8C7E] ring-offset-2 ring-offset-[#EAE4DA]' : 'opacity-75 hover:opacity-100'}`}>
-                  <img src={img} alt="" loading="lazy" decoding="async" width="160" height="120" className="w-full h-full object-cover" />
+                <button key={img} type="button" onClick={() => setActiveImage(i)} aria-label={`View gallery image ${i + 1} of ${selected.gallery.length}`} aria-pressed={activeImage === i} className={`shrink-0 overflow-hidden bg-[#D4CBBB] transition-all ${activeImage === i ? 'ring-2 ring-[#2D8C7E] ring-offset-2 ring-offset-[#EAE4DA]' : 'opacity-75 hover:opacity-100'}`} style={{ aspectRatio: '1600/1060', width: '128px' }}>
+                  <img src={img} alt="" loading="lazy" decoding="async" width="1600" height="1060" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
