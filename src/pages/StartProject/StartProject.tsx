@@ -96,7 +96,7 @@ export default function StartProject({ setPage }: Props) {
       // Enquiries use Supabase's Data API directly. The table's public-insert
       // RLS policy is the permission boundary; this avoids relying on the
       // generated Make Edge Function and a separately deployed route.
-      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries`, {
+      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries_078be9eb`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${publicAnonKey}`,

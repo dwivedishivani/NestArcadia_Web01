@@ -1,0 +1,665 @@
+import { useState, useEffect } from 'react';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+
+interface Props {
+  adminPassword: string;
+  onLogout: () => void;
+}
+
+type AdminView = 'dashboard' | 'journal' | 'enquiries';
+
+interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  image_url: string;
+  status: 'draft' | 'published';
+  read_time: string;
+  tags: string[];
+  created_at: string;
+  published_at: string | null;
+}
+
+interface Enquiry {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  project_type: string;
+  configuration: string;
+  budget: string;
+  timeline: string;
+  design_style: string;
+  message: string;
+  source: string;
+  status: string;
+  notes: string;
+  created_at: string;
+}
+
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/make-server-078be9eb`;
+
+export default function AdminDashboard({ adminPassword, onLogout }: Props) {
+  const [view, setView] = useState<AdminView>('dashboard');
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Admin-Password': adminPassword,
+    apikey: publicAnonKey,
+    Authorization: `Bearer ${publicAnonKey}`,
+  };
+
+  const fetchBlogs = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/admin/blogs`, { headers });
+      const data = await res.json();
+      setBlogs(data.data || []);
+    } catch (err) {
+      console.error('Failed to fetch blogs:', err);
+    }
+    setLoading(false);
+  };
+
+  const fetchEnquiries = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/admin/enquiries`, { headers });
+      const data = await res.json();
+      setEnquiries(data.data || []);
+    } catch (err) {
+      console.error('Failed to fetch enquiries:', err);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (view === 'journal') fetchBlogs();
+    if (view === 'enquiries') fetchEnquiries();
+  }, [view]);
+
+  const deleteBlog = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this article?')) return;
+    try {
+      await fetch(`${API_BASE}/admin/blogs/${id}`, { method: 'DELETE', headers });
+      fetchBlogs();
+    } catch (err) {
+      console.error('Failed to delete blog:', err);
+    }
+  };
+
+  const deleteEnquiry = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this enquiry?')) return;
+    try {
+      await fetch(`${API_BASE}/admin/enquiries/${id}`, { method: 'DELETE', headers });
+      fetchEnquiries();
+    } catch (err) {
+      console.error('Failed to delete enquiry:', err);
+    }
+  };
+
+  const updateEnquiryStatus = async (id: string, status: string) => {
+    try {
+      await fetch(`${API_BASE}/admin/enquiries/${id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ status }),
+      });
+      fetchEnquiries();
+    } catch (err) {
+      console.error('Failed to update enquiry:', err);
+    }
+  };
+
+  const navItems = [
+    { id: 'dashboard' as AdminView, label: 'Dashboard', icon: '◻' },
+    { id: 'journal' as AdminView, label: 'Journal', icon: '◎' },
+    { id: 'enquiries' as AdminView, label: 'Enquiries', icon: '◈' },
+  ];
+
+  return (
+    <div className="min-h-screen flex" style={{ background: '#F2EDE4' }}>
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 border-r border-[#D4CBBB] flex flex-col transform transition-transform lg:transform-none ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+        style={{ background: '#EAE4DA' }}
+      >
+        <div className="p-6 border-b border-[#D4CBBB]">
+          <h1 className="font-display text-xl text-[#1A1714]">NestArcadia</h1>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mt-1">Admin</p>
+        </div>
+
+        <nav className="flex-1 p-4">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setView(item.id);
+                setSidebarOpen(false);
+              }}
+              className={`w-full text-left px-4 py-3 mb-1 flex items-center gap-3 transition-colors ${
+                view === item.id
+                  ? 'bg-[#1C3A5A] text-white'
+                  : 'text-[#6B5E4E] hover:bg-[#D4CBBB]/50'
+              }`}
+            >
+              <span className="text-lg">{item.icon}</span>
+              <span className="text-[14px]">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-[#D4CBBB]">
+          <button
+            onClick={onLogout}
+            className="w-full text-left px-4 py-3 text-[14px] text-[#6B5E4E] hover:text-[#1A1714] transition-colors flex items-center gap-3"
+          >
+            <span>←</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 min-h-screen">
+        {/* Top bar */}
+        <header className="border-b border-[#D4CBBB] px-6 py-4 flex items-center justify-between" style={{ background: '#EAE4DA' }}>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden text-[#6B5E4E] hover:text-[#1A1714]"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h2 className="font-display text-xl text-[#1A1714] capitalize">{view}</h2>
+          </div>
+          {view === 'journal' && (
+            <button
+              onClick={() => {
+                setEditingBlog(null);
+                setShowBlogForm(true);
+              }}
+              className="bg-[#1C3A5A] text-white text-[13px] px-5 py-2 hover:bg-[#2D8C7E] transition-colors"
+            >
+              + New Article
+            </button>
+          )}
+        </header>
+
+        <div className="p-6 lg:p-10">
+          {/* Dashboard View */}
+          {view === 'dashboard' && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <button
+                onClick={() => setView('journal')}
+                className="border border-[#D4CBBB] p-8 text-left hover:border-[#2D8C7E] transition-colors group"
+                style={{ background: '#EAE4DA' }}
+              >
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-2">Content</p>
+                <h3 className="font-display text-2xl text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">
+                  Journal
+                </h3>
+                <p className="text-[14px] text-[#6B5E4E] mt-2">
+                  Manage blog posts, articles, and editorial content
+                </p>
+              </button>
+
+              <button
+                onClick={() => setView('enquiries')}
+                className="border border-[#D4CBBB] p-8 text-left hover:border-[#2D8C7E] transition-colors group"
+                style={{ background: '#EAE4DA' }}
+              >
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-2">Leads</p>
+                <h3 className="font-display text-2xl text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">
+                  Enquiries
+                </h3>
+                <p className="text-[14px] text-[#6B5E4E] mt-2">
+                  View and manage customer project submissions
+                </p>
+              </button>
+
+              <div
+                className="border border-[#D4CBBB] p-8"
+                style={{ background: '#EAE4DA' }}
+              >
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-2">Quick Stats</p>
+                <div className="mt-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[14px] text-[#6B5E4E]">Published Articles</span>
+                    <span className="font-display text-lg text-[#1A1714]">—</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[14px] text-[#6B5E4E]">Total Enquiries</span>
+                    <span className="font-display text-lg text-[#1A1714]">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Journal View */}
+          {view === 'journal' && !showBlogForm && (
+            <div>
+              {loading ? (
+                <div className="text-center py-20 text-[#6B5E4E]">Loading articles...</div>
+              ) : blogs.length === 0 ? (
+                <div className="text-center py-20 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
+                  <p className="text-[#6B5E4E] mb-4">No articles yet</p>
+                  <button
+                    onClick={() => setShowBlogForm(true)}
+                    className="text-[14px] text-[#1C3A5A] border-b border-[#1C3A5A] hover:text-[#2D8C7E] hover:border-[#2D8C7E] transition-colors"
+                  >
+                    Create your first article →
+                  </button>
+                </div>
+              ) : (
+                <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-[#D4CBBB]">
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Title</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Category</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Status</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Date</th>
+                          <th className="text-right text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {blogs.map((blog) => (
+                          <tr key={blog.id} className="border-b border-[#D4CBBB] last:border-b-0">
+                            <td className="px-6 py-4">
+                              <p className="text-[14px] text-[#1A1714] font-medium">{blog.title}</p>
+                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{blog.author}</p>
+                            </td>
+                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">{blog.category}</td>
+                            <td className="px-6 py-4">
+                              <span
+                                className={`inline-block text-[11px] uppercase tracking-wider px-3 py-1 ${
+                                  blog.status === 'published'
+                                    ? 'bg-[#2D8C7E]/10 text-[#2D8C7E]'
+                                    : 'bg-[#6B5E4E]/10 text-[#6B5E4E]'
+                                }`}
+                              >
+                                {blog.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">
+                              {new Date(blog.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button
+                                onClick={() => {
+                                  setEditingBlog(blog);
+                                  setShowBlogForm(true);
+                                }}
+                                className="text-[13px] text-[#1C3A5A] hover:text-[#2D8C7E] mr-4"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => deleteBlog(blog.id)}
+                                className="text-[13px] text-red-600 hover:text-red-700"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Blog Form */}
+          {view === 'journal' && showBlogForm && (
+            <BlogForm
+              blog={editingBlog}
+              headers={headers}
+              onSave={() => {
+                setShowBlogForm(false);
+                setEditingBlog(null);
+                fetchBlogs();
+              }}
+              onCancel={() => {
+                setShowBlogForm(false);
+                setEditingBlog(null);
+              }}
+            />
+          )}
+
+          {/* Enquiries View */}
+          {view === 'enquiries' && (
+            <div>
+              {loading ? (
+                <div className="text-center py-20 text-[#6B5E4E]">Loading enquiries...</div>
+              ) : enquiries.length === 0 ? (
+                <div className="text-center py-20 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
+                  <p className="text-[#6B5E4E]">No enquiries yet</p>
+                </div>
+              ) : (
+                <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-[#D4CBBB]">
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Client</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Contact</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Project</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Budget</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Status</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Date</th>
+                          <th className="text-right text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {enquiries.map((enquiry) => (
+                          <tr key={enquiry.id} className="border-b border-[#D4CBBB] last:border-b-0">
+                            <td className="px-6 py-4">
+                              <p className="text-[14px] text-[#1A1714] font-medium">{enquiry.name}</p>
+                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.city}</p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="text-[13px] text-[#1A1714]">{enquiry.email}</p>
+                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.phone}</p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <p className="text-[13px] text-[#1A1714]">{enquiry.project_type}</p>
+                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.configuration}</p>
+                            </td>
+                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">{enquiry.budget}</td>
+                            <td className="px-6 py-4">
+                              <select
+                                value={enquiry.status}
+                                onChange={(e) => updateEnquiryStatus(enquiry.id, e.target.value)}
+                                className="text-[12px] bg-transparent border border-[#D4CBBB] px-2 py-1 outline-none focus:border-[#2D8C7E]"
+                              >
+                                <option value="new">New</option>
+                                <option value="contacted">Contacted</option>
+                                <option value="qualified">Qualified</option>
+                                <option value="site_visit">Site Visit</option>
+                                <option value="proposal">Proposal</option>
+                                <option value="won">Won</option>
+                                <option value="lost">Lost</option>
+                              </select>
+                            </td>
+                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">
+                              {new Date(enquiry.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button
+                                onClick={() => deleteEnquiry(enquiry.id)}
+                                className="text-[13px] text-red-600 hover:text-red-700"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// Blog Form Component
+function BlogForm({
+  blog,
+  headers,
+  onSave,
+  onCancel,
+}: {
+  blog: Blog | null;
+  headers: Record<string, string>;
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  const [form, setForm] = useState({
+    title: blog?.title || '',
+    slug: blog?.slug || '',
+    excerpt: blog?.excerpt || '',
+    content: blog?.content || '',
+    category: blog?.category || 'Materials',
+    author: blog?.author || '',
+    image_url: blog?.image_url || '',
+    status: blog?.status || 'draft',
+    read_time: blog?.read_time || '5 min read',
+    tags: blog?.tags?.join(', ') || '',
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const categories = ['Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+
+    try {
+      const payload = {
+        ...form,
+        tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+      };
+
+      const url = blog
+        ? `${API_BASE}/admin/blogs/${blog.id}`
+        : `${API_BASE}/admin/blogs`;
+      const method = blog ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error('Failed to save article');
+      onSave();
+    } catch (err: any) {
+      setError(err.message || 'Failed to save article');
+    }
+    setSaving(false);
+  };
+
+  const inputClass = 'w-full bg-transparent border border-[#D4CBBB] px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E]/50 outline-none focus:border-[#2D8C7E] transition-colors';
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-3xl">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="font-display text-xl text-[#1A1714]">
+          {blog ? 'Edit Article' : 'New Article'}
+        </h3>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="text-[14px] text-[#6B5E4E] hover:text-[#1A1714]"
+        >
+          ← Back to list
+        </button>
+      </div>
+
+      <div className="border border-[#D4CBBB] p-8" style={{ background: '#EAE4DA' }}>
+        <div className="grid gap-6">
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Title *</label>
+            <input
+              className={inputClass}
+              value={form.title}
+              onChange={(e) => {
+                setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) });
+              }}
+              placeholder="Article title"
+              required
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Slug</label>
+              <input
+                className={inputClass}
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="url-friendly-slug"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Author *</label>
+              <input
+                className={inputClass}
+                value={form.author}
+                onChange={(e) => setForm({ ...form, author: e.target.value })}
+                placeholder="Author name"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Category</label>
+              <select
+                className={`${inputClass} cursor-pointer`}
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Read Time</label>
+              <input
+                className={inputClass}
+                value={form.read_time}
+                onChange={(e) => setForm({ ...form, read_time: e.target.value })}
+                placeholder="5 min read"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Status</label>
+              <select
+                className={`${inputClass} cursor-pointer`}
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value as 'draft' | 'published' })}
+              >
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Image URL</label>
+            <input
+              className={inputClass}
+              value={form.image_url}
+              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+              placeholder="https://images.unsplash.com/..."
+            />
+          </div>
+
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Excerpt *</label>
+            <textarea
+              className={`${inputClass} resize-none`}
+              rows={2}
+              value={form.excerpt}
+              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+              placeholder="Brief description of the article"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">
+              Content * <span className="normal-case tracking-normal text-[10px]">(Separate paragraphs with blank lines)</span>
+            </label>
+            <textarea
+              className={`${inputClass} resize-none font-mono text-[13px]`}
+              rows={12}
+              value={form.content}
+              onChange={(e) => setForm({ ...form, content: e.target.value })}
+              placeholder="Article content. Each paragraph should be separated by a blank line."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Tags</label>
+            <input
+              className={inputClass}
+              value={form.tags}
+              onChange={(e) => setForm({ ...form, tags: e.target.value })}
+              placeholder="tag1, tag2, tag3"
+            />
+          </div>
+        </div>
+
+        {error && (
+          <p className="text-[13px] text-red-600 bg-red-50 border border-red-200 px-4 py-2 mt-6">
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-4 mt-8">
+          <button
+            type="submit"
+            disabled={saving}
+            className="bg-[#1C3A5A] text-white text-[14px] px-8 py-3 hover:bg-[#2D8C7E] transition-colors disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : blog ? 'Update Article' : 'Create Article'}
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="border border-[#D4CBBB] text-[#6B5E4E] text-[14px] px-8 py-3 hover:border-[#1A1714] hover:text-[#1A1714] transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}

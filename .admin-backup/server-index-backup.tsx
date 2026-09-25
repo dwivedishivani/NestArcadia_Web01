@@ -2,8 +2,9 @@ import { Hono } from "npm:hono";
 import { cors } from "npm:hono/cors";
 import { logger } from "npm:hono/logger";
 import { createClient } from "jsr:@supabase/supabase-js@2.49.8";
+import * as kv from "./kv_store.tsx";
 
-const app = new Hono().basePath("/server");
+const app = new Hono();
 
 const supabase = () => createClient(
   Deno.env.get("SUPABASE_URL")!,
@@ -265,116 +266,6 @@ app.delete("/make-server-078be9eb/admin/blogs/:id", verifyAdmin, async (c) => {
     
     const { error } = await db
       .from("blogs_078be9eb")
-      .delete()
-      .eq("id", id);
-    
-    if (error) throw error;
-    return c.json({ success: true });
-  } catch (err: any) {
-    return c.json({ error: err.message }, 500);
-  }
-});
-
-// ============== HOMES/PORTFOLIO ENDPOINTS ==============
-
-// Get all homes (public - for homes page)
-app.get("/make-server-078be9eb/homes", async (c) => {
-  try {
-    const db = supabase();
-    const { data, error } = await db
-      .from("homes_078be9eb")
-      .select("*")
-      .eq("status", "published")
-      .order("display_order", { ascending: true });
-    
-    if (error) throw error;
-    return c.json({ data });
-  } catch (err: any) {
-    return c.json({ error: err.message }, 500);
-  }
-});
-
-// Get all homes including unpublished (admin only)
-app.get("/make-server-078be9eb/admin/homes", verifyAdmin, async (c) => {
-  try {
-    const db = supabase();
-    const { data, error } = await db
-      .from("homes_078be9eb")
-      .select("*")
-      .order("display_order", { ascending: true });
-    
-    if (error) throw error;
-    return c.json({ data });
-  } catch (err: any) {
-    return c.json({ error: err.message }, 500);
-  }
-});
-
-// Create home (admin only)
-app.post("/make-server-078be9eb/admin/homes", verifyAdmin, async (c) => {
-  try {
-    const body = await c.req.json();
-    const db = supabase();
-    
-    const { data, error } = await db.from("homes_078be9eb").insert({
-      name: body.name,
-      location: body.location,
-      type: body.type,
-      area: body.area,
-      style: body.style,
-      description: body.description,
-      gallery_images: body.gallery_images || [],
-      status: body.status || "published",
-      display_order: body.display_order || 0,
-      created_at: new Date().toISOString(),
-    }).select();
-    
-    if (error) throw error;
-    return c.json({ success: true, data });
-  } catch (err: any) {
-    return c.json({ error: err.message }, 500);
-  }
-});
-
-// Update home (admin only)
-app.put("/make-server-078be9eb/admin/homes/:id", verifyAdmin, async (c) => {
-  try {
-    const id = c.req.param("id");
-    const body = await c.req.json();
-    const db = supabase();
-    
-    const { data, error } = await db
-      .from("homes_078be9eb")
-      .update({
-        name: body.name,
-        location: body.location,
-        type: body.type,
-        area: body.area,
-        style: body.style,
-        description: body.description,
-        gallery_images: body.gallery_images,
-        status: body.status,
-        display_order: body.display_order,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", id)
-      .select();
-    
-    if (error) throw error;
-    return c.json({ success: true, data });
-  } catch (err: any) {
-    return c.json({ error: err.message }, 500);
-  }
-});
-
-// Delete home (admin only)
-app.delete("/make-server-078be9eb/admin/homes/:id", verifyAdmin, async (c) => {
-  try {
-    const id = c.req.param("id");
-    const db = supabase();
-    
-    const { error } = await db
-      .from("homes_078be9eb")
       .delete()
       .eq("id", id);
     
