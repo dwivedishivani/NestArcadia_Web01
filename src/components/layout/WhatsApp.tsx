@@ -1,3 +1,5 @@
+import { trackEvent } from '../../utils/analytics';
+
 const WA_URL = 'https://wa.me/918448061997?text=Hi%20NestArcadia%2C%20I%20would%20like%20to%20discuss%20interior%20design%20for%20my%20home%20in%20Noida%2FGreater%20Noida.';
 
 export default function WhatsApp() {
@@ -5,6 +7,7 @@ export default function WhatsApp() {
     <a
       href={WA_URL}
       target="_blank"
+      onClick={() => trackEvent('whatsapp_click', { lead_method: 'whatsapp', placement: 'floating_button' })}
       rel="noopener noreferrer"
       aria-label="Chat with a NestArcadia designer on WhatsApp"
       className="group fixed bottom-[88px] right-6 z-50 flex items-center gap-2.5 bg-[#25D366] px-3.5 py-3 text-white shadow-[0_10px_26px_rgba(37,211,102,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(37,211,102,0.4)] sm:bottom-6 sm:right-6"
