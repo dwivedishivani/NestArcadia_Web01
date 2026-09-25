@@ -48,11 +48,24 @@ export default function Nav({ page, setPage }: NavProps) {
             className="flex items-center text-left shrink-0"
             aria-label="NestArcadia Home"
           >
-            <img
-              src={transparent ? logoWhiteImg : logoImg}
-              alt="NestArcadia — heritage Indian interiors"
-              className="h-[68px] lg:h-[78px] w-auto object-contain"
-            />
+            <span className="relative block h-[68px] lg:h-[78px] w-auto">
+              <img
+                src={logoImg}
+                alt="NestArcadia — heritage Indian interiors"
+                className="absolute inset-0 h-full w-auto object-contain transition-opacity duration-200"
+                style={{ opacity: transparent ? 0 : 1 }}
+                aria-hidden={transparent}
+                loading="eager"
+              />
+              <img
+                src={logoWhiteImg}
+                alt=""
+                className="absolute inset-0 h-full w-auto object-contain transition-opacity duration-200"
+                style={{ opacity: transparent ? 1 : 0 }}
+                aria-hidden={!transparent}
+                loading="eager"
+              />
+            </span>
           </button>
 
           {/* Desktop links */}
