@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Page } from '../../App';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+import { trackEvent } from '../../utils/analytics';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -122,6 +123,13 @@ export default function StartProject({ setPage }: Props) {
       if (!response.ok) {
         throw new Error('We could not submit your brief right now. Please try again or WhatsApp us directly.');
       }
+      trackEvent('generate_lead', {
+        lead_method: 'project_brief',
+        project_type: form.projectType,
+        budget_range: form.budget,
+        timeline: form.timeline,
+        city: form.city,
+      });
       setSubmitted(true);
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
@@ -157,6 +165,7 @@ export default function StartProject({ setPage }: Props) {
             <a
               href={`https://wa.me/918448061997?text=${encodeURIComponent('Hello NestArcadia, I just submitted a project brief. Looking forward to hearing from you.')}`}
               target="_blank"
+              onClick={() => trackEvent('whatsapp_click', { lead_method: 'whatsapp', placement: 'success_screen' })}
               rel="noopener noreferrer"
               className="text-[14px] text-white bg-[#2D8C7E] border border-[#2D8C7E] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] transition-all"
             >
