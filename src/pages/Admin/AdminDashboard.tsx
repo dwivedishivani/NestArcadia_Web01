@@ -58,7 +58,7 @@ interface Home {
   created_at: string;
 }
 
-const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api`;
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
 export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [view, setView] = useState<AdminView>('dashboard');
