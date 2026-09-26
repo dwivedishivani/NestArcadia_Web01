@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Page } from '../../App';
-
-const logoImg = '/nestarcadia-logo-transparent.png';
-const logoWhiteImg = '/nestarcadia-logo-white.png';
+import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
+import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.png';
 
 interface NavProps {
   page: Page;
@@ -49,24 +48,11 @@ export default function Nav({ page, setPage }: NavProps) {
             className="flex items-center text-left shrink-0"
             aria-label="NestArcadia Home"
           >
-            <span className="grid h-[68px] lg:h-[78px] w-max">
-              <img
-                src={logoImg}
-                alt="NestArcadia — heritage Indian interiors"
-                className="col-start-1 row-start-1 h-full w-auto object-contain transition-opacity duration-200"
-                style={{ opacity: transparent ? 0 : 1 }}
-                aria-hidden={transparent}
-                loading="eager"
-              />
-              <img
-                src={logoWhiteImg}
-                alt=""
-                className="col-start-1 row-start-1 h-full w-auto object-contain transition-opacity duration-200"
-                style={{ opacity: transparent ? 1 : 0 }}
-                aria-hidden={!transparent}
-                loading="eager"
-              />
-            </span>
+            <img
+              src={transparent ? logoWhiteImg : logoImg}
+              alt="NestArcadia — heritage Indian interiors"
+              className="h-[68px] lg:h-[78px] w-auto object-contain"
+            />
           </button>
 
           {/* Desktop links */}

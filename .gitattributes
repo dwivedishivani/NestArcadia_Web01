@@ -5,6 +5,11 @@
 # Images & Graphics
 # ---------------------------------------------------------------------------
 *.png                filter=lfs diff=lfs merge=lfs -text
+
+# Deployment-critical brand marks stay as ordinary Git blobs so static hosts
+# that do not fetch Git LFS assets can build and serve the header/footer.
+src/assets/images/branding/nestarcadia-logo-transparent.png -filter -diff -merge -text
+src/assets/images/branding/nestarcadia-logo-white.png -filter -diff -merge -text
 *.jpg                filter=lfs diff=lfs merge=lfs -text
 *.jpeg               filter=lfs diff=lfs merge=lfs -text
 *.gif                filter=lfs diff=lfs merge=lfs -text

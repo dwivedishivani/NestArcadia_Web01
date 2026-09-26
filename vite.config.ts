@@ -16,13 +16,6 @@ export default defineConfig(({ mode }) => {
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
-      rollupOptions: {
-        output: {
-          assetFileNames: '[name][extname]',
-          chunkFileNames: '[name].js',
-          entryFileNames: '[name].js',
-        },
-      },
     },
     plugins: [
 react(),
