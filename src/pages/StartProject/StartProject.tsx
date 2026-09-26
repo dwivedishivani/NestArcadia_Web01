@@ -107,16 +107,15 @@ export default function StartProject({ setPage }: Props) {
     setSubmissionError('');
 
     try {
-      // Enquiries use Supabase's Data API directly. The table's public-insert
-      // RLS policy is the permission boundary; this avoids relying on the
-      // generated Make Edge Function and a separately deployed route.
-      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries`, {
+      // Send enquiries through the same backend store used by the Admin Panel.
+      // The service attribution travels in the existing source field.
+      const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
+      const response = await fetch(`${API_BASE}/enquiries`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${publicAnonKey}`,
           apikey: publicAnonKey,
           'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
         },
         body: JSON.stringify({
           name: form.name,
@@ -129,7 +128,6 @@ export default function StartProject({ setPage }: Props) {
           timeline: form.timeline,
           design_style: form.style,
           message: form.message,
-          service: serviceInterest || null,
           source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
         }),
       });
