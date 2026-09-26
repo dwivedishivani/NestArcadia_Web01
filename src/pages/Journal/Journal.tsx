@@ -435,6 +435,8 @@ const categoryDeepDives: Record<string, string[]> = {
 
 export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [liveArticles, setLiveArticles] = useState<typeof articles>([]);
 
   useEffect(() => {
@@ -477,6 +479,35 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   }, []);
 
   const sourceArticles = liveArticles.length > 0 ? liveArticles : articles;
+
+  const handleNewsletterSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const email = newsletterEmail.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      setNewsletterState('error');
+      return;
+    }
+    setNewsletterState('submitting');
+    try {
+      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/newsletter_subscribers`, {
+        method: 'POST',
+        headers: {
+          apikey: publicAnonKey,
+          Authorization: `Bearer ${publicAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, source: 'journal', status: 'subscribed' }),
+      });
+      if (response.ok || response.status === 409) {
+        setNewsletterState('success');
+        setNewsletterEmail('');
+      } else {
+        setNewsletterState('error');
+      }
+    } catch {
+      setNewsletterState('error');
+    }
+  };
 
   const filtered = active === 'All' ? sourceArticles : sourceArticles.filter(a => a.category === active);
   const selected = sourceArticles.find(a => a.id === articleId);
@@ -697,16 +728,22 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             <h3 className="font-display text-2xl text-[#1A1714] mb-1">Stay in the story.</h3>
             <p className="text-[#6B5E4E] text-[14px]">Design insights, craft discoveries, and new homes — in your inbox.</p>
           </div>
-          <div className="flex gap-0 border border-[#D4CBBB]">
+          <form onSubmit={handleNewsletterSubmit} className="flex gap-0 border border-[#D4CBBB]">
             <input
               type="email"
+              value={newsletterEmail}
+              onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterState('idle'); }}
               placeholder="your@email.com"
+              aria-label="Email address"
               className="px-5 py-3 text-[14px] bg-transparent outline-none text-[#1A1714] placeholder:text-[#6B5E4E] w-60"
+              disabled={newsletterState === 'submitting'}
             />
-            <button className="px-6 py-3 bg-[#1C3A5A] text-white text-[13px] hover:bg-[#2D8C7E] transition-colors">
-              Subscribe
+            <button type="submit" disabled={newsletterState === 'submitting'} className="px-6 py-3 bg-[#1C3A5A] text-white text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-60">
+              {newsletterState === 'submitting' ? 'Saving…' : 'Subscribe'}
             </button>
-          </div>
+          </form>
+          {newsletterState === 'success' && <p className="mt-2 text-xs text-[#2D8C7E]">You’re on the list.</p>}
+          {newsletterState === 'error' && <p className="mt-2 text-xs text-[#B64B42]">Please enter a valid email and try again.</p>}
         </div>
       </section>
     </div>
