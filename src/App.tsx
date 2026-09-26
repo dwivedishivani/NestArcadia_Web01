@@ -23,7 +23,7 @@ const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
 
 export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'admin';
 
-const API_BASE = `https://${projectId}.supabase.co/functions/v1/server/make-server-078be9eb`;
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api`;
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
