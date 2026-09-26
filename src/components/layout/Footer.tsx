@@ -1,5 +1,6 @@
 import type { Page } from '../../App';
-import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
+
+const logoImg = '/nestarcadia-logo-transparent.png';
 
 interface FooterProps {
   setPage: (page: Page) => void;

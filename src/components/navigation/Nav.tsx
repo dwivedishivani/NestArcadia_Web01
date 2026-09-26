@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { Page } from '../../App';
-import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
-import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.png';
+
+const logoImg = '/nestarcadia-logo-transparent.png';
+const logoWhiteImg = '/nestarcadia-logo-white.png';
 
 interface NavProps {
   page: Page;

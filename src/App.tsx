@@ -9,8 +9,9 @@ import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
-import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
+
+const logoImg = '/nestarcadia-logo-transparent.png';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
