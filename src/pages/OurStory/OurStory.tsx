@@ -135,7 +135,7 @@ export default function OurStory({ setPage }: Props) {
             onClick={() => setPage('project')}
             className="text-[13px] text-white border border-white/40 px-6 py-2.5 self-start hover:bg-white hover:text-[#1A1714] transition-all"
           >
-            Start Your Project →
+            Tell Us Your Home Story →
           </button>
         </div>
       </section>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import type { Page } from '../../App';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
@@ -52,14 +53,27 @@ function validateForm(form: FormState): FormErrors {
 }
 
 export default function StartProject({ setPage }: Props) {
+  const location = useLocation();
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState('');
   const [form, setForm] = useState<FormState>(initialForm);
   const [touched, setTouched] = useState<Partial<Record<FormField, boolean>>>({});
   const [errors, setErrors] = useState<FormErrors>({});
+  const [serviceInterest, setServiceInterest] = useState('');
 
   const showConfig = form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex';
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const service = params.get('service')?.trim() ?? '';
+    setServiceInterest(service);
+    if (service) {
+      setForm((current) => current.message
+        ? current
+        : { ...current, message: `I would like to discuss ${service}.` });
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const nextErrors = validateForm(form);
@@ -115,7 +129,7 @@ export default function StartProject({ setPage }: Props) {
           timeline: form.timeline,
           design_style: form.style,
           message: form.message,
-          source: 'start-your-project',
+          source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
         }),
       });
 
@@ -179,6 +193,11 @@ export default function StartProject({ setPage }: Props) {
         <p className="text-[#6B5E4E] text-[15px] mt-3 max-w-md leading-relaxed">
           Tell us about your space, your life, and what matters most to you. Your requirements come first — always.
         </p>
+        {serviceInterest && (
+          <p className="mt-5 inline-flex border border-[#2D8C7E]/35 bg-[#2D8C7E]/10 px-3 py-2 text-[12px] text-[#1C3A5A]">
+            Exploring: {serviceInterest}
+          </p>
+        )}
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">

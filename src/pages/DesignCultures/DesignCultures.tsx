@@ -173,7 +173,7 @@ export default function DesignCultures({ setPage }: Props) {
             onClick={() => setPage('project')}
             className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
           >
-            Start Your Project →
+            Find Your Design Direction →
           </button>
         </div>
       </div>

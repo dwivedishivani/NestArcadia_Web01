@@ -1,4 +1,5 @@
 import type { Page } from '../../App';
+import { useNavigate } from 'react-router';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -12,6 +13,7 @@ const services = [
     tagline: 'Thoughtful, functional and timeless spaces.',
     desc: 'We craft complete interior design solutions — from concept boards to execution drawings. Every space is designed around you: your lifestyle, your story, your way of living. We blend heritage aesthetics with contemporary comfort.',
     includes: ['Mood boards & design concept', 'Space planning & 3D visualization', 'Material & finish selection', 'Furniture layout design', 'Lighting design coordination'],
+    cta: 'Shape My Design Direction',
     img: u('photo-1785402231092-859d0a6c4397', 800, 600),
   },
   {
@@ -20,6 +22,7 @@ const services = [
     tagline: 'From design to handover, seamlessly.',
     desc: "We manage the entire journey — from approved designs to move-in ready homes. Our project management team oversees every contractor, craftsman, and vendor, so you don't have to. One point of contact. Zero stress.",
     includes: ['Project timeline management', 'Contractor coordination', 'Quality control inspections', 'Progress reporting', 'Handover & after-care'],
+    cta: 'Map My Turnkey Journey',
     img: u('photo-1746439318854-4a8bc02a03ba', 800, 600),
   },
   {
@@ -28,6 +31,7 @@ const services = [
     tagline: 'Made for your space. Made for your story.',
     desc: 'We design and build bespoke furniture — from kitchen modules to statement wardrobes, from dining tables to platform beds. Every piece is made in India, with locally sourced materials and traditional craftsmanship techniques.',
     includes: ['Custom kitchen modules', 'Wardrobes & storage solutions', 'Bed frames & bedroom furniture', 'Dining & seating', 'Statement pieces & joinery'],
+    cta: 'Plan My Custom Furniture',
     img: u('photo-1682662046610-fbdb3db4bd74', 800, 600),
   },
   {
@@ -36,6 +40,7 @@ const services = [
     tagline: 'Balance. Positive energy. Better living.',
     desc: 'We integrate Vastu Shastra principles naturally into modern home design — without compromise on aesthetics. Energy flow, directional orientation, material choices, and spatial harmony are built into every layout from the start.',
     includes: ['Vastu-compliant space planning', 'Directional analysis', 'Material & colour Vastu alignment', 'Entry & threshold design', 'Remediation for existing spaces'],
+    cta: 'Review My Layout with Vastu',
     img: u('photo-1750420556288-d0e32a6f517b', 800, 600),
   },
   {
@@ -44,6 +49,7 @@ const services = [
     tagline: 'Atmosphere that feels like home.',
     desc: 'Lighting is the final layer that transforms a space from designed to lived-in. We curate ambient, task, and accent lighting schemes — combined with decor styling using textiles, art, plants, and handcrafted accessories.',
     includes: ['Ambient & accent lighting plans', 'Fixture sourcing & specification', 'Textile & rug curation', 'Art & wall styling', 'Plant styling & decor layering'],
+    cta: 'Curate My Lighting & Decor',
     img: u('photo-1785232273548-4beae5334903', 800, 600),
   },
   {
@@ -52,6 +58,7 @@ const services = [
     tagline: 'Smarter spaces for modern lives.',
     desc: 'Before design comes strategy. We analyse your space for flow, function, and future needs — then create layouts that make every square foot count. Particularly powerful for compact urban homes where space is at a premium.',
     includes: ['Floor plan analysis', 'Traffic flow & zoning', 'Multi-functional layout design', 'Storage optimisation', 'Scale & proportion balancing'],
+    cta: 'Unlock My Floor Plan',
     img: u('photo-1667375185276-13b00bf723bc', 800, 600),
   },
 ];
@@ -65,6 +72,21 @@ const process = [
 ];
 
 export default function Services({ setPage }: Props) {
+  const navigate = useNavigate();
+
+  const beginServiceBrief = (service: string, cta: string) => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'cta_click',
+      cta_label: cta,
+      cta_placement: 'service_detail',
+      service_interest: service,
+      destination: '/start-your-project',
+    });
+    navigate(`/start-your-project?service=${encodeURIComponent(service)}&source=services`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Page Header */}
@@ -116,6 +138,13 @@ export default function Services({ setPage }: Props) {
                     ))}
                   </ul>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => beginServiceBrief(s.name, s.cta)}
+                  className="mt-8 self-start border border-[#1C3A5A] px-6 py-3 text-[13px] font-semibold text-[#1C3A5A] transition-all hover:border-[#2D8C7E] hover:bg-[#2D8C7E] hover:text-white"
+                >
+                  {s.cta} →
+                </button>
               </div>
               {i % 2 === 0 && (
                 <div className="relative overflow-hidden bg-[#D4CBBB] min-h-[320px]">
@@ -155,7 +184,7 @@ export default function Services({ setPage }: Props) {
             onClick={() => setPage('project')}
             className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
           >
-            Start Your Project →
+            Discuss My Requirements →
           </button>
         </div>
       </div>

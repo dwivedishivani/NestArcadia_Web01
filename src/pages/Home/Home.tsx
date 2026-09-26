@@ -7,6 +7,10 @@ interface Props { setPage: (p: Page) => void; }
 const u = (id: string, w: number, h: number) =>
   `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
+const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
+  .map((width) => `${u(id, width, Math.round(width * 9 / 16))} ${width}w`)
+  .join(', ');
+
 const IMG = {
   hero:     u('photo-1713192706971-03900dcf5706', 1920, 1080),
   north:    u('photo-1713192706955-6ef5c71811bd', 600, 760),
@@ -36,9 +40,9 @@ const cultures = [
 ];
 
 const heroSlides = [
-  { image: IMG.hero, eyebrow: 'Tradition Meets Tomorrow', title: <>We Bring<br />Timeless Culture<br />to Modern Living</>, description: <>Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</> },
-  { image: IMG.villa, eyebrow: 'A Royal Sense of Arrival', title: <>A Villa Where<br />Everyday Living<br />Feels Grand</>, description: <>Sun-washed verandahs. Tailored details.<br />A farmhouse spirit, finished with quiet grandeur.</> },
-  { image: IMG.home3, eyebrow: 'Rooted, Not Repeated', title: <>Heritage Details.<br />A Home That<br />Feels Like Yours.</>, description: <>Indian craft, interpreted with restraint.<br />Designed for your life, not a passing trend.</> },
+  { image: IMG.hero, imageId: 'photo-1713192706971-03900dcf5706', eyebrow: 'Tradition Meets Tomorrow', title: <>We Bring<br />Timeless Culture<br />to Modern Living</>, description: <>Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</> },
+  { image: IMG.villa, imageId: 'photo-1613490493576-7fde63acd811', eyebrow: 'A Royal Sense of Arrival', title: <>A Villa Where<br />Everyday Living<br />Feels Grand</>, description: <>Sun-washed verandahs. Tailored details.<br />A farmhouse spirit, finished with quiet grandeur.</> },
+  { image: IMG.home3, imageId: 'photo-1644057501622-dfa7dd26dbfb', eyebrow: 'Rooted, Not Repeated', title: <>Heritage Details.<br />A Home That<br />Feels Like Yours.</>, description: <>Indian craft, interpreted with restraint.<br />Designed for your life, not a passing trend.</> },
 ];
 
 const allTrends = [
@@ -128,7 +132,7 @@ export default function Home({ setPage }: Props) {
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
         <div className="absolute inset-0 bg-[#1C3A5A]">
-          <img src={currentHero.image} alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes" width="1920" height="1080" loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover transition-opacity duration-700" />
+          <img src={currentHero.image} srcSet={heroSrcSet(currentHero.imageId)} sizes="100vw" alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes" width="1920" height="1080" loading="eager" fetchPriority={heroSlide === 0 ? 'high' : 'auto'} decoding="async" className="w-full h-full object-cover transition-opacity duration-700" />
         </div>
         <div
           className={heroSlide === 1
@@ -489,7 +493,7 @@ export default function Home({ setPage }: Props) {
               onClick={() => setPage('project')}
               className="text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-[#2D8C7E] hover:border-[#2D8C7E]"
             >
-              Start Your Project →
+              Tell Us About Your Space →
             </button>
           </div>
           <div className="hidden lg:flex flex-col gap-4">

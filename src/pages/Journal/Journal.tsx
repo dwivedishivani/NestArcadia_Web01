@@ -515,7 +515,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
             >
-              Start Your Project →
+              Apply This to My Home →
             </a>
           </div>
         </div>

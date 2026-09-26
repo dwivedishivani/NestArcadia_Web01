@@ -98,7 +98,7 @@ export default function FAQs({ setPage }: Props) {
       <section className="bg-[#1C3A5A] px-6 lg:px-20 py-16">
         <div className="max-w-[1120px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div><h2 className="font-display text-3xl text-white">Still have a question about your space?</h2><p className="mt-2 text-[14px] text-white/65">Tell us about your home or workplace and we will guide the next step.</p></div>
-          <button onClick={() => setPage('project')} className="shrink-0 border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#2D8C7E]">Start Your Project →</button>
+          <button onClick={() => setPage('project')} className="shrink-0 border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#2D8C7E]">Get Answers for Your Home →</button>
         </div>
       </section>
     </div>
