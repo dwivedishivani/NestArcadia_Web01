@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import ImageUpload from '../../components/ImageUpload';
 
-const API_BASE = `https://${projectId}.supabase.co/functions/v1/server/make-server-078be9eb`;
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
 interface Home {
   id: string;
