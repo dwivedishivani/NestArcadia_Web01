@@ -129,6 +129,7 @@ export default function StartProject({ setPage }: Props) {
           timeline: form.timeline,
           design_style: form.style,
           message: form.message,
+          service: serviceInterest || null,
           source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
         }),
       });
