@@ -610,8 +610,35 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="animate-pulse">
+            <div className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB]">
+              <div className="bg-[#D4CBBB]" style={{ minHeight: '380px' }} />
+              <div className="flex flex-col justify-center p-10 lg:p-14 bg-[#EAE4DA]">
+                <div className="h-3 w-24 bg-[#D4CBBB] mb-5" />
+                <div className="h-8 w-3/4 bg-[#D4CBBB] mb-4" />
+                <div className="h-4 w-full bg-[#D4CBBB] mb-2" />
+                <div className="h-4 w-2/3 bg-[#D4CBBB] mb-8" />
+                <div className="h-3 w-32 bg-[#D4CBBB]" />
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map(i => (
+                <div key={i}>
+                  <div className="bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }} />
+                  <div className="h-3 w-20 bg-[#D4CBBB] mb-3" />
+                  <div className="h-6 w-3/4 bg-[#D4CBBB] mb-3" />
+                  <div className="h-4 w-full bg-[#D4CBBB] mb-2" />
+                  <div className="h-4 w-2/3 bg-[#D4CBBB]" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Featured article */}
-        {featured && (
+        {!loading && featured && (
           <button
             onClick={() => setArticleId(featured.id)}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group"
@@ -642,7 +669,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         )}
 
         {/* Article grid */}
-        {rest.length > 0 && (
+        {!loading && rest.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map(a => (
               <button
@@ -671,7 +698,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           </div>
         )}
 
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <div className="py-20 text-center">
             <p className="text-[#6B5E4E] text-[15px]">No articles in this category yet.</p>
           </div>
