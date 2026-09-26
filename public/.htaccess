@@ -6,17 +6,27 @@ AddType image/webp .webp
 AddType application/javascript .js
 AddType text/css .css
 
+# Allow access to all files
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot)$">
+  Require all granted
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Don't rewrite files or directories
+  # Explicitly allow assets directory and files with extensions
+  RewriteCond %{REQUEST_URI} ^/assets/ [OR]
+  RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot)$ [NC]
+  RewriteRule ^ - [L]
+
+  # Don't rewrite existing files or directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
   # Rewrite everything else to index.html for SPA routing
-  RewriteRule ^(.*)$ index.html [L]
+  RewriteRule ^(.*)$ /index.html [L]
 </IfModule>
 
 # Compress text files
