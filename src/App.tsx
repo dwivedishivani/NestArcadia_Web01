@@ -16,7 +16,6 @@ const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'
 const Services = lazy(() => import('./pages/Services/Services'));
 const OurStory = lazy(() => import('./pages/OurStory/OurStory'));
 const Journal = lazy(() => import('./pages/Journal/Journal'));
-const JournalArticle = lazy(() => import('./pages/Journal/Journal'));
 const Homes = lazy(() => import('./pages/Homes/Homes'));
 const StartProject = lazy(() => import('./pages/StartProject/StartProject'));
 const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
@@ -222,7 +221,7 @@ function SiteShell() {
           {page === 'cultures' && <DesignCultures setPage={setPage} />}
           {page === 'services' && <Services setPage={setPage} />}
           {page === 'story' && <OurStory setPage={setPage} />}
-          {page === 'journal' && (articleId ? <JournalArticle setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} /> : <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />)}
+          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />}
           {page === 'homes' && <Homes setPage={setPage} />}
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}
