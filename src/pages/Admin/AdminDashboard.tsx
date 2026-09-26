@@ -77,6 +77,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [enquiryServiceFilter, setEnquiryServiceFilter] = useState<string>('all');
   const [enquirySort, setEnquirySort] = useState<'date_desc' | 'date_asc' | 'name_asc' | 'name_desc'>('date_desc');
   const [enquirySearch, setEnquirySearch] = useState<string>('');
+  const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
 
   const headers = {
     'Content-Type': 'application/json',
@@ -475,6 +476,20 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
           {/* Enquiries View */}
           {view === 'enquiries' && (
             <div>
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E]">Lead pipeline</p>
+                  <p className="text-[13px] text-[#6B5E4E] mt-1">Track incoming project enquiries and move them through the pipeline.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={fetchEnquiries}
+                  disabled={loading}
+                  className="border border-[#D4CBBB] bg-[#EAE4DA] text-[#1A1714] text-[13px] px-4 py-2 hover:border-[#2D8C7E] disabled:opacity-50 transition-colors"
+                >
+                  {loading ? 'Refreshing…' : '↻ Refresh'}
+                </button>
+              </div>
               {loading ? (
                 <div className="text-center py-20 text-[#6B5E4E]">Loading enquiries...</div>
               ) : enquiries.length === 0 ? (
@@ -551,7 +566,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                     {/* Results Count */}
                     <div className="mt-3 flex justify-between items-center text-[12px] text-[#6B5E4E]">
                       <span>Showing {filteredEnquiries.length} of {enquiries.length} enquiries</span>
-                      {(enquirySearch || enquiryStatusFilter !== 'all' || enquiryCityFilter !== 'all') && (
+                      {(enquirySearch || enquiryStatusFilter !== 'all' || enquiryCityFilter !== 'all' || enquiryServiceFilter !== 'all') && (
                         <button
                           onClick={() => {
                             setEnquirySearch('');
@@ -568,11 +583,26 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                   </div>
 
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
+                    <button
+                      type="button"
+                      onClick={() => setEnquiryServiceFilter('all')}
+                      className="text-left border border-[#D4CBBB] px-4 py-3 hover:border-[#2D8C7E] transition-colors"
+                      style={{ background: '#EAE4DA' }}
+                    >
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">All enquiries</p>
+                      <p className="font-display text-xl text-[#1A1714] mt-1">{enquiries.length}</p>
+                    </button>
                     {Object.entries(serviceCounts).map(([service, count]) => (
-                      <div key={service} className="border border-[#D4CBBB] px-4 py-3" style={{ background: '#EAE4DA' }}>
+                      <button
+                        key={service}
+                        type="button"
+                        onClick={() => setEnquiryServiceFilter(service)}
+                        className="text-left border border-[#D4CBBB] px-4 py-3 hover:border-[#2D8C7E] transition-colors"
+                        style={{ background: '#EAE4DA' }}
+                      >
                         <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E] truncate">{service}</p>
                         <p className="font-display text-xl text-[#1A1714] mt-1">{count}</p>
-                      </div>
+                      </button>
                     ))}
                   </div>
 
@@ -593,7 +623,11 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                       </thead>
                       <tbody>
                         {filteredEnquiries.map((enquiry) => (
-                          <tr key={enquiry.id} className="border-b border-[#D4CBBB] last:border-b-0">
+                          <tr
+  key={enquiry.id}
+  onClick={() => setSelectedEnquiry(enquiry)}
+  className="border-b border-[#D4CBBB] last:border-b-0 cursor-pointer hover:bg-[#F2EDE4] transition-colors"
+>
                             <td className="px-6 py-4">
                               <p className="text-[14px] text-[#1A1714] font-medium">{enquiry.name}</p>
                               <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.city}</p>
@@ -632,7 +666,10 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                             </td>
                             <td className="px-6 py-4 text-right">
                               <button
-                                onClick={() => deleteEnquiry(enquiry.id)}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  deleteEnquiry(enquiry.id);
+                                }}
                                 className="text-[13px] text-red-600 hover:text-red-700"
                               >
                                 Delete
@@ -646,6 +683,74 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                 </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {selectedEnquiry && (
+            <div
+              className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4"
+              onClick={() => setSelectedEnquiry(null)}
+            >
+              <div
+                className="w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#D4CBBB] p-6 lg:p-8"
+                style={{ background: '#F2EDE4' }}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="flex items-start justify-between gap-4 mb-6">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E]">Enquiry</p>
+                    <h3 className="font-display text-2xl text-[#1A1714] mt-1">{selectedEnquiry.name}</h3>
+                    <p className="text-[12px] text-[#6B5E4E] mt-1">
+                      {new Date(selectedEnquiry.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEnquiry(null)}
+                    className="text-[#6B5E4E] hover:text-[#1A1714] text-xl"
+                    aria-label="Close enquiry"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="text-[11px] px-2.5 py-1 bg-[#2D8C7E]/10 text-[#1C3A5A] border border-[#2D8C7E]/20">
+                    {selectedEnquiry.service || 'General enquiry'}
+                  </span>
+                  <span className="text-[11px] px-2.5 py-1 border border-[#D4CBBB]">
+                    {selectedEnquiry.status}
+                  </span>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Email</p><a className="text-[14px] text-[#1C3A5A] hover:text-[#2D8C7E]" href={`mailto:${selectedEnquiry.email}`}>{selectedEnquiry.email}</a></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Phone</p><a className="text-[14px] text-[#1C3A5A] hover:text-[#2D8C7E]" href={`tel:${selectedEnquiry.phone}`}>{selectedEnquiry.phone}</a></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">City</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.city || '—'}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Project</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.project_type || '—'} {selectedEnquiry.configuration ? `• ${selectedEnquiry.configuration}` : ''}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Budget</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.budget || '—'}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Timeline</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.timeline || '—'}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Design style</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.design_style || '—'}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Source</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.source || '—'}</p></div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-[#D4CBBB]">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E] mb-2">Message</p>
+                  <p className="text-[14px] leading-relaxed text-[#1A1714] whitespace-pre-wrap">{selectedEnquiry.message || 'No message provided.'}</p>
+                </div>
+
+                <div className="flex flex-wrap gap-3 mt-7">
+                  <a href={`mailto:${selectedEnquiry.email}`} className="bg-[#1C3A5A] text-white text-[13px] px-5 py-2.5 hover:bg-[#2D8C7E] transition-colors">Email client</a>
+                  <a href={`tel:${selectedEnquiry.phone}`} className="border border-[#D4CBBB] text-[#1A1714] text-[13px] px-5 py-2.5 hover:border-[#2D8C7E] transition-colors">Call client</a>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEnquiry(null)}
+                    className="border border-[#D4CBBB] text-[#6B5E4E] text-[13px] px-5 py-2.5 hover:border-[#1A1714] transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
