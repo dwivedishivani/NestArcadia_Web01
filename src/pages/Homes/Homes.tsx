@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
@@ -92,8 +93,47 @@ export default function Homes({ setPage }: Props) {
   const [type, setType] = useState('All Types');
   const [selected, setSelected] = useState<typeof homes[number] | null>(null);
   const [activeImage, setActiveImage] = useState(0);
+  const [liveHomes, setLiveHomes] = useState<typeof homes>([]);
 
-  const filtered = homes.filter(h =>
+  useEffect(() => {
+    let cancelled = false;
+    const loadPublishedHomes = async () => {
+      try {
+        const params = new URLSearchParams({
+          select: 'id,name,location,type,area,style,description,gallery_images,status,display_order,created_at',
+          status: 'eq.published',
+          order: 'display_order.asc.nullslast,created_at.desc',
+        });
+        const response = await fetch(
+          `https://${projectId}.supabase.co/rest/v1/homes_078be9eb?${params.toString()}`,
+          { headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` } }
+        );
+        if (!response.ok) return;
+        const rows = await response.json();
+        if (cancelled || !Array.isArray(rows) || rows.length === 0) return;
+        const normalized = rows
+          .map((row: any) => ({
+            name: row.name || 'Untitled home',
+            location: row.location || 'NCR',
+            type: row.type || 'Residential Interior',
+            area: row.area || '',
+            style: row.style || 'Central',
+            desc: row.description || '',
+            gallery: Array.isArray(row.gallery_images) ? row.gallery_images.filter(Boolean) : [],
+          }))
+          .filter((home: any) => home.gallery.length > 0);
+        if (!cancelled && normalized.length > 0) setLiveHomes(normalized);
+      } catch {
+        // Keep the curated portfolio bundled with the site if the public content request fails.
+      }
+    };
+    loadPublishedHomes();
+    return () => { cancelled = true; };
+  }, []);
+
+  const sourceHomes = liveHomes.length > 0 ? liveHomes : homes;
+
+  const filtered = sourceHomes.filter(h =>
     (style === 'All Regions' || h.style === style) &&
     (type === 'All Types' || h.type === type)
   );
