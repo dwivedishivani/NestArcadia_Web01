@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
 
 interface Props {
@@ -434,9 +435,51 @@ const categoryDeepDives: Record<string, string[]> = {
 
 export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
+  const [liveArticles, setLiveArticles] = useState<typeof articles>([]);
 
-  const filtered = active === 'All' ? articles : articles.filter(a => a.category === active);
-  const selected = getJournalArticle(articleId);
+  useEffect(() => {
+    let cancelled = false;
+    const loadPublishedArticles = async () => {
+      try {
+        const params = new URLSearchParams({
+          select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at',
+          status: 'eq.published',
+          order: 'published_at.desc.nullslast,created_at.desc',
+        });
+        const response = await fetch(
+          `https://${projectId}.supabase.co/rest/v1/blogs_078be9eb?${params.toString()}`,
+          { headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` } }
+        );
+        if (!response.ok) return;
+        const rows = await response.json();
+        if (cancelled || !Array.isArray(rows) || rows.length === 0) return;
+
+        const normalized = rows.map((row: any) => ({
+          id: row.slug || String(row.id),
+          category: row.category || 'Journal',
+          title: row.title || 'Untitled article',
+          excerpt: row.excerpt || '',
+          author: row.author || 'NestArcadia',
+          date: new Date(row.published_at || row.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }),
+          readTime: row.read_time || '5 min read',
+          img: row.image_url || '',
+          thumb: row.image_url || '',
+          body: String(row.content || '').split(/\\n\\s*\\n/).filter(Boolean),
+          related: [],
+        }));
+        setLiveArticles(normalized);
+      } catch {
+        // Keep the editorial fallback bundled with the site if the public content request fails.
+      }
+    };
+    loadPublishedArticles();
+    return () => { cancelled = true; };
+  }, []);
+
+  const sourceArticles = liveArticles.length > 0 ? liveArticles : articles;
+
+  const filtered = active === 'All' ? sourceArticles : sourceArticles.filter(a => a.category === active);
+  const selected = sourceArticles.find(a => a.id === articleId);
 
   // Article detail view
   if (selected) {
