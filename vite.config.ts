@@ -18,16 +18,9 @@ export default defineConfig(({ mode }) => {
       minify: !emitSourcemaps,
       rollupOptions: {
         output: {
-          assetFileNames: (assetInfo) => {
-            // Keep original filenames for images to avoid 422 errors on Hostinger
-            if (assetInfo.name && /\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
-              return 'assets/[name][extname]';
-            }
-            // Hash other assets (CSS, JS) for cache busting
-            return 'assets/[name]-[hash][extname]';
-          },
-          chunkFileNames: 'assets/[name]-[hash].js',
-          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: '[name][extname]',
+          chunkFileNames: '[name].js',
+          entryFileNames: '[name].js',
         },
       },
     },
