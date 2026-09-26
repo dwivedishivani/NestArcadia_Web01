@@ -209,6 +209,11 @@ function SiteShell() {
   const articleId = location.pathname.startsWith('/journal/') ? location.pathname.split('/')[2] : undefined;
   const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
   // Admin page has its own shell
   if (page === 'admin') {
     return <AdminShell />;

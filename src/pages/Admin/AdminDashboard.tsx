@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import HomeForm from './HomeForm';
 import ImageUpload from '../../components/ImageUpload';
@@ -71,6 +71,10 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [editingHome, setEditingHome] = useState<Home | null>(null);
   const [showHomeForm, setShowHomeForm] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [enquiryStatusFilter, setEnquiryStatusFilter] = useState<string>('all');
+  const [enquiryCityFilter, setEnquiryCityFilter] = useState<string>('all');
+  const [enquirySort, setEnquirySort] = useState<'date_desc' | 'date_asc' | 'name_asc' | 'name_desc'>('date_desc');
+  const [enquirySearch, setEnquirySearch] = useState<string>('');
 
   const headers = {
     'Content-Type': 'application/json',
@@ -163,6 +167,56 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
       console.error('Failed to delete home:', err);
     }
   };
+
+  // Filter and sort enquiries
+  const filteredEnquiries = useMemo(() => {
+    let filtered = [...enquiries];
+
+    // Search filter
+    if (enquirySearch) {
+      const search = enquirySearch.toLowerCase();
+      filtered = filtered.filter(e => 
+        e.name.toLowerCase().includes(search) ||
+        e.email.toLowerCase().includes(search) ||
+        e.phone.includes(search) ||
+        e.city.toLowerCase().includes(search)
+      );
+    }
+
+    // Status filter
+    if (enquiryStatusFilter !== 'all') {
+      filtered = filtered.filter(e => e.status === enquiryStatusFilter);
+    }
+
+    // City filter
+    if (enquiryCityFilter !== 'all') {
+      filtered = filtered.filter(e => e.city === enquiryCityFilter);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (enquirySort) {
+        case 'date_desc':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'date_asc':
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case 'name_asc':
+          return a.name.localeCompare(b.name);
+        case 'name_desc':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [enquiries, enquirySearch, enquiryStatusFilter, enquiryCityFilter, enquirySort]);
+
+  // Get unique cities for filter
+  const uniqueCities = useMemo(() => 
+    Array.from(new Set(enquiries.map(e => e.city))).sort(),
+    [enquiries]
+  );
 
   const navItems = [
     { id: 'dashboard' as AdminView, label: 'Dashboard', icon: '◻' },
@@ -407,7 +461,79 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                   <p className="text-[#6B5E4E]">No enquiries yet</p>
                 </div>
               ) : (
-                <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
+                <div>
+                  {/* Filter Controls */}
+                  <div className="mb-6 p-4 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {/* Search */}
+                      <input
+                        type="text"
+                        placeholder="Search name, email, phone, city..."
+                        value={enquirySearch}
+                        onChange={(e) => setEnquirySearch(e.target.value)}
+                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
+                      />
+                      
+                      {/* Status Filter */}
+                      <select
+                        value={enquiryStatusFilter}
+                        onChange={(e) => setEnquiryStatusFilter(e.target.value)}
+                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
+                      >
+                        <option value="all">All Status</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="qualified">Qualified</option>
+                        <option value="site_visit">Site Visit</option>
+                        <option value="proposal">Proposal</option>
+                        <option value="won">Won</option>
+                        <option value="lost">Lost</option>
+                      </select>
+
+                      {/* City Filter */}
+                      <select
+                        value={enquiryCityFilter}
+                        onChange={(e) => setEnquiryCityFilter(e.target.value)}
+                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
+                      >
+                        <option value="all">All Cities</option>
+                        {uniqueCities.map(city => (
+                          <option key={city} value={city}>{city}</option>
+                        ))}
+                      </select>
+
+                      {/* Sort */}
+                      <select
+                        value={enquirySort}
+                        onChange={(e) => setEnquirySort(e.target.value as any)}
+                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
+                      >
+                        <option value="date_desc">Newest First</option>
+                        <option value="date_asc">Oldest First</option>
+                        <option value="name_asc">Name A-Z</option>
+                        <option value="name_desc">Name Z-A</option>
+                      </select>
+                    </div>
+                    
+                    {/* Results Count */}
+                    <div className="mt-3 flex justify-between items-center text-[12px] text-[#6B5E4E]">
+                      <span>Showing {filteredEnquiries.length} of {enquiries.length} enquiries</span>
+                      {(enquirySearch || enquiryStatusFilter !== 'all' || enquiryCityFilter !== 'all') && (
+                        <button
+                          onClick={() => {
+                            setEnquirySearch('');
+                            setEnquiryStatusFilter('all');
+                            setEnquiryCityFilter('all');
+                          }}
+                          className="text-[#2D8C7E] hover:text-[#1C3A5A]"
+                        >
+                          Clear Filters
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
@@ -422,7 +548,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                         </tr>
                       </thead>
                       <tbody>
-                        {enquiries.map((enquiry) => (
+                        {filteredEnquiries.map((enquiry) => (
                           <tr key={enquiry.id} className="border-b border-[#D4CBBB] last:border-b-0">
                             <td className="px-6 py-4">
                               <p className="text-[14px] text-[#1A1714] font-medium">{enquiry.name}</p>
@@ -468,6 +594,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                       </tbody>
                     </table>
                   </div>
+                </div>
                 </div>
               )}
             </div>
