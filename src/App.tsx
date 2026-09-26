@@ -5,9 +5,12 @@ import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
 import MobileConversionBar from './components/layout/MobileConversionBar';
 import Home from './pages/Home/Home';
+import AdminLogin from './pages/Admin/AdminLogin';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
+import { projectId, publicAnonKey } from '../utils/supabase/info';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
@@ -18,7 +21,9 @@ const Homes = lazy(() => import('./pages/Homes/Homes'));
 const StartProject = lazy(() => import('./pages/StartProject/StartProject'));
 const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
 
-export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq';
+export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'admin';
+
+const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api`;
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
@@ -40,6 +45,7 @@ const pagePaths: Record<Page, string> = {
   homes: '/homes',
   project: '/start-your-project',
   faq: '/faqs',
+  admin: '/admin',
 };
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
@@ -51,9 +57,11 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   homes: { title: 'Interior Design Portfolio | Homes in NCR', description: 'Explore NestArcadia’s modern Indian interior design portfolio: apartments, villas and family homes shaped with craft and contemporary comfort.' },
   project: { title: 'Start Your Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about your 2BHK, 3BHK, 4BHK, villa or farmhouse interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: { title: 'Interior Design FAQs | Greater Noida West, Noida & NCR', description: 'Answers to common questions about 2BHK, 3BHK and 4BHK interior design, modular kitchens, turnkey execution, Vastu planning and commercial interiors in NCR.' },
+  admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
 };
 
 function pageFromPath(pathname: string): Page {
+  if (pathname.startsWith('/admin')) return 'admin';
   if (pathname.startsWith('/design-cultures')) return 'cultures';
   if (pathname.startsWith('/interior-design-services')) return 'services';
   if (pathname.startsWith('/our-story')) return 'story';
@@ -155,12 +163,54 @@ function RouteFallback() {
   return <div className="min-h-[52vh] animate-pulse bg-[#F2EDE4] px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-[#D4CBBB]" /><div className="mx-auto mt-6 h-12 max-w-xl bg-[#EAE4DA]" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-[#EAE4DA]" /></div>;
 }
 
+function AdminShell() {
+  const navigate = useNavigate();
+  const [adminPassword, setAdminPassword] = useState<string | null>(sessionStorage.getItem('admin_password'));
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const handleLogin = async (password: string) => {
+    setLoginLoading(true);
+    setLoginError('');
+    try {
+      const res = await fetch(`${API_BASE}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        sessionStorage.setItem('admin_password', password);
+        setAdminPassword(password);
+      } else {
+        setLoginError('Invalid password. Please try again.');
+      }
+    } catch {
+      setLoginError('Unable to connect. Please try again.');
+    }
+    setLoginLoading(false);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_password');
+    setAdminPassword(null);
+    navigate('/');
+  };
+
+  if (!adminPassword) {
+    return <AdminLogin onLogin={handleLogin} error={loginError} loading={loginLoading} />;
+  }
+  return <AdminDashboard adminPassword={adminPassword} onLogout={handleLogout} />;
+}
+
+
 function SiteShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const page = pageFromPath(location.pathname);
   const articleId = location.pathname.startsWith('/journal/') ? location.pathname.split('/')[2] : undefined;
   const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  if (page === 'admin') return <AdminShell />;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
