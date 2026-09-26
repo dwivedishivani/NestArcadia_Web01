@@ -135,6 +135,16 @@ export default function StartProject({ setPage }: Props) {
       if (!response.ok) {
         throw new Error('We could not submit your brief right now. Please try again or WhatsApp us directly.');
       }
+
+      // Emit one business-level lead event only after the backend confirms the enquiry.
+      // GTM can use this single event as the trigger for the Google Ads lead conversion.
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'lead_submit',
+        lead_source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
+        page_path: window.location.pathname,
+      });
+
       setSubmitted(true);
     } catch (error) {
       setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
