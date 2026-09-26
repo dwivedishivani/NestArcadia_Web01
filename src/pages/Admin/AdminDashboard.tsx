@@ -39,6 +39,7 @@ interface Enquiry {
   design_style: string;
   message: string;
   source: string;
+  service?: string | null;
   status: string;
   notes: string;
   created_at: string;
@@ -73,6 +74,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [enquiryStatusFilter, setEnquiryStatusFilter] = useState<string>('all');
   const [enquiryCityFilter, setEnquiryCityFilter] = useState<string>('all');
+  const [enquiryServiceFilter, setEnquiryServiceFilter] = useState<string>('all');
   const [enquirySort, setEnquirySort] = useState<'date_desc' | 'date_asc' | 'name_asc' | 'name_desc'>('date_desc');
   const [enquirySearch, setEnquirySearch] = useState<string>('');
 
@@ -193,6 +195,11 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
       filtered = filtered.filter(e => e.city === enquiryCityFilter);
     }
 
+    // Service filter
+    if (enquiryServiceFilter !== 'all') {
+      filtered = filtered.filter(e => (e.service || 'General enquiry') === enquiryServiceFilter);
+    }
+
     // Sort
     filtered.sort((a, b) => {
       switch (enquirySort) {
@@ -210,13 +217,27 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
     });
 
     return filtered;
-  }, [enquiries, enquirySearch, enquiryStatusFilter, enquiryCityFilter, enquirySort]);
+  }, [enquiries, enquirySearch, enquiryStatusFilter, enquiryCityFilter, enquiryServiceFilter, enquirySort]);
 
-  // Get unique cities for filter
-  const uniqueCities = useMemo(() => 
-    Array.from(new Set(enquiries.map(e => e.city))).sort(),
+  // Get unique cities and services for filters
+  const uniqueCities = useMemo(() =>
+    Array.from(new Set(enquiries.map(e => e.city).filter(Boolean))).sort(),
     [enquiries]
   );
+
+  const uniqueServices = useMemo(() =>
+    Array.from(new Set(enquiries.map(e => e.service || 'General enquiry'))).sort(),
+    [enquiries]
+  );
+
+  const serviceCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    enquiries.forEach((e) => {
+      const service = e.service || 'General enquiry';
+      counts[service] = (counts[service] || 0) + 1;
+    });
+    return counts;
+  }, [enquiries]);
 
   const navItems = [
     { id: 'dashboard' as AdminView, label: 'Dashboard', icon: '◻' },
@@ -464,7 +485,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                 <div>
                   {/* Filter Controls */}
                   <div className="mb-6 p-4 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                       {/* Search */}
                       <input
                         type="text"
@@ -502,6 +523,18 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                         ))}
                       </select>
 
+                      {/* Service Filter */}
+                      <select
+                        value={enquiryServiceFilter}
+                        onChange={(e) => setEnquiryServiceFilter(e.target.value)}
+                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
+                      >
+                        <option value="all">All Services</option>
+                        {uniqueServices.map(service => (
+                          <option key={service} value={service}>{service}</option>
+                        ))}
+                      </select>
+
                       {/* Sort */}
                       <select
                         value={enquirySort}
@@ -524,6 +557,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                             setEnquirySearch('');
                             setEnquiryStatusFilter('all');
                             setEnquiryCityFilter('all');
+                            setEnquiryServiceFilter('all');
                           }}
                           className="text-[#2D8C7E] hover:text-[#1C3A5A]"
                         >
@@ -533,6 +567,15 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                     </div>
                   </div>
 
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
+                    {Object.entries(serviceCounts).map(([service, count]) => (
+                      <div key={service} className="border border-[#D4CBBB] px-4 py-3" style={{ background: '#EAE4DA' }}>
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E] truncate">{service}</p>
+                        <p className="font-display text-xl text-[#1A1714] mt-1">{count}</p>
+                      </div>
+                    ))}
+                  </div>
+
                   <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
                   <div className="overflow-x-auto">
                     <table className="w-full">
@@ -540,6 +583,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                         <tr className="border-b border-[#D4CBBB]">
                           <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Client</th>
                           <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Contact</th>
+                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Service</th>
                           <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Project</th>
                           <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Budget</th>
                           <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Status</th>
@@ -557,6 +601,11 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
                             <td className="px-6 py-4">
                               <p className="text-[13px] text-[#1A1714]">{enquiry.email}</p>
                               <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.phone}</p>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="inline-block text-[11px] px-2.5 py-1 bg-[#2D8C7E]/10 text-[#1C3A5A] border border-[#2D8C7E]/20">
+                                {enquiry.service || 'General enquiry'}
+                              </span>
                             </td>
                             <td className="px-6 py-4">
                               <p className="text-[13px] text-[#1A1714]">{enquiry.project_type}</p>
