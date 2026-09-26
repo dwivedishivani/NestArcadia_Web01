@@ -374,7 +374,7 @@ const fallbackArticles = [
   },
 ];
 
-export const getJournalArticle = (slug: string | undefined, articlesData: typeof fallbackArticles) => articlesData.find((article) => article.id === slug);
+export const getJournalArticle = (slug: string | undefined, articlesData = fallbackArticles) => articlesData.find((article) => article.id === slug);
 
 const categories = ['All', 'Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
 

@@ -1,41 +1,25 @@
-# MIME types for proper file serving
-AddType image/svg+xml .svg .svgz
-AddType image/png .png
-AddType image/jpeg .jpg .jpeg
-AddType image/webp .webp
-AddType application/javascript .js
-AddType text/css .css
-
-# Disable mod_security for static assets if it's blocking files
-<IfModule mod_security.c>
-  SecFilterEngine Off
-  SecFilterScanPOST Off
-</IfModule>
-
-# Allow access to all static files
-<FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot)$">
-  Require all granted
-  Allow from all
-  Order allow,deny
-</FilesMatch>
-
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-
-  # Explicitly allow assets directory and files with extensions
-  RewriteCond %{REQUEST_URI} ^/assets/ [OR]
-  RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot)$ [NC]
-  RewriteRule ^ - [L]
-
-  # Don't rewrite existing files or directories
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
-  RewriteRule ^ - [L]
-
-  # Rewrite everything else to index.html for SPA routing
-  RewriteRule ^(.*)$ /index.html [L]
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /index.html [L]
 </IfModule>
+
+# Basic security headers
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# MIME Types
+AddType application/javascript .js
+AddType text/css .css
+AddType image/svg+xml .svg
+AddType image/webp .webp
+AddType image/png .png
+AddType image/jpeg .jpg .jpeg
 
 # Compress text files
 <IfModule mod_deflate.c>
