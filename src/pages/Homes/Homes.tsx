@@ -140,7 +140,7 @@ export default function Homes({ setPage }: Props) {
 
   if (selected) {
     return (
-      <div className="pt-[72px]">
+      <div className="pt-20 lg:pt-[90px]">
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
           <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design project in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
@@ -172,7 +172,7 @@ export default function Homes({ setPage }: Props) {
               <p className="text-[11px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">{selected.style} India · {selected.style}</p>
               <h1 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] mb-4">{selected.name}</h1>
               <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-8">{selected.desc}</p>
-              <div className="grid grid-cols-3 gap-6 py-8 border-t border-b border-[#D4CBBB] mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-[#D4CBBB] mb-8">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-1">Location</p>
                   <p className="text-sm text-[#1A1714]">{selected.location}</p>
