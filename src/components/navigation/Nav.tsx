@@ -51,7 +51,7 @@ export default function Nav({ page, setPage }: NavProps) {
             <img
               src={transparent ? logoWhiteImg : logoImg}
               alt="NestArcadia — heritage Indian interiors"
-              className="h-[68px] lg:h-[78px] w-auto object-contain"
+              className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
             />
           </button>
 

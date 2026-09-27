@@ -215,7 +215,7 @@ function SiteShell() {
     <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
       <SeoManager page={page} />
       <Nav page={page} setPage={setPage} />
-      <main className="flex-1 pb-16 sm:pb-0">
+      <main className="flex-1 pb-24 sm:pb-0">
         {page === 'home' && <Home setPage={setPage} />}
         <Suspense fallback={<RouteFallback />}>
           {page === 'cultures' && <DesignCultures setPage={setPage} />}
