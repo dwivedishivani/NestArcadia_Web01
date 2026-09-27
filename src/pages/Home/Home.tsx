@@ -176,7 +176,7 @@ export default function Home({ setPage }: Props) {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-6 lg:left-20 flex items-center gap-3">
+        <div className="absolute bottom-20 sm:bottom-8 left-6 lg:left-20 flex items-center gap-3">
           <span className="text-white text-xs tracking-widest">{String(heroSlide + 1).padStart(2, '0')}</span>
           <span className="block w-12 h-px bg-white/25" />
           <span className="text-white/40 text-xs tracking-widest">03</span>
@@ -296,12 +296,12 @@ export default function Home({ setPage }: Props) {
           </div>
 
           {/* 3 visible trend cards */}
-          <div className="grid grid-cols-3 gap-4 flex-1">
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0">
             {visible.map((t, i) => (
               <button
                 key={t.name + trendStart}
                 onClick={() => setPage('cultures')}
-                className="text-left group"
+                className="min-w-[78%] snap-start text-left group sm:min-w-0"
                 style={{
                   opacity: 1,
                   transition: 'opacity 0.3s ease',
