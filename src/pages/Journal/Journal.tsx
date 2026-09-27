@@ -521,7 +521,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       .filter(Boolean) as typeof articles;
 
     return (
-      <div className="pt-[72px]">
+      <div className="pt-20 lg:pt-[90px]">
         {/* Hero */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ height: '55vh', minHeight: '360px' }}>
           <img src={selected.img} alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
@@ -531,7 +531,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             <h1 className="font-display text-[clamp(1.75rem,4vw,3.25rem)] text-white leading-tight max-w-2xl">
               {selected.title}
             </h1>
-            <div className="flex items-center gap-4 mt-4 text-white/50 text-[13px]">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4 text-white/50 text-[13px]">
               <span>By {selected.author}</span>
               <span>·</span>
               <span>{selected.date}</span>
@@ -663,7 +663,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               <img src={featured.thumb} alt={featured.title} loading="lazy" decoding="async" width="800" height="560" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ minHeight: '380px' }} />
             </div>
             <div className="flex flex-col justify-center p-10 lg:p-14" style={{ background: '#EAE4DA' }}>
-              <div className="flex items-center gap-3 mb-5">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5">
                 <span className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E]">{featured.category}</span>
                 <span className="text-[#D4CBBB]">·</span>
                 <span className="text-[13px] text-[#6B5E4E]">{featured.date}</span>
@@ -728,17 +728,17 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             <h3 className="font-display text-2xl text-[#1A1714] mb-1">Stay in the story.</h3>
             <p className="text-[#6B5E4E] text-[14px]">Design insights, craft discoveries, and new homes — in your inbox.</p>
           </div>
-          <form onSubmit={handleNewsletterSubmit} className="flex gap-0 border border-[#D4CBBB]">
+          <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-xl flex-col gap-0 border border-[#D4CBBB] sm:flex-row">
             <input
               type="email"
               value={newsletterEmail}
               onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterState('idle'); }}
               placeholder="your@email.com"
               aria-label="Email address"
-              className="px-5 py-3 text-[14px] bg-transparent outline-none text-[#1A1714] placeholder:text-[#6B5E4E] w-60"
+              className="w-full min-w-0 flex-1 px-5 py-3 text-[14px] bg-transparent outline-none text-[#1A1714] placeholder:text-[#6B5E4E] sm:w-60"
               disabled={newsletterState === 'submitting'}
             />
-            <button type="submit" disabled={newsletterState === 'submitting'} className="px-6 py-3 bg-[#1C3A5A] text-white text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-60">
+            <button type="submit" disabled={newsletterState === 'submitting'} className="w-full px-6 py-3 bg-[#1C3A5A] text-white text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-60 sm:w-auto">
               {newsletterState === 'submitting' ? 'Saving…' : 'Subscribe'}
             </button>
           </form>
