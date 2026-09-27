@@ -26,13 +26,30 @@ html {
   font-size: 16px;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
   background-color: #F2EDE4;
   color: #1C3A5A;
   overflow-x: hidden;
+  min-width: 320px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.65;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
 }
 
 .font-display {
