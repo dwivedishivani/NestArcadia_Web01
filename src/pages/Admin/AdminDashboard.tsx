@@ -868,6 +868,7 @@ function BlogForm({
   const [expandedPreview, setExpandedPreview] = useState(false);
   const [existingTags, setExistingTags] = useState<string[]>([]);
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
+  const [tagDraft, setTagDraft] = useState('');
 
   const categories = ['Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
   const standardTags = [
@@ -1113,30 +1114,29 @@ function BlogForm({
               <div>
                 <div className="flex items-center justify-between gap-3 mb-2">
                   <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] block">Tags</label>
-                  <div className="flex items-center gap-3">
-                    <button type="button" onClick={suggestTags} className="text-[11px] text-[#1C3A5A] hover:text-[#2D8C7E]">
-                      ↻ Refresh suggestions
-                    </button>
-                    <button type="button" onClick={addCustomTag} className="text-[11px] text-[#1C3A5A] hover:text-[#2D8C7E]">
-                      + Add new
-                    </button>
-                  </div>
+                  <button type="button" onClick={suggestTags} className="text-[11px] text-[#1C3A5A] hover:text-[#2D8C7E]">
+                    ↻ Refresh smart suggestions
+                  </button>
                 </div>
 
                 <div className="border border-[#D4CBBB] bg-[#F2EDE4] p-3 min-h-[52px]">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {selectedTags.map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="inline-flex items-center gap-2 text-[12px] px-3 py-1.5 bg-[#1C3A5A] text-white"
-                        title="Remove tag"
-                      >
+                      <button key={tag} type="button" onClick={() => removeTag(tag)}
+                        className="inline-flex items-center gap-2 text-[12px] px-3 py-1.5 bg-[#1C3A5A] text-white" title="Remove tag">
                         {tag} <span aria-hidden>×</span>
                       </button>
                     ))}
                     {selectedTags.length === 0 && <span className="text-[12px] text-[#6B5E4E]">No tags selected yet.</span>}
+                  </div>
+                  <div className="flex gap-2">
+                    <input value={tagDraft} onChange={(e) => setTagDraft(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomTag(); } }}
+                      className="flex-1 bg-transparent border border-[#D4CBBB] px-3 py-2 text-[12px] outline-none focus:border-[#2D8C7E]"
+                      placeholder="Type your own tag and press Enter" aria-label="Add custom tag" />
+                    <button type="button" onClick={addCustomTag} className="border border-[#D4CBBB] px-3 text-[12px] text-[#1A1714] hover:border-[#2D8C7E]">
+                      Add
+                    </button>
                   </div>
                 </div>
 
