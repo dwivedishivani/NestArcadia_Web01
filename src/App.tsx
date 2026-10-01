@@ -181,6 +181,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
+    const websiteSchema = page === 'home' && !localService ? { '@type': 'WebSite', name: 'NestArcadia', url: SITE_URL } : null;
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
@@ -192,20 +193,20 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       { '@type': 'ListItem', position: 2, name: localService.area, item: canonical },
     ] };
     schema.textContent = JSON.stringify(localService
-      ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb] }
+      ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb].filter(Boolean) }
       : (articleSchema
-        ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema] }
+        ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
         : ((page === 'home' || page === 'faq')
-          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
-          : { '@context': 'https://schema.org', ...businessSchema })));
+          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }].filter(Boolean) }
+          : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : [])] }));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
       page_path: pathname,
       page_location: window.location.href,
       page_title: document.title,
-      page_type: page,
-      content_group: page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page,
+      page_type: localService ? 'local_service' : page,
+      content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
     });
   }, [location.pathname, page, article, articleSlug, faqItems, localService]);
   return null;
