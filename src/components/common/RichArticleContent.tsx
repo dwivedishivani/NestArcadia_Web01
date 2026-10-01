@@ -23,6 +23,8 @@ function sanitizeHtml(html: string) {
         if ((attribute.name === 'color' && !safeColor) || (attribute.name === 'face' && !safeFace)) {
           element.removeAttribute(attribute.name);
         }
+      } else if (element.tagName === 'P' && attribute.name === 'class') {
+        if (!/^(editor-lead|editor-small)$/.test(attribute.value.trim())) element.removeAttribute(attribute.name);
       } else {
         element.removeAttribute(attribute.name);
       }
@@ -37,7 +39,7 @@ function sanitizeHtml(html: string) {
 }
 
 function looksLikeRichHtml(value: string) {
-  return /<\/(p|h2|h3|blockquote|ul|ol|li|strong|b|em|i|font)>|<(hr)\b/i.test(value);
+  return /<\/(p|h2|h3|h4|blockquote|ul|ol|li|strong|b|em|i|font)>|<(hr)\b/i.test(value);
 }
 
 function legacyParagraphs(value: string) {
