@@ -11,6 +11,12 @@ interface Props {
 const u = (id: string, w: number, h: number) =>
   `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
+const LIME_PLASTER_SOURCES = [
+  { label: 'CEPT University / UCL Open Environment — moisture buffering and mould growth in naturally ventilated lime-plastered houses (2024)', href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11443221/' },
+  { label: 'Indoor Environment / J-STAGE — fungal resistance of thinly applied modern lime plaster (2024)', href: 'https://www.jstage.jst.go.jp/article/siej/27/3/27_175/_article/-char/en' },
+  { label: 'ScienceDirect — experimental investigation of cement and lime plaster hygrothermal behaviour (2022)', href: 'https://www.sciencedirect.com/science/article/abs/pii/S0360132322003353' },
+];
+
 export const articles = [
   {
     id: 'rattan',
@@ -444,7 +450,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
     const loadPublishedArticles = async () => {
       try {
         const params = new URLSearchParams({
-          select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at',
+          select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at,updated_at',
           status: 'eq.published',
           order: 'published_at.desc.nullslast,created_at.desc',
         });
@@ -468,6 +474,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           thumb: row.image_url || '',
           body: String(row.content || '').split(/\\n\\s*\\n/).filter(Boolean),
           related: [],
+          ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
         }));
         setLiveArticles(normalized);
       } catch {
