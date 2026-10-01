@@ -35,6 +35,65 @@ function plainTextToHtml(text: string) {
     .map((paragraph) => `<p>${paragraph.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>`).join('');
 }
 
+function sanitizePastedHtml(html: string) {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+
+  const allowed = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3', 'H4', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'HR']);
+  const blockAliases = new Map([['DIV', 'P'], ['SECTION', 'P'], ['ARTICLE', 'P'], ['H1', 'H2']]);
+
+  const cleanNode = (node: Node): Node[] => {
+    if (node.nodeType === Node.TEXT_NODE) return [document.createTextNode(node.textContent || '')];
+    if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+    const source = node as HTMLElement;
+    const mappedTag = blockAliases.get(source.tagName) || source.tagName;
+
+    // Ignore pasted images/media and other non-article embeds. The editor does not store media in article HTML.
+    if (['IMG', 'VIDEO', 'AUDIO', 'IFRAME', 'SCRIPT', 'STYLE', 'TABLE'].includes(source.tagName)) return [];
+
+    if (mappedTag === 'BR') return [document.createElement('br')];
+    if (mappedTag === 'HR') return [document.createElement('hr')];
+
+    const children = Array.from(source.childNodes).flatMap(cleanNode);
+
+    if (!allowed.has(mappedTag)) return children;
+
+    const element = document.createElement(mappedTag.toLowerCase());
+    children.forEach((child) => element.appendChild(child));
+
+    if (mappedTag === 'A') {
+      const href = source.getAttribute('href')?.trim() || '';
+      if (/^(https?:\/\/|\/|#|mailto:)/i.test(href)) {
+        element.setAttribute('href', href);
+        element.setAttribute('target', '_blank');
+        element.setAttribute('rel', 'noopener noreferrer');
+      }
+    }
+
+    return [element];
+  };
+
+  const fragment = document.createDocumentFragment();
+  Array.from(template.content.childNodes).flatMap(cleanNode).forEach((node) => fragment.appendChild(node));
+
+  const wrapper = document.createElement('div');
+  wrapper.appendChild(fragment);
+  return wrapper.innerHTML.trim();
+}
+
+function getPastedHtml(event: React.ClipboardEvent<HTMLDivElement>) {
+  const html = event.clipboardData.getData('text/html');
+  const text = event.clipboardData.getData('text/plain');
+
+  if (html) {
+    const sanitized = sanitizePastedHtml(html);
+    if (sanitized) return sanitized;
+  }
+
+  return text ? plainTextToHtml(text) : '';
+}
+
 export default function RichArticleEditor({ value, onChange, placeholder }: RichArticleEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const selectionRef = useRef<Range | null>(null);
@@ -44,7 +103,7 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
 
   useEffect(() => {
     if (!editorRef.current || initializedRef.current) return;
-    editorRef.current.innerHTML = /<\/?(p|h2|h3|blockquote|ul|ol|li|strong|em|a|hr|font)\b/i.test(value) ? value : plainTextToHtml(value);
+    editorRef.current.innerHTML = /<\/?(p|h2|h3|h4|blockquote|ul|ol|li|strong|em|a|hr|font)\b/i.test(value) ? value : plainTextToHtml(value);
     initializedRef.current = true;
   }, [value]);
 
@@ -104,7 +163,7 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
     emitChange();
   };
 
-  const run = (action: typeof toolbar[number][2]) =>
+  const run = (action: typeof toolbar[number][2]) => {
     editorRef.current?.focus();
     restoreSelection();
 
@@ -141,10 +200,14 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
   };
 
   const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
-    const plainText = event.clipboardData.getData('text/plain');
-    if (!plainText) return;
+    const content = getPastedHtml(event);
+    if (!content) return;
+
     event.preventDefault();
-    document.execCommand('insertHTML', false, plainTextToHtml(plainText));
+    editorRef.current?.focus();
+    restoreSelection();
+    document.execCommand('insertHTML', false, content);
+    saveSelection();
     emitChange();
   };
 
@@ -230,7 +293,7 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
           </div>
         </div>
         <p className="text-[11px] text-[#6B5E4E] mt-2">
-          Select text first, then use formatting. Font and colour apply to the selected text.
+          Paste from ChatGPT or another rich editor to keep headings, lists, bold, italic, links and spacing. Site typography is applied automatically.
         </p>
       </div>
 
