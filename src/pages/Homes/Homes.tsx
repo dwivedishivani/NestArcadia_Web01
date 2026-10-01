@@ -204,7 +204,7 @@ export default function Homes({ setPage }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Portfolio</p>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Homes</h1>
-        <p className="text-[#6B5E4E] text-sm mt-3">Real spaces. Real people. Real stories.</p>
+        <p className="text-[#6B5E4E] text-sm mt-3">Selected design studies and portfolio concepts.</p>
       </div>
 
       {/* Filters */}
@@ -247,7 +247,7 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
-                    alt={`NestArcadia ${h.type} interior design project in ${h.location}`}
+                    alt={`NestArcadia ${h.type} interior design concept in ${h.location}`}
                     loading="lazy"
                     decoding="async"
                     width="800"
