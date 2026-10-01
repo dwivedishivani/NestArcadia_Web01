@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type FormEvent } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import HomeForm from './HomeForm';
 import ImageUpload from '../../components/ImageUpload';
+import RichArticleEditor from '../../components/admin/RichArticleEditor';
+import ArticlePreview from '../../components/admin/ArticlePreview';
 
 interface Props {
   adminPassword: string;
@@ -858,12 +860,98 @@ function BlogForm({
     image_url: blog?.image_url || '',
     status: blog?.status || 'draft',
     read_time: blog?.read_time || '5 min read',
-    tags: blog?.tags?.join(', ') || '',
+    tags: blog?.tags || [],
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  const [expandedPreview, setExpandedPreview] = useState(false);
+  const [existingTags, setExistingTags] = useState<string[]>([]);
+  const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
+  const [tagDraft, setTagDraft] = useState('');
 
   const categories = ['Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
+  const standardTags = [
+    'Interior Design',
+    'Architecture',
+    'Home Interiors',
+    'Noida',
+    'Noida Extension',
+    'Greater Noida West',
+    'Vastu',
+    'Materials',
+    'Craft',
+    'Wellness',
+    'Residential Interiors',
+    'Commercial Interiors',
+  ];
+
+  useEffect(() => {
+    let active = true;
+    fetch(`${API_BASE}/admin/blogs`, { headers })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!active) return;
+        const tags = (data.data || [])
+          .flatMap((item: Blog) => Array.isArray(item.tags) ? item.tags : [])
+          .map((tag: string) => tag.trim())
+          .filter(Boolean);
+        setExistingTags(Array.from(new Set(tags)));
+      })
+      .catch(() => {
+        if (active) setExistingTags([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [headers]);
+
+  const selectedTags = form.tags;
+  const availableTags = Array.from(new Set([...existingTags, ...standardTags]));
+
+  const suggestTags = () => {
+    const haystack = `${form.title} ${form.excerpt} ${form.content} ${form.category}`.toLowerCase();
+    const scored = availableTags
+      .map((tag) => {
+        const normalized = tag.toLowerCase();
+        const words = normalized.split(/\s+/).filter((word) => word.length > 2);
+        let score = 0;
+        if (haystack.includes(normalized)) score += 8;
+        words.forEach((word) => {
+          if (haystack.includes(word)) score += 2;
+        });
+        if (normalized === form.category.toLowerCase()) score += 5;
+        return { tag, score };
+      })
+      .filter(({ tag, score }) => score > 0 && !selectedTags.includes(tag))
+      .sort((a, b) => b.score - a.score || a.tag.localeCompare(b.tag))
+      .slice(0, 8)
+      .map(({ tag }) => tag);
+
+    setSuggestedTags(scored);
+  };
+
+  useEffect(() => {
+    suggestTags();
+    // Suggestions intentionally update when article content changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.title, form.excerpt, form.content, form.category, existingTags]);
+
+  const addTag = (tag: string) => {
+    const clean = tag.trim();
+    if (!clean || selectedTags.includes(clean)) return;
+    setForm((current) => ({ ...current, tags: [...current.tags, clean] }));
+    setSuggestedTags((current) => current.filter((item) => item !== clean));
+  };
+
+  const removeTag = (tag: string) => {
+    setForm((current) => ({ ...current, tags: current.tags.filter((item) => item !== tag) }));
+  };
+
+  const addCustomTag = () => {
+    const input = window.prompt('Enter a new tag');
+    if (input) addTag(input);
+  };
 
   const generateSlug = (title: string) => {
     return title
@@ -872,20 +960,14 @@ function BlogForm({
       .replace(/(^-|-$)/g, '');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
     try {
-      const payload = {
-        ...form,
-        tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
-      };
-
-      const url = blog
-        ? `${API_BASE}/admin/blogs/${blog.id}`
-        : `${API_BASE}/admin/blogs`;
+      const payload = { ...form, tags: form.tags.map((tag) => tag.trim()).filter(Boolean) };
+      const url = blog ? `${API_BASE}/admin/blogs/${blog.id}` : `${API_BASE}/admin/blogs`;
       const method = blog ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -898,169 +980,215 @@ function BlogForm({
       onSave();
     } catch (err: any) {
       setError(err.message || 'Failed to save article');
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const inputClass = 'w-full bg-transparent border border-[#D4CBBB] px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E]/50 outline-none focus:border-[#2D8C7E] transition-colors';
 
+  const preview = (
+    <ArticlePreview
+      title={form.title}
+      excerpt={form.excerpt}
+      author={form.author}
+      readTime={form.read_time}
+      category={form.category}
+      content={form.content}
+      imageUrl={form.image_url}
+    />
+  );
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl">
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="font-display text-xl text-[#1A1714]">
-          {blog ? 'Edit Article' : 'New Article'}
-        </h3>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="text-[14px] text-[#6B5E4E] hover:text-[#1A1714]"
-        >
-          ← Back to list
-        </button>
-      </div>
-
-      <div className="border border-[#D4CBBB] p-8" style={{ background: '#EAE4DA' }}>
-        <div className="grid gap-6">
+    <>
+      <form onSubmit={handleSubmit} className="max-w-[1200px]">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Title *</label>
-            <input
-              className={inputClass}
-              value={form.title}
-              onChange={(e) => {
-                setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) });
-              }}
-              placeholder="Article title"
-              required
-            />
+            <h3 className="font-display text-xl text-[#1A1714]">
+              {blog ? 'Edit Article' : 'New Article'}
+            </h3>
+            <p className="text-[12px] text-[#6B5E4E] mt-1">Write, format, preview and refine before publishing.</p>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Slug</label>
-              <input
-                className={inputClass}
-                value={form.slug}
-                onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                placeholder="url-friendly-slug"
-              />
-            </div>
-            <div>
-              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Author *</label>
-              <input
-                className={inputClass}
-                value={form.author}
-                onChange={(e) => setForm({ ...form, author: e.target.value })}
-                placeholder="Author name"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Category</label>
-              <select
-                className={`${inputClass} cursor-pointer`}
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Read Time</label>
-              <input
-                className={inputClass}
-                value={form.read_time}
-                onChange={(e) => setForm({ ...form, read_time: e.target.value })}
-                placeholder="5 min read"
-              />
-            </div>
-            <div>
-              <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Status</label>
-              <select
-                className={`${inputClass} cursor-pointer`}
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value as 'draft' | 'published' })}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-            </div>
-          </div>
-
-          <ImageUpload
-            value={form.image_url}
-            onChange={(url) => setForm({ ...form, image_url: url })}
-            aspectRatio={1200 / 700}
-            targetWidth={1200}
-            targetHeight={700}
-            label="Article Image"
-            placeholder="Paste image URL or upload file"
-          />
-
-          <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Excerpt *</label>
-            <textarea
-              className={`${inputClass} resize-none`}
-              rows={2}
-              value={form.excerpt}
-              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-              placeholder="Brief description of the article"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">
-              Content * <span className="normal-case tracking-normal text-[10px]">(Separate paragraphs with blank lines)</span>
-            </label>
-            <textarea
-              className={`${inputClass} resize-none font-mono text-[13px]`}
-              rows={12}
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Article content. Each paragraph should be separated by a blank line."
-              required
-            />
-          </div>
-
-          <div>
-            <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Tags</label>
-            <input
-              className={inputClass}
-              value={form.tags}
-              onChange={(e) => setForm({ ...form, tags: e.target.value })}
-              placeholder="tag1, tag2, tag3"
-            />
-          </div>
+          <button type="button" onClick={onCancel} className="text-[14px] text-[#6B5E4E] hover:text-[#1A1714]">
+            ← Back to list
+          </button>
         </div>
 
-        {error && (
-          <p className="text-[13px] text-red-600 bg-red-50 border border-red-200 px-4 py-2 mt-6">
-            {error}
-          </p>
-        )}
-
-        <div className="flex gap-4 mt-8">
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-[#1C3A5A] text-white text-[14px] px-8 py-3 hover:bg-[#2D8C7E] transition-colors disabled:opacity-50"
-          >
-            {saving ? 'Saving...' : blog ? 'Update Article' : 'Create Article'}
-          </button>
+        <div className="flex items-center justify-between border-b border-[#D4CBBB] mb-6">
+          <div className="flex">
+            <button type="button" onClick={() => setMode('edit')} className={`px-5 py-3 text-[13px] border-b-2 ${mode === 'edit' ? 'border-[#1C3A5A] text-[#1C3A5A]' : 'border-transparent text-[#6B5E4E]'}`}>
+              Edit
+            </button>
+            <button type="button" onClick={() => setMode('preview')} className={`px-5 py-3 text-[13px] border-b-2 ${mode === 'preview' ? 'border-[#1C3A5A] text-[#1C3A5A]' : 'border-transparent text-[#6B5E4E]'}`}>
+              Preview
+            </button>
+          </div>
           <button
             type="button"
-            onClick={onCancel}
-            className="border border-[#D4CBBB] text-[#6B5E4E] text-[14px] px-8 py-3 hover:border-[#1A1714] hover:text-[#1A1714] transition-colors"
+            onClick={() => setExpandedPreview(true)}
+            className="text-[12px] text-[#1C3A5A] hover:text-[#2D8C7E] px-3 py-2"
           >
-            Cancel
+            ⛶ Expand Preview
           </button>
         </div>
-      </div>
-    </form>
+
+        {mode === 'preview' ? (
+          <div className="border border-[#D4CBBB] p-6 lg:p-12" style={{ background: '#F2EDE4' }}>
+            {preview}
+          </div>
+        ) : (
+          <div className="border border-[#D4CBBB] p-6 lg:p-8" style={{ background: '#EAE4DA' }}>
+            <div className="grid gap-6">
+              <div>
+                <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Title *</label>
+                <input
+                  className={inputClass}
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) })}
+                  placeholder="Article title"
+                  required
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Slug</label>
+                  <input className={inputClass} value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="url-friendly-slug" />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Author *</label>
+                  <input className={inputClass} value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} placeholder="Author name" required />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Category</label>
+                  <select className={`${inputClass} cursor-pointer`} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                    {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Read Time</label>
+                  <input className={inputClass} value={form.read_time} onChange={(e) => setForm({ ...form, read_time: e.target.value })} placeholder="5 min read" />
+                </div>
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Status</label>
+                  <select className={`${inputClass} cursor-pointer`} value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as 'draft' | 'published' })}>
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+              </div>
+
+              <ImageUpload
+                value={form.image_url}
+                onChange={(url) => setForm({ ...form, image_url: url })}
+                aspectRatio={1200 / 700}
+                targetWidth={1200}
+                targetHeight={700}
+                label="Article Image"
+                placeholder="Paste image URL or upload file"
+              />
+
+              <div>
+                <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Excerpt *</label>
+                <textarea className={`${inputClass} resize-none`} rows={2} value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="Brief description of the article" required />
+              </div>
+
+              <div>
+                <div className="flex flex-wrap items-end justify-between gap-3 mb-2">
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] block">
+                    Content *
+                  </label>
+                  <span className="text-[10px] text-[#6B5E4E]">Paste the full article first, then format it.</span>
+                </div>
+                <RichArticleEditor
+                  value={form.content}
+                  onChange={(content) => setForm((current) => ({ ...current, content }))}
+                  placeholder="Paste or write the article here..."
+                />
+                <p className="text-[11px] text-[#6B5E4E] mt-2">Use H2/H3 for structure, Quote for research takeaways, and lists where information naturally belongs.</p>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] block">Tags</label>
+                  <button type="button" onClick={suggestTags} className="text-[11px] text-[#1C3A5A] hover:text-[#2D8C7E]">
+                    ↻ Refresh smart suggestions
+                  </button>
+                </div>
+
+                <div className="border border-[#D4CBBB] bg-[#F2EDE4] p-3 min-h-[52px]">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {selectedTags.map((tag) => (
+                      <button key={tag} type="button" onClick={() => removeTag(tag)}
+                        className="inline-flex items-center gap-2 text-[12px] px-3 py-1.5 bg-[#1C3A5A] text-white" title="Remove tag">
+                        {tag} <span aria-hidden>×</span>
+                      </button>
+                    ))}
+                    {selectedTags.length === 0 && <span className="text-[12px] text-[#6B5E4E]">No tags selected yet.</span>}
+                  </div>
+                  <div className="flex gap-2">
+                    <input value={tagDraft} onChange={(e) => setTagDraft(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomTag(); } }}
+                      className="flex-1 bg-transparent border border-[#D4CBBB] px-3 py-2 text-[12px] outline-none focus:border-[#2D8C7E]"
+                      placeholder="Type your own tag and press Enter" aria-label="Add custom tag" />
+                    <button type="button" onClick={addCustomTag} className="border border-[#D4CBBB] px-3 text-[12px] text-[#1A1714] hover:border-[#2D8C7E]">
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {suggestedTags.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#6B5E4E] mb-2">Suggested from your existing blog tags</p>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestedTags.map((tag) => (
+                        <button key={tag} type="button" onClick={() => addTag(tag)} className="text-[12px] px-3 py-1.5 border border-[#D4CBBB] text-[#1A1714] hover:border-[#2D8C7E] hover:text-[#2D8C7E]">
+                          + {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <p className="text-[10px] text-[#6B5E4E] mt-3">
+                  Suggestions are generated locally from your existing blog tags and the article text. You can freely add, edit or remove tags.
+                </p>
+              </div>
+            </div>
+
+            {error && <p className="text-[13px] text-red-600 bg-red-50 border border-red-200 px-4 py-2 mt-6">{error}</p>}
+
+            <div className="flex flex-wrap gap-4 mt-8">
+              <button type="submit" disabled={saving} className="bg-[#1C3A5A] text-white text-[14px] px-8 py-3 hover:bg-[#2D8C7E] transition-colors disabled:opacity-50">
+                {saving ? 'Saving...' : blog ? 'Update Article' : 'Create Article'}
+              </button>
+              <button type="button" onClick={onCancel} className="border border-[#D4CBBB] text-[#6B5E4E] text-[14px] px-8 py-3 hover:border-[#1A1714] hover:text-[#1A1714] transition-colors">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </form>
+
+      {expandedPreview && (
+        <div className="fixed inset-0 z-[80] bg-[#F2EDE4] overflow-y-auto">
+          <div className="sticky top-0 z-10 border-b border-[#D4CBBB] px-6 py-4 flex items-center justify-between" style={{ background: '#EAE4DA' }}>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E]">Article Preview</p>
+              <p className="text-[14px] text-[#1A1714] mt-1">{form.title || 'Untitled article'}</p>
+            </div>
+            <button type="button" onClick={() => setExpandedPreview(false)} className="text-[13px] text-[#1C3A5A] hover:text-[#2D8C7E]">
+              Close Preview ×
+            </button>
+          </div>
+          <div className="px-6 lg:px-20 py-12 lg:py-16">
+            {preview}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

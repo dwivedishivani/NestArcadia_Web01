@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import RichArticleContent from '../../components/common/RichArticleContent';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
 
@@ -567,18 +568,10 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           <p className="text-[#1A1714] text-[16px] leading-[1.9] mb-10 font-semibold">
             {selected.excerpt}
           </p>
-          <div className="flex flex-col gap-6">
-            {selected.body.map((para, i) => (
-              <div key={i}>
-                <p className="text-[#1A1714] text-[15px] leading-[1.9]">{para}</p>
-                {i === 1 && pullQuote && (
-                  <p className="my-9 border-l-2 border-[#2D8C7E] pl-5 font-display text-xl leading-relaxed text-[#1C3A5A]">
-                    “{pullQuote}”
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+          <RichArticleContent
+            content={selected.body.join('\n\n')}
+            className="journal-public-content"
+          />
           <section className="mt-14 border-t border-[#D4CBBB] pt-10" aria-labelledby="practical-guide">
             <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">NestArcadia practical guide</p>
             <h2 id="practical-guide" className="font-display text-3xl text-[#1A1714] mb-7">Planning this well in a real home</h2>
