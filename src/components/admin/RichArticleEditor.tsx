@@ -7,10 +7,18 @@ interface RichArticleEditorProps {
 }
 
 const toolbar = [
-  ['B', 'Bold', 'bold'], ['I', 'Italic', 'italic'], ['H2', 'Heading 2', 'h2'],
-  ['H3', 'Heading 3', 'h3'], ['“', 'Blockquote', 'quote'], ['•', 'Bulleted list', 'ul'],
+  ['B', 'Bold', 'bold'], ['I', 'Italic', 'italic'], ['“', 'Blockquote', 'quote'], ['•', 'Bulleted list', 'ul'],
   ['1.', 'Numbered list', 'ol'], ['Link', 'Add link', 'link'], ['—', 'Divider', 'hr'],
   ['↶', 'Undo', 'undo'], ['↷', 'Redo', 'redo'],
+] as const;
+
+const textStyles = [
+  { label: 'Body', value: 'P' },
+  { label: 'Lead', value: 'LEAD' },
+  { label: 'Heading 2', value: 'H2' },
+  { label: 'Heading 3', value: 'H3' },
+  { label: 'Heading 4', value: 'H4' },
+  { label: 'Small', value: 'SMALL' },
 ] as const;
 
 const fontOptions = [
@@ -56,7 +64,47 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
 
   const emitChange = () => onChange(editorRef.current?.innerHTML || '');
 
-  const run = (action: typeof toolbar[number][2]) => {
+  const applyBlockStyle = (style: typeof textStyles[number]['value']) => {
+    editorRef.current?.focus();
+    restoreSelection();
+
+    const selection = window.getSelection();
+    if (!selection || !selection.rangeCount || !editorRef.current) return;
+
+    const range = selection.getRangeAt(0);
+    let node: Node | null = range.commonAncestorContainer;
+    if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    let block = node instanceof HTMLElement ? node.closest('p,h2,h3,h4,div,blockquote,li') : null;
+
+    if (!block || !editorRef.current.contains(block)) {
+      document.execCommand('formatBlock', false, 'p');
+      block = node instanceof HTMLElement ? node.closest('p,h2,h3,h4,div,blockquote,li') : null;
+    }
+
+    if (!block || !editorRef.current.contains(block)) return;
+
+    if (style === 'LEAD') {
+      const p = document.createElement('p');
+      p.className = 'editor-lead';
+      p.innerHTML = block.innerHTML;
+      block.replaceWith(p);
+    } else if (style === 'SMALL') {
+      const p = document.createElement('p');
+      p.className = 'editor-small';
+      p.innerHTML = block.innerHTML;
+      block.replaceWith(p);
+    } else {
+      const tag = style.toLowerCase();
+      const replacement = document.createElement(tag);
+      replacement.innerHTML = block.innerHTML;
+      block.replaceWith(replacement);
+    }
+
+    saveSelection();
+    emitChange();
+  };
+
+  const run = (action: typeof toolbar[number][2]) =>
     editorRef.current?.focus();
     restoreSelection();
 
@@ -64,9 +112,7 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
       const url = window.prompt('Enter URL');
       if (!url) return;
       document.execCommand('createLink', false, url);
-    } else if (action === 'h2') document.execCommand('formatBlock', false, 'H2');
-    else if (action === 'h3') document.execCommand('formatBlock', false, 'H3');
-    else if (action === 'quote') document.execCommand('formatBlock', false, 'BLOCKQUOTE');
+    } else if (action === 'quote') document.execCommand('formatBlock', false, 'blockquote');
     else if (action === 'ul') document.execCommand('insertUnorderedList', false);
     else if (action === 'ol') document.execCommand('insertOrderedList', false);
     else if (action === 'hr') document.execCommand('insertHorizontalRule', false);
@@ -126,6 +172,19 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
           </div>
 
           <div className="h-7 w-px bg-[#C9BDAA] mx-1" />
+
+          <label className="admin-editor-control" title="Text style">
+            <span className="admin-editor-control-label">Style</span>
+            <select
+              defaultValue="P"
+              onMouseDown={saveSelection}
+              onChange={(event) => applyBlockStyle(event.target.value as typeof textStyles[number]['value'])}
+              className="admin-editor-select"
+              aria-label="Text style"
+            >
+              {textStyles.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </label>
 
           <label className="admin-editor-control" title="Font">
             <span className="admin-editor-control-label">Font</span>
