@@ -27,15 +27,6 @@ const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
-type FaqItem = [string, string];
-
-const homeFaqSchema: FaqItem[] = [
-  ['Which areas does NestArcadia serve?', 'NestArcadia serves Noida, Greater Noida, Greater Noida West, Delhi, Gurgaon, Faridabad and Ghaziabad for residential and commercial interior design projects.'],
-  ['Do you design 2BHK, 3BHK and 4BHK interiors?', 'Yes. We plan and execute interiors for 2BHK, 3BHK and 4BHK apartments, as well as villas, farmhouses and commercial offices. Every project is tailored to the layout, lifestyle and budget.'],
-  ['What services are included in a turnkey interior project?', 'Turnkey projects can include space planning, 3D visualisation, material selection, modular and custom furniture, lighting, decor, site coordination and final handover.'],
-  ['When should I contact an interior designer?', 'Ideally, contact us before possession or before any civil work begins. Early planning gives more flexibility for electrical points, storage, lighting, kitchen layout and material decisions.'],
-];
-
 const pagePaths: Record<Page, string> = {
   home: '/',
   cultures: '/design-cultures',
@@ -76,7 +67,6 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
   const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null; modifiedAt: string | null } | null>(null);
-  const [faqItems, setFaqItems] = useState<FaqItem[]>(homeFaqSchema);
 
   useEffect(() => {
     let active = true;
@@ -131,15 +121,6 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     loadArticleMeta();
     return () => { active = false; };
   }, [articleSlug]);
-
-  useEffect(() => {
-    let active = true;
-    if (page !== 'faq') { setFaqItems(homeFaqSchema); return; }
-    import('./pages/FAQs/FAQs').then(({ faqGroups }) => {
-      if (active) setFaqItems(faqGroups.flatMap((group) => group.items) as FaqItem[]);
-    });
-    return () => { active = false; };
-  }, [page]);
 
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
@@ -205,7 +186,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       page_type: localService ? 'local_service' : page,
       content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
     });
-  }, [location.pathname, page, article, articleSlug, faqItems, localService]);
+  }, [location.pathname, page, article, articleSlug, localService]);
   return null;
 }
 
