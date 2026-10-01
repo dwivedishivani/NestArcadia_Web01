@@ -558,6 +558,12 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
         {/* Article body */}
         <div className="max-w-[780px] mx-auto px-6 py-16">
+          <div className="mb-10 border-l-2 border-[#2D8C7E] pl-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D8C7E]">Editorial responsibility</p>
+            <p className="text-[13px] leading-[1.7] text-[#6B5E4E] mt-1">
+              Published by NestArcadia Journal. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.
+            </p>
+          </div>
           <a
             href="/journal"
             onClick={(event) => { event.preventDefault(); setArticleId(null); }}
