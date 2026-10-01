@@ -75,7 +75,7 @@ function pageFromPath(pathname: string): Page {
 function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
-  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null } | null>(null);
+  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null; modifiedAt: string | null } | null>(null);
   const [faqItems, setFaqItems] = useState<FaqItem[]>(homeFaqSchema);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     const loadArticleMeta = async () => {
       try {
         const params = new URLSearchParams({
-          select: 'slug,title,excerpt,category,author,image_url,published_at,created_at',
+          select: 'slug,title,excerpt,category,author,image_url,published_at,created_at,updated_at',
           slug: 'eq.' + articleSlug,
           status: 'eq.published',
           limit: '1',
@@ -105,6 +105,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
               category: row.category || 'Journal',
               author: row.author || 'NestArcadia',
               publishedAt: row.published_at || row.created_at || null,
+              modifiedAt: row.updated_at || row.published_at || row.created_at || null,
             });
             return;
           }
@@ -123,6 +124,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           category: fallback.category,
           author: fallback.author,
           publishedAt: null,
+          modifiedAt: null,
         } : null);
       });
     };
@@ -177,7 +179,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Noida Extension', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
-    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author, url: SITE_URL + '/our-story' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt, dateModified: activeArticle.publishedAt } : {}) };
+    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
