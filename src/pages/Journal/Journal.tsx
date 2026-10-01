@@ -687,8 +687,9 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         {/* Featured article */}
         {featured && (
-          <button
-            onClick={() => setArticleId(featured.id)}
+          <a
+            href={`/journal/${featured.id}`}
+            onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group"
           >
             <div className="overflow-hidden bg-[#D4CBBB]" style={{ minHeight: '380px' }}>
@@ -713,16 +714,17 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                 </span>
               </div>
             </div>
-          </button>
+          </a>
         )}
 
         {/* Article grid */}
         {rest.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map(a => (
-              <button
+              <a
                 key={a.id}
-                onClick={() => setArticleId(a.id)}
+                href={`/journal/${a.id}`}
+                onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
                 className="text-left group"
               >
                 <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
@@ -741,7 +743,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                   <p className="text-[12px] text-[#6B5E4E]">{a.author} · {a.readTime}</p>
                   <span className="text-[#2D8C7E] text-sm">→</span>
                 </div>
-              </button>
+              </a>
             ))}
           </div>
         )}
