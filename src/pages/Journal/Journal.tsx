@@ -516,8 +516,10 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   if (selected) {
     const pullQuote = 'pullQuote' in selected ? selected.pullQuote : null;
     const conclusion = 'conclusion' in selected ? selected.conclusion : null;
-    const relatedArticles = selected.related
-      .map(id => articles.find(a => a.id === id))
+    const fallbackArticle = articles.find(a => a.id === selected.id);
+    const relatedIds = selected.related.length > 0 ? selected.related : (fallbackArticle?.related ?? []);
+    const relatedArticles = relatedIds
+      .map(id => sourceArticles.find(a => a.id === id) ?? articles.find(a => a.id === id))
       .filter(Boolean) as typeof articles;
 
     return (
@@ -537,6 +539,12 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               <span>{selected.date}</span>
               <span>·</span>
               <span>{selected.readTime}</span>
+              {'updated' in selected && selected.updated && (
+                <>
+                  <span>·</span>
+                  <span>Updated {selected.updated}</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -593,6 +601,24 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </a>
           </div>
         </div>
+
+        {'researchSources' in selected && selected.researchSources?.length > 0 && (
+          <section className="mt-14 border-t border-[#D4CBBB] pt-8" aria-labelledby="research-notes">
+            <p id="research-notes" className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">Research notes</p>
+            <p className="text-[13px] leading-[1.8] text-[#6B5E4E] mb-4">
+              Technical and performance claims in this article are limited to the conditions described by the cited research. Material performance can vary with formulation, substrate, installation and building conditions.
+            </p>
+            <ul className="space-y-2">
+              {selected.researchSources.map((source) => (
+                <li key={source.href}>
+                  <a href={source.href} target="_blank" rel="noopener noreferrer" className="text-[13px] text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">
+                    {source.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* Related articles */}
         {relatedArticles.length > 0 && (
