@@ -1,7 +1,7 @@
 function sanitizeHtml(html: string) {
   const template = document.createElement('template');
   template.innerHTML = html;
-  const allowed = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'HR', 'FONT']);
+  const allowed = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'HR', 'FONT', 'H4']);
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT);
   const elements: Element[] = [];
   while (walker.nextNode()) elements.push(walker.currentNode as Element);
