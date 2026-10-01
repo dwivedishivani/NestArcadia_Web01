@@ -187,8 +187,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
       { '@type': 'ListItem', position: 3, name: activeArticle.title, item: canonical },
     ] };
-    const visibleFaqs = page === 'home' ? homeFaqSchema : faqItems;
-    const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
+      const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
       { '@type': 'ListItem', position: 2, name: localService.area, item: canonical },
     ] };
@@ -196,9 +195,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb].filter(Boolean) }
       : (articleSchema
         ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
-        : ((page === 'home' || page === 'faq')
-          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }, ...(websiteSchema ? [websiteSchema] : [])].filter(Boolean) }
-          : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : [])] }));
+        : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : [])] }));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
