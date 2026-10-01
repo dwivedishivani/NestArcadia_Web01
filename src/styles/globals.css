@@ -88,17 +88,12 @@ input:focus, textarea:focus, select:focus {
   outline: none;
 }
 
-
 .rich-article-content {
   color: #1A1714;
   font-size: 15px;
   line-height: 1.9;
 }
-
-.rich-article-content p {
-  margin: 0 0 1.35rem;
-}
-
+.rich-article-content p { margin: 0 0 1.35rem; }
 .rich-article-content h2 {
   font-family: var(--font-display, Georgia, serif);
   font-size: clamp(1.55rem, 3vw, 2.15rem);
@@ -106,7 +101,6 @@ input:focus, textarea:focus, select:focus {
   margin: 2.75rem 0 1rem;
   color: #1A1714;
 }
-
 .rich-article-content h3 {
   font-family: var(--font-display, Georgia, serif);
   font-size: clamp(1.2rem, 2vw, 1.55rem);
@@ -114,17 +108,8 @@ input:focus, textarea:focus, select:focus {
   margin: 2rem 0 .75rem;
   color: #1A1714;
 }
-
-.rich-article-content strong,
-.rich-article-content b {
-  font-weight: 650;
-}
-
-.rich-article-content em,
-.rich-article-content i {
-  font-style: italic;
-}
-
+.rich-article-content strong, .rich-article-content b { font-weight: 650; }
+.rich-article-content em, .rich-article-content i { font-style: italic; }
 .rich-article-content blockquote {
   margin: 2rem 0;
   padding: 1rem 0 1rem 1.25rem;
@@ -134,38 +119,117 @@ input:focus, textarea:focus, select:focus {
   font-size: 1.2rem;
   line-height: 1.6;
 }
-
-.rich-article-content ul,
-.rich-article-content ol {
+.rich-article-content ul, .rich-article-content ol {
   margin: 1.25rem 0 1.5rem;
   padding-left: 1.5rem;
 }
-
-.rich-article-content li {
-  margin: .45rem 0;
-}
-
+.rich-article-content li { margin: .45rem 0; }
 .rich-article-content a {
   color: #1C3A5A;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-
 .rich-article-content hr {
   margin: 2.5rem 0;
   border: 0;
   border-top: 1px solid #D4CBBB;
 }
 
+/* Admin rich editor */
+.admin-rich-editor .admin-editor-tool {
+  min-width: 36px;
+  height: 34px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  color: #1A1714;
+  background: #F8F5EF;
+  font-size: 13px;
+  line-height: 1;
+  border-radius: 2px;
+  transition: border-color .15s ease, background-color .15s ease, color .15s ease;
+}
+.admin-rich-editor .admin-editor-tool:hover {
+  border-color: #2D8C7E;
+  background: #FFFFFF;
+  color: #1C3A5A;
+}
+.admin-rich-editor .admin-editor-control {
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 8px;
+  border: 1px solid #C9BDAA;
+  background: #F8F5EF;
+}
+.admin-rich-editor .admin-editor-control-label {
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #6B5E4E;
+}
+.admin-rich-editor .admin-editor-select {
+  min-width: 145px;
+  border: 0;
+  background: transparent;
+  color: #1A1714;
+  font-size: 13px;
+  outline: none;
+}
+.admin-rich-editor .admin-editor-color {
+  width: 27px;
+  height: 24px;
+  padding: 1px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.rich-editor {
+  background: #F8F5EF;
+  font-size: 17px;
+  line-height: 1.85;
+}
 .rich-editor:empty::before {
   content: attr(data-placeholder);
-  color: rgba(107, 94, 78, .5);
+  color: rgba(107, 94, 78, .55);
   pointer-events: none;
 }
-
 .rich-editor p { margin: 0 0 1.25rem; }
-.rich-editor h2 { font-family: var(--font-display, Georgia, serif); font-size: 1.7rem; line-height: 1.25; margin: 1.75rem 0 .75rem; }
-.rich-editor h3 { font-family: var(--font-display, Georgia, serif); font-size: 1.35rem; line-height: 1.3; margin: 1.5rem 0 .65rem; }
-.rich-editor blockquote { margin: 1.5rem 0; padding-left: 1rem; border-left: 2px solid #2D8C7E; color: #1C3A5A; font-family: var(--font-display, Georgia, serif); }
-.rich-editor ul, .rich-editor ol { padding-left: 1.5rem; margin: 1rem 0; }
-.rich-editor a { color: #1C3A5A; text-decoration: underline; text-underline-offset: 3px; }
+.rich-editor h2 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.8rem;
+  line-height: 1.25;
+  margin: 1.9rem 0 .8rem;
+  color: #1C3A5A;
+}
+.rich-editor h3 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.45rem;
+  line-height: 1.3;
+  margin: 1.55rem 0 .7rem;
+  color: #1C3A5A;
+}
+.rich-editor blockquote {
+  margin: 1.6rem 0;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid #2D8C7E;
+  background: rgba(45, 140, 126, .06);
+  color: #1C3A5A;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.2rem;
+}
+.rich-editor ul, .rich-editor ol {
+  padding-left: 1.75rem;
+  margin: 1rem 0 1.4rem;
+}
+.rich-editor ul { list-style: disc; }
+.rich-editor ol { list-style: decimal; }
+.rich-editor li { margin: .45rem 0; }
+.rich-editor a {
+  color: #1C3A5A;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
