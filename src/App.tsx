@@ -11,6 +11,7 @@ import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { getLocalServicePage, type LocalServiceConfig, default as LocalServicePage } from './pages/LocalService/LocalServicePage';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
@@ -71,18 +72,61 @@ function pageFromPath(pathname: string): Page {
   return 'home';
 }
 
-function SeoManager({ page }: { page: Page }) {
+function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
-  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string } | null>(null);
+  const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null } | null>(null);
   const [faqItems, setFaqItems] = useState<FaqItem[]>(homeFaqSchema);
 
   useEffect(() => {
     let active = true;
     if (!articleSlug) { setArticle(null); return; }
-    import('./pages/Journal/Journal').then(({ getJournalArticle }) => {
-      if (active) setArticle(getJournalArticle(articleSlug) ?? null);
-    });
+    const loadArticleMeta = async () => {
+      try {
+        const params = new URLSearchParams({
+          select: 'slug,title,excerpt,category,author,image_url,published_at,created_at',
+          slug: 'eq.' + articleSlug,
+          status: 'eq.published',
+          limit: '1',
+        });
+        const response = await fetch(
+          'https://' + projectId + '.supabase.co/rest/v1/blogs_078be9eb?' + params.toString(),
+          { headers: { apikey: publicAnonKey, Authorization: 'Bearer ' + publicAnonKey } }
+        );
+        if (response.ok) {
+          const rows = await response.json();
+          if (Array.isArray(rows) && rows[0]) {
+            const row = rows[0];
+            if (active) setArticle({
+              id: row.slug || articleSlug,
+              title: row.title || 'NestArcadia Journal',
+              excerpt: row.excerpt || '',
+              img: row.image_url || SOCIAL_IMAGE,
+              category: row.category || 'Journal',
+              author: row.author || 'NestArcadia',
+              publishedAt: row.published_at || row.created_at || null,
+            });
+            return;
+          }
+        }
+      } catch {
+        // Fall through to the bundled article metadata.
+      }
+      import('./pages/Journal/Journal').then(({ getJournalArticle }) => {
+        if (!active) return;
+        const fallback = getJournalArticle(articleSlug);
+        setArticle(fallback ? {
+          id: fallback.id,
+          title: fallback.title,
+          excerpt: fallback.excerpt,
+          img: fallback.img,
+          category: fallback.category,
+          author: fallback.author,
+          publishedAt: null,
+        } : null);
+      });
+    };
+    loadArticleMeta();
     return () => { active = false; };
   }, [articleSlug]);
 
@@ -98,9 +142,11 @@ function SeoManager({ page }: { page: Page }) {
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
     const activeArticle = article?.id === articleSlug ? article : undefined;
-    const meta = activeArticle
-      ? { title: `${activeArticle.title} | NestArcadia Journal`, description: activeArticle.excerpt, image: activeArticle.img, type: 'article' }
-      : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
+    const meta = localService
+      ? { title: localService.title + ' | NestArcadia', description: localService.description, image: SOCIAL_IMAGE, type: 'website' }
+      : activeArticle
+        ? { title: activeArticle.title + ' | NestArcadia Journal', description: activeArticle.excerpt, image: activeArticle.img, type: 'article' }
+        : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
     const canonical = `${SITE_URL}${pathname}`;
     document.title = meta.title;
     const setMeta = (name: string, content: string, property = false) => {
@@ -129,20 +175,27 @@ function SeoManager({ page }: { page: Page }) {
     link.href = canonical;
     let schema = document.getElementById('nestarcadia-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
-    const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
+    const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Noida', 'Greater Noida', 'Greater Noida West', 'Noida Extension', 'Delhi', 'Gurgaon', 'Faridabad', 'Ghaziabad'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
-    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category };
+    const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: { '@type': 'Person', name: activeArticle.author, url: SITE_URL + '/our-story' }, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt, dateModified: activeArticle.publishedAt } : {}) };
+    const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
       { '@type': 'ListItem', position: 3, name: activeArticle.title, item: canonical },
     ] };
     const visibleFaqs = page === 'home' ? homeFaqSchema : faqItems;
-    schema.textContent = JSON.stringify(articleSchema
-      ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema] }
-      : ((page === 'home' || page === 'faq')
-        ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
-        : { '@context': 'https://schema.org', ...businessSchema }));
+    const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+      { '@type': 'ListItem', position: 2, name: localService.area, item: canonical },
+    ] };
+    schema.textContent = JSON.stringify(localService
+      ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb] }
+      : (articleSchema
+        ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema] }
+        : ((page === 'home' || page === 'faq')
+          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }] }
+          : { '@context': 'https://schema.org', ...businessSchema })));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
@@ -152,7 +205,7 @@ function SeoManager({ page }: { page: Page }) {
       page_type: page,
       content_group: page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page,
     });
-  }, [location.pathname, page, article, articleSlug, faqItems]);
+  }, [location.pathname, page, article, articleSlug, faqItems, localService]);
   return null;
 }
 
@@ -206,6 +259,7 @@ function SiteShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const page = pageFromPath(location.pathname);
+  const localService = getLocalServicePage(location.pathname);
   const articleId = location.pathname.startsWith('/journal/') ? location.pathname.split('/')[2] : undefined;
   const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
@@ -213,10 +267,10 @@ function SiteShell() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
-      <SeoManager page={page} />
+      <SeoManager page={page} localService={localService} />
       <Nav page={page} setPage={setPage} />
       <main className="flex-1 pb-24 sm:pb-0">
-        {page === 'home' && <Home setPage={setPage} />}
+        {localService ? <LocalServicePage config={localService} setPage={setPage} /> : page === 'home' && <Home setPage={setPage} />}
         <Suspense fallback={<RouteFallback />}>
           {page === 'cultures' && <DesignCultures setPage={setPage} />}
           {page === 'services' && <Services setPage={setPage} />}
@@ -226,8 +280,8 @@ function SiteShell() {
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}
         </Suspense>
-        <EditorialContext page={page} />
-        <ConversionBanner page={page} setPage={setPage} />
+        {!localService && <EditorialContext page={page} />}
+        {!localService && <ConversionBanner page={page} setPage={setPage} />}
       </main>
       <Footer setPage={setPage} />
       <WhatsApp />
