@@ -197,7 +197,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       : (articleSchema
         ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
         : ((page === 'home' || page === 'faq')
-          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }].filter(Boolean) }
+          ? { '@context': 'https://schema.org', '@graph': [businessSchema, { '@type': 'FAQPage', mainEntity: visibleFaqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }, ...(websiteSchema ? [websiteSchema] : [])].filter(Boolean) }
           : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : [])] }));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
