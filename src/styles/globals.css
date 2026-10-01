@@ -198,6 +198,8 @@ input:focus, textarea:focus, select:focus {
   pointer-events: none;
 }
 .rich-editor p { margin: 0 0 1.25rem; }
+.rich-editor .editor-lead { font-size: 1.2rem; line-height: 1.75; color: #52677E; margin-bottom: 1.5rem; }
+.rich-editor .editor-small { font-size: .875rem; line-height: 1.65; color: #6B5E4E; }
 .rich-editor h2 {
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.8rem;
@@ -232,4 +234,13 @@ input:focus, textarea:focus, select:focus {
   color: #1C3A5A;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+
+.rich-editor h4 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.15rem;
+  line-height: 1.35;
+  margin: 1.35rem 0 .6rem;
+  color: #1C3A5A;
 }
