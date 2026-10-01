@@ -1,7 +1,7 @@
 function sanitizeHtml(html: string) {
   const template = document.createElement('template');
   template.innerHTML = html;
-  const allowed = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'HR', 'FONT']);
+  const allowed = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'HR', 'FONT', 'H4']);
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT);
   const elements: Element[] = [];
   while (walker.nextNode()) elements.push(walker.currentNode as Element);
@@ -23,6 +23,8 @@ function sanitizeHtml(html: string) {
         if ((attribute.name === 'color' && !safeColor) || (attribute.name === 'face' && !safeFace)) {
           element.removeAttribute(attribute.name);
         }
+      } else if (element.tagName === 'P' && attribute.name === 'class') {
+        if (!/^(editor-lead|editor-small)$/.test(attribute.value.trim())) element.removeAttribute(attribute.name);
       } else {
         element.removeAttribute(attribute.name);
       }
@@ -37,7 +39,7 @@ function sanitizeHtml(html: string) {
 }
 
 function looksLikeRichHtml(value: string) {
-  return /<\/(p|h2|h3|blockquote|ul|ol|li|strong|b|em|i|font)>|<(hr)\b/i.test(value);
+  return /<\/(p|h2|h3|h4|blockquote|ul|ol|li|strong|b|em|i|font)>|<(hr)\b/i.test(value);
 }
 
 function legacyParagraphs(value: string) {
