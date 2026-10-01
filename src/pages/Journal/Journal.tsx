@@ -11,6 +11,12 @@ interface Props {
 const u = (id: string, w: number, h: number) =>
   `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
+const LIME_PLASTER_SOURCES = [
+  { label: 'CEPT University / UCL Open Environment — moisture buffering and mould growth in naturally ventilated lime-plastered houses (2024)', href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11443221/' },
+  { label: 'Indoor Environment / J-STAGE — fungal resistance of thinly applied modern lime plaster (2024)', href: 'https://www.jstage.jst.go.jp/article/siej/27/3/27_175/_article/-char/en' },
+  { label: 'ScienceDirect — experimental investigation of cement and lime plaster hygrothermal behaviour (2022)', href: 'https://www.sciencedirect.com/science/article/abs/pii/S0360132322003353' },
+];
+
 export const articles = [
   {
     id: 'rattan',
@@ -36,7 +42,7 @@ export const articles = [
     id: 'jaali',
     category: 'Craft',
     title: 'The Art of Jaali: Bringing Lattice to Modern Homes',
-    excerpt: "The intricately carved jaali screen was once purely architectural. Today it is one of the most requested elements in modern Indian interior design.",
+    excerpt: "The intricately carved jaali screen has long been part of Indian architectural traditions. Today it is often used to introduce filtered light, privacy and pattern into contemporary interiors.",
     author: 'Shivani',
     date: 'Aug 2026',
     readTime: '7 min read',
@@ -44,9 +50,9 @@ export const articles = [
     thumb: u('photo-1759722144194-1fe9ebdd46dd', 800, 560),
     body: [
       "The jaali — a perforated lattice screen cut from stone, wood, or metal — is one of the most sophisticated architectural inventions of the Indian subcontinent. In the courts of Rajasthan, stone jaali allowed women to observe public gatherings from behind a screen that filtered both view and light. In mosques and dargahs, jaali walls created a sense of enclosure while maintaining airflow.",
-      "What made the jaali brilliant was not just its beauty but its environmental intelligence. A jaali wall in a Rajasthani haveli reduced direct solar gain, created pressure differences that drew hot air out, and turned harsh desert light into a soft, patterned glow. This was passive climate control, six hundred years before that phrase existed.",
+      "What made the jaali brilliant was not just its beauty but its environmental intelligence. In historic buildings, perforated screens could provide shade, privacy and filtered daylight while allowing air movement. The exact thermal effect depended on the screen, orientation, surrounding openings and climate, so the principle is best understood as part of a larger passive-design strategy.",
       "In the contemporary Indian home, the jaali has been liberated from its structural origins. It no longer needs to be stone or even weight-bearing. Designers use laser-cut metal panels as room dividers, CNC-routed timber screens as wardrobes, brass jaali as cabinet door inserts, and printed or cast plaster versions as feature walls.",
-      "At NestArcadia, we have used jaali in a variety of ways — from a full-height metal screen that divides a living and dining area in a Noida apartment, to a small brass insert in a kitchen cabinet door in Pune. The scale changes everything. A large jaali commands a room. A small one rewards the careful eye.",
+      "In a contemporary apartment, a jaali can be used as a full-height room divider, a wardrobe or cabinet insert, or a smaller architectural detail. The scale changes everything: a large screen becomes a spatial element, while a smaller insert can introduce pattern without dominating the room.",
       "One thing we have learned: the best jaali in a contemporary interior is the one that is not immediately obvious. The first thing you see should be the light it creates — the pattern of shadow on a white wall, the dappled effect across a dining table. The screen itself is secondary. The light is the point.",
       "For those considering a jaali element in their home, the most practical application is as a wardrobe or cabinet door insert. This gives you the beauty of the pattern without the structural complexity, and the effect — particularly with a warm light source behind the panel — is genuinely remarkable.",
     ],
@@ -55,22 +61,32 @@ export const articles = [
   {
     id: 'lime-plaster',
     category: 'Surfaces',
-    title: 'Lime Plaster: The Ancient Wall Treatment Making a Comeback',
-    excerpt: "There is a reason the walls of India's ancient temples still stand smooth and luminous. Lime plaster is durable, breathable, and deeply beautiful.",
+    title: 'Lime Plaster in Indian Interiors: What the Research Actually Says',
+    excerpt: 'Lime plaster is returning to contemporary Indian interiors, but its real value is more interesting than a trend: moisture buffering, vapour permeability and fungal resistance all depend on the material, formulation and building conditions.',
     author: 'Shivani',
     date: 'Jul 2026',
-    readTime: '6 min read',
+    updated: 'Oct 2026',
+    readTime: '10 min read',
     img: u('photo-1533628635777-112b2239b1c7', 1200, 700),
     thumb: u('photo-1533628635777-112b2239b1c7', 800, 560),
     body: [
-      "Walk into a space finished in lime plaster and you feel it before you see it. The air is slightly different — drier, cleaner. The walls have a quality of light that painted surfaces cannot replicate: a depth, a warmth, a sense that the wall is breathing.",
-      "Lime plaster — chuna in its Indian context — has been used on the subcontinent for thousands of years. The stepped wells of Gujarat, the palace walls of Rajasthan, the courtyard homes of Tamil Nadu and Kerala — lime was the surface treatment that connected Indian architecture across regions, climates, and centuries.",
-      "What makes lime plaster exceptional as a wall finish is its anti-microbial quality (lime is naturally alkaline, inhibiting mold and bacteria), its breathability (it allows walls to release moisture, preventing damp), and its finish, which changes with light throughout the day in a way that paint simply cannot.",
-      "The texture of lime plaster depends entirely on the hand that applies it. A trowel-finished lime wall has a smooth, almost luminous surface. A hand-applied finish has slight irregularities — small peaks and valleys — that catch the light and give the wall a living quality. Both are extraordinary. Neither is replicable with any mass-produced product.",
-      "At NestArcadia, we specify lime plaster for feature walls, bedroom walls, and bathroom walls where the material's anti-humidity properties are particularly valuable. We do not use it everywhere — the contrast between a lime plaster feature wall and a simply painted adjacent wall is often more effective than a fully lime-plastered space.",
-      "The important caveat: lime plaster requires a skilled craftsperson to apply. It is not a material you can commission from a general contractor. The application technique — building up layers, burnishing while wet — takes years to learn. Part of our work at NestArcadia is connecting clients with the craftspeople who can do this material justice.",
+      "Lime plaster has returned to contemporary Indian interiors for a reason that goes beyond appearance. The surface has a soft, mineral depth that changes with daylight, but it also behaves differently from many dense, film-forming finishes. Research on lime-plastered buildings has examined moisture buffering, vapour movement, hygrothermal behaviour and fungal resistance. Those findings are useful — provided we do not turn them into blanket promises.",
+      "In India, lime-based finishes have a long architectural history. Lime plaster and lime mortar appear across historic buildings and conservation work, where their compatibility with traditional masonry and their ability to interact with moisture are important practical considerations. Modern interior lime plasters are not automatically identical to historic recipes, however. Thickness, binder composition, aggregates, additives, substrate and final coating can all change performance.",
+      "One of the strongest research-backed characteristics is moisture buffering. A 2024 study by researchers from CEPT University examined naturally ventilated lime-plastered houses in Ahmedabad, including measurements from 45 traditional buildings. The researchers describe lime plaster as hygroscopic: it can adsorb and desorb moisture, which can moderate indoor relative humidity. They also found that surface moisture and relative-humidity conditions matter when assessing mould growth. In other words, lime can participate in the moisture balance of a building, but it is not a substitute for ventilation, waterproofing or solving a source of damp.",
+      "Vapour permeability is related but slightly different. A vapour-permeable wall assembly can allow moisture vapour to move through materials rather than trapping it behind an impermeable coating. A controlled 2022 experiment comparing lime and cement plaster test cells also found that the lime-plastered cell moderated indoor relative humidity and showed different hygrothermal behaviour. The authors noted that the experiment was conducted under controlled conditions without internal heat loads, so the results should not be treated as a universal temperature or comfort guarantee for every home.",
+      "Fungal resistance is another area where the evidence is more specific than the usual marketing language. A 2024 study published in Indoor Environment tested thinly applied modern lime plaster formulations against Aspergillus niger and Cladosporium sphaerospermum. The tested formulations showed strong fungal resistance, and formulations containing more than 30% slaked lime inhibited fungal growth under the study conditions. That is meaningful evidence for the material property being tested. It does not mean that every lime finish will prevent mould in every room, because real buildings also depend on moisture sources, surface temperature, ventilation, substrate and formulation.",
+      "This distinction matters in bathrooms and other humid spaces. A lime finish may be appropriate where the complete wall build-up and substrate are suitable, but it should never be specified as a way to hide a leaking pipe, rising damp, failed waterproofing or persistent condensation. If moisture is entering the assembly, the cause has to be addressed first. The finish is one layer of a building system, not the system itself.",
+      "The same principle applies to claims about indoor air quality. Some research discusses lime materials in relation to adsorption of certain compounds and fungal resistance, and newer experiments are investigating pollution-mitigation behaviour. That is interesting science, but it is too broad to say that a lime-plastered wall simply 'cleans the air'. Indoor air quality is influenced by ventilation, outdoor pollution, furnishings, cleaning products, combustion sources, filtration and many other factors. A responsible specification should describe the material's measured properties rather than promise a health outcome.",
+      "There is also a practical reason designers continue to value lime: the finish has a distinctive visual response. Trowelled, polished and textured applications can catch light differently across a wall, and natural variation can become part of the character of the room. Unlike a perfectly uniform printed surface, a hand-applied mineral finish can show subtle changes in tone and texture. That variation is a feature for some clients and a drawback for others, which is why physical samples are essential before approval.",
+      "For a Noida or Greater Noida home, we would evaluate lime plaster against the actual room and wall assembly rather than specifying it everywhere. A feature wall in a living room or bedroom may offer the visual depth clients want without making the entire interior dependent on one finish. In areas exposed to water or high humidity, the substrate, waterproofing, ventilation and exact plaster system need to be reviewed before the material is approved.",
+      "Application quality matters as much as the recipe. Surface preparation, layer thickness, curing, substrate compatibility and the final finish can all affect the result. This is why lime plaster should be sampled on the actual substrate and reviewed in the home's lighting. The question is not simply 'Do we like lime plaster?' It is 'Does this particular lime system make sense for this wall, this room and this way of living?'",
+      "For homeowners comparing lime plaster with conventional paint, the useful comparison is not 'natural versus chemical'. Modern paints vary widely in formulation and performance, including low-VOC options. The more useful questions are: Is the coating vapour-permeable? How will it behave with the existing wall? What maintenance does it require? What level of texture or variation do you want? And is the installer experienced with the specified system?",
+      "Another point worth understanding is the difference between a material property and a building outcome. A plaster can be vapour-permeable in a laboratory measurement, yet the overall wall can behave differently if it is paired with an impermeable coating, a damp substrate or a construction detail that prevents moisture from moving as intended. The same caution applies to mould: a surface with fungal resistance can still become a problem if water is continuously available at the wall. Good interior specification therefore starts with the whole assembly and the source of moisture, not a single product label.",
+      "Maintenance should also be part of the decision. Lime finishes can show variation, small marks and changes in appearance as they age. Some homeowners will see that as character; others will prefer a more uniform surface that can be touched up easily. Before approval, it is useful to discuss cleaning, repairs, future drilling, colour variation and what happens if a section of wall needs to be patched. A beautiful material becomes a better long-term choice when the homeowner understands how it will live after installation.",
+      "That is ultimately why lime plaster remains interesting. Its value is not that it is a magical healthy-wall material. Its value is that it combines a distinctive mineral finish with measurable moisture and fungal-resistance characteristics in some formulations and building conditions. When the material, substrate, climate and workmanship are considered together, it can be a highly considered choice for an Indian interior.",
     ],
     related: ['rattan', 'jaali'],
+    researchSources: LIME_PLASTER_SOURCES,
   },
   {
     id: 'north-india',
@@ -82,33 +98,26 @@ export const articles = [
     readTime: '8 min read',
     img: u('photo-1547194936-28214bd75193', 1200, 700),
     thumb: u('photo-1547194936-28214bd75193', 800, 560),
-    body: [
-      "The domestic architecture of northern India was built for grandeur and hospitality. The haveli — the courtyard house of Rajasthan, Punjab, and Uttar Pradesh — was not simply a residence. It was a social institution: a place where family gathered, where guests were received, where commerce happened, and where multiple generations lived together under one roof.",
-      "The materials that defined the haveli were carved sandstone, teak and sheesham wood, lime plaster, and brass. The language of decoration was intricate: jaali screens, carved wooden balconies, painted courtyards, and doorways that announced the family's status and taste. Nothing was minimal. Everything was layered.",
-      "What is remarkable about this tradition is its environmental sophistication. The central courtyard was not merely decorative — it was a passive cooling system. Hot air rose from the courtyard, drawing cooler air in through lower openings. Deep verandas shaded the interior. Thick walls stored coolth from the night. The north Indian haveli was a climate machine, dressed in extraordinary craft.",
-      "In the contemporary Indian apartment, none of the structural elements of the haveli are available. No courtyard, no carved stone facade, no deep veranda. What remains possible is the material and decorative language — translated into a modern idiom.",
-      "This is where NestArcadia's approach becomes important. We do not recreate a haveli inside a Noida flat. We extract the most powerful elements — the warmth of dark teak, the depth of carved detail, the richness of layered textiles — and reinterpret them in a contemporary space. A carved teak door frame. A jaali screen as a room divider. A brasswork light fixture above a marble dining table. The accumulated weight of these details creates a room that feels rooted, without feeling costumed.",
-      "For a 3BHK apartment in NCR that wants a North Indian character, the most effective strategy is to focus the investment on two or three significant elements: the front door, the living room focal wall, and the primary lighting. These three points of intervention, done with real craft and real materials, will establish the character of the entire home.",
-    ],
-    related: ['rattan', 'lime-plaster'],
+    body: ["The domestic architecture of northern India was built for grandeur and hospitality. The haveli — the courtyard house found across parts of Rajasthan, Punjab, Uttar Pradesh and other regions — was not simply a residence. It could be a social and family setting where multiple generations gathered, guests were received and daily work happened around shared spaces.", "The materials associated with many historic havelis include carved stone, timber, lime-based finishes and metalwork. The decorative language can be intricate: jaali screens, carved balconies, painted surfaces and substantial doorways. These elements were not identical across every region or period, so it is more useful to think of the haveli as a family of architectural traditions than as one fixed style.", "What is especially interesting is the relationship between form and climate. Courtyards, shaded verandas, thick walls, controlled openings and high ceilings could help manage sun, airflow and temperature in particular building types. The exact effect depended on orientation, materials, local climate and how the building was occupied. Rather than calling the haveli a universal 'climate machine', it is more accurate to see these elements as parts of a climate-responsive architectural vocabulary.", "In the contemporary Indian apartment, most of those structural conditions are unavailable. There may be no courtyard, carved stone facade or deep veranda. What remains possible is the material and spatial language — translated into a modern idiom.", "This is where NestArcadia's approach becomes useful. We do not recreate a haveli inside a Noida flat. We extract selected qualities — the warmth of timber, the depth of carved detail, the richness of layered textiles or the filtering effect of a screen — and reinterpret them at an appropriate scale. A crafted door detail, a carefully proportioned screen or a brass light can create a sense of rootedness without turning the room into a historical replica.", "For a 3BHK apartment in NCR that wants a North Indian character, a focused palette is usually more practical than trying to reproduce an entire historic vocabulary. Choose a small number of meaningful elements, then give them enough visual space to work. The result can acknowledge regional design history while still feeling like a contemporary home."], related: ['site-execution-noida', 'interior-budget-conversation'],
   },
   {
     id: 'vastu',
     category: 'Wellness',
     title: 'Vastu and Modern Design: Finding Balance Without Compromise',
-    excerpt: "Can Vastu principles coexist with contemporary minimalism? Our designers share how they integrate ancient spatial wisdom into modern layouts.",
+    excerpt: 'A practical look at integrating traditional Vastu preferences into contemporary apartment planning without presenting belief-based guidance as building science.',
     author: 'Shami Saifi',
     date: 'May 2026',
     readTime: '6 min read',
     img: u('photo-1648147870253-c45f6f430528', 1200, 700),
     thumb: u('photo-1648147870253-c45f6f430528', 800, 560),
     body: [
-      "Vastu Shastra is often misunderstood in two opposite ways. Some treat it as superstition, to be ignored in a modern secular home. Others treat it as an absolute code, to be followed even at the cost of spatial sense or aesthetic quality. Both extremes miss the point.",
-      "Vastu is, at its core, a system of spatial logic. Its rules about directional orientation, material placement, and room positioning are derived from observations about the movement of sunlight, the direction of prevailing winds, and the psychological effects of space. Many of its prescriptions make intuitive sense even to someone with no belief in its metaphysical dimensions.",
-      "The kitchen in the southeast — this places the cooking zone toward the morning sun, which dries the space and reduces bacterial growth. The bedroom in the southwest — this orients the head toward the south while sleeping, which many people find genuinely restful. The entry from the north or east — this orients the home toward morning light, making the arrival experience brighter and more welcoming.",
-      "At NestArcadia, we treat Vastu as a design tool, not a constraint. When a client requests Vastu compliance, we begin with the layout — working with the directional logic before we think about aesthetics. In most cases, a Vastu-compliant layout and a well-designed layout are the same thing. The cases where they conflict are rarer than most clients expect.",
-      "Where Vastu does sometimes create challenges is in apartments where the builder's layout is fixed and cannot be structurally altered. In these cases, we work with corrective approaches — the strategic placement of elements like mirrors, plants, colours, and materials — that respect the Vastu intent without requiring structural change.",
-      "For clients who want Vastu guidance as part of their NestArcadia project, we recommend beginning the conversation early — ideally before the apartment is selected, so the directional orientation of the property can be considered from the start. Retrofitting Vastu into an already-purchased and structurally fixed home is possible, but it is always easier to start with a compliant base.",
+      "Vastu Shastra is often approached in two very different ways: as an absolute rulebook or as something that has no place in a contemporary home. For a design brief, a more useful approach is to understand what the client actually wants from Vastu and then separate traditional guidance from measurable building performance.",
+      "Vastu is a traditional Indian system of spatial planning that gives importance to orientation, room placement, entrances and relationships between parts of a dwelling. Some contemporary interpretations also connect these ideas with sunlight, airflow and the experience of space. Those interpretations should not be presented as established building-science or medical evidence. When a client asks for Vastu compliance, we treat the request as part of the design brief and document the choices clearly.",
+      "Traditional Vastu guidance may influence the preferred placement of kitchens, bedrooms, entrances and other spaces. These prescriptions belong to the Vastu tradition rather than being proven causes of health, sleep quality or indoor-air outcomes. That distinction allows the design to respect the client's beliefs without making scientific claims that the evidence does not establish.",
+      "At NestArcadia, the practical starting point is the floor plan. We review orientation, circulation, daylight, ventilation, storage and the builder's fixed constraints before applying the client's Vastu preferences. The aim is to find a layout that works operationally while respecting the principles the household wants to follow.",
+      "Apartments can make this more nuanced because structural walls, plumbing stacks, shafts and electrical locations may already be fixed. In those situations, the design conversation becomes one of priorities: which Vastu requirements are essential to the client, which can be addressed through planning, and where a compromise is preferable to an impractical layout.",
+      "For clients who want Vastu guidance as part of their NestArcadia project, starting early is useful. If the property has not yet been selected, orientation and layout can be considered before purchase. If the home is already fixed, the design can focus on achievable changes rather than promising that decorative adjustments will transform the building's physical performance.",
+      "The strongest outcome is a home that is comfortable, functional and personally meaningful. Vastu can be one layer of that brief, while circulation, daylight, ventilation, storage, materials and execution remain grounded in ordinary design and construction requirements.",
     ],
     related: ['north-india', 'rattan'],
   },
@@ -225,19 +234,6 @@ export const articles = [
     related: ['3d-visualisation-interiors', 'interior-budget-conversation'],
   },
   {
-    id: 'commercial-office-interior-greater-noida-west', category: 'Architecture', title: 'Commercial Office Interior Design in Greater Noida West: Plan for Work, Not Just Looks',
-    excerpt: 'A considered commercial office interior can support focus, trust and growth — from a compact startup suite to a client-facing NCR workspace.', author: 'Mandeep Sharma', date: 'Jul 2026', readTime: '7 min read',
-    img: u('photo-1566112718365-4c8ccbedc3d9', 1200, 700), thumb: u('photo-1566112718365-4c8ccbedc3d9', 800, 560),
-    pullQuote: 'The best office design makes work easier before it makes an impression.', conclusion: 'For commercial interiors in Greater Noida West, Noida and NCR, NestArcadia begins with the real working day. When circulation, acoustics, client experience and future growth are considered together, the result is an office that supports the business long after opening day.',
-    body: [
-      'Commercial office interior design is often reduced to a reception image, a few meeting rooms and a logo wall. Those things matter, but they are only the visible edge of a workplace. A good office in Greater Noida West has to support the way people arrive, work together, take calls, focus, host clients and reset between tasks. The design should make the organisation feel more capable, not merely more decorated.',
-      'The first practical decision is zoning. Teams that need concentration should not sit beside a high-traffic pantry. Meeting rooms need privacy without becoming dark boxes. Reception should give a client a clear sense of arrival while leaving staff enough room to work. In a compact commercial office, flexible rooms, shared touchdown desks and thoughtful storage can create capacity without turning the floor plate into a maze.',
-      'Acoustics are one of the highest-value investments in office interiors. Soft flooring, acoustic panels, upholstered elements and sealed meeting-room doors reduce the stress of constant background sound. This is particularly important in sales, consulting and design businesses where a private conversation or an online call is part of everyday work. Silence does not need to be sterile; it can be built through warm, tactile materials.',
-      'Brand expression should be clear but not excessive. A company’s colours can appear in a restrained way through upholstery, wayfinding, art or one focused wall. We prefer an office that lets people understand the brand through its confidence and clarity rather than through logos on every surface. Natural light, comfortable task seating and a welcoming client area speak to a business’s values as much as a graphic wall does.',
-      'For growing teams in Noida and Greater Noida, the final layer is adaptability. Plan power points, data, spare workstations and storage for the next stage of the team, not only the first day. A commercial interior that can evolve avoids an expensive rework just when the business is gaining momentum.',
-    ], related: ['site-execution-noida', 'interior-budget-conversation'],
-  },
-  {
     id: '4bhk-interior-design-noida', category: 'Design Cultures', title: '4BHK Interior Design in Noida: Giving Every Room a Clear Role',
     excerpt: 'A larger apartment needs more than more furniture. It needs hierarchy, personality and a plan that lets a family use every square foot well.', author: 'Shivani', date: 'Jun 2026', readTime: '7 min read',
     img: u('photo-1745301558339-44eb3217d5da', 1200, 700), thumb: u('photo-1745301558339-44eb3217d5da', 800, 560),
@@ -277,6 +273,9 @@ export const articles = [
     ], related: ['commercial-office-interior-greater-noida-west', 'interior-budget-conversation'],
   },
   {
+    id: 'commercial-office-interior-greater-noida-west', category: 'Architecture', title: 'Commercial Office Interior Design in Greater Noida West: Plan for Work, Not Just Looks', excerpt: 'A practical guide to planning a commercial office around workflow, privacy, lighting, acoustics, storage and the realities of execution in Greater Noida West.', author: 'Mandeep Sharma', date: 'Jul 2026', readTime: '8 min read', img: u('photo-1746439318854-4a8bc02a03ba', 1200, 700), thumb: u('photo-1746439318854-4a8bc02a03ba', 800, 560), pullQuote: 'A good office interior has to work during the working day, not just during a photography session.', conclusion: 'NestArcadia approaches commercial interiors as coordinated working environments, balancing workflow, client experience, materials, lighting and execution.', body: ["A commercial office interior has to work during the working day, not just during a photography session. In Greater Noida West, a useful office brief starts with the people who will use the space: how they arrive, where focused work happens, how meetings are held, where equipment and documents are stored, and what a visitor should understand about the business within the first few minutes.", "The first decision is zoning. A compact office may need reception, workstations, a private cabin, one meeting area, storage and a small support zone without making the plan feel crowded. These functions should be placed according to movement and privacy rather than simply divided into equal rectangles.", "Workstations need the same attention. Desk dimensions, chair movement, monitor position, cable management and storage all affect how comfortable the space is after the novelty wears off. Furniture should be tested against the actual floor plan and team size before it is ordered.", "Lighting is another operational layer. General illumination supports movement and everyday work; task lighting can support specific work areas; accent lighting can shape reception and meeting spaces. Daylight should also be considered where available because glare and screen reflections can affect how a workspace is used.", "Acoustics deserve equal attention. Open work areas, hard ceilings and reflective surfaces can allow conversations and equipment noise to travel farther than expected. The right solution depends on the room, occupancy and construction, so formal acoustic requirements should be discussed with the relevant specialist when needed.", "Storage is often underestimated in small commercial interiors. Files, samples, equipment, cleaning supplies, stationery and personal items all need a place to go. Built-in cabinets can make a compact office feel calmer, but they should be sized around the actual inventory.", "The reception area is the first transition between the outside world and the business. Signage, seating, lighting, the reception desk, circulation and the visibility of the brand should work together without turning the space into a showroom.", "Materials also need a commercial logic. High-touch areas may need surfaces that are easier to maintain; meeting rooms may benefit from softer finishes; reception can carry more visual character. The right palette is the one that matches expected wear, maintenance and the identity of the business.", "In Greater Noida West, site coordination can be just as important as the design. Building rules, access timings, lift availability, material movement, existing services and landlord or society requirements can affect the execution sequence. These constraints should be checked early.", "A clear commercial interior process therefore looks less like a styling exercise and more like a coordinated project: brief and measured site conditions, zoning and circulation, furniture and lighting, storage and materials, documented decisions, coordinated execution and a practical handover review.", "For a growing business, the office may also need to change. Flexible furniture, sensible service planning and adaptable partitions can make future changes easier, although the right level of flexibility depends on the lease, building and business plan.", "The goal is not to make every office look like a polished corporate headquarters. A good commercial interior gives people enough clarity to work, enough privacy to concentrate, enough flexibility to collaborate and enough character to make the business feel like itself."], related: ['office-reception-design-ncr', 'interior-budget-conversation']
+  },
+  {
     id: 'lighting-design-noida-homes', category: 'Surfaces', title: 'Lighting Design for Noida Homes: Layering Light for 2BHK, 3BHK and 4BHK Interiors',
     excerpt: 'Good lighting is not a row of spotlights. It is a layered plan that gives a home atmosphere, comfort and practical clarity.', author: 'Shivani', date: 'Mar 2026', readTime: '6 min read',
     img: u('photo-1564078516393-cf04bd966897', 1200, 700), thumb: u('photo-1564078516393-cf04bd966897', 800, 560),
@@ -306,8 +305,8 @@ export const articles = [
     id: 'sustainable-interior-materials-noida', category: 'Materials', title: 'Sustainable Interior Materials for Noida Homes: What Is Worth Choosing?',
     excerpt: 'A practical view of low-VOC finishes, responsibly sourced wood and durable materials for modern interiors in Noida and Greater Noida.', author: 'Shivani', date: 'Jan 2026', readTime: '6 min read',
     img: u('photo-1618221195710-dd6b41faaea6', 1200, 700), thumb: u('photo-1618221195710-dd6b41faaea6', 800, 560),
-    pullQuote: 'Sustainable design is less about a label and more about choosing materials that stay useful for a long time.', conclusion: 'NestArcadia helps homeowners choose materials that balance healthier indoor air, lasting performance and visual warmth — a more meaningful approach to sustainable interior design in NCR.',
-    body: ['Sustainable interior design is becoming a serious consideration for homeowners, not a passing style. In a Noida apartment, the most useful choices are often practical ones: low-VOC paints, durable surfaces, repairable furniture and wood or boards sourced through responsible suppliers. These decisions improve the home without demanding an impractical lifestyle.', 'The most sustainable item is usually the one that does not need replacing quickly. A well-built wardrobe, a classic floor finish or a solid dining table can outlast several trend cycles. We encourage clients to invest in high-use elements first, then make lighter choices for items that are easy to update later.', 'Indoor air quality matters too. Paints, adhesives and engineered boards can affect a new home’s smell and comfort. Asking about emissions, allowing adequate ventilation during execution and avoiding unnecessary layers of chemical finishes are small but valuable steps. A healthy home should feel considered at the level of materials, not only at the level of colour.', 'The goal is not perfection or a long list of eco claims. It is a coherent home with fewer disposable decisions, durable finishes and materials that age with dignity. That approach supports both the environment and the everyday experience of living there.'], related: ['interior-material-selection-ncr', 'lime-plaster'],
+    pullQuote: 'Sustainable design is less about a label and more about choosing materials that stay useful for a long time.', conclusion: 'NestArcadia helps homeowners compare material performance, durability, maintenance and emissions information so sustainability becomes a practical part of interior decisions in NCR.',
+    body: ["Sustainable interior design is becoming a practical consideration for homeowners, not simply a visual trend. In a Noida apartment, useful choices often include durable finishes, repairable furniture, efficient use of materials and products whose environmental or emissions information can actually be verified.", "The most sustainable item is often one that does not need replacing quickly. A well-built wardrobe, a durable floor finish or a solid dining table can outlast several trend cycles. We encourage clients to invest in high-use elements first, then keep easier-to-change layers — textiles, artwork and accessories — more flexible.", "Indoor air quality deserves a careful, evidence-based conversation. Paints, adhesives, sealants and engineered wood products can emit volatile organic compounds (VOCs), but emissions vary by formulation and product. Rather than treating every 'chemical' finish as harmful, ask manufacturers for product information, consider low-emission options where appropriate, allow adequate ventilation during installation and follow the product's curing or occupancy guidance.", "Durability also matters because replacement has an environmental cost. A finish that can be repaired, refinished or maintained may be preferable to one that looks impressive initially but needs frequent replacement. Maintenance requirements should therefore be considered alongside recycled content, sourcing claims and the expected service life of the product.", "Responsible sourcing is another part of the picture. Wood certification, supplier transparency, locally available materials, transport distance, manufacturing processes and the amount of waste generated during fabrication can all matter. No single label makes a product universally sustainable, so the useful approach is to compare the factors that are relevant to the project.", "The goal is not a perfect material palette or a long list of eco claims. It is a home with fewer disposable decisions, durable finishes, sensible maintenance and enough flexibility to adapt over time. That approach can support both resource-conscious design and the everyday experience of living there."], related: ['interior-material-selection-ncr', 'lime-plaster'],
   },
   {
     id: 'handcrafted-textiles-modern-home', category: 'Craft', title: 'Handcrafted Textiles in Modern Indian Interiors: How to Use Them Without Overdoing It',
@@ -444,7 +443,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
     const loadPublishedArticles = async () => {
       try {
         const params = new URLSearchParams({
-          select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at',
+          select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at,updated_at',
           status: 'eq.published',
           order: 'published_at.desc.nullslast,created_at.desc',
         });
@@ -468,6 +467,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           thumb: row.image_url || '',
           body: String(row.content || '').split(/\\n\\s*\\n/).filter(Boolean),
           related: [],
+          ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
         }));
         setLiveArticles(normalized);
       } catch {
@@ -516,8 +516,10 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   if (selected) {
     const pullQuote = 'pullQuote' in selected ? selected.pullQuote : null;
     const conclusion = 'conclusion' in selected ? selected.conclusion : null;
-    const relatedArticles = selected.related
-      .map(id => articles.find(a => a.id === id))
+    const fallbackArticle = articles.find(a => a.id === selected.id);
+    const relatedIds = selected.related.length > 0 ? selected.related : (fallbackArticle?.related ?? []);
+    const relatedArticles = relatedIds
+      .map(id => sourceArticles.find(a => a.id === id) ?? articles.find(a => a.id === id))
       .filter(Boolean) as typeof articles;
 
     return (
@@ -537,12 +539,24 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               <span>{selected.date}</span>
               <span>·</span>
               <span>{selected.readTime}</span>
+              {'updated' in selected && selected.updated && (
+                <>
+                  <span>·</span>
+                  <span>Updated {selected.updated}</span>
+                </>
+              )}
             </div>
           </div>
         </div>
 
         {/* Article body */}
         <div className="max-w-[780px] mx-auto px-6 py-16">
+          <div className="mb-10 border-l-2 border-[#2D8C7E] pl-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D8C7E]">Editorial responsibility</p>
+            <p className="text-[13px] leading-[1.7] text-[#6B5E4E] mt-1">
+              Published by NestArcadia Journal. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.
+            </p>
+          </div>
           <a
             href="/journal"
             onClick={(event) => { event.preventDefault(); setArticleId(null); }}
@@ -593,6 +607,24 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </a>
           </div>
         </div>
+
+        {'researchSources' in selected && selected.researchSources?.length > 0 && (
+          <section className="mt-14 border-t border-[#D4CBBB] pt-8" aria-labelledby="research-notes">
+            <p id="research-notes" className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">Research notes</p>
+            <p className="text-[13px] leading-[1.8] text-[#6B5E4E] mb-4">
+              Technical and performance claims in this article are limited to the conditions described by the cited research. Material performance can vary with formulation, substrate, installation and building conditions.
+            </p>
+            <ul className="space-y-2">
+              {selected.researchSources.map((source) => (
+                <li key={source.href}>
+                  <a href={source.href} target="_blank" rel="noopener noreferrer" className="text-[13px] text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">
+                    {source.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* Related articles */}
         {relatedArticles.length > 0 && (
@@ -655,8 +687,9 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         {/* Featured article */}
         {featured && (
-          <button
-            onClick={() => setArticleId(featured.id)}
+          <a
+            href={`/journal/${featured.id}`}
+            onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group"
           >
             <div className="overflow-hidden bg-[#D4CBBB]" style={{ minHeight: '380px' }}>
@@ -681,16 +714,17 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                 </span>
               </div>
             </div>
-          </button>
+          </a>
         )}
 
         {/* Article grid */}
         {rest.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map(a => (
-              <button
+              <a
                 key={a.id}
-                onClick={() => setArticleId(a.id)}
+                href={`/journal/${a.id}`}
+                onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
                 className="text-left group"
               >
                 <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
@@ -709,7 +743,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                   <p className="text-[12px] text-[#6B5E4E]">{a.author} · {a.readTime}</p>
                   <span className="text-[#2D8C7E] text-sm">→</span>
                 </div>
-              </button>
+              </a>
             ))}
           </div>
         )}

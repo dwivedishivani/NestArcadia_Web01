@@ -7,7 +7,7 @@ const content: Record<Page, { title: string; label: string; paragraphs: string[]
     paragraphs: [
       'NestArcadia is an Indian interior design studio for homeowners who want more than a finished room. We begin with daily rituals: the first cup of chai, a child’s homework at the dining table, a grandparents’ favourite chair, the way afternoon light enters a living room. Those details guide our layouts, storage, lighting and material choices, so the result feels personal from the first day—not merely styled for a photograph.',
       'Our work brings regional craft into contemporary homes with care. A handwoven textile, a carved timber detail, lime plaster or a finely proportioned jaali can hold the memory of a place while still serving a modern apartment, villa or holiday home. We design across India and coordinate the practical work behind a beautiful home: planning, drawings, sourcing, custom furniture, site execution and finishing layers.',
-      'Whether you are renovating a compact city apartment or building a family home from the ground up, our process is designed to make decisions clearer. Explore our design cultures, see completed homes, or begin with a project brief. We will help turn your requirements into an interior with a distinct sense of belonging.'
+      'Whether you are renovating a compact city apartment or building a family home from the ground up, our process is designed to make decisions clearer. Explore our design cultures, browse selected design studies, or begin with a project brief. We will help turn your requirements into an interior with a distinct sense of belonging.'
     ]
   },
   cultures: {
@@ -48,11 +48,11 @@ const content: Record<Page, { title: string; label: string; paragraphs: string[]
   },
   homes: {
     label: 'Selected work',
-    title: 'Interior design projects shaped by place, people and everyday use',
+    title: 'Selected design studies shaped by place, people and everyday use',
     paragraphs: [
-      'Every NestArcadia home begins with an individual set of constraints and opportunities: an apartment’s daylight, a villa’s garden view, a family’s collected furniture or a city’s climate. Our portfolio shows the outcomes, but it also reflects the questions behind them—how to create privacy in an open plan, how to make a compact home feel generous, and how to introduce heritage without making a room feel overdone.',
-      'Across these projects, you will find a shared design discipline. Materials are chosen for their character and performance, circulation is made clear, and the visual language is edited until it feels effortless. Some homes draw from a particular region; others take a lighter, more contemporary route. All are made to hold the lives taking place inside them.',
-      'Filter by region or home type to find relevant references, then open a project for its essential details. If you see a direction that feels close to your own home, our team can help translate that mood into a plan suited to your space, budget and timeline.'
+      'Every NestArcadia design study begins with an individual set of constraints and opportunities: an apartment’s daylight, a villa’s garden view, a family’s collected furniture or a city’s climate. These references focus on the design decisions behind a space—how to create privacy in an open plan, how to make a compact home feel generous, and how to introduce heritage without making a room feel overdone.',
+      'Across these studies, you will find a shared design discipline. Materials are considered for their character and practical performance, circulation is made clear, and the visual language is edited until it feels effortless. Some references draw from a particular region; others take a lighter, more contemporary route.',
+      'Filter by region or home type to find relevant references. Where a project is presented as a concept, it is labelled accordingly rather than presented as completed client work. If you see a direction that feels close to your own home, our team can help translate that mood into a plan suited to your space, budget and timeline.'
     ]
   },
   project: {

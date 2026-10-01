@@ -124,7 +124,7 @@ export default function Homes({ setPage }: Props) {
           .filter((home: any) => home.gallery.length > 0);
         if (!cancelled && normalized.length > 0) setLiveHomes(normalized);
       } catch {
-        // Keep the curated portfolio bundled with the site if the public content request fails.
+        // Keep the curated design studies bundled with the site if the public content request fails.
       }
     };
     loadPublishedHomes();
@@ -142,14 +142,14 @@ export default function Homes({ setPage }: Props) {
     return (
       <div className="pt-20 lg:pt-[90px]">
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
-          <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design project in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design concept in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
           <p className="absolute right-6 bottom-5 lg:right-20 text-[11px] tracking-[0.2em] text-white/80">{String(activeImage + 1).padStart(2, '0')} / {String(selected.gallery.length).padStart(2, '0')}</p>
         </div>
         <section className="border-b border-[#D4CBBB] bg-[#EAE4DA]">
           <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[#6B5E4E]">Project Gallery</p>
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[#6B5E4E]">Concept Gallery</p>
               <p className="text-[11px] text-[#2D8C7E]">Select a view</p>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
@@ -190,7 +190,7 @@ export default function Homes({ setPage }: Props) {
                 onClick={() => setPage('project')}
                 className="text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#2D8C7E] hover:border-[#2D8C7E] transition-all"
               >
-                Design My Home Like This →
+                Use This Concept as a Reference →
               </button>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function Homes({ setPage }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Portfolio</p>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Homes</h1>
-        <p className="text-[#6B5E4E] text-sm mt-3">Real spaces. Real people. Real stories.</p>
+        <p className="text-[#6B5E4E] text-sm mt-3">Selected design studies and portfolio concepts.</p>
       </div>
 
       {/* Filters */}
@@ -247,7 +247,7 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
-                    alt={`NestArcadia ${h.type} interior design project in ${h.location}`}
+                    alt={`NestArcadia ${h.type} interior design concept in ${h.location}`}
                     loading="lazy"
                     decoding="async"
                     width="800"

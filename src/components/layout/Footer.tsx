@@ -46,6 +46,14 @@ export default function Footer({ setPage }: FooterProps) {
                 {l.label}
               </button>
             ))}
+            <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Local design services</p>
+              <div className="flex flex-col gap-2">
+                <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Greater Noida West</a>
+                <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Noida Extension</a>
+                <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
+              </div>
+            </div>
             <button
               onClick={() => setPage('project')}
               className="text-[14px] text-[#2D8C7E] text-left mt-2 hover:text-[#1C3A5A] transition-colors font-medium"
