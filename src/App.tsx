@@ -1,5 +1,5 @@
 import { Component, lazy, Suspense, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
-import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router';
+import { createBrowserRouter, RouterProvider, useLocation, useNavigate, useRouteError } from 'react-router';
 import Nav from './components/navigation/Nav';
 import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
@@ -47,7 +47,9 @@ class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
 
   handleRetry = () => {
     sessionStorage.removeItem('nestarcadia_chunk_retry');
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.set('_na_reload', String(Date.now()));
+    window.location.replace(url.toString());
   };
 
   render() {
@@ -240,6 +242,43 @@ function RouteFallback() {
   return <div className="min-h-[52vh] animate-pulse bg-[#F2EDE4] px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-[#D4CBBB]" /><div className="mx-auto mt-6 h-12 max-w-xl bg-[#EAE4DA]" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-[#EAE4DA]" /></div>;
 }
 
+function RouteErrorElement() {
+  const error = useRouteError();
+  const message = error instanceof Error ? error.message : String(error ?? '');
+  const isChunkError = /chunk|loading css|failed to fetch dynamically imported module|importing a module script failed/i.test(message);
+
+  useEffect(() => {
+    if (!isChunkError || sessionStorage.getItem('nestarcadia_chunk_retry')) return;
+    sessionStorage.setItem('nestarcadia_chunk_retry', '1');
+    const url = new URL(window.location.href);
+    url.searchParams.set('_na_reload', String(Date.now()));
+    window.location.replace(url.toString());
+  }, [isChunkError]);
+
+  const retry = () => {
+    sessionStorage.removeItem('nestarcadia_chunk_retry');
+    const url = new URL(window.location.href);
+    url.searchParams.set('_na_reload', String(Date.now()));
+    window.location.replace(url.toString());
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F2EDE4] text-[#1A1714] flex items-center justify-center px-6 py-24">
+      <div className="max-w-xl text-center">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+        <h1 className="font-display text-4xl sm:text-5xl leading-tight mb-5">Something interrupted this page.</h1>
+        <p className="text-[#6B5E4E] text-sm leading-7 mb-8">
+          This usually happens while the site is updating. We have tried to refresh the latest version automatically.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <button type="button" onClick={retry} className="bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold hover:bg-[#2D8C7E] transition-colors">Reload Latest Version</button>
+          <a href="/" className="border border-[#1C3A5A] text-[#1C3A5A] px-6 py-3 text-sm font-semibold hover:bg-[#1C3A5A] hover:text-white transition-colors">Go to Home</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AdminShell() {
   const navigate = useNavigate();
   const [adminPassword, setAdminPassword] = useState<string | null>(sessionStorage.getItem('admin_password'));
@@ -315,6 +354,6 @@ function SiteShell() {
   );
 }
 
-const router = createBrowserRouter([{ path: '*', Component: SiteShell }]);
+const router = createBrowserRouter([{ path: '*', Component: SiteShell, errorElement: <RouteErrorElement /> }]);
 
 export default function App() { return <SiteErrorBoundary><RouterProvider router={router} /></SiteErrorBoundary>; }
