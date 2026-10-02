@@ -234,7 +234,7 @@ export default function Homes({ setPage }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         {filtered.length === 0 ? (
           <div className="py-20 text-center">
-            <p className="text-[#6B5E4E] text-sm">No homes match this filter.</p>
+            <p className="text-[#6B5E4E] text-sm">No projects match this filter.</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
