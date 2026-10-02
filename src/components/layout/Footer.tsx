@@ -6,7 +6,7 @@ interface FooterProps {
 }
 
 const navLinks: { label: string; page: Page }[] = [
-  { label: 'Homes', page: 'homes' },
+  { label: 'Our Projects', page: 'homes' },
   { label: 'Design Cultures', page: 'cultures' },
   { label: 'Our Services', page: 'services' },
   { label: 'Our Story', page: 'story' },
