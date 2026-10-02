@@ -1,0 +1,10 @@
+# NestArcadia SPA redirects
+RewriteEngine On
+
+# Preserve the old portfolio URL for SEO/bookmarks.
+RewriteRule ^homes/?$ /our-projects [R=301,L]
+
+# Send all other client-side routes to the React app.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
