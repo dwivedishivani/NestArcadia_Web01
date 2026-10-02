@@ -104,7 +104,7 @@ export default function RichArticleEditor({ value, onChange, placeholder }: Rich
     emitChange();
   };
 
-  const run = (action: typeof toolbar[number][2]) =>
+  const run = (action: typeof toolbar[number][2]) => {
     editorRef.current?.focus();
     restoreSelection();
 
