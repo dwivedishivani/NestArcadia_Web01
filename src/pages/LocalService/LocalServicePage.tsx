@@ -24,7 +24,7 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-greater-noida-west',
     eyebrow: 'Greater Noida West · Interior Design',
-    title: 'Interior Design in Greater Noida West, Planned for Real Homes',
+    title: 'Interior Design in Greater Noida West',
     description: 'Interior design and turnkey execution for apartments, villas and new-possession homes in Greater Noida West — with practical planning for storage, kitchens, lighting and site execution.',
     area: 'Greater Noida West',
     heroImage: image('photo-1600210492486-724fe5c67fb0'),
@@ -53,7 +53,7 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-noida-extension',
     eyebrow: 'Noida Extension · Interior Design',
-    title: 'Interior Design in Noida Extension for 2BHK, 3BHK and 4BHK Homes',
+    title: 'Interior Design for Homes in Noida Extension',
     description: 'Practical residential interior design for Noida Extension apartments, from space planning and modular kitchens to custom storage, lighting and turnkey execution.',
     area: 'Noida Extension',
     heroImage: image('photo-1618221195710-dd6b41faaea6'),
@@ -130,7 +130,7 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
         <div className="absolute inset-0 bg-[#1C3A5A]/45" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[400px] lg:min-h-[460px] pb-14">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/55 mb-4">{config.eyebrow}</p>
-          <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05] max-w-5xl">{config.title}</h1>
+          <h1 className="font-display text-[clamp(2.3rem,5vw,4rem)] text-white leading-[1.06] max-w-4xl">{config.title}</h1>
           <p className="text-white/65 text-sm leading-[1.8] max-w-2xl mt-4">{config.description}</p>
           <a href="/start-your-project" onClick={(event) => { event.preventDefault(); setPage('project'); }} className="inline-flex mt-7 self-start bg-white text-[#1C3A5A] px-7 py-3 text-[13px] font-semibold hover:bg-[#2D8C7E] hover:text-white transition-colors">Discuss Your Project →</a>
         </div>
