@@ -6,6 +6,7 @@ import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.pn
 interface NavProps {
   page: Page;
   setPage: (page: Page) => void;
+  forceSolid?: boolean;
 }
 
 const links: { label: string; page: Page }[] = [
@@ -16,7 +17,7 @@ const links: { label: string; page: Page }[] = [
   { label: 'Journal', page: 'journal' },
 ];
 
-export default function Nav({ page, setPage }: NavProps) {
+export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -29,7 +30,7 @@ export default function Nav({ page, setPage }: NavProps) {
   useEffect(() => setMenuOpen(false), [page]);
 
   const isHome = page === 'home';
-  const transparent = isHome && !scrolled;
+  const transparent = isHome && !scrolled && !forceSolid;
 
   return (
     <>
