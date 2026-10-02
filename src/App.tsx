@@ -74,7 +74,7 @@ const pagePaths: Record<Page, string> = {
   services: '/interior-design-services',
   story: '/our-story',
   journal: '/journal',
-  homes: '/homes',
+  homes: '/our-projects',
   project: '/start-your-project',
   faq: '/faqs',
   admin: '/admin',
@@ -98,7 +98,7 @@ function pageFromPath(pathname: string): Page {
   if (pathname.startsWith('/interior-design-services')) return 'services';
   if (pathname.startsWith('/our-story')) return 'story';
   if (pathname.startsWith('/journal')) return 'journal';
-  if (pathname.startsWith('/homes')) return 'homes';
+  if (pathname.startsWith('/our-projects')) return 'homes';
   if (pathname.startsWith('/start-your-project')) return 'project';
   if (pathname.startsWith('/faqs')) return 'faq';
   return 'home';
