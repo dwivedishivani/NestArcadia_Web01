@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Component, lazy, Suspense, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
 import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router';
 import Nav from './components/navigation/Nav';
 import Footer from './components/layout/Footer';
@@ -27,6 +27,47 @@ const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-
 
 const SITE_URL = 'https://nestarcadia.com';
 const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
+
+class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('NestArcadia page error:', error, info);
+    const message = String(error?.message || '').toLowerCase();
+    const isChunkError = /chunk|loading css|failed to fetch dynamically imported module|importing a module script failed/.test(message);
+    if (isChunkError && !sessionStorage.getItem('nestarcadia_chunk_retry')) {
+      sessionStorage.setItem('nestarcadia_chunk_retry', '1');
+      window.location.reload();
+    }
+  }
+
+  handleRetry = () => {
+    sessionStorage.removeItem('nestarcadia_chunk_retry');
+    window.location.reload();
+  };
+
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <div className="min-h-screen bg-[#F2EDE4] text-[#1A1714] flex items-center justify-center px-6 py-24">
+        <div className="max-w-xl text-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+          <h1 className="font-display text-4xl sm:text-5xl leading-tight mb-5">Something interrupted this page.</h1>
+          <p className="text-[#6B5E4E] text-sm leading-7 mb-8">The site is still available. Please try the page again, or return to the homepage.</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button type="button" onClick={this.handleRetry} className="bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold hover:bg-[#2D8C7E] transition-colors">Reload Page</button>
+            <a href="/" className="border border-[#1C3A5A] text-[#1C3A5A] px-6 py-3 text-sm font-semibold hover:bg-[#1C3A5A] hover:text-white transition-colors">Go to Home</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 const pagePaths: Record<Page, string> = {
   home: '/',
   cultures: '/design-cultures',
@@ -276,4 +317,4 @@ function SiteShell() {
 
 const router = createBrowserRouter([{ path: '*', Component: SiteShell }]);
 
-export default function App() { return <RouterProvider router={router} />; }
+export default function App() { return <SiteErrorBoundary><RouterProvider router={router} /></SiteErrorBoundary>; }
