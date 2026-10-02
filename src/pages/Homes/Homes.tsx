@@ -166,7 +166,7 @@ export default function Homes({ setPage }: Props) {
             onClick={() => setSelected(null)}
             className="text-[13px] font-semibold text-[#52677E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
           >
-            ← Back to Homes
+            ← Back to Our Projects
           </button>
           <div className="max-w-[780px]">
               <p className="text-[11px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">{selected.style} India · {selected.style}</p>
@@ -203,7 +203,7 @@ export default function Homes({ setPage }: Props) {
       {/* Header */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Portfolio</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Homes</h1>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Our Projects</h1>
         <p className="text-[#6B5E4E] text-sm mt-3">Selected design studies and portfolio concepts.</p>
       </div>
 
