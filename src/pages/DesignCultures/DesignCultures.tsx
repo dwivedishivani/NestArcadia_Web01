@@ -20,8 +20,8 @@ const cultures = [
     tagline: 'Wood. Light. Timeless elegance.',
     desc: 'South Indian design breathes with natural light and unadorned wood. Rosewood pillars, granite floors, and woven cane — simplicity is the luxury. Spaces are open, airy, and grounded in a deep respect for natural materials.',
     materials: ['Rosewood and teak columns', 'Granite and Athangudi tiles', 'Woven cane furniture', 'Bronze temple lamps', 'Mango wood accents'],
-    img: u('photo-1746439324750-da9426ed51e7', 1200, 800),
-    thumb: u('photo-1746439324750-da9426ed51e7', 600, 400),
+    img: u('photo-1713192704825-74a0017f585d', 1200, 800),
+    thumb: u('photo-1713192704825-74a0017f585d', 600, 400),
     accent: '#2D8C7E',
   },
   {
