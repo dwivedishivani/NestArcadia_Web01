@@ -88,7 +88,7 @@ export default function DesignCultures({ setPage }: Props) {
         {cultures.map((c, i) => (
           <div
             key={c.name}
-            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#D4CBBB] ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
+            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#D4CBBB] lg:h-[520px] lg:overflow-hidden ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
           >
             {/* Image — alternates sides */}
             <div
@@ -108,18 +108,18 @@ export default function DesignCultures({ setPage }: Props) {
 
             {/* Text */}
             <div
-              className={`flex flex-col justify-center px-8 lg:px-16 py-14 ${i % 2 === 1 ? 'lg:order-1' : ''}`}
+              className={`flex flex-col justify-center px-8 lg:px-16 py-14 lg:py-8 overflow-hidden ${i % 2 === 1 ? 'lg:order-1' : ''}`}
               style={{ background: i % 2 === 0 ? '#F2EDE4' : '#EAE4DA' }}
             >
-              <p className="text-[10px] uppercase tracking-[0.28em] text-[#6B5E4E] mb-4">0{i + 1}</p>
-              <h2 className="font-display text-[clamp(2rem,4vw,3rem)] text-[#1A1714] mb-2">{c.name}</h2>
-              <p className="text-[#2D8C7E] text-sm mb-6">{c.tagline}</p>
-              <p className="text-[#6B5E4E] text-sm leading-[1.8] mb-8">{c.desc}</p>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-[#6B5E4E] mb-2 lg:mb-2">0{i + 1}</p>
+              <h2 className="font-display text-[clamp(2rem,4vw,3rem)] text-[#1A1714] mb-1 lg:mb-1">{c.name}</h2>
+              <p className="text-[#2D8C7E] text-sm lg:text-[13px] mb-3 lg:mb-3">{c.tagline}</p>
+              <p className="text-[#6B5E4E] text-sm leading-[1.8] lg:text-[13px] lg:leading-[1.55] mb-4 lg:mb-4">{c.desc}</p>
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Signature Materials</p>
-                <ul className="flex flex-col gap-1.5">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 lg:mb-2">Signature Materials</p>
+                <ul className="flex flex-col gap-1 lg:gap-1">
                   {c.materials.map(m => (
-                    <li key={m} className="text-xs text-[#1A1714] flex items-center gap-2">
+                    <li key={m} className="text-xs lg:text-[11px] text-[#1A1714] flex items-center gap-2">
                     <span className="w-1 h-1 bg-[#2D8C7E] rounded-full shrink-0" />
                       {m}
                     </li>
@@ -128,7 +128,7 @@ export default function DesignCultures({ setPage }: Props) {
               </div>
               <button
                 onClick={() => setPage('project')}
-                className="mt-8 text-[14px] font-semibold text-[#1C3A5A] border border-[#1C3A5A] px-6 py-2.5 self-start hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+                className="mt-4 lg:mt-4 text-[14px] lg:text-[13px] font-semibold text-[#1C3A5A] border border-[#1C3A5A] px-6 lg:px-5 py-2.5 lg:py-2 self-start hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
               >
                 Design My Home in This Style →
               </button>
