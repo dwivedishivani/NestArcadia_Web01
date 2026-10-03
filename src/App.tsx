@@ -26,7 +26,7 @@ export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'hom
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
 const SITE_URL = 'https://nestarcadia.com';
-const SOCIAL_IMAGE = 'https://images.unsplash.com/photo-1603901622056-0a5bee231395?w=1200&h=630&fit=crop&auto=format&q=85';
+const SOCIAL_IMAGE = `${SITE_URL}/images/site/photo-1603901622056-0a5bee231395.jpg`;
 
 class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
