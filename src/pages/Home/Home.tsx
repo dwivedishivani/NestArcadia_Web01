@@ -14,7 +14,7 @@ const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
 const IMG = {
   hero:     u('photo-1713192706971-03900dcf5706', 1920, 1080),
   north:    u('photo-1713192706955-6ef5c71811bd', 600, 760),
-  south:    u('south-courtyard-generated-01', 600, 760),
+  south:    u('photo-1746439324750-da9426ed51e7', 600, 760),
   east:     u('photo-1713192707527-13b598f4adca', 600, 760),
   west:     u('photo-1713192707656-11e779929375', 600, 760),
   central:  u('photo-1690629979559-898c1b23ae3d', 600, 760),
