@@ -173,6 +173,22 @@ export default function Services({ setPage }: Props) {
         </div>
       </section>
 
+      {/* Service Areas */}
+      <section className="py-20 px-6 lg:px-20">
+        <div className="max-w-[1440px] mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Where We Work</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior Design Across NCR</h2>
+            <p className="text-[#6B5E4E] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West, with residential and commercial design work across nearby NCR markets.</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 pt-1">
+            {['Greater Noida West','Noida Extension','Greater Noida','Noida','Ghaziabad','Indirapuram','Crossing Republik','Faridabad','Delhi','Gurugram','Dadri','Jewar','Yamuna Expressway','Delhi NCR'].map(area => (
+              <span key={area} className="border-b border-[#D4CBBB] pb-2 text-xs text-[#1A1714]">{area}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <div className="bg-[#1C3A5A] py-16 px-6 lg:px-20">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
