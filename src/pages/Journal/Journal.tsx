@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import RichArticleContent from '../../components/common/RichArticleContent';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
 
 interface Props {
   setPage: (p: Page) => void;
@@ -464,8 +464,8 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           author: row.author || 'NestArcadia',
           date: new Date(row.published_at || row.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }),
           readTime: row.read_time || '5 min read',
-          img: row.image_url || '',
-          thumb: row.image_url || '',
+          img: resolveSiteImageReference(row.image_url || ''),
+          thumb: resolveSiteImageReference(row.image_url || ''),
           body: String(row.content || '').split(/\\n\\s*\\n/).filter(Boolean),
           related: [],
           ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
