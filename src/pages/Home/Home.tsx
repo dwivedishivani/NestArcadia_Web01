@@ -13,11 +13,11 @@ const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
 
 const IMG = {
   hero:     u('photo-1713192706971-03900dcf5706', 1920, 1080),
-  north:    u('photo-1713192706955-6ef5c71811bd', 600, 760),
+  north:    u('photo-1604578762246-41134e37f9cc', 600, 760),
   south:    u('photo-1713192704825-74a0017f585d', 600, 760),
-  east:     u('photo-1713192707527-13b598f4adca', 600, 760),
-  west:     u('photo-1713192707656-11e779929375', 600, 760),
-  central:  u('photo-1690629979559-898c1b23ae3d', 600, 760),
+  east:     u('photo-1640357264948-24beb7df5216', 600, 760),
+  west:     u('photo-1746439315937-79a9cb4c1521', 600, 760),
+  central:  u('photo-1746173098001-2ae330a6a763', 600, 760),
   classics: u('photo-1643148636639-c4f28543a5cc', 960, 640),
   rattan:   u('photo-1781232756080-c81ff43ff8f7', 600, 400),
   wicker:   u('photo-1758486561455-ebd0d3ba7423', 600, 400),
