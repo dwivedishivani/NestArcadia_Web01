@@ -1,9 +1,10 @@
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 import { useNavigate } from 'react-router';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => `/images/site/${id}.jpg`;
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
 
 const services = [
   {
