@@ -504,9 +504,19 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
         </section>
 
         <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pb-16 lg:pb-20">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 items-stretch">
             {photos.slice(0, 4).map((src, i) => (
-              <img key={src + i} src={src} alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'} width="800" height="900" loading="lazy" decoding="async" className={`w-full h-[220px] lg:h-[300px] object-cover ${i === 1 ? 'mt-8 lg:mt-12' : ''} `} />
+              <div key={src + i} className="group overflow-hidden">
+                <img
+                  src={src}
+                  alt={i === 0 ? `${config.area} interior design reference` : 'Interior design reference'}
+                  width="800"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-[220px] lg:h-[300px] object-cover transition-transform duration-500 ease-out group-hover:translate-y-3"
+                />
+              </div>
             ))}
           </div>
           <p className="text-[11px] text-[#8A7B69] mt-3">Design references from NestArcadia’s visual language — not presented as a local project claim.</p>
