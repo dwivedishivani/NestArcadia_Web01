@@ -5,7 +5,7 @@ import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
   .map((width) => `${u(id, width, Math.round(width * 9 / 16))} ${width}w`)
