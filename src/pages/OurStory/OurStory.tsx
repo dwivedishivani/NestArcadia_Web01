@@ -2,8 +2,7 @@ import type { Page } from '../../App';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, w: number, h: number) =>
-  `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
+const u = (id: string, _w: number, _h: number) => `/images/site/${id}.jpg`;
 
 const timeline = [
   { year: '2024', event: 'NestArcadia founded', desc: 'Built on a family background in real estate and construction, NestArcadia began as a design-focused practice for thoughtful interiors.' },
