@@ -79,12 +79,6 @@ export default function Footer({ setPage }: FooterProps) {
             >
               Share Your Project Brief →
             </button>
-            <button
-              onClick={() => setPage('project')}
-              className="text-[14px] text-[#2D8C7E] text-left mt-2 hover:text-[#1C3A5A] transition-colors font-medium"
-            >
-              Share Your Project Brief →
-            </button>
           </div>
 
           {/* Social + contact */}
