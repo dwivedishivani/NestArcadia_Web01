@@ -1,4 +1,5 @@
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { page: Page; setPage: (page: Page) => void; }
 
@@ -15,7 +16,7 @@ const content: Partial<Record<Page, { image: string; eyebrow: string; title: str
 export default function ConversionBanner({ page, setPage }: Props) {
   const item = content[page];
   if (!item) return null;
-  const source = `/images/site/${item.image}.jpg`;
+  const source = resolveSiteImage(item.image);
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
       <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
