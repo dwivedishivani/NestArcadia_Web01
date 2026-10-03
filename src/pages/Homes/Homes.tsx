@@ -5,8 +5,7 @@ import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, w: number, h: number) =>
-  `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
+const u = (id: string, _w: number, _h: number) => `/images/site/${id}.jpg`;
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
 
