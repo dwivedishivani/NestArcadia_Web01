@@ -1,8 +1,9 @@
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => `/images/site/${id}.jpg`;
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
 
 const timeline = [
   { year: '2024', event: 'NestArcadia founded', desc: 'Built on a family background in real estate and construction, NestArcadia began as a design-focused practice for thoughtful interiors.' },
