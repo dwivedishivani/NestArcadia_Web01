@@ -685,7 +685,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
-            <div className="overflow-hidden bg-[#D4CBBB] aspect-[16/10] lg:aspect-none lg:h-full min-h-0">
+            <div className="overflow-hidden bg-[#D4CBBB] aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
               <img src={featured.thumb} alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: '#EAE4DA' }}>
