@@ -1,3 +1,5 @@
+import { projectId } from '../../utils/supabase/info';
+
 type SiteImageOverride = { public_url?: string | null; local_path?: string | null };
 
 let overrides: Record<string, SiteImageOverride> = {};
@@ -7,8 +9,10 @@ export function setSiteImageOverrides(items: Array<{ source_key: string; public_
 }
 
 export function resolveSiteImage(sourceKey: string) {
-  const item = overrides[sourceKey];
-  return item?.public_url || item?.local_path || `/images/site/${sourceKey}.jpg`;
+  const key = sourceKey.trim();
+  if (!key) return '';
+  const item = overrides[key];
+  return item?.public_url || item?.local_path || `https://${projectId}.supabase.co/functions/v1/site-media/image/${encodeURIComponent(key)}`;
 }
 
 export function resolveSiteImageReference(value: string) {
