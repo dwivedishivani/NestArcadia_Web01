@@ -209,6 +209,16 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
     const websiteSchema = page === 'home' && !localService ? { '@type': 'WebSite', name: 'NestArcadia', url: SITE_URL } : null;
+    const faqSchema = page === 'faq' && !localService ? {
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: 'NestArcadia serves Greater Noida West, Noida Extension, Greater Noida, Noida and nearby NCR markets including Ghaziabad, Faridabad, Delhi and Gurugram.' } },
+        { '@type': 'Question', name: 'Do you design 2BHK, 3BHK and 4BHK interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the scope adapted to the property and household requirements.' } },
+        { '@type': 'Question', name: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', acceptedAnswer: { '@type': 'Answer', text: 'The cost depends on the property condition, scope, materials, furniture and level of customisation. NestArcadia can define a project scope and budget after reviewing the property and requirements.' } },
+        { '@type': 'Question', name: 'Do you provide turnkey interior design and execution?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Depending on the project, NestArcadia can manage planning and design through materials, site execution and final handover.' } },
+        { '@type': 'Question', name: 'Do you design commercial office interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Commercial work can include office space planning, reception, meeting rooms, workstations, storage, lighting, acoustics and execution coordination.' } }
+      ]
+    } : null;
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
@@ -222,7 +232,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb].filter(Boolean) }
       : (articleSchema
         ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
-        : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : [])] }));
+        : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : []), ...(faqSchema ? [faqSchema] : [])] }));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'page_view',
