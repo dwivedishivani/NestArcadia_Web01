@@ -12,6 +12,6 @@ export function resolveSiteImage(sourceKey: string) {
 }
 
 export function resolveSiteImageReference(value: string) {
-  const match = value.match(/(?:site-image:\/\/|images\.unsplash\.com\/)(photo-\d+-[a-z0-9]+)/i);
+  const match = value.match(/site-image:\/\/(photo-\d+-[a-z0-9]+)/i);
   return match ? resolveSiteImage(match[1]) : value;
 }
