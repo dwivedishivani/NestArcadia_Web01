@@ -17,6 +17,7 @@ export interface LocalServiceConfig {
   process: string[];
   faqs: Array<{ question: string; answer: string }>;
   related: Array<{ href: string; label: string }>;
+  gallery?: string[];
 }
 
 const image = (id: string) => resolveSiteImage(id);
@@ -118,6 +119,21 @@ const gallery = [
   image('photo-1600607687920-4e2a09cf159d'),
   image('photo-1600566753086-00f18fb6b3ea'),
 ];
+
+const fallbackGallery = [
+  image('photo-1667375186016-db03fabfc259'),
+  image('photo-1603901622056-0a5bee231395'),
+];
+
+const getGalleryPhotos = (config: LocalServiceConfig) => {
+  const candidates = config.gallery?.length
+    ? [...config.gallery, ...fallbackGallery]
+    : [...gallery, ...fallbackGallery];
+
+  return Array.from(new Set(candidates))
+    .filter((src) => src !== config.heroImage)
+    .slice(0, 4);
+};
 
 const additionalLocationPages: LocalServiceConfig[] = [
   {
@@ -478,7 +494,7 @@ export const getLocalServicePage = (pathname: string) =>
   localServicePages.find((page) => pathname.replace(/\/+$/, '') === page.path) ?? null;
 
 export default function LocalServicePage({ config, setPage }: { config: LocalServiceConfig; setPage: (p: Page) => void }) {
-  const photos = config.gallery?.length ? config.gallery : gallery.filter(src => src !== config.heroImage).slice(0, 4);
+  const photos = getGalleryPhotos(config);
   return (
     <div className="pt-20 lg:pt-[90px]">
       <header className="relative overflow-hidden bg-[#1C3A5A]">
