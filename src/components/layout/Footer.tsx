@@ -44,7 +44,7 @@ export default function Footer({ setPage }: FooterProps) {
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-16 items-start">
 
           {/* Logo + tagline */}
           <button onClick={() => setPage('home')} className="text-left">
@@ -66,19 +66,19 @@ export default function Footer({ setPage }: FooterProps) {
               </button>
             ))}
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services & locations</p>
-              <div className="flex flex-col gap-2 mb-5">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services</p>
+              <div className="flex flex-col gap-2">
                 <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Greater Noida West</a>
                 <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Noida Extension</a>
                 <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
               </div>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Service areas</p>
-              <div className="grid grid-cols-3 gap-x-4 gap-y-2 max-w-[520px]">
-                {serviceAreas.map(area => (
-                  <a key={area.label} href={area.href} className="text-[12px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">{area.label}</a>
-                ))}
-              </div>
             </div>
+            <button
+              onClick={() => setPage('project')}
+              className="text-[14px] text-[#2D8C7E] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
+            >
+              Share Your Project Brief →
+            </button>
             <button
               onClick={() => setPage('project')}
               className="text-[14px] text-[#2D8C7E] text-left mt-2 hover:text-[#1C3A5A] transition-colors font-medium"
@@ -129,7 +129,23 @@ export default function Footer({ setPage }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-8 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row justify-between gap-2">
+        <div className="mt-10 pt-7 border-t border-[#D4CBBB]">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 mb-5">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Service areas</p>
+              <p className="text-[13px] text-[#8A7B69] mt-1">Interior design across Noida, Greater Noida and the wider NCR.</p>
+            </div>
+          </div>
+          <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-7 gap-y-3">
+            {serviceAreas.map(area => (
+              <a key={area.label} href={area.href} className="whitespace-nowrap text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">
+                {area.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row justify-between gap-2">
           <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
           <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
         </div>
