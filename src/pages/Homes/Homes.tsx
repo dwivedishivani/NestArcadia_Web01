@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
@@ -119,7 +119,7 @@ export default function Homes({ setPage }: Props) {
             area: row.area || '',
             style: row.style || 'Central',
             desc: row.description || '',
-            gallery: Array.isArray(row.gallery_images) ? row.gallery_images.filter(Boolean) : [],
+            gallery: Array.isArray(row.gallery_images) ? row.gallery_images.filter(Boolean).map(resolveSiteImageReference) : [],
           }))
           .filter((home: any) => home.gallery.length > 0);
         if (!cancelled && normalized.length > 0) setLiveHomes(normalized);
