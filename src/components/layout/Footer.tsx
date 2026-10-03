@@ -17,20 +17,20 @@ const navLinks: { label: string; page: Page }[] = [
 const serviceAreas = [
   { label: 'Greater Noida West', href: '/interior-design-greater-noida-west' },
   { label: 'Noida Extension', href: '/interior-design-noida-extension' },
-  { label: 'Greater Noida', href: '/interior-design-greater-noida-west' },
-  { label: 'Noida', href: '/interior-design-services' },
-  { label: 'Ghaziabad', href: '/interior-design-services' },
-  { label: 'Indirapuram', href: '/interior-design-services' },
-  { label: 'Crossing Republik', href: '/interior-design-services' },
-  { label: 'Faridabad', href: '/interior-design-services' },
-  { label: 'Delhi', href: '/interior-design-services' },
-  { label: 'East Delhi', href: '/interior-design-services' },
-  { label: 'South Delhi', href: '/interior-design-services' },
-  { label: 'Gurugram', href: '/interior-design-services' },
-  { label: 'Dadri', href: '/interior-design-services' },
-  { label: 'Jewar', href: '/interior-design-services' },
-  { label: 'Yamuna Expressway', href: '/interior-design-services' },
-  { label: 'Delhi NCR', href: '/interior-design-services' },
+  { label: 'Greater Noida', href: '/interior-design-greater-noida' },
+  { label: 'Noida', href: '/interior-design-noida' },
+  { label: 'Ghaziabad', href: '/interior-design-ghaziabad' },
+  { label: 'Indirapuram', href: '/interior-design-indirapuram' },
+  { label: 'Crossing Republik', href: '/interior-design-crossing-republik' },
+  { label: 'Faridabad', href: '/interior-design-faridabad' },
+  { label: 'Delhi', href: '/interior-design-delhi' },
+  { label: 'East Delhi', href: '/interior-design-east-delhi' },
+  { label: 'South Delhi', href: '/interior-design-south-delhi' },
+  { label: 'Gurugram', href: '/interior-design-gurugram' },
+  { label: 'Dadri', href: '/interior-design-dadri' },
+  { label: 'Jewar', href: '/interior-design-jewar' },
+  { label: 'Yamuna Expressway', href: '/interior-design-yamuna-expressway' },
+  { label: 'Delhi NCR', href: '/interior-design-delhi-ncr' },
 ];
 
 const socials = [
@@ -66,18 +66,16 @@ export default function Footer({ setPage }: FooterProps) {
               </button>
             ))}
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Local design services</p>
-              <div className="flex flex-col gap-2">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services & locations</p>
+              <div className="flex flex-col gap-2 mb-5">
                 <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Greater Noida West</a>
                 <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Noida Extension</a>
                 <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
               </div>
-            </div>
-            <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Areas we serve</p>
-              <div className="grid grid-cols-2 gap-x-5 gap-y-2 max-w-[330px]">
-                {['Greater Noida West','Noida Extension','Greater Noida','Noida','Ghaziabad','Indirapuram','Crossing Republik','Faridabad','Delhi','East Delhi','South Delhi','Gurugram','Dadri','Jewar','Yamuna Expressway','Delhi NCR'].map(area => (
-                  <span key={area} className="text-[12px] text-[#6B5E4E]">{area}</span>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Service areas</p>
+              <div className="grid grid-cols-3 gap-x-4 gap-y-2 max-w-[520px]">
+                {serviceAreas.map(area => (
+                  <a key={area.label} href={area.href} className="text-[12px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">{area.label}</a>
                 ))}
               </div>
             </div>
