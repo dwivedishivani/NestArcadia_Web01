@@ -244,3 +244,10 @@ input:focus, textarea:focus, select:focus {
   margin: 1.35rem 0 .6rem;
   color: #1C3A5A;
 }
+
+/* Figma reference frame: 639.99 × 680.78px at the 1280px content width. */
+@media (min-width: 1024px) {
+  .design-culture-row {
+    height: 680.78px;
+  }
+}
