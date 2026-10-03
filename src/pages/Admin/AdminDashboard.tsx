@@ -4,13 +4,14 @@ import HomeForm from './HomeForm';
 import ImageUpload from '../../components/ImageUpload';
 import RichArticleEditor from '../../components/admin/RichArticleEditor';
 import ArticlePreview from '../../components/admin/ArticlePreview';
+import MediaLibrary from './MediaLibrary';
 
 interface Props {
   adminPassword: string;
   onLogout: () => void;
 }
 
-type AdminView = 'dashboard' | 'journal' | 'enquiries' | 'homes';
+type AdminView = 'dashboard' | 'journal' | 'enquiries' | 'homes' | 'media';
 
 interface Blog {
   id: string;
@@ -247,6 +248,7 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
     { id: 'journal' as AdminView, label: 'Journal', icon: '◎' },
     { id: 'enquiries' as AdminView, label: 'Enquiries', icon: '◈' },
     { id: 'homes' as AdminView, label: 'Homes', icon: '◐' },
+    { id: 'media' as AdminView, label: 'Website Images', icon: '▧' },
   ];
 
   return (
@@ -331,6 +333,9 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
         </header>
 
         <div className="p-6 lg:p-10">
+          {/* Media Library View */}
+          {view === 'media' && <MediaLibrary adminPassword={adminPassword} />}
+
           {/* Dashboard View */}
           {view === 'dashboard' && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
