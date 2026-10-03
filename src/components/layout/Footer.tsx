@@ -14,6 +14,25 @@ const navLinks: { label: string; page: Page }[] = [
   { label: 'FAQs', page: 'faq' },
 ];
 
+const serviceAreas = [
+  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west' },
+  { label: 'Noida Extension', href: '/interior-design-noida-extension' },
+  { label: 'Greater Noida', href: '/interior-design-greater-noida-west' },
+  { label: 'Noida', href: '/interior-design-services' },
+  { label: 'Ghaziabad', href: '/interior-design-services' },
+  { label: 'Indirapuram', href: '/interior-design-services' },
+  { label: 'Crossing Republik', href: '/interior-design-services' },
+  { label: 'Faridabad', href: '/interior-design-services' },
+  { label: 'Delhi', href: '/interior-design-services' },
+  { label: 'East Delhi', href: '/interior-design-services' },
+  { label: 'South Delhi', href: '/interior-design-services' },
+  { label: 'Gurugram', href: '/interior-design-services' },
+  { label: 'Dadri', href: '/interior-design-services' },
+  { label: 'Jewar', href: '/interior-design-services' },
+  { label: 'Yamuna Expressway', href: '/interior-design-services' },
+  { label: 'Delhi NCR', href: '/interior-design-services' },
+];
+
 const socials = [
   { label: 'Instagram', href: 'https://www.instagram.com/nestarcadia/', icon: <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5.5A4.5 4.5 0 1 0 12 16.5 4.5 4.5 0 0 0 12 7.5Zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8ZM17.65 6.6a1.05 1.05 0 1 0 0-2.1 1.05 1.05 0 0 0 0 2.1Z" /> },
   { label: 'Facebook', href: 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/?ref=PROFILE_EDIT_xav_ig_profile_page_web', icon: <path d="M13.6 22v-8h2.75l.42-3.12H13.6V8.9c0-.9.25-1.52 1.55-1.52h1.74V4.6A23.4 23.4 0 0 0 15.2 4c-2.74 0-4.62 1.67-4.62 4.73v2.15H7.5V14h3.08v8h3.02Z" /> },
