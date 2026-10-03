@@ -16,6 +16,13 @@ interface MediaAsset {
   public_url: string | null;
   mime_type: string | null;
   updated_at: string;
+  focal_x: number | null;
+  focal_y: number | null;
+  optimized_at: string | null;
+  original_bytes: number | null;
+  optimized_bytes: number | null;
+  optimized_width: number | null;
+  optimized_height: number | null;
 }
 
 interface Props {
@@ -31,6 +38,10 @@ export default function MediaLibrary({ adminPassword }: Props) {
   const [pageFilter, setPageFilter] = useState('all');
   const [uploading, setUploading] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const [cropAsset, setCropAsset] = useState<MediaAsset | null>(null);
+  const [cropX, setCropX] = useState(50);
+  const [cropY, setCropY] = useState(50);
+  const [optimizingAll, setOptimizingAll] = useState(false);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const headers = useMemo(() => ({
@@ -74,7 +85,34 @@ export default function MediaLibrary({ adminPassword }: Props) {
     });
   }, [assets, pageFilter, query]);
 
-  const replaceImage = async (asset: MediaAsset, file: File) => {
+  const prepareImageForUpload = async (file: File) => {
+    const source = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = source;
+      await img.decode();
+      const maxDimension = 2400;
+      const scale = Math.min(1, maxDimension / Math.max(img.naturalWidth, img.naturalHeight));
+      const width = Math.max(1, Math.round(img.naturalWidth * scale));
+      const height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return file;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, width, height);
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.82));
+      if (!blob || blob.size >= file.size) return file;
+      return new File([blob], `${file.name.replace(/\.[^.]+$/, '')}.webp`, { type: 'image/webp' });
+    } finally {
+      URL.revokeObjectURL(source);
+    }
+  };
+
+  const replaceImage = async (asset: MediaAsset, file: File, quiet = false) => {
     setUploading(asset.id);
     setMessage('');
     try {
@@ -92,8 +130,9 @@ export default function MediaLibrary({ adminPassword }: Props) {
       if (!suggestionRes.ok) throw new Error(suggestionPayload.error || 'Could not prepare image SEO metadata');
 
       const suggestion = suggestionPayload.data;
+      const preparedFile = await prepareImageForUpload(file);
       const form = new FormData();
-      form.append('file', file);
+      form.append('file', preparedFile);
       form.append('source_key', asset.source_key);
       form.append('display_name', asset.display_name);
       form.append('page', asset.page);
@@ -110,12 +149,55 @@ export default function MediaLibrary({ adminPassword }: Props) {
       const uploadPayload = await uploadRes.json();
       if (!uploadRes.ok) throw new Error(uploadPayload.error || 'Image upload failed');
 
-      setMessage(`Replaced “${asset.display_name}” and generated SEO metadata.`);
-      await loadAssets();
+      if (!quiet) setMessage(`Replaced “${asset.display_name}”, compressed the upload, and generated SEO metadata.`);
+      if (!quiet) await loadAssets();
+      return true;
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Image upload failed');
+      if (!quiet) setMessage(error instanceof Error ? error.message : 'Image upload failed');
+      return false;
     } finally {
       setUploading(null);
+    }
+  };
+
+  const optimizeAll = async () => {
+    setOptimizingAll(true);
+    setMessage('Optimizing existing website images…');
+    let changed = 0;
+    try {
+      for (const asset of assets) {
+        if (asset.optimized_at || !asset.public_url) continue;
+        const response = await fetch(asset.public_url);
+        if (!response.ok) continue;
+        const sourceBlob = await response.blob();
+        const sourceFile = new File([sourceBlob], asset.seo_file_name || `${asset.source_key}.jpg`, { type: sourceBlob.type || 'image/jpeg' });
+        const prepared = await prepareImageForUpload(sourceFile);
+        if (prepared.size < sourceBlob.size && await replaceImage(asset, prepared, true)) changed += 1;
+      }
+      setMessage(`Image optimization complete. ${changed} image${changed === 1 ? '' : 's'} reduced.`);
+      await loadAssets();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Image optimization failed');
+    } finally {
+      setOptimizingAll(false);
+    }
+  };
+
+  const saveCrop = async () => {
+    if (!cropAsset) return;
+    try {
+      const response = await fetch(`${API_BASE}/admin/images/${cropAsset.id}`, {
+        method: 'PUT',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ focal_x: Math.round(cropX), focal_y: Math.round(cropY) }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || 'Could not save image view');
+      setAssets((current) => current.map((item) => item.id === cropAsset.id ? { ...item, focal_x: cropX, focal_y: cropY } : item));
+      setCropAsset(null);
+      setMessage(`Saved the visual crop for “${cropAsset.display_name}”.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not save image view');
     }
   };
 
@@ -129,9 +211,14 @@ export default function MediaLibrary({ adminPassword }: Props) {
             Replace an image here and every page using the same image key will use the new asset. You do not need to edit code.
           </p>
         </div>
-        <button type="button" onClick={loadAssets} className="border border-[#D4CBBB] px-4 py-2 text-[13px] hover:border-[#2D8C7E]">
-          Refresh library
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={loadAssets} className="border border-[#D4CBBB] px-4 py-2 text-[13px] hover:border-[#2D8C7E]">
+            Refresh library
+          </button>
+          <button type="button" onClick={() => void optimizeAll()} disabled={optimizingAll || loading} className="bg-[#2D8C7E] text-white px-4 py-2 text-[13px] hover:bg-[#1C3A5A] disabled:opacity-50">
+            {optimizingAll ? 'Optimizing images…' : 'Optimize existing images'}
+          </button>
+        </div>
       </div>
 
       <div className="border border-[#D4CBBB] p-4 mb-6 grid md:grid-cols-[1.5fr_0.7fr] gap-3" style={{ background: '#EAE4DA' }}>
@@ -166,7 +253,7 @@ export default function MediaLibrary({ adminPassword }: Props) {
             return (
               <article key={asset.id} className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
                 <div className="aspect-[4/3] bg-[#D4CBBB] overflow-hidden">
-                  <img src={preview} alt={asset.alt_text || asset.display_name} className="w-full h-full object-cover" loading="lazy" />
+                  <img src={preview} alt={asset.alt_text || asset.display_name} className="w-full h-full object-cover" style={{ objectPosition: `${asset.focal_x ?? 50}% ${asset.focal_y ?? 50}%` }} loading="lazy" />
                 </div>
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
@@ -195,14 +282,14 @@ export default function MediaLibrary({ adminPassword }: Props) {
                     }}
                   />
 
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => inputRefs.current[asset.id]?.click()}
-                    className="mt-5 w-full bg-[#1C3A5A] text-white px-4 py-3 text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-50"
-                  >
-                    {busy ? 'Replacing + preparing SEO…' : 'Replace image'}
-                  </button>
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <button type="button" onClick={() => { setCropAsset(asset); setCropX(asset.focal_x ?? 50); setCropY(asset.focal_y ?? 50); }} className="border border-[#1C3A5A] text-[#1C3A5A] px-3 py-3 text-[13px] hover:border-[#2D8C7E] hover:text-[#2D8C7E]">
+                      Adjust view
+                    </button>
+                    <button type="button" disabled={busy} onClick={() => inputRefs.current[asset.id]?.click()} className="bg-[#1C3A5A] text-white px-3 py-3 text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-50">
+                      {busy ? 'Replacing…' : 'Replace image'}
+                    </button>
+                  </div>
                 </div>
               </article>
             );
@@ -213,6 +300,45 @@ export default function MediaLibrary({ adminPassword }: Props) {
       {!loading && filtered.length === 0 && (
         <div className="py-20 text-center border border-[#D4CBBB] text-[#6B5E4E]">
           No images match this filter.
+        </div>
+      )}
+
+      {cropAsset && (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-5" onPointerDown={(event) => { if (event.target === event.currentTarget) setCropAsset(null); }}>
+          <div className="w-full max-w-3xl bg-[#F2EDE4] border border-[#D4CBBB] p-5 lg:p-7">
+            <div className="flex items-start justify-between gap-5 mb-5">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E]">Visual crop</p>
+                <h4 className="font-display text-2xl text-[#1A1714] mt-1">{cropAsset.display_name}</h4>
+                <p className="text-[12px] text-[#6B5E4E] mt-1">Drag inside the fixed frame to choose the part that stays visible.</p>
+              </div>
+              <button type="button" onClick={() => setCropAsset(null)} className="text-[#6B5E4E] text-xl">×</button>
+            </div>
+            <div
+              className="relative aspect-[16/9] bg-[#D4CBBB] overflow-hidden cursor-grab active:cursor-grabbing select-none"
+              onPointerDown={(event) => {
+                const rect = event.currentTarget.getBoundingClientRect();
+                const update = (clientX: number, clientY: number) => {
+                  setCropX(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
+                  setCropY(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)));
+                };
+                update(event.clientX, event.clientY);
+                const move = (moveEvent: PointerEvent) => update(moveEvent.clientX, moveEvent.clientY);
+                const up = () => { window.removeEventListener('pointermove', move); };
+                window.addEventListener('pointermove', move);
+                window.addEventListener('pointerup', up, { once: true });
+              }}
+            >
+              <img src={cropAsset.public_url || cropAsset.local_path} alt="" className="w-full h-full object-cover pointer-events-none" style={{ objectPosition: `${cropX}% ${cropY}%` }} />
+            </div>
+            <div className="flex items-center justify-between gap-4 mt-5">
+              <p className="text-[12px] text-[#6B5E4E]">Focus: {Math.round(cropX)}% × {Math.round(cropY)}%</p>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setCropAsset(null)} className="border border-[#D4CBBB] px-5 py-2.5 text-[13px]">Cancel</button>
+                <button type="button" onClick={() => void saveCrop()} className="bg-[#1C3A5A] text-white px-5 py-2.5 text-[13px] hover:bg-[#2D8C7E]">Save view</button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
