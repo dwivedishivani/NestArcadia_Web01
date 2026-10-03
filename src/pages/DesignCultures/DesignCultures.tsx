@@ -88,11 +88,11 @@ export default function DesignCultures({ setPage }: Props) {
         {cultures.map((c, i) => (
           <div
             key={c.name}
-            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#D4CBBB] lg:h-[520px] lg:overflow-hidden ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
+            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#D4CBBB] lg:h-[680.78px] lg:overflow-hidden ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
           >
             {/* Image — alternates sides */}
             <div
-              className={`relative overflow-hidden bg-[#D4CBBB] h-[385px] lg:h-[520px] ${i % 2 === 1 ? 'lg:order-2' : ''}`}
+              className={`relative overflow-hidden bg-[#D4CBBB] h-[385px] lg:h-full min-h-0 ${i % 2 === 1 ? 'lg:order-2' : ''}`}
             >
               <img
                 src={c.img}
