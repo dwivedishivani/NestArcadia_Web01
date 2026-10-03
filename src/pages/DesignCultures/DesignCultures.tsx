@@ -3,7 +3,7 @@ import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const cultures = [
   {
