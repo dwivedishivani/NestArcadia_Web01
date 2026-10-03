@@ -12,6 +12,7 @@ import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { getLocalServicePage, type LocalServiceConfig, default as LocalServicePage } from './pages/LocalService/LocalServicePage';
+import { setSiteImageOverrides } from './utils/siteImages';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
@@ -366,4 +367,22 @@ function SiteShell() {
 
 const router = createBrowserRouter([{ path: '*', Component: SiteShell, errorElement: <RouteErrorElement /> }]);
 
-export default function App() { return <SiteErrorBoundary><RouterProvider router={router} /></SiteErrorBoundary>; }
+function SiteImageBootstrap() {
+  const [, setVersion] = useState(0);
+
+  useEffect(() => {
+    fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
+      headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
+      .then((payload) => {
+        setSiteImageOverrides(payload.data || []);
+        setVersion((value) => value + 1);
+      })
+      .catch((error) => console.warn('Site image registry unavailable; using local image fallbacks.', error));
+  }, []);
+
+  return <RouterProvider router={router} />;
+}
+
+export default function App() { return <SiteErrorBoundary><SiteImageBootstrap /></SiteErrorBoundary>; }
