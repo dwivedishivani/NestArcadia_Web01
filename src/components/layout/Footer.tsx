@@ -24,8 +24,8 @@ const socials = [
 export default function Footer({ setPage }: FooterProps) {
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 items-start">
 
           {/* Logo + tagline */}
           <button onClick={() => setPage('home')} className="text-left">
@@ -112,7 +112,7 @@ export default function Footer({ setPage }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-[#D4CBBB] flex flex-col sm:flex-row justify-between gap-2">
+        <div className="mt-8 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row justify-between gap-2">
           <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
           <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
         </div>
