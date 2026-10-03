@@ -18,7 +18,7 @@ export interface LocalServiceConfig {
   related: Array<{ href: string; label: string }>;
 }
 
-const image = (id: string) => `https://images.unsplash.com/${id}?w=1600&h=700&fit=crop&auto=format&q=82`;
+const image = (id: string) => `/images/site/${id}.jpg`;
 
 export const localServicePages: LocalServiceConfig[] = [
   {
