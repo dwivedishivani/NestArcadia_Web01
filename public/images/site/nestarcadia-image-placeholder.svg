@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
-  <rect width="1600" height="900" fill="#EAE4DA"/>
-  <rect x="80" y="80" width="1440" height="740" rx="4" stroke="#D4CBBB" stroke-width="2"/>
-  <path d="M690 520L800 410L910 520" stroke="#2D8C7E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M720 520V610H880V520" stroke="#2D8C7E" stroke-width="5"/>
-  <path d="M800 410V350" stroke="#2D8C7E" stroke-width="5" stroke-linecap="round"/>
-  <text x="800" y="690" text-anchor="middle" fill="#6B5E4E" font-family="Arial, sans-serif" font-size="28" letter-spacing="6">NESTARCADIA</text>
-</svg>
