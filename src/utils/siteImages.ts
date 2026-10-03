@@ -8,7 +8,7 @@ export function setSiteImageOverrides(items: Array<{ source_key: string; public_
 
 export function resolveSiteImage(sourceKey: string) {
   const item = overrides[sourceKey];
-  return item?.public_url || item?.local_path || `/images/site/${sourceKey}.jpg`;
+  return item?.public_url || item?.local_path || '/images/site/nestarcadia-image-placeholder.svg';
 }
 
 export function resolveSiteImageReference(value: string) {
