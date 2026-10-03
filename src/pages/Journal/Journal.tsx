@@ -437,7 +437,8 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [liveArticles, setLiveArticles] = useState<typeof articles>([]);
+  const [liveArticles, setLiveArticles] = useState<typeof articles | null>(null);
+  const [articlesLoaded, setArticlesLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -454,7 +455,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         );
         if (!response.ok) return;
         const rows = await response.json();
-        if (cancelled || !Array.isArray(rows) || rows.length === 0) return;
+        if (cancelled) return;
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+          setLiveArticles([]);
+          setArticlesLoaded(true);
+          return;
+        }
 
         const normalized = rows.map((row: any) => ({
           id: row.slug || String(row.id),
@@ -471,15 +478,20 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
         }));
         setLiveArticles(normalized);
+        setArticlesLoaded(true);
       } catch {
-        // Keep the editorial fallback bundled with the site if the public content request fails.
+        if (!cancelled) {
+          // Only fall back to bundled editorial data after the live-content request has finished.
+          setLiveArticles([]);
+          setArticlesLoaded(true);
+        }
       }
     };
     loadPublishedArticles();
     return () => { cancelled = true; };
   }, []);
 
-  const sourceArticles = liveArticles.length > 0 ? liveArticles : articles;
+  const sourceArticles = liveArticles && liveArticles.length > 0 ? liveArticles : articles;
 
   const handleNewsletterSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -678,6 +690,30 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
+        {!articlesLoaded ? (
+          <>
+            <div className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full lg:h-[420px] lg:overflow-hidden animate-pulse">
+              <div className="bg-[#D4CBBB] min-h-[260px] lg:h-full" />
+              <div className="bg-[#EAE4DA] p-10 lg:p-14 flex flex-col justify-center gap-4">
+                <div className="h-3 w-24 bg-[#D4CBBB]" />
+                <div className="h-10 w-4/5 bg-[#D4CBBB]" />
+                <div className="h-4 w-full max-w-xl bg-[#D4CBBB]" />
+                <div className="h-4 w-2/3 bg-[#D4CBBB]" />
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }} />
+                  <div className="h-3 w-20 bg-[#D4CBBB] mb-3" />
+                  <div className="h-6 w-4/5 bg-[#EAE4DA] mb-3" />
+                  <div className="h-4 w-full bg-[#EAE4DA]" />
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+        <>
         {/* Featured article */}
         {featured && (
           <a
@@ -745,6 +781,8 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           <div className="py-20 text-center">
             <p className="text-[#6B5E4E] text-[15px]">No articles in this category yet.</p>
           </div>
+        )}
+        </>
         )}
       </div>
 
