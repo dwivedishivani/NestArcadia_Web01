@@ -10,3 +10,8 @@ export function resolveSiteImage(sourceKey: string) {
   const item = overrides[sourceKey];
   return item?.public_url || item?.local_path || `/images/site/${sourceKey}.jpg`;
 }
+
+export function resolveSiteImageReference(value: string) {
+  const match = value.match(/(?:site-image:\/\/|images\.unsplash\.com\/)(photo-\d+-[a-z0-9]+)/i);
+  return match ? resolveSiteImage(match[1]) : value;
+}
