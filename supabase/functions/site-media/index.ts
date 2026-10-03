@@ -63,7 +63,15 @@ Deno.serve(async (req) => {
 
   const url = new URL(req.url);
   const pathname = url.pathname;
-  const path = pathname.endsWith("/images") ? "/images" : pathname.endsWith("/admin/images") ? "/admin/images" : pathname.includes("/admin/images/") ? pathname.slice(pathname.lastIndexOf("/admin/images/")) : pathname;
+  const path = pathname.endsWith("/images")
+    ? "/images"
+    : pathname.includes("/image/")
+      ? pathname.slice(pathname.lastIndexOf("/image/"))
+      : pathname.endsWith("/admin/images")
+        ? "/admin/images"
+        : pathname.includes("/admin/images/")
+          ? pathname.slice(pathname.lastIndexOf("/admin/images/"))
+          : pathname;
 
   try {
     if (req.method === "GET" && path === "/images") return json({ data: await listAssets() });
@@ -117,7 +125,7 @@ Deno.serve(async (req) => {
       const baseName = slugify(suggestedName.replace(/\.[^.]+$/, "") || displayName || "nestarcadia-interior");
       const seoFileName = `${baseName}.${extension}`;
 
-      const existing = await supabase.from("site_image_assets").select("id, internal_name").eq("source_key", sourceKey).maybeSingle();
+      const existing = await supabase.from("site_image_assets").select("id, internal_name, focal_x, focal_y").eq("source_key", sourceKey).maybeSingle();
       if (existing.error) throw existing.error;
 
       const internalName = existing.data?.internal_name || `site.${slugify(page)}.${slugify(section || displayName)}`;
@@ -140,6 +148,11 @@ Deno.serve(async (req) => {
         storage_path: storagePath,
         public_url: publicUrl(storagePath),
         mime_type: file.type,
+        focal_x: existing.data?.focal_x ?? 50,
+        focal_y: existing.data?.focal_y ?? 50,
+        optimized_at: file.type === "image/webp" ? new Date().toISOString() : null,
+        original_bytes: file.size,
+        optimized_bytes: file.size,
         updated_at: new Date().toISOString(),
       };
 
@@ -159,6 +172,8 @@ Deno.serve(async (req) => {
         section: body.section,
         alt_text: body.alt_text,
         seo_file_name: body.seo_file_name,
+        focal_x: Math.max(0, Math.min(100, Number(body.focal_x ?? 50))),
+        focal_y: Math.max(0, Math.min(100, Number(body.focal_y ?? 50))),
         updated_at: new Date().toISOString(),
       }).eq("id", id).select().single();
       if (saved.error) throw saved.error;
