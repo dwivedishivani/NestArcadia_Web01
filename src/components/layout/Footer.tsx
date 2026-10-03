@@ -54,6 +54,14 @@ export default function Footer({ setPage }: FooterProps) {
                 <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
               </div>
             </div>
+            <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Areas we serve</p>
+              <div className="grid grid-cols-2 gap-x-5 gap-y-2 max-w-[330px]">
+                {['Greater Noida West','Noida Extension','Greater Noida','Noida','Ghaziabad','Indirapuram','Crossing Republik','Faridabad','Delhi','East Delhi','South Delhi','Gurugram','Dadri','Jewar','Yamuna Expressway','Delhi NCR'].map(area => (
+                  <span key={area} className="text-[12px] text-[#6B5E4E]">{area}</span>
+                ))}
+              </div>
+            </div>
             <button
               onClick={() => setPage('project')}
               className="text-[14px] text-[#2D8C7E] text-left mt-2 hover:text-[#1C3A5A] transition-colors font-medium"
