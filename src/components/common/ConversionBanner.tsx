@@ -15,7 +15,7 @@ const content: Partial<Record<Page, { image: string; eyebrow: string; title: str
 export default function ConversionBanner({ page, setPage }: Props) {
   const item = content[page];
   if (!item) return null;
-  const source = `https://images.unsplash.com/${item.image}?w=1440&h=460&fit=crop&auto=format&q=85`;
+  const source = `/images/site/${item.image}.jpg`;
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
       <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
