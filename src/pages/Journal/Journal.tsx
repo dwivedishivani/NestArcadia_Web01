@@ -453,7 +453,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           `https://${projectId}.supabase.co/rest/v1/blogs_078be9eb?${params.toString()}`,
           { headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` } }
         );
-        if (!response.ok) return;
+        if (!response.ok) {
+          if (!cancelled) {
+            setLiveArticles([]);
+            setArticlesLoaded(true);
+          }
+          return;
+        }
         const rows = await response.json();
         if (cancelled) return;
 
