@@ -477,7 +477,7 @@ export const getLocalServicePage = (pathname: string) =>
   localServicePages.find((page) => pathname.replace(/\/+$/, '') === page.path) ?? null;
 
 export default function LocalServicePage({ config, setPage }: { config: LocalServiceConfig; setPage: (p: Page) => void }) {
-  const photos = config.gallery?.length ? config.gallery : [config.heroImage, ...gallery.slice(1)];
+  const photos = config.gallery?.length ? config.gallery : gallery.filter(src => src !== config.heroImage).slice(0, 4);
   return (
     <div className="pt-20 lg:pt-[90px]">
       <header className="relative overflow-hidden bg-[#1C3A5A]">
