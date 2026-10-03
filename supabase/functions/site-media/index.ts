@@ -62,7 +62,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const url = new URL(req.url);
-  const path = url.pathname.replace(/^\/functions\/v1\/site-media/, "");
+  const pathname = url.pathname;
+  const path = pathname.endsWith("/images") ? "/images" : pathname.endsWith("/admin/images") ? "/admin/images" : pathname.includes("/admin/images/") ? pathname.slice(pathname.lastIndexOf("/admin/images/")) : pathname;
 
   try {
     if (req.method === "GET" && path === "/images") return json({ data: await listAssets() });
