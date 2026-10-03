@@ -92,13 +92,13 @@ export default function DesignCultures({ setPage }: Props) {
           >
             {/* Image — alternates sides */}
             <div
-              className={`relative overflow-hidden bg-[#D4CBBB] ${i % 2 === 1 ? 'lg:order-2' : ''}`}
-              style={{ minHeight: '420px' }}
+              className={`relative overflow-hidden bg-[#D4CBBB] h-[385px] lg:h-[520px] ${i % 2 === 1 ? 'lg:order-2' : ''}`}
             >
               <img
                 src={c.img}
                 alt={`${c.name} Indian heritage interior design for Noida and Greater Noida homes`}
-                loading="lazy"
+                loading={i < 2 ? 'eager' : 'lazy'}
+                fetchPriority={i < 2 ? 'high' : 'auto'}
                 decoding="async"
                 width="1200"
                 height="800"
