@@ -1,4 +1,5 @@
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 export interface LocalServiceConfig {
   path: string;
@@ -18,7 +19,7 @@ export interface LocalServiceConfig {
   related: Array<{ href: string; label: string }>;
 }
 
-const image = (id: string) => `/images/site/${id}.jpg`;
+const image = (id: string) => resolveSiteImage(id);
 
 export const localServicePages: LocalServiceConfig[] = [
   {
