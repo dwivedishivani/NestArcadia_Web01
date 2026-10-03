@@ -93,7 +93,7 @@ export default function DesignCultures({ setPage }: Props) {
             {/* Image — alternates sides */}
             <div
               className={`relative overflow-hidden bg-[#D4CBBB] ${i % 2 === 1 ? 'lg:order-2' : ''}`}
-              style={{ minHeight: '420px' }}
+              style={{ height: '420px' }}
             >
               <img
                 src={c.img}
