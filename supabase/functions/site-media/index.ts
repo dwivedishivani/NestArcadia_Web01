@@ -68,6 +68,29 @@ Deno.serve(async (req) => {
   try {
     if (req.method === "GET" && path === "/images") return json({ data: await listAssets() });
 
+    if (req.method === "GET" && path.startsWith("/image/")) {
+      const sourceKey = decodeURIComponent(path.slice("/image/".length));
+      if (!sourceKey) return json({ error: "source_key is required" }, 400);
+      const { data: asset, error: assetError } = await supabase
+        .from("site_image_assets")
+        .select("public_url")
+        .eq("source_key", sourceKey)
+        .maybeSingle();
+      if (assetError) throw assetError;
+      if (!asset?.public_url) return json({ error: "Image not found" }, 404);
+
+      const imageResponse = await fetch(asset.public_url);
+      if (!imageResponse.ok || !imageResponse.body) return json({ error: "Stored image unavailable" }, 502);
+      return new Response(imageResponse.body, {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": imageResponse.headers.get("content-type") || "image/jpeg",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
+
     if (path.startsWith("/admin/") && !admin(req)) return json({ error: "Unauthorized" }, 401);
 
     if (req.method === "GET" && path === "/admin/images") return json({ data: await listAssets() });
