@@ -10,7 +10,7 @@ interface Props {
   setArticleId: (id: string | null) => void;
 }
 
-const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const LIME_PLASTER_SOURCES = [
   { label: 'CEPT University / UCL Open Environment — moisture buffering and mould growth in naturally ventilated lime-plastered houses (2024)', href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11443221/' },
