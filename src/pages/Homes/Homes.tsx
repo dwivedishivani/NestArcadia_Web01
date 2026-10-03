@@ -6,7 +6,7 @@ import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
 
