@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => `/images/site/${id}.jpg`;
+const u = (id: string, _w: number, _h: number) => resolveSiteImage(id);
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
 
