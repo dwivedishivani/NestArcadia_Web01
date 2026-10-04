@@ -114,7 +114,7 @@ export default function Services({ setPage }: Props) {
           {services.map((s, i) => (
             <div
               key={s.number}
-              className="grid lg:grid-cols-[1fr_1.2fr] gap-0 border-b border-[#D4CBBB] py-16"
+              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] py-16"
               style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
             >
               {i % 2 === 1 && (
