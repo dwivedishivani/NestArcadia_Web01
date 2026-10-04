@@ -440,8 +440,14 @@ export default function MediaLibrary({ adminPassword }: Props) {
               <div
                 className="absolute inset-0 bg-black/50 pointer-events-none"
                 style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)',
-                  opacity: 0.45,
+                  clipPath: `polygon(
+                    0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+                    ${(cropData.x / cropImageRef.current.naturalWidth) * 100}% ${(cropData.y / cropImageRef.current.naturalHeight) * 100}%,
+                    ${(cropData.x / cropImageRef.current.naturalWidth) * 100}% ${((cropData.y + cropData.height) / cropImageRef.current.naturalHeight) * 100}%,
+                    ${((cropData.x + cropData.width) / cropImageRef.current.naturalWidth) * 100}% ${((cropData.y + cropData.height) / cropImageRef.current.naturalHeight) * 100}%,
+                    ${((cropData.x + cropData.width) / cropImageRef.current.naturalWidth) * 100}% ${(cropData.y / cropImageRef.current.naturalHeight) * 100}%,
+                    ${(cropData.x / cropImageRef.current.naturalWidth) * 100}% ${(cropData.y / cropImageRef.current.naturalHeight) * 100}%
+                  )`,
                 }}
               />
               <div
