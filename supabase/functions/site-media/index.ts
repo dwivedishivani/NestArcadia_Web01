@@ -87,7 +87,12 @@ Deno.serve(async (req) => {
       if (assetError) throw assetError;
       if (!asset?.public_url) return json({ error: "Image not found" }, 404);
 
-      const imageResponse = await fetch(asset.public_url);
+      const requestedWidth = Number(url.searchParams.get('width') || 0);
+      const requestedQuality = Number(url.searchParams.get('quality') || 78);
+      const sourceUrl = requestedWidth > 0 && asset.public_url.includes('/storage/v1/object/public/')
+        ? asset.public_url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + `?width=${Math.min(Math.max(Math.round(requestedWidth), 320), 1920)}&quality=${Math.min(Math.max(Math.round(requestedQuality), 40), 90)}&resize=contain`
+        : asset.public_url;
+      const imageResponse = await fetch(sourceUrl);
       if (!imageResponse.ok || !imageResponse.body) return json({ error: "Stored image unavailable" }, 502);
       return new Response(imageResponse.body, {
         status: 200,
