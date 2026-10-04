@@ -17,6 +17,16 @@ const links: { label: string; page: Page }[] = [
   { label: 'Journal', page: 'journal' },
 ];
 
+const pagePaths: Partial<Record<Page, string>> = {
+  home: '/',
+  cultures: '/design-cultures',
+  services: '/interior-design-services',
+  story: '/our-story',
+  journal: '/journal',
+  homes: '/our-projects',
+  project: '/start-your-project',
+};
+
 export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,8 +54,9 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 flex items-center justify-between h-20 lg:h-[90px]">
 
           {/* Logo */}
-          <button
-            onClick={() => setPage('home')}
+          <a
+            href="/"
+            onClick={(event) => { event.preventDefault(); setPage('home'); }}
             className="flex items-center text-left shrink-0"
             aria-label="NestArcadia Home"
           >
@@ -54,14 +65,18 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
               alt="NestArcadia — heritage Indian interiors"
               className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
             />
-          </button>
+          </a>
 
           {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-8">
             {links.map(l => (
-              <button
+              <a
                 key={l.page}
-                onClick={() => setPage(l.page)}
+                href={pagePaths[l.page] ?? '#'}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setPage(l.page);
+                }}
                 className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#2D8C7E]"
                 style={{
                   color: page === l.page
@@ -73,14 +88,15 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
                 }}
               >
                 {l.label}
-              </button>
+              </a>
             ))}
           </div>
 
           {/* CTA + hamburger */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setPage('project')}
+            <a
+              href="/start-your-project"
+              onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white"
               style={{
                 color: transparent ? '#ffffff' : '#1C3A5A',
@@ -88,7 +104,7 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
               }}
             >
               Start Your Project →
-            </button>
+            </a>
 
             <button
               className="lg:hidden flex flex-col gap-[6px] p-2"
@@ -113,21 +129,26 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
         >
           <div className="px-6 py-7 flex flex-col gap-5">
             {links.map(l => (
-              <button
+              <a
                 key={l.page}
-                onClick={() => setPage(l.page)}
+                href={pagePaths[l.page] ?? '#'}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setPage(l.page);
+                }}
                 className="text-left text-[17px] font-semibold transition-colors"
                 style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
               >
                 {l.label}
-              </button>
+              </a>
             ))}
-            <button
-              onClick={() => setPage('project')}
+            <a
+              href="/start-your-project"
+              onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
             >
               Start Your Project →
-            </button>
+            </a>
           </div>
         </div>
       </nav>
