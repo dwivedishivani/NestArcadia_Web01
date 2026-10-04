@@ -12,6 +12,12 @@ const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
   .map((width) => `${u(id, width, Math.round(width * 9 / 16))} ${width}w`)
   .join(', ');
 
+const heroDirectUrls: Record<string, string> = {
+  'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-002.jpg',
+  'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-015.jpg',
+  'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-016.jpg',
+};
+
 const IMG = {
   hero:     u('photo-1713192706971-03900dcf5706', 1920, 1080),
   north:    u('photo-1604578762246-41134e37f9cc', 600, 760),
@@ -111,6 +117,7 @@ const faqs = [
 export default function Home({ setPage }: Props) {
   const [trendStart, setTrendStart] = useState(0);
   const [heroSlide, setHeroSlide] = useState(0);
+  const [heroImageFallback, setHeroImageFallback] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
@@ -128,12 +135,27 @@ export default function Home({ setPage }: Props) {
   const prevTrend = () => setTrendStart(s => (s - 1 + n) % n);
   const currentHero = heroSlides[heroSlide];
 
+  useEffect(() => {
+    setHeroImageFallback(false);
+  }, [heroSlide]);
+
   return (
     <div>
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
         <div className="absolute inset-0 bg-[#1C3A5A]">
-          <img src={currentHero.image} srcSet={heroSrcSet(currentHero.imageId)} sizes="100vw" alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes" width="1920" height="1080" loading="eager" fetchPriority={heroSlide === 0 ? 'high' : 'auto'} decoding="async" className="w-full h-full object-cover transition-opacity duration-700" />
+          <img
+            src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
+            {...(!heroImageFallback ? { srcSet: heroSrcSet(currentHero.imageId), sizes: '100vw' } : {})}
+            alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes"
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchPriority={heroSlide === 0 ? 'high' : 'auto'}
+            decoding="async"
+            onError={() => setHeroImageFallback(true)}
+            className="w-full h-full object-cover transition-opacity duration-700"
+          />
         </div>
         <div
           className={heroSlide === 1
