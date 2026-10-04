@@ -36,7 +36,7 @@ export default function OurStory({ setPage }: Props) {
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Who We Are</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05]">Our Story</h1>
           <p className="text-white/60 text-sm mt-3 max-w-md">
-            A growing practice shaped by heritage, craft and real-world experience.
+            Premium interior design for modern homes and spaces across Noida & NCR.
           </p>
         </div>
       </div>

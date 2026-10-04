@@ -61,6 +61,7 @@ export default function StartProject({ setPage }: Props) {
   const [touched, setTouched] = useState<Partial<Record<FormField, boolean>>>({});
   const [errors, setErrors] = useState<FormErrors>({});
   const [serviceInterest, setServiceInterest] = useState('');
+  const [website, setWebsite] = useState('');
 
   const showConfig = form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex';
 
@@ -94,6 +95,7 @@ export default function StartProject({ setPage }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+    if (website.trim()) return;
 
     const validationErrors = validateForm(form);
     setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true });
@@ -129,6 +131,7 @@ export default function StartProject({ setPage }: Props) {
           design_style: form.style,
           message: form.message,
           source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
+          website,
         }),
       });
 
@@ -211,6 +214,10 @@ export default function StartProject({ setPage }: Props) {
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         <form onSubmit={handleSubmit}>
+        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label htmlFor="website">Website</label>
+          <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+        </div>
           <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
 
             {/* Left: Contact + Type */}
