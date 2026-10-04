@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
 import type { Page } from '../../App';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
 import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.png';
 
 interface NavProps {
   page: Page;
-  setPage: (page: Page) => void;
   forceSolid?: boolean;
 }
 
@@ -17,7 +17,8 @@ const links: { label: string; page: Page }[] = [
   { label: 'Journal', page: 'journal' },
 ];
 
-export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
+export default function Nav({ page, forceSolid = false }: NavProps) {
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', admin: '/admin' };
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,24 +45,20 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 flex items-center justify-between h-20 lg:h-[90px]">
 
           {/* Logo */}
-          <button
-            onClick={() => setPage('home')}
-            className="flex items-center text-left shrink-0"
-            aria-label="NestArcadia Home"
-          >
+          <Link to="/" className="flex items-center text-left shrink-0" aria-label="NestArcadia Home">
             <img
               src={transparent ? logoWhiteImg : logoImg}
               alt="NestArcadia — heritage Indian interiors"
               className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
             />
-          </button>
+          </Link>
 
           {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-8">
             {links.map(l => (
-              <button
+              <Link
                 key={l.page}
-                onClick={() => setPage(l.page)}
+                to={pagePaths[l.page]}
                 className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#2D8C7E]"
                 style={{
                   color: page === l.page
@@ -73,14 +70,14 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
                 }}
               >
                 {l.label}
-              </button>
+              </Link>
             ))}
           </div>
 
           {/* CTA + hamburger */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setPage('project')}
+            <Link
+              to="/start-your-project"
               className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white"
               style={{
                 color: transparent ? '#ffffff' : '#1C3A5A',
@@ -88,7 +85,7 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
               }}
             >
               Start Your Project →
-            </button>
+            </Link>
 
             <button
               className="lg:hidden flex flex-col gap-[6px] p-2"
@@ -113,21 +110,21 @@ export default function Nav({ page, setPage, forceSolid = false }: NavProps) {
         >
           <div className="px-6 py-7 flex flex-col gap-5">
             {links.map(l => (
-              <button
+              <Link
                 key={l.page}
-                onClick={() => setPage(l.page)}
-                className="text-left text-[17px] font-semibold transition-colors"
+                to={pagePaths[l.page]}
+                className="text-left text-[17px] font-semibold transition-colors
                 style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
               >
                 {l.label}
-              </button>
+              </Link>
             ))}
-            <button
-              onClick={() => setPage('project')}
+            <Link
+              to="/start-your-project"
               className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
             >
               Start Your Project →
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
