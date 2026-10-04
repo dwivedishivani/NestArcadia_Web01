@@ -312,7 +312,7 @@ export default function Home({ setPage }: Props) {
                   <img
                     src={t.img}
                     alt={`${t.name} interior design trend for Greater Noida West homes`}
-                    loading="lazy"
+                    loading={i === 0 ? 'eager' : 'eager'}
                     decoding="async"
                     width="600"
                     height="450"

@@ -4,7 +4,7 @@ import Nav from './components/navigation/Nav';
 import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
 import MobileConversionBar from './components/layout/MobileConversionBar';
-import Home from './pages/Home/Home';
+const Home = lazy(() => import('./pages/Home/Home'));
 const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 import EditorialContext from './components/common/EditorialContext';
