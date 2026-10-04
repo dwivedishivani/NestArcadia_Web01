@@ -3,7 +3,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2.49.8";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD") || "nestarcadia2024";
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
 const BUCKET = "site-images";
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
@@ -21,7 +21,7 @@ function json(data: unknown, status = 200) {
 }
 
 function admin(req: Request) {
-  return req.headers.get("X-Admin-Password") === ADMIN_PASSWORD;
+  return Boolean(ADMIN_PASSWORD) && req.headers.get("X-Admin-Password") === ADMIN_PASSWORD;
 }
 
 function slugify(value: string) {
