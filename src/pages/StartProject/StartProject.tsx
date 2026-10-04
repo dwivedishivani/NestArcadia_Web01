@@ -393,7 +393,7 @@ export default function StartProject({ setPage }: Props) {
                   </p>
                   <a
                     href={`https://wa.me/918448061997?text=${encodeURIComponent(
-                      `Hello NestArcadia, my project brief could not be submitted on the website.\\n\\nName: ${form.name}\\nEmail: ${form.email}\\nPhone: ${form.phone}\\nCity: ${form.city}\\nProject: ${form.projectType}\\nConfiguration: ${form.configuration || 'N/A'}\\nBudget: ${form.budget}\\nTimeline: ${form.timeline}\\nStyle: ${form.style}\\nMessage: ${form.message || 'N/A'}`,
+                      `Hello NestArcadia, my project brief could not be submitted on the website.\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCity: ${form.city}\nProject: ${form.projectType}\nConfiguration: ${form.configuration || 'N/A'}\nBudget: ${form.budget}\nTimeline: ${form.timeline}\nStyle: ${form.style}\nMessage: ${form.message || 'N/A'}`,
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
