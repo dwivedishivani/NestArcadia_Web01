@@ -343,7 +343,7 @@ function SiteShell() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
       <SeoManager page={page} localService={localService} />
-      <Nav page={page} setPage={setPage} forceSolid={Boolean(localService)} />
+      <Nav page={page} forceSolid={Boolean(localService)} />
       <main className="flex-1 pb-24 sm:pb-0">
         {localService ? <LocalServicePage config={localService} setPage={setPage} /> : page === 'home' && <Home setPage={setPage} />}
         <Suspense fallback={<RouteFallback />}>
@@ -358,7 +358,7 @@ function SiteShell() {
         {!localService && <EditorialContext page={page} />}
         {!localService && <ConversionBanner page={page} setPage={setPage} />}
       </main>
-      <Footer setPage={setPage} />
+      <Footer />
       <WhatsApp />
       <MobileConversionBar setPage={setPage} />
     </div>
