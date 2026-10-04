@@ -5,8 +5,8 @@ import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
 import MobileConversionBar from './components/layout/MobileConversionBar';
 import Home from './pages/Home/Home';
-import AdminLogin from './pages/Admin/AdminLogin';
-import AdminDashboard from './pages/Admin/AdminDashboard';
+const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
@@ -324,9 +324,9 @@ function AdminShell() {
   };
 
   if (!adminPassword) {
-    return <AdminLogin onLogin={handleLogin} error={loginError} loading={loginLoading} />;
+    return <Suspense fallback={<RouteFallback />}><AdminLogin onLogin={handleLogin} error={loginError} loading={loginLoading} /></Suspense>;
   }
-  return <AdminDashboard adminPassword={adminPassword} onLogout={handleLogout} />;
+  return <Suspense fallback={<RouteFallback />}><AdminDashboard adminPassword={adminPassword} onLogout={handleLogout} /></Suspense>;
 }
 
 
