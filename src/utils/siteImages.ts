@@ -50,18 +50,12 @@ export function setSiteImageOverrides(
   requestAnimationFrame(() => applyFocalPoints());
 }
 
-function transformedPublicUrl(url: string, width?: number) {
-  if (!width || !url.includes('/storage/v1/object/public/')) return url;
-  const separator = url.includes('?') ? '&' : '?';
-  return url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + `${separator}width=${Math.min(Math.max(Math.round(width), 320), 1920)}&quality=78&resize=contain`;
-}
-
 export function resolveSiteImage(sourceKey: string, requestedWidth?: number) {
   const key = sourceKey.trim();
   if (!key) return '';
   const item = overrides[key];
   const storedUrl = item?.public_url || item?.local_path;
-  if (storedUrl && !storedUrl.startsWith('/images/')) return transformedPublicUrl(storedUrl, requestedWidth);
+  if (storedUrl && !storedUrl.startsWith('/images/')) return storedUrl;
   const width = requestedWidth ? `?width=${Math.min(Math.max(Math.round(requestedWidth), 320), 1920)}&quality=78` : '';
   return `https://${projectId}.supabase.co/functions/v1/site-media/image/${encodeURIComponent(key)}${width}`;
 }
