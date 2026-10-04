@@ -114,7 +114,7 @@ export default function Services({ setPage }: Props) {
           {services.map((s, i) => {
             const imageFirst = i % 2 === 1;
             const imageFrame = (
-              <div className="relative min-w-0 w-full h-full min-h-[280px] lg:min-h-0 overflow-hidden bg-[#D4CBBB]">
+              <div className="relative min-w-0 w-full min-h-[280px] lg:min-h-[560px] self-stretch overflow-hidden bg-[#D4CBBB]">
                 <img
                   src={s.img}
                   alt={s.name}
@@ -128,7 +128,7 @@ export default function Services({ setPage }: Props) {
             );
 
             const textFrame = (
-              <div className={`h-full min-w-0 flex flex-col justify-center px-0 py-12 lg:py-16 ${imageFirst ? 'lg:px-16' : 'lg:pr-16'}`}>
+              <div className={`min-w-0 flex flex-col justify-center px-0 py-12 lg:py-16 ${imageFirst ? 'lg:px-16' : 'lg:pr-16'}`}>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">{s.number}</p>
                 <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#1A1714] mb-2">{s.name}</h2>
                 <p className="text-[#2D8C7E] text-sm mb-5">{s.tagline}</p>
@@ -157,7 +157,7 @@ export default function Services({ setPage }: Props) {
             return (
               <div
                 key={s.number}
-                className="grid grid-cols-1 lg:grid-cols-2 lg:h-[560px] w-full min-h-0 border-b border-[#D4CBBB]"
+                className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[560px] w-full min-h-0 border-b border-[#D4CBBB]"
                 style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
               >
                 {imageFirst ? imageFrame : textFrame}
