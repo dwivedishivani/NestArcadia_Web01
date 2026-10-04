@@ -16,11 +16,21 @@ const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
 // Enable logger
 app.use('*', logger(console.log));
 
-// Enable CORS for all routes and methods
+// Allow only production, local-development, and explicitly authorized origins.
+const ALLOWED_ORIGINS = new Set([
+  "https://nestarcadia.com",
+  "https://www.nestarcadia.com",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+]);
+
+const resolveAllowedOrigin = (origin: string) =>
+  ALLOWED_ORIGINS.has(origin) ? origin : undefined;
+
 app.use(
   "/*",
   cors({
-    origin: "*",
+    origin: resolveAllowedOrigin,
     allowHeaders: ["Content-Type", "Authorization", "X-Admin-Password", "apikey", "x-client-info"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
