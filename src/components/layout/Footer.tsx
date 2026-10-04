@@ -1,8 +1,8 @@
 import type { Page } from '../../App';
+import { Link } from 'react-router';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
 
 interface FooterProps {
-  setPage: (page: Page) => void;
 }
 
 const navLinks: { label: string; page: Page }[] = [
@@ -40,30 +40,31 @@ const socials = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nest-arcadia', icon: <path d="M6.05 8.35A2.1 2.1 0 1 0 6.05 4.15a2.1 2.1 0 0 0 0 4.2ZM4.25 9.8h3.6V20H4.25V9.8Zm5.85 0h3.45v1.4h.05c.48-.9 1.65-1.85 3.4-1.85 3.64 0 4.31 2.4 4.31 5.52V20h-3.6v-4.55c0-1.08-.02-2.47-1.5-2.47-1.51 0-1.74 1.18-1.74 2.39V20h-3.6V9.8Z" /> },
 ];
 
-export default function Footer({ setPage }: FooterProps) {
+export default function Footer() {
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', admin: '/admin' };
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-16 items-start">
 
           {/* Logo + tagline */}
-          <button onClick={() => setPage('home')} className="text-left">
+          <Link to="/" className="text-left">
             <img src={logoImg} alt="NestArcadia — heritage Indian interiors" width="180" height="96" loading="lazy" decoding="async" className="h-24 w-auto object-contain" />
             <p className="text-[13px] text-[#6B5E4E] mt-4 leading-relaxed max-w-[220px]">
               Heritage-inspired interiors, thoughtfully designed for the way modern India lives.
             </p>
-          </button>
+          </Link>
 
           {/* Nav */}
           <div className="flex flex-col gap-3">
             {navLinks.map(l => (
-              <button
+              <Link
                 key={l.page}
-                onClick={() => setPage(l.page)}
+                to={pagePaths[l.page]}
                 className="text-[14px] text-[#6B5E4E] text-left hover:text-[#2D8C7E] transition-colors"
               >
                 {l.label}
-              </button>
+              </Link>
             ))}
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services</p>
@@ -73,12 +74,12 @@ export default function Footer({ setPage }: FooterProps) {
                 <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
               </div>
             </div>
-            <button
-              onClick={() => setPage('project')}
+            <Link
+              to="/start-your-project"
               className="text-[14px] text-[#2D8C7E] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
             >
               Share Your Project Brief →
-            </button>
+            </Link>
           </div>
 
           {/* Social + contact */}
