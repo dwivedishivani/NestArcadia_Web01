@@ -394,13 +394,13 @@ export default function MediaLibrary({ adminPassword }: Props) {
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       e.currentTarget.value = '';
-                      if (file) void replaceImage(asset, file);
+                      if (file) void startCrop(asset, file);
                     }}
                   />
 
                   <div className="mt-5 grid grid-cols-2 gap-2">
-                    <button type="button" onClick={() => { setCropAsset(asset); setCropX(asset.focal_x ?? 50); setCropY(asset.focal_y ?? 50); }} className="border border-[#1C3A5A] text-[#1C3A5A] px-3 py-3 text-[13px] hover:border-[#2D8C7E] hover:text-[#2D8C7E]">
-                      Adjust view
+                    <button type="button" onClick={() => void startCrop(asset)} disabled={busy} className="border border-[#1C3A5A] text-[#1C3A5A] px-3 py-3 text-[13px] hover:border-[#2D8C7E] hover:text-[#2D8C7E] disabled:opacity-50">
+                      Adjust crop
                     </button>
                     <button type="button" disabled={busy} onClick={() => inputRefs.current[asset.id]?.click()} className="bg-[#1C3A5A] text-white px-3 py-3 text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-50">
                       {busy ? 'Replacing…' : 'Replace image'}
