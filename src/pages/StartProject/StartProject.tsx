@@ -107,28 +107,29 @@ export default function StartProject({ setPage }: Props) {
     setSubmissionError('');
 
     try {
-      // Send enquiries through the same backend store used by the Admin Panel.
-      // The service attribution travels in the existing source field.
-      const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
-      const response = await fetch(`${API_BASE}/enquiries`, {
+      // Insert directly into Supabase. The public INSERT RLS policy validates
+      // the enquiry payload and keeps the form independent of the Figma Make edge proxy.
+      const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${publicAnonKey}`,
           apikey: publicAnonKey,
           'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
         },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, ''),
           city: form.city,
           project_type: form.projectType,
           configuration: form.configuration,
           budget: form.budget,
           timeline: form.timeline,
           design_style: form.style,
-          message: form.message,
+          message: form.message.trim(),
           source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
+          form_answers: {},
         }),
       });
 
