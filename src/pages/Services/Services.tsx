@@ -114,7 +114,7 @@ export default function Services({ setPage }: Props) {
           {services.map((s, i) => (
             <div
               key={s.number}
-              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] py-16"
+              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] items-start"
               style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
             >
               {i % 2 === 1 && (
@@ -122,7 +122,7 @@ export default function Services({ setPage }: Props) {
                   <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
-              <div className={`flex flex-col justify-center px-0 ${i % 2 === 1 ? 'lg:px-16' : 'lg:pr-16'} py-4`}>
+              <div className={`flex flex-col justify-center px-0 ${i % 2 === 1 ? 'lg:px-16' : 'lg:pr-16'} py-16`}>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">{s.number}</p>
                 <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#1A1714] mb-2">{s.name}</h2>
                 <p className="text-[#2D8C7E] text-sm mb-5">{s.tagline}</p>
