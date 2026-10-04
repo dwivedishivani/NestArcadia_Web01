@@ -51,7 +51,7 @@ export default function Footer() {
           <Link to="/" className="text-left">
             <img src={logoImg} alt="NestArcadia — heritage Indian interiors" width="180" height="96" loading="lazy" decoding="async" className="h-24 w-auto object-contain" />
             <p className="text-[13px] text-[#6B5E4E] mt-4 leading-relaxed max-w-[220px]">
-              Heritage-inspired interiors, thoughtfully designed for the way modern India lives.
+              Premium interior design for modern homes and spaces across Noida & NCR.
             </p>
           </Link>
 
