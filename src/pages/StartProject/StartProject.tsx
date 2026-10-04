@@ -109,34 +109,74 @@ export default function StartProject({ setPage }: Props) {
     setSubmissionError('');
 
     try {
-      // Send enquiries through the same backend store used by the Admin Panel.
-      // The service attribution travels in the existing source field.
-      const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
-      const response = await fetch(`${API_BASE}/enquiries`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${publicAnonKey}`,
-          apikey: publicAnonKey,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          city: form.city,
-          project_type: form.projectType,
-          configuration: form.configuration,
-          budget: form.budget,
-          timeline: form.timeline,
-          design_style: form.style,
-          message: form.message,
-          source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
-          website,
-        }),
-      });
+      // Use a stable client-generated ID so a network retry can safely fall back
+      // to the Edge Function without creating a duplicate enquiry.
+      const leadId = crypto.randomUUID();
+      const source = serviceInterest ? `services:${serviceInterest}` : 'start-your-project';
+      const payload = {
+        id: leadId,
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        city: form.city,
+        project_type: form.projectType,
+        configuration: form.configuration,
+        budget: form.budget,
+        timeline: form.timeline,
+        design_style: form.style,
+        message: form.message,
+        source,
+      };
 
-      if (!response.ok) {
-        throw new Error('We could not submit your brief right now. Please try again or WhatsApp us directly.');
+      let submittedSuccessfully = false;
+
+      // Primary path: direct PostgREST insert. This avoids Edge Function
+      // cold starts and keeps public lead capture independent of route aliases.
+      try {
+        const response = await fetch(
+          `https://${projectId}.supabase.co/rest/v1/enquiries_078be9eb`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${publicAnonKey}`,
+              apikey: publicAnonKey,
+              'Content-Type': 'application/json',
+              Prefer: 'return=minimal',
+            },
+            body: JSON.stringify(payload),
+          },
+        );
+
+        if (response.ok) {
+          submittedSuccessfully = true;
+        }
+      } catch {
+        // Fall through to the Edge Function fallback below.
+      }
+
+      // Fallback path: the existing Edge Function remains available if
+      // PostgREST is unreachable, blocked, or temporarily unavailable.
+      if (!submittedSuccessfully) {
+        const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
+        const response = await fetch(`${API_BASE}/enquiries`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${publicAnonKey}`,
+            apikey: publicAnonKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error('We could not submit your brief right now.');
+        }
+
+        submittedSuccessfully = true;
+      }
+
+      if (!submittedSuccessfully) {
+        throw new Error('We could not submit your brief right now.');
       }
 
       // Emit one business-level lead event only after the backend confirms the enquiry.
@@ -144,13 +184,17 @@ export default function StartProject({ setPage }: Props) {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: 'lead_submit',
-        lead_source: serviceInterest ? `services:${serviceInterest}` : 'start-your-project',
+        lead_source: source,
         page_path: window.location.pathname,
       });
 
       setSubmitted(true);
     } catch (error) {
-      setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now. Please try again or WhatsApp us directly.');
+      setSubmissionError(
+        error instanceof Error
+          ? error.message
+          : 'We could not submit your brief right now.',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -343,9 +387,21 @@ export default function StartProject({ setPage }: Props) {
                 {isSubmitting ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
               </button>
               {submissionError && (
-                <p role="alert" className="text-[12px] text-[#6B5E4E] text-center -mt-4">
-                  {submissionError}
-                </p>
+                <div role="alert" className="text-center -mt-4">
+                  <p className="text-[12px] text-[#6B5E4E]">
+                    {submissionError}
+                  </p>
+                  <a
+                    href={`https://wa.me/918448061997?text=${encodeURIComponent(
+                      `Hello NestArcadia, my project brief could not be submitted on the website.\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCity: ${form.city}\nProject: ${form.projectType}\nConfiguration: ${form.configuration || 'N/A'}\nBudget: ${form.budget}\nTimeline: ${form.timeline}\nStyle: ${form.style}\nMessage: ${form.message || 'N/A'}`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex mt-3 bg-[#2D8C7E] text-white px-4 py-2 text-[12px] hover:bg-[#1C3A5A] transition-colors"
+                  >
+                    Send Brief on WhatsApp
+                  </a>
+                </div>
               )}
               <p className="text-[12px] text-[#6B5E4E] text-center -mt-4">
                 We respond within 24 hours. Or{' '}

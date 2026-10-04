@@ -16,11 +16,21 @@ const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
 // Enable logger
 app.use('*', logger(console.log));
 
-// Enable CORS for all routes and methods
+// Allow only production, local-development, and explicitly authorized origins.
+const ALLOWED_ORIGINS = new Set([
+  "https://nestarcadia.com",
+  "https://www.nestarcadia.com",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+]);
+
+const resolveAllowedOrigin = (origin: string) =>
+  ALLOWED_ORIGINS.has(origin) ? origin : undefined;
+
 app.use(
   "/*",
   cors({
-    origin: "*",
+    origin: resolveAllowedOrigin,
     allowHeaders: ["Content-Type", "Authorization", "X-Admin-Password", "apikey", "x-client-info"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
@@ -59,23 +69,27 @@ app.post("/make-server-078be9eb/enquiries", async (c) => {
   try {
     const body = await c.req.json();
     const db = supabase();
-    
-    const { data, error } = await db.from("enquiries_078be9eb").insert({
-      name: body.name,
-      email: body.email,
-      phone: body.phone,
-      city: body.city,
-      project_type: body.project_type,
-      configuration: body.configuration,
-      budget: body.budget,
-      timeline: body.timeline,
-      design_style: body.design_style,
-      message: body.message,
-      source: body.source,
-      status: "new",
-      created_at: new Date().toISOString(),
-    });
-    
+    const leadId = body.id || crypto.randomUUID();
+
+    const { data, error } = await db
+      .from("enquiries_078be9eb")
+      .upsert({
+        id: leadId,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        city: body.city,
+        project_type: body.project_type,
+        configuration: body.configuration,
+        budget: body.budget,
+        timeline: body.timeline,
+        design_style: body.design_style,
+        message: body.message,
+        source: body.source,
+        status: "new",
+      }, { onConflict: "id", ignoreDuplicates: true })
+      .select();
+
     if (error) throw error;
     return c.json({ success: true, data });
   } catch (err: any) {
