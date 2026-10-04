@@ -111,18 +111,24 @@ export default function Services({ setPage }: Props) {
       {/* Services list */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-20">
         <div className="flex flex-col gap-0">
-          {services.map((s, i) => (
-            <div
-              key={s.number}
-              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] items-stretch lg:h-[560px]"
-              style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
-            >
-              {i % 2 === 1 && (
-                <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden bg-[#D4CBBB] order-last lg:order-none">
-                  <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
-                </div>
-              )}
-              <div className={`flex flex-col justify-center px-0 ${i % 2 === 1 ? 'lg:px-16' : 'lg:pr-16'} py-16`}>
+          {services.map((s, i) => {
+            const imageFirst = i % 2 === 1;
+            const imageFrame = (
+              <div className="relative min-w-0 w-full h-full min-h-[280px] lg:min-h-0 overflow-hidden bg-[#D4CBBB]">
+                <img
+                  src={s.img}
+                  alt={s.name}
+                  loading="lazy"
+                  decoding="async"
+                  width="800"
+                  height="600"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            );
+
+            const textFrame = (
+              <div className={`h-full min-w-0 flex flex-col justify-center px-0 py-12 lg:py-16 ${imageFirst ? 'lg:px-16' : 'lg:pr-16'}`}>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">{s.number}</p>
                 <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#1A1714] mb-2">{s.name}</h2>
                 <p className="text-[#2D8C7E] text-sm mb-5">{s.tagline}</p>
@@ -146,13 +152,19 @@ export default function Services({ setPage }: Props) {
                   {s.cta} →
                 </button>
               </div>
-              {i % 2 === 0 && (
-                <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden bg-[#D4CBBB]">
-                  <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
-                </div>
-              )}
-            </div>
-          ))}
+            );
+
+            return (
+              <div
+                key={s.number}
+                className="grid grid-cols-1 lg:grid-cols-2 lg:h-[560px] w-full min-h-0 border-b border-[#D4CBBB]"
+                style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
+              >
+                {imageFirst ? imageFrame : textFrame}
+                {imageFirst ? textFrame : imageFrame}
+              </div>
+            );
+          })}
         </div>
       </div>
 
