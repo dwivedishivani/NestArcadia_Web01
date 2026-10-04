@@ -14,6 +14,17 @@ const navLinks: { label: string; page: Page }[] = [
   { label: 'FAQs', page: 'faq' },
 ];
 
+const pagePaths: Partial<Record<Page, string>> = {
+  home: '/',
+  cultures: '/design-cultures',
+  services: '/interior-design-services',
+  story: '/our-story',
+  journal: '/journal',
+  homes: '/our-projects',
+  project: '/start-your-project',
+  faq: '/faqs',
+};
+
 const serviceAreas = [
   { label: 'Greater Noida West', href: '/interior-design-greater-noida-west' },
   { label: 'Noida Extension', href: '/interior-design-noida-extension' },
@@ -47,23 +58,31 @@ export default function Footer({ setPage }: FooterProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-16 items-start">
 
           {/* Logo + tagline */}
-          <button onClick={() => setPage('home')} className="text-left">
+          <a
+            href="/"
+            onClick={(event) => { event.preventDefault(); setPage('home'); }}
+            className="text-left"
+          >
             <img src={logoImg} alt="NestArcadia — heritage Indian interiors" width="180" height="96" loading="lazy" decoding="async" className="h-24 w-auto object-contain" />
             <p className="text-[13px] text-[#6B5E4E] mt-4 leading-relaxed max-w-[220px]">
               Heritage-inspired interiors, thoughtfully designed for the way modern India lives.
             </p>
-          </button>
+          </a>
 
           {/* Nav */}
           <div className="flex flex-col gap-3">
             {navLinks.map(l => (
-              <button
+              <a
                 key={l.page}
-                onClick={() => setPage(l.page)}
+                href={pagePaths[l.page] ?? '#'}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setPage(l.page);
+                }}
                 className="text-[14px] text-[#6B5E4E] text-left hover:text-[#2D8C7E] transition-colors"
               >
                 {l.label}
-              </button>
+              </a>
             ))}
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services</p>
@@ -73,12 +92,13 @@ export default function Footer({ setPage }: FooterProps) {
                 <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
               </div>
             </div>
-            <button
-              onClick={() => setPage('project')}
+            <a
+              href="/start-your-project"
+              onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[14px] text-[#2D8C7E] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
             >
               Share Your Project Brief →
-            </button>
+            </a>
           </div>
 
           {/* Social + contact */}
