@@ -39,8 +39,13 @@ export default function MediaLibrary({ adminPassword }: Props) {
   const [uploading, setUploading] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [cropAsset, setCropAsset] = useState<MediaAsset | null>(null);
-  const [cropX, setCropX] = useState(50);
-  const [cropY, setCropY] = useState(50);
+  const [cropPreview, setCropPreview] = useState('');
+  const [cropData, setCropData] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [cropDisplayScale, setCropDisplayScale] = useState(1);
+  const [cropDragging, setCropDragging] = useState<'move' | 'resize' | null>(null);
+  const [cropDragStart, setCropDragStart] = useState<{ x: number; y: number } | null>(null);
+  const cropImageRef = useRef<HTMLImageElement | null>(null);
+  const cropContainerRef = useRef<HTMLDivElement | null>(null);
   const [optimizingAll, setOptimizingAll] = useState(false);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -183,22 +188,133 @@ export default function MediaLibrary({ adminPassword }: Props) {
     }
   };
 
-  const saveCrop = async () => {
-    if (!cropAsset) return;
+  const startCrop = async (asset: MediaAsset, file?: File) => {
+    setMessage('');
     try {
-      const response = await fetch(`${API_BASE}/admin/images/${cropAsset.id}`, {
-        method: 'PUT',
-        headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ focal_x: Math.round(cropX), focal_y: Math.round(cropY) }),
+      const sourceUrl = file ? URL.createObjectURL(file) : (asset.public_url || asset.local_path);
+      if (!sourceUrl) throw new Error('Image source is unavailable');
+
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = sourceUrl;
+      await img.decode();
+
+      const aspectRatio = 4 / 3;
+      const imgAspect = img.naturalWidth / img.naturalHeight;
+      let width = img.naturalWidth;
+      let height = width / aspectRatio;
+      if (imgAspect < aspectRatio) {
+        height = img.naturalHeight;
+        width = height * aspectRatio;
+      }
+
+      cropImageRef.current = img;
+      setCropPreview(sourceUrl);
+      setCropData({
+        x: (img.naturalWidth - width) / 2,
+        y: (img.naturalHeight - height) / 2,
+        width,
+        height,
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || 'Could not save image view');
-      setAssets((current) => current.map((item) => item.id === cropAsset.id ? { ...item, focal_x: cropX, focal_y: cropY } : item));
-      setCropAsset(null);
-      setMessage(`Saved the visual crop for “${cropAsset.display_name}”.`);
+      setCropAsset(asset);
+
+      requestAnimationFrame(() => {
+        if (cropContainerRef.current) {
+          setCropDisplayScale(cropContainerRef.current.offsetWidth / img.naturalWidth);
+        }
+      });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Could not save image view');
+      setMessage(error instanceof Error ? error.message : 'Could not open image cropper');
     }
+  };
+
+  const handleCropPointerDown = (event: React.PointerEvent, mode: 'move' | 'resize') => {
+    event.preventDefault();
+    setCropDragging(mode);
+    setCropDragStart({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleCropPointerMove = (event: PointerEvent) => {
+    if (!cropDragging || !cropDragStart || !cropData || !cropImageRef.current) return;
+    const scale = cropDisplayScale || 1;
+    const dx = (event.clientX - cropDragStart.x) / scale;
+    const dy = (event.clientY - cropDragStart.y) / scale;
+
+    if (cropDragging === 'move') {
+      const x = Math.max(0, Math.min(cropImageRef.current.naturalWidth - cropData.width, cropData.x + dx));
+      const y = Math.max(0, Math.min(cropImageRef.current.naturalHeight - cropData.height, cropData.y + dy));
+      setCropData({ ...cropData, x, y });
+    } else {
+      const nextWidth = Math.max(120, cropData.width + dx);
+      const nextHeight = nextWidth / (4 / 3);
+      if (
+        cropData.x + nextWidth <= cropImageRef.current.naturalWidth &&
+        cropData.y + nextHeight <= cropImageRef.current.naturalHeight
+      ) {
+        setCropData({ ...cropData, width: nextWidth, height: nextHeight });
+      }
+    }
+
+    setCropDragStart({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleCropPointerUp = () => {
+    setCropDragging(null);
+    setCropDragStart(null);
+  };
+
+  useEffect(() => {
+    if (!cropDragging) return;
+    window.addEventListener('pointermove', handleCropPointerMove);
+    window.addEventListener('pointerup', handleCropPointerUp, { once: true });
+    return () => {
+      window.removeEventListener('pointermove', handleCropPointerMove);
+      window.removeEventListener('pointerup', handleCropPointerUp);
+    };
+  }, [cropDragging, cropDragStart, cropData, cropDisplayScale]);
+
+  const applyCrop = async () => {
+    if (!cropAsset || !cropData || !cropImageRef.current) return;
+    try {
+      setUploading(cropAsset.id);
+      const canvas = document.createElement('canvas');
+      canvas.width = 1600;
+      canvas.height = 1200;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not prepare the cropped image');
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(
+        cropImageRef.current,
+        cropData.x,
+        cropData.y,
+        cropData.width,
+        cropData.height,
+        0,
+        0,
+        1600,
+        1200,
+      );
+
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', 0.86));
+      if (!blob) throw new Error('Could not create the cropped image');
+
+      const file = new File([blob], `${cropAsset.source_key}-cropped.webp`, { type: 'image/webp' });
+      const asset = cropAsset;
+      cancelCrop();
+      await replaceImage(asset, file);
+    } catch (error) {
+      setUploading(null);
+      setMessage(error instanceof Error ? error.message : 'Could not apply image crop');
+    }
+  };
+
+  const cancelCrop = () => {
+    setCropAsset(null);
+    setCropPreview('');
+    setCropData(null);
+    cropImageRef.current = null;
   };
 
   return (
@@ -303,39 +419,63 @@ export default function MediaLibrary({ adminPassword }: Props) {
         </div>
       )}
 
-      {cropAsset && (
-        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-5" onPointerDown={(event) => { if (event.target === event.currentTarget) setCropAsset(null); }}>
-          <div className="w-full max-w-3xl bg-[#F2EDE4] border border-[#D4CBBB] p-5 lg:p-7">
+      {cropAsset && cropData && cropPreview && cropImageRef.current && (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-5" onPointerDown={(event) => { if (event.target === event.currentTarget) cancelCrop(); }}>
+          <div className="w-full max-w-4xl bg-[#F2EDE4] border border-[#D4CBBB] p-5 lg:p-7">
             <div className="flex items-start justify-between gap-5 mb-5">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E]">Visual crop</p>
                 <h4 className="font-display text-2xl text-[#1A1714] mt-1">{cropAsset.display_name}</h4>
-                <p className="text-[12px] text-[#6B5E4E] mt-1">Drag inside the fixed frame to choose the part that stays visible.</p>
+                <p className="text-[12px] text-[#6B5E4E] mt-1">Drag the white frame to reposition it. Drag the bottom-right handle to resize it.</p>
               </div>
-              <button type="button" onClick={() => setCropAsset(null)} className="text-[#6B5E4E] text-xl">×</button>
+              <button type="button" onClick={cancelCrop} className="text-[#6B5E4E] text-xl">×</button>
             </div>
+
             <div
-              className="relative aspect-[16/9] bg-[#D4CBBB] overflow-hidden cursor-grab active:cursor-grabbing select-none"
-              onPointerDown={(event) => {
-                const rect = event.currentTarget.getBoundingClientRect();
-                const update = (clientX: number, clientY: number) => {
-                  setCropX(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
-                  setCropY(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)));
-                };
-                update(event.clientX, event.clientY);
-                const move = (moveEvent: PointerEvent) => update(moveEvent.clientX, moveEvent.clientY);
-                const up = () => { window.removeEventListener('pointermove', move); };
-                window.addEventListener('pointermove', move);
-                window.addEventListener('pointerup', up, { once: true });
-              }}
+              ref={cropContainerRef}
+              className="relative max-h-[68vh] overflow-hidden bg-[#D4CBBB] select-none mx-auto w-fit max-w-full"
+              style={{ userSelect: 'none' }}
             >
-              <img src={cropAsset.public_url || cropAsset.local_path} alt="" className="w-full h-full object-cover pointer-events-none" style={{ objectPosition: `${cropX}% ${cropY}%` }} />
+              <img src={cropPreview} alt="" className="block max-w-full max-h-[68vh] w-auto h-auto" draggable={false} />
+              <div
+                className="absolute inset-0 bg-black/50 pointer-events-none"
+                style={{
+                  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0)',
+                  opacity: 0.45,
+                }}
+              />
+              <div
+                className="absolute border-2 border-white cursor-move"
+                style={{
+                  left: String((cropData.x / cropImageRef.current.naturalWidth) * 100) + '%',
+                  top: String((cropData.y / cropImageRef.current.naturalHeight) * 100) + '%',
+                  width: String((cropData.width / cropImageRef.current.naturalWidth) * 100) + '%',
+                  height: String((cropData.height / cropImageRef.current.naturalHeight) * 100) + '%',
+                  boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
+                }}
+                onPointerDown={(event) => handleCropPointerDown(event, 'move')}
+              >
+                <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
+                  {[...Array(9)].map((_, i) => <div key={i} className="border border-white/30" />)}
+                </div>
+                <div
+                  className="absolute bottom-0 right-0 w-7 h-7 bg-white border-2 border-[#1C3A5A] cursor-nwse-resize"
+                  style={{ transform: 'translate(50%, 50%)' }}
+                  onPointerDown={(event) => {
+                    event.stopPropagation();
+                    handleCropPointerDown(event, 'resize');
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex items-center justify-between gap-4 mt-5">
-              <p className="text-[12px] text-[#6B5E4E]">Focus: {Math.round(cropX)}% × {Math.round(cropY)}%</p>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 mt-5">
+              <p className="text-[12px] text-[#6B5E4E]">Crop frame: 4:3 · Final output: 1600×1200 WebP</p>
               <div className="flex gap-2">
-                <button type="button" onClick={() => setCropAsset(null)} className="border border-[#D4CBBB] px-5 py-2.5 text-[13px]">Cancel</button>
-                <button type="button" onClick={() => void saveCrop()} className="bg-[#1C3A5A] text-white px-5 py-2.5 text-[13px] hover:bg-[#2D8C7E]">Save view</button>
+                <button type="button" onClick={cancelCrop} className="border border-[#D4CBBB] px-5 py-2.5 text-[13px]">Cancel</button>
+                <button type="button" disabled={uploading === cropAsset.id} onClick={() => void applyCrop()} className="bg-[#1C3A5A] text-white px-5 py-2.5 text-[13px] hover:bg-[#2D8C7E] disabled:opacity-50">
+                  {uploading === cropAsset.id ? 'Uploading…' : 'Apply Crop'}
+                </button>
               </div>
             </div>
           </div>
