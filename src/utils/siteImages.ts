@@ -10,6 +10,21 @@ type SiteImageOverride = {
 let overrides: Record<string, SiteImageOverride> = {};
 let focalObserverStarted = false;
 
+function replaceImageSources() {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
+    const src = img.currentSrc || img.src;
+    const match = src.match(/\/site-media\/image\/([^?]+)/);
+    const sourceKey = match ? decodeURIComponent(match[1]) : null;
+    if (!sourceKey) return;
+    const item = overrides[sourceKey];
+    const publicUrl = item?.public_url;
+    if (!publicUrl || publicUrl.startsWith('/images/')) return;
+    img.removeAttribute('srcset');
+    img.src = publicUrl;
+  });
+}
+
 function applyFocalPoints() {
   if (typeof document === 'undefined') return;
   document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
@@ -46,8 +61,9 @@ export function setSiteImageOverrides(
   }>
 ) {
   overrides = Object.fromEntries(items.map((item) => [item.source_key, item]));
+  replaceImageSources();
   ensureFocalObserver();
-  requestAnimationFrame(() => applyFocalPoints());
+  requestAnimationFrame(() => { replaceImageSources(); applyFocalPoints(); });
 }
 
 export function resolveSiteImage(sourceKey: string, requestedWidth?: number) {
