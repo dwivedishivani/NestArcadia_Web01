@@ -113,7 +113,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-left text-[17px] font-semibold transition-colors
+                className="text-left text-[17px] font-semibold transition-colors"
                 style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
               >
                 {l.label}
