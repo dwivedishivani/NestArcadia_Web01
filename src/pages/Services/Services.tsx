@@ -114,11 +114,11 @@ export default function Services({ setPage }: Props) {
           {services.map((s, i) => (
             <div
               key={s.number}
-              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] items-start"
+              className="grid lg:grid-cols-2 gap-0 border-b border-[#D4CBBB] items-stretch lg:h-[560px]"
               style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
             >
               {i % 2 === 1 && (
-                <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#D4CBBB] order-last lg:order-none">
+                <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden bg-[#D4CBBB] order-last lg:order-none">
                   <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
@@ -147,7 +147,7 @@ export default function Services({ setPage }: Props) {
                 </button>
               </div>
               {i % 2 === 0 && (
-                <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#D4CBBB]">
+                <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden bg-[#D4CBBB]">
                   <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
