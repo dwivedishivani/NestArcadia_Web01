@@ -118,7 +118,7 @@ export default function Services({ setPage }: Props) {
               style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
             >
               {i % 2 === 1 && (
-                <div className="relative overflow-hidden bg-[#D4CBBB] min-h-[320px] order-last lg:order-none">
+                <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#D4CBBB] order-last lg:order-none">
                   <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
@@ -147,7 +147,7 @@ export default function Services({ setPage }: Props) {
                 </button>
               </div>
               {i % 2 === 0 && (
-                <div className="relative overflow-hidden bg-[#D4CBBB] min-h-[320px]">
+                <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#D4CBBB]">
                   <img src={s.img} alt={s.name} loading="lazy" decoding="async" width="800" height="600" className="absolute inset-0 w-full h-full object-cover" />
                 </div>
               )}
