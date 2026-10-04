@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import type { Page } from '../../App';
 import { resolveSiteImage } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
