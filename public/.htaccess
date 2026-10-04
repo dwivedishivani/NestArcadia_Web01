@@ -1,6 +1,11 @@
 # NestArcadia SPA redirects
 RewriteEngine On
 
+# Canonicalize the host so search engines see one authoritative domain.
+RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
+
+
 # Preserve the old portfolio URL for SEO/bookmarks.
 RewriteRule ^homes/?$ /our-projects [R=301,L]
 
