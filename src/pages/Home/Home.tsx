@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Page } from '../../App';
+import { Link } from 'react-router';
 import { resolveSiteImage } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
@@ -461,21 +461,40 @@ export default function Home({ setPage }: Props) {
             <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Helpful answers</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Questions before you begin.</h2>
           </div>
-          <div className="border-t border-[#D4CBBB]">
-            {faqs.map((faq, i) => (
-              <div key={faq.question} className="border-b border-[#D4CBBB]">
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between gap-6 py-5 text-left text-[15px] font-medium text-[#1A1714]"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  aria-expanded={openFaq === i}
-                >
-                  {faq.question}
-                  <span className="text-xl font-normal text-[#2D8C7E]" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
-                </button>
-                {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E]">{faq.answer}</p>}
-              </div>
-            ))}
+          <div>
+            <div className="border-t border-[#D4CBBB]">
+              {faqs.map((faq, i) => (
+                <div key={faq.question} className="border-b border-[#D4CBBB]">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between gap-6 py-5 text-left text-[15px] font-medium text-[#1A1714]"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    aria-expanded={openFaq === i}
+                  >
+                    {faq.question}
+                    <span className="text-xl font-normal text-[#2D8C7E]" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
+                  </button>
+                  {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E]">{faq.answer}</p>}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-6">
+              <Link
+                to="/faqs"
+                className="border border-[#1C3A5A] px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
+              >
+                See All FAQs →
+              </Link>
+              <a
+                href="https://wa.me/918448061997?text=Hi%20NestArcadia%2C%20I%20have%20a%20question%20about%20interior%20design%20for%20my%20home%20in%20Noida%2FGreater%20Noida."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-[#1C3A5A]/40 px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
+              >
+                Ask on WhatsApp →
+              </a>
+            </div>
           </div>
         </div>
       </section>
