@@ -188,6 +188,13 @@ export default function StartProject({ setPage }: Props) {
         page_path: window.location.pathname,
       });
 
+      const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+      gtag?.('event', 'generate_lead', {
+        lead_source: source,
+        page_path: window.location.pathname,
+        send_to: 'G-LDM2YL1MP5',
+      });
+
       setSubmitted(true);
     } catch (error) {
       setSubmissionError(
