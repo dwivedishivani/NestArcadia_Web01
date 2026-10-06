@@ -95,29 +95,36 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
 };
 
+function normalizePathname(pathname: string) {
+  const normalized = pathname.replace(/\\/+$/, '');
+  return normalized || '/';
+}
+
 function pageFromPath(pathname: string): Page {
-  if (pathname.startsWith('/admin')) return 'admin';
-  if (pathname.startsWith('/design-cultures')) return 'cultures';
-  if (pathname.startsWith('/interior-design-services')) return 'services';
-  if (pathname.startsWith('/our-story')) return 'story';
-  if (pathname.startsWith('/journal')) return 'journal';
-  if (pathname.startsWith('/our-projects')) return 'homes';
-  if (pathname.startsWith('/start-your-project')) return 'project';
-  if (pathname.startsWith('/faqs')) return 'faq';
+  const path = normalizePathname(pathname);
+  if (path === '/admin') return 'admin';
+  if (path === '/design-cultures') return 'cultures';
+  if (path === '/interior-design-services') return 'services';
+  if (path === '/our-story') return 'story';
+  if (path === '/journal' || path.startsWith('/journal/')) return 'journal';
+  if (path === '/our-projects') return 'homes';
+  if (path === '/start-your-project') return 'project';
+  if (path === '/faqs') return 'faq';
   return 'home';
 }
 
 function isKnownPath(pathname: string) {
-  if (pathname === '/') return true;
-  if (pathname.startsWith('/admin')) return true;
-  if (pathname.startsWith('/design-cultures')) return true;
-  if (pathname.startsWith('/interior-design-services')) return true;
-  if (pathname.startsWith('/our-story')) return true;
-  if (pathname.startsWith('/journal')) return true;
-  if (pathname.startsWith('/our-projects')) return true;
-  if (pathname.startsWith('/start-your-project')) return true;
-  if (pathname.startsWith('/faqs')) return true;
-  return Boolean(getLocalServicePage(pathname));
+  const path = normalizePathname(pathname);
+  if (path === '/') return true;
+  if (path === '/admin') return true;
+  if (path === '/design-cultures') return true;
+  if (path === '/interior-design-services') return true;
+  if (path === '/our-story') return true;
+  if (path === '/journal' || path.startsWith('/journal/')) return true;
+  if (path === '/our-projects') return true;
+  if (path === '/start-your-project') return true;
+  if (path === '/faqs') return true;
+  return Boolean(getLocalServicePage(path));
 }
 
 function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
@@ -271,7 +278,61 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
 declare global { interface Window { dataLayer?: Record<string, unknown>[] } }
 
 function NotFoundPage() {
-  return <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]"><p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p><h1 className="font-display text-5xl mb-5">Page not found.</h1><p className="text-[#6B5E4E] mb-8">The page you requested does not exist.</p><a href="/" className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">Return Home</a></div>;
+  const location = useLocation();
+
+  useEffect(() => {
+    const pathname = normalizePathname(location.pathname);
+    const canonical = `${SITE_URL}${pathname}`;
+    document.title = 'Page not found | NestArcadia';
+
+    const setMeta = (name: string, content: string, property = false) => {
+      const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let element = document.head.querySelector(selector) as HTMLMetaElement | null;
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(property ? 'property' : 'name', name);
+        document.head.appendChild(element);
+      }
+      element.content = content;
+    };
+
+    setMeta('description', 'The page you requested does not exist on NestArcadia.');
+    setMeta('robots', 'noindex, nofollow, noarchive');
+    setMeta('og:title', 'Page not found | NestArcadia', true);
+    setMeta('og:description', 'The page you requested does not exist on NestArcadia.', true);
+    setMeta('og:type', 'website', true);
+    setMeta('og:url', canonical, true);
+    setMeta('og:image', SOCIAL_IMAGE, true);
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', 'Page not found | NestArcadia');
+    setMeta('twitter:description', 'The page you requested does not exist on NestArcadia.');
+    setMeta('twitter:image', SOCIAL_IMAGE);
+
+    let link = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      document.head.appendChild(link);
+    }
+    link.href = canonical;
+
+    const schema = document.getElementById('nestarcadia-schema');
+    if (schema) schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Page not found | NestArcadia',
+      url: canonical,
+    });
+  }, [location.pathname]);
+
+  return (
+    <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]">
+      <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+      <h1 className="font-display text-5xl mb-5">Page not found.</h1>
+      <p className="text-[#6B5E4E] mb-8">The page you requested does not exist.</p>
+      <a href="/" className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">Return Home</a>
+    </div>
+  );
 }
 
 function RouteFallback() {
@@ -434,10 +495,11 @@ function AdminShell() {
 function SiteShell() {
   const location = useLocation();
   const navigate = useNavigate();
-  const page = pageFromPath(location.pathname);
-  const localService = getLocalServicePage(location.pathname);
-  if (!isKnownPath(location.pathname)) return <NotFoundPage />;
-  const articleId = location.pathname.startsWith('/journal/') ? location.pathname.split('/')[2] : undefined;
+  const normalizedPath = normalizePathname(location.pathname);
+  const page = pageFromPath(normalizedPath);
+  const localService = getLocalServicePage(normalizedPath);
+  if (!isKnownPath(normalizedPath)) return <NotFoundPage />;
+  const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
   const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   if (page === 'admin') return <AdminShell />;
