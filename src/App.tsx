@@ -131,10 +131,16 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
   const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null; modifiedAt: string | null } | null>(null);
+  const [articleMetaLoaded, setArticleMetaLoaded] = useState(false);
 
   useEffect(() => {
     let active = true;
-    if (!articleSlug) { setArticle(null); return; }
+    if (!articleSlug) {
+      setArticle(null);
+      setArticleMetaLoaded(false);
+      return;
+    }
+    setArticleMetaLoaded(false);
     const loadArticleMeta = async () => {
       try {
         const params = new URLSearchParams({
@@ -151,16 +157,19 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           const rows = await response.json();
           if (Array.isArray(rows) && rows[0]) {
             const row = rows[0];
-            if (active) setArticle({
-              id: row.slug || articleSlug,
-              title: row.title || 'NestArcadia Journal',
-              excerpt: row.excerpt || '',
-              img: row.image_url || SOCIAL_IMAGE,
-              category: row.category || 'Journal',
-              author: row.author || 'NestArcadia',
-              publishedAt: row.published_at || row.created_at || null,
-              modifiedAt: row.updated_at || row.published_at || row.created_at || null,
-            });
+            if (active) {
+              setArticle({
+                id: row.slug || articleSlug,
+                title: row.title || 'NestArcadia Journal',
+                excerpt: row.excerpt || '',
+                img: row.image_url || SOCIAL_IMAGE,
+                category: row.category || 'Journal',
+                author: row.author || 'NestArcadia',
+                publishedAt: row.published_at || row.created_at || null,
+                modifiedAt: row.updated_at || row.published_at || row.created_at || null,
+              });
+              setArticleMetaLoaded(true);
+            }
             return;
           }
         }
@@ -180,6 +189,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           publishedAt: null,
           modifiedAt: null,
         } : null);
+        setArticleMetaLoaded(true);
       });
     };
     loadArticleMeta();
@@ -189,11 +199,14 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
     const activeArticle = article?.id === articleSlug ? article : undefined;
+    const invalidJournalArticle = Boolean(articleSlug) && articleMetaLoaded && !activeArticle;
     const meta = localService
       ? { title: localService.title + ' | NestArcadia', description: localService.description, image: SOCIAL_IMAGE, type: 'website' }
       : activeArticle
         ? { title: activeArticle.title + ' | NestArcadia Journal', description: activeArticle.excerpt, image: activeArticle.img, type: 'article' }
-        : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
+        : invalidJournalArticle
+          ? { title: 'Page not found | NestArcadia', description: 'The journal article you requested does not exist on NestArcadia.', image: SOCIAL_IMAGE, type: 'website' }
+          : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
     const canonical = `${SITE_URL}${pathname}`;
     document.title = meta.title;
     const setMeta = (name: string, content: string, property = false) => {
@@ -206,7 +219,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     setMeta('author', 'NestArcadia');
     setMeta('geo.region', 'IN-UP');
     setMeta('geo.placename', 'Greater Noida West, Noida Extension, Greater Noida, Noida, Ghaziabad, Faridabad, Delhi NCR, Gurugram');
-    setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMeta('robots', invalidJournalArticle ? 'noindex, nofollow, noarchive' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     setMeta('og:title', meta.title, true);
     setMeta('og:description', meta.description, true);
     setMeta('og:type', meta.type, true);
@@ -271,7 +284,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       page_path: pathname,
       send_to: 'G-LDM2YL1MP5',
     });
-  }, [location.pathname, page, article, articleSlug, localService]);
+  }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
   return null;
 }
 
