@@ -290,6 +290,82 @@ function RouteErrorElement() {
   );
 }
 
+function ConsentManager() {
+  const [visible, setVisible] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('nestarcadia_consent_v2');
+    if (!stored) {
+      setVisible(true);
+      return;
+    }
+    const granted = stored === 'granted';
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.('consent', 'update', {
+      ad_storage: granted ? 'granted' : 'denied',
+      ad_user_data: granted ? 'granted' : 'denied',
+      ad_personalization: granted ? 'granted' : 'denied',
+      analytics_storage: granted ? 'granted' : 'denied',
+    });
+  }, []);
+
+  const saveConsent = (granted: boolean) => {
+    localStorage.setItem('nestarcadia_consent_v2', granted ? 'granted' : 'denied');
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.('consent', 'update', {
+      ad_storage: granted ? 'granted' : 'denied',
+      ad_user_data: granted ? 'granted' : 'denied',
+      ad_personalization: granted ? 'granted' : 'denied',
+      analytics_storage: granted ? 'granted' : 'denied',
+    });
+    setSettingsOpen(false);
+    setVisible(false);
+  };
+
+  if (!visible) {
+    return (
+      <button
+        type="button"
+        onClick={() => { setVisible(true); setSettingsOpen(true); }}
+        className="fixed bottom-4 left-4 z-[100] rounded-full border border-[#C9BDAA] bg-[#F8F5EF]/95 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1C3A5A] shadow-sm backdrop-blur-sm hover:bg-white"
+        aria-label="Open privacy choices"
+      >
+        Privacy choices
+      </button>
+    );
+  }
+
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-[100] px-3 pb-3 sm:px-5 sm:pb-5" role="dialog" aria-label="Privacy and cookie choices">
+      <div className="mx-auto max-w-5xl rounded-2xl border border-[#C9BDAA] bg-[#F8F5EF] p-5 shadow-2xl sm:p-6">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#2D8C7E]">Privacy choices</p>
+            <h2 className="font-display text-xl text-[#1C3A5A] sm:text-2xl">A little control stays with you.</h2>
+            <p className="mt-2 text-sm leading-6 text-[#52677E]">
+              NestArcadia uses Google Analytics and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-col gap-2 sm:min-w-[220px]">
+            <button type="button" onClick={() => saveConsent(true)} className="rounded-full bg-[#1C3A5A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#2D8C7E]">Accept all</button>
+            <button type="button" onClick={() => saveConsent(false)} className="rounded-full border border-[#1C3A5A] px-5 py-3 text-sm font-semibold text-[#1C3A5A] transition-colors hover:bg-white">Reject non-essential</button>
+            <button type="button" onClick={() => setSettingsOpen((value) => !value)} className="text-xs font-medium text-[#52677E] underline underline-offset-4">{settingsOpen ? 'Hide details' : 'What is being used?'}</button>
+          </div>
+        </div>
+        {settingsOpen && (
+          <div className="mt-5 grid gap-3 border-t border-[#D4CBBB] pt-5 text-xs leading-5 text-[#52677E] sm:grid-cols-2">
+            <div><strong className="text-[#1C3A5A]">Essential:</strong> required for the website to function and cannot be switched off here.</div>
+            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics helps us understand visits, engagement and page performance.</div>
+            <div><strong className="text-[#1C3A5A]">Advertising:</strong> Google Ads measurement helps us understand campaign performance and enquiries.</div>
+            <div><strong className="text-[#1C3A5A]">Your choice:</strong> you can reopen Privacy choices at any time from the button at the bottom-left.</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function AdminShell() {
   const navigate = useNavigate();
   const [adminPassword, setAdminPassword] = useState<string | null>(sessionStorage.getItem('admin_password'));
@@ -343,6 +419,7 @@ function SiteShell() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
       <SeoManager page={page} localService={localService} />
+      <ConsentManager />
       <Nav page={page} forceSolid={Boolean(localService)} />
       <main className="flex-1 pb-24 sm:pb-0">
         {localService ? <LocalServicePage config={localService} setPage={setPage} /> : page === 'home' && <Home setPage={setPage} />}
