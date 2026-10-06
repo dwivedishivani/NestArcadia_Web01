@@ -201,14 +201,22 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     return () => { active = false; };
   }, [articleSlug]);
 
+  const journalSeoOverrides: Record<string, { title: string; description: string }> = {
+    'luxury-interior-design-noida-extension': {
+      title: 'Luxury Interior Designers in Noida Extension | Premium Turnkey Execution by Nest Arcadia',
+      description: 'Elevate your apartment with Nest Arcadia, the premier luxury interior design studio in Greater Noida West. Discover our guide to high-end, turnkey 3BHK/4BHK interiors, spatial planning, and smart home integration.',
+    },
+  };
+
   useEffect(() => {
     const pathname = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '');
     const activeArticle = article?.id === articleSlug ? article : undefined;
     const invalidJournalArticle = Boolean(articleSlug) && articleMetaLoaded && !activeArticle;
+    const seoOverride = articleSlug ? journalSeoOverrides[articleSlug] : undefined;
     const meta = localService
       ? { title: localService.title + ' | NestArcadia', description: localService.description, image: SOCIAL_IMAGE, type: 'website' }
       : activeArticle
-        ? { title: activeArticle.title + ' | NestArcadia Journal', description: activeArticle.excerpt, image: activeArticle.img, type: 'article' }
+        ? { title: seoOverride?.title || (activeArticle.title + ' | NestArcadia Journal'), description: seoOverride?.description || activeArticle.excerpt, image: activeArticle.img, type: 'article' }
         : invalidJournalArticle
           ? { title: 'Page not found | NestArcadia', description: 'The journal article you requested does not exist on NestArcadia.', image: SOCIAL_IMAGE, type: 'website' }
           : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
