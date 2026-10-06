@@ -513,7 +513,14 @@ function SiteShell() {
   const localService = getLocalServicePage(normalizedPath);
   if (!isKnownPath(normalizedPath)) return <NotFoundPage />;
   const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
-  const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  // Always reset the scroll position when the route changes. This also covers
+  // navigation triggered directly by the header/footer links (not only setPage).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  const setPage = (next: Page) => { navigate(pagePaths[next]); };
 
   if (page === 'admin') return <AdminShell />;
 
