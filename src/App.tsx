@@ -119,7 +119,6 @@ function isKnownPath(pathname: string) {
   if (pathname.startsWith('/faqs')) return true;
   return Boolean(getLocalServicePage(pathname));
 }
-}
 
 function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
   const location = useLocation();
