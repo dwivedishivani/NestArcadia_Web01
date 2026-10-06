@@ -243,6 +243,14 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       page_type: localService ? 'local_service' : page,
       content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
     });
+
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    gtag?.('event', 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: pathname,
+      send_to: 'G-LDM2YL1MP5',
+    });
   }, [location.pathname, page, article, articleSlug, localService]);
   return null;
 }
