@@ -41,7 +41,7 @@ const socials = [
 ];
 
 export default function Footer() {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', admin: '/admin' };
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', privacy: '/privacy-policy', admin: '/admin' };
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
@@ -140,9 +140,12 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row justify-between gap-2">
+        <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
-          <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy-policy" className="text-[12px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">Privacy Policy</Link>
+            <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
+          </div>
         </div>
       </div>
     </footer>
