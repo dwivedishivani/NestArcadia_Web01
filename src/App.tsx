@@ -21,8 +21,9 @@ const Journal = lazy(() => import('./pages/Journal/Journal'));
 const Homes = lazy(() => import('./pages/Homes/Homes'));
 const StartProject = lazy(() => import('./pages/StartProject/StartProject'));
 const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 
-export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'admin';
+export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'privacy' | 'admin';
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
@@ -80,6 +81,7 @@ const pagePaths: Record<Page, string> = {
   homes: '/our-projects',
   project: '/start-your-project',
   faq: '/faqs',
+  privacy: '/privacy-policy',
   admin: '/admin',
 };
 
@@ -92,6 +94,7 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia’s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: { title: 'Interior Design Cost, Services & FAQs | Noida & NCR', description: 'Answers about 2BHK and 3BHK interior design, costs, modular kitchens, turnkey execution, Vastu planning and commercial interiors across Noida, Greater Noida and NCR.' },
+  privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
   admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
 };
 
@@ -110,6 +113,7 @@ function pageFromPath(pathname: string): Page {
   if (path === '/our-projects') return 'homes';
   if (path === '/start-your-project') return 'project';
   if (path === '/faqs') return 'faq';
+  if (path === '/privacy-policy') return 'privacy';
   return 'home';
 }
 
@@ -124,6 +128,7 @@ function isKnownPath(pathname: string) {
   if (path === '/our-projects') return true;
   if (path === '/start-your-project') return true;
   if (path === '/faqs') return true;
+  if (path === '/privacy-policy') return true;
   return Boolean(getLocalServicePage(path));
 }
 
@@ -540,6 +545,7 @@ function SiteShell() {
           {page === 'homes' && <Homes setPage={setPage} />}
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}
+          {page === 'privacy' && <PrivacyPolicy />}
         </Suspense>
         {!localService && <EditorialContext page={page} />}
         {!localService && <ConversionBanner page={page} setPage={setPage} />}
