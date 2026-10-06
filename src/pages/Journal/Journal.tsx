@@ -531,6 +531,19 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   const filtered = active === 'All' ? sourceArticles : sourceArticles.filter(a => a.category === active);
   const selected = sourceArticles.find(a => a.id === articleId);
 
+  if (articleId && articlesLoaded && !selected) {
+    return (
+      <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia Journal</p>
+        <h1 className="font-display text-5xl mb-5">Page not found.</h1>
+        <p className="text-[#6B5E4E] mb-8">The journal article you requested does not exist.</p>
+        <a href="/journal" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
+          Back to Journal
+        </a>
+      </div>
+    );
+  }
+
   // Article detail view
   if (selected) {
     const pullQuote = 'pullQuote' in selected ? selected.pullQuote : null;
