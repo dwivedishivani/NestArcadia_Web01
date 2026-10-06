@@ -547,7 +547,7 @@ function SiteShell() {
           {page === 'faq' && <FAQs setPage={setPage} />}
           {page === 'privacy' && <PrivacyPolicy />}
         </Suspense>
-        {!localService && <EditorialContext page={page} />}
+        {!localService && page !== 'privacy' && <EditorialContext page={page} />}
         {!localService && <ConversionBanner page={page} setPage={setPage} />}
       </main>
       <Footer />
