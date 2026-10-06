@@ -107,6 +107,20 @@ function pageFromPath(pathname: string): Page {
   return 'home';
 }
 
+function isKnownPath(pathname: string) {
+  if (pathname === '/') return true;
+  if (pathname.startsWith('/admin')) return true;
+  if (pathname.startsWith('/design-cultures')) return true;
+  if (pathname.startsWith('/interior-design-services')) return true;
+  if (pathname.startsWith('/our-story')) return true;
+  if (pathname.startsWith('/journal')) return true;
+  if (pathname.startsWith('/our-projects')) return true;
+  if (pathname.startsWith('/start-your-project')) return true;
+  if (pathname.startsWith('/faqs')) return true;
+  return Boolean(getLocalServicePage(pathname));
+}
+}
+
 function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
   const location = useLocation();
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
@@ -256,6 +270,10 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
 }
 
 declare global { interface Window { dataLayer?: Record<string, unknown>[] } }
+
+function NotFoundPage() {
+  return <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]"><p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p><h1 className="font-display text-5xl mb-5">Page not found.</h1><p className="text-[#6B5E4E] mb-8">The page you requested does not exist.</p><a href="/" className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">Return Home</a></div>;
+}
 
 function RouteFallback() {
   return <div className="min-h-[52vh] animate-pulse bg-[#F2EDE4] px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-[#D4CBBB]" /><div className="mx-auto mt-6 h-12 max-w-xl bg-[#EAE4DA]" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-[#EAE4DA]" /></div>;
@@ -419,6 +437,7 @@ function SiteShell() {
   const navigate = useNavigate();
   const page = pageFromPath(location.pathname);
   const localService = getLocalServicePage(location.pathname);
+  if (!isKnownPath(location.pathname)) return <NotFoundPage />;
   const articleId = location.pathname.startsWith('/journal/') ? location.pathname.split('/')[2] : undefined;
   const setPage = (next: Page) => { navigate(pagePaths[next]); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
