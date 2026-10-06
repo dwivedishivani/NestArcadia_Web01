@@ -96,7 +96,7 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
 };
 
 function normalizePathname(pathname: string) {
-  const normalized = pathname.replace(/\\/+$/, '');
+  const normalized = pathname.replace(/\/+$/, '');
   return normalized || '/';
 }
 
@@ -511,14 +511,15 @@ function SiteShell() {
   const normalizedPath = normalizePathname(location.pathname);
   const page = pageFromPath(normalizedPath);
   const localService = getLocalServicePage(normalizedPath);
-  if (!isKnownPath(normalizedPath)) return <NotFoundPage />;
-  const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
   // Always reset the scroll position when the route changes. This also covers
   // navigation triggered directly by the header/footer links (not only setPage).
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  if (!isKnownPath(normalizedPath)) return <NotFoundPage />;
+  const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
   const setPage = (next: Page) => { navigate(pagePaths[next]); };
 
