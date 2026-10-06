@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Page } from '../../App';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { setPage: (p: Page) => void; }
 
