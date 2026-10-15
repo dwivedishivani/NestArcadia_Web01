@@ -126,7 +126,6 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
       return expected.some((attributeValue) => normalized.includes(attributeValue))
     })
   }
-  }
 
   const title = config.title ?? "Figma Make App"
   const description = config.description ?? ''
