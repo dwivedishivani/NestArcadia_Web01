@@ -210,7 +210,7 @@ export default function Home({ setPage }: Props) {
       <section className="py-24 lg:py-32 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">Every Home Has a Story</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] text-[#17665B] mb-5">Every Home Has a Story</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] leading-[1.08]">
               Rooted in Tradition.<br />Designed for You.
             </h2>
@@ -221,7 +221,7 @@ export default function Home({ setPage }: Props) {
             </p>
             <button
               onClick={() => setPage('story')}
-              className="text-[14px] text-[#1C3A5A] border-b border-[#1C3A5A] pb-px self-start hover:text-[#2D8C7E] hover:border-[#2D8C7E] transition-colors"
+              className="text-[14px] text-[#1C3A5A] border-b border-[#1C3A5A] pb-px self-start hover:text-[#17665B] hover:border-[#17665B] transition-colors"
             >
               Our Story →
             </button>
@@ -236,7 +236,7 @@ export default function Home({ setPage }: Props) {
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Design Cultures</h2>
             <p className="text-[#6B5E4E] text-[15px] mt-1.5">Same roots. Endless possibilities.</p>
           </div>
-          <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#2D8C7E] transition-colors">
+          <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All →
           </button>
         </div>
@@ -303,14 +303,14 @@ export default function Home({ setPage }: Props) {
             <div className="flex gap-2 mt-1">
               <button
                 onClick={prevTrend}
-                className="w-9 h-9 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+                className="min-h-11 min-w-11 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-all"
                 aria-label="Previous trends"
               >
                 ←
               </button>
               <button
                 onClick={nextTrend}
-                className="w-9 h-9 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+                className="min-h-11 min-w-11 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-all"
                 aria-label="Next trends"
               >
                 →
@@ -341,8 +341,8 @@ export default function Home({ setPage }: Props) {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2D8C7E] mb-1">{t.tag}</p>
-                <p className="text-[13px] font-medium text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">{t.name}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#17665B] mb-1">{t.tag}</p>
+                <p className="text-[13px] font-medium text-[#1A1714] group-hover:text-[#17665B] transition-colors">{t.name}</p>
                 {i === 0 && (
                   <p className="text-[11px] text-[#6B5E4E] mt-1 leading-relaxed line-clamp-3">
                     {t.desc}
@@ -358,10 +358,11 @@ export default function Home({ setPage }: Props) {
               <button
                 key={i}
                 onClick={() => setTrendStart(i)}
-                className="h-1 transition-all rounded-full"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-offset-0"
                 style={{
                   width: i === trendStart ? '24px' : '6px',
-                  background: i === trendStart ? '#2D8C7E' : '#D4CBBB',
+                  height: '4px',
+                  background: i === trendStart ? '#17665B' : '#8A7B69',
                 }}
                 aria-label={`Go to trend ${i + 1}`}
               />
@@ -379,14 +380,14 @@ export default function Home({ setPage }: Props) {
               End-to-end interior solutions, inspired by heritage, designed for modern living.
             </p>
           </div>
-          <button onClick={() => setPage('services')} className="hidden sm:block text-[14px] text-[#1A1714] pt-2 hover:text-[#2D8C7E] transition-colors">
+          <button onClick={() => setPage('services')} className="hidden sm:block text-[14px] text-[#1A1714] pt-2 hover:text-[#17665B] transition-colors">
             View All Services →
           </button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 items-start gap-x-8 gap-y-10 lg:gap-6">
           {services.map(s => (
             <button key={s.name} onClick={() => setPage('services')} className="group flex h-full flex-col text-left">
-              <div className="w-10 h-10 border border-[#D4CBBB] flex items-center justify-center text-[#2D8C7E] mb-4 transition-all group-hover:bg-[#2D8C7E] group-hover:border-[#2D8C7E] group-hover:text-white">
+              <div className="w-10 h-10 border border-[#D4CBBB] flex items-center justify-center text-[#17665B] mb-4 transition-all group-hover:bg-[#17665B] group-hover:border-[#17665B] group-hover:text-white">
                 <span className="text-base">{s.icon}</span>
               </div>
               <p className="min-h-12 text-[14px] font-medium text-[#1A1714] mb-1.5">{s.name}</p>
@@ -424,7 +425,7 @@ export default function Home({ setPage }: Props) {
             'Delivered with care, everywhere in India',
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-7 py-6 border-b border-white/[0.08] last:border-b-0">
-              <span className="font-display text-[#2D8C7E] text-sm shrink-0 mt-px">0{i + 1}</span>
+              <span className="font-display text-[#B8D8D1] text-sm shrink-0 mt-px">0{i + 1}</span>
               <p className="text-white/75 text-[15px] leading-relaxed">{item}</p>
             </div>
           ))}
@@ -438,7 +439,7 @@ export default function Home({ setPage }: Props) {
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Featured Homes</h2>
             <p className="text-[#6B5E4E] text-[15px] mt-1.5">Real spaces. Real people. Real stories.</p>
           </div>
-          <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#2D8C7E] transition-colors">
+          <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All Homes →
           </button>
         </div>
@@ -449,7 +450,7 @@ export default function Home({ setPage }: Props) {
                 <img src={IMG[h.img]} alt={`NestArcadia ${h.name} ${h.loc} home interior design`} loading="lazy" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714] min-h-[3.5rem]">{h.name}</p>
-              <p className="text-[13px] text-[#2D8C7E] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
+              <p className="text-[13px] text-[#17665B] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
               <p className="text-[13px] text-[#6B5E4E] leading-relaxed min-h-[3.75rem]">{h.desc}</p>
             </button>
           ))}
@@ -460,7 +461,7 @@ export default function Home({ setPage }: Props) {
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
         <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.9fr_1.4fr] gap-8 lg:gap-20">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Designed for NCR living</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Designed for NCR living</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Interior design that understands where you live.</h2>
           </div>
           <div className="lg:pt-2">
@@ -481,7 +482,7 @@ export default function Home({ setPage }: Props) {
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
         <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-20">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Helpful answers</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Helpful answers</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Questions before you begin.</h2>
           </div>
           <div>
@@ -495,7 +496,7 @@ export default function Home({ setPage }: Props) {
                     aria-expanded={openFaq === i}
                   >
                     {faq.question}
-                    <span className="text-xl font-normal text-[#2D8C7E]" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
+                    <span className="text-xl font-normal text-[#17665B]" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
                   </button>
                   {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E]">{faq.answer}</p>}
                 </div>
@@ -533,7 +534,7 @@ export default function Home({ setPage }: Props) {
             <p className="text-white/55 text-[15px] mb-8">Your requirement comes first. Always.</p>
             <button
               onClick={() => setPage('project')}
-              className="text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-[#2D8C7E] hover:border-[#2D8C7E]"
+              className="text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-[#17665B] hover:border-[#17665B]"
             >
               Tell Us About Your Space →
             </button>
@@ -546,7 +547,7 @@ export default function Home({ setPage }: Props) {
               'Compact apartment — we maximise every inch',
             ].map(f => (
               <div key={f} className="flex items-center gap-3 text-white/65 text-[15px]">
-                <span className="text-[#2D8C7E]">◎</span>
+                <span className="text-[#17665B]">◎</span>
                 {f}
               </div>
             ))}
