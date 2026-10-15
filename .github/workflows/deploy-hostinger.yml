@@ -1,0 +1,82 @@
+name: Deploy NestArcadia to Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nestarcadia-hostinger-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build production site
+        run: pnpm build
+
+      - name: Validate production output
+        run: |
+          test -s dist/index.html
+          test -d dist/assets
+          test -s dist/robots.txt
+          test -s dist/sitemap.xml
+          echo "Production build validated."
+
+      - name: Upload production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nestarcadia-production-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Deploy site files over SSH
+        env:
+          HOSTINGER_SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          HOSTINGER_SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
+          HOSTINGER_SSH_USERNAME: ${{ secrets.HOSTINGER_SSH_USERNAME }}
+          HOSTINGER_SSH_PASSWORD: ${{ secrets.HOSTINGER_SSH_PASSWORD }}
+        shell: bash
+        run: |
+          if [[ -z "$HOSTINGER_SSH_HOST" || -z "$HOSTINGER_SSH_PORT" || -z "$HOSTINGER_SSH_USERNAME" || -z "$HOSTINGER_SSH_PASSWORD" ]]; then
+            echo "::notice::Deployment was not run because Hostinger SSH GitHub Actions secrets are not configured yet. The build succeeded; add the four secrets and use Run workflow once."
+            exit 0
+          fi
+
+          sudo apt-get update -qq
+          sudo apt-get install -y sshpass
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$HOSTINGER_SSH_PORT" "$HOSTINGER_SSH_HOST" >> ~/.ssh/known_hosts
+
+          # Upload all current production files in one transfer. Do not delete
+          # existing files, and preserve Hostinger's .well-known directory.
+          tar -C dist --exclude='.well-known' -czf - . |
+            SSHPASS="$HOSTINGER_SSH_PASSWORD" sshpass -e ssh \
+              -p "$HOSTINGER_SSH_PORT" \
+              -o StrictHostKeyChecking=yes \
+              "$HOSTINGER_SSH_USERNAME@$HOSTINGER_SSH_HOST" \
+              'mkdir -p "$HOME/domains/nestarcadia.com/public_html" && tar -xzf - -C "$HOME/domains/nestarcadia.com/public_html"'
+
+          echo "Production files uploaded to Hostinger."
