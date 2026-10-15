@@ -40,8 +40,24 @@ function publicUrl(path: string) {
   return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
-async function listAssets() {
-  const { data, error } = await supabase.from("site_image_assets").select("*").order("page", { ascending: true }).order("category", { ascending: true }).order("display_name", { ascending: true });
+async function listAssets(publicOnly = false) {
+  // The public website only needs the keys used to resolve images and focal points.
+  // Keep full metadata available to authenticated admin routes, not every visitor.
+  if (publicOnly) {
+    const { data, error } = await supabase
+      .from("site_image_assets")
+      .select("source_key, public_url, local_path, focal_x, focal_y")
+      .order("source_key", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  }
+
+  const { data, error } = await supabase
+    .from("site_image_assets")
+    .select("*")
+    .order("page", { ascending: true })
+    .order("category", { ascending: true })
+    .order("display_name", { ascending: true });
   if (error) throw error;
   return data ?? [];
 }
@@ -74,7 +90,7 @@ Deno.serve(async (req) => {
           : pathname;
 
   try {
-    if (req.method === "GET" && path === "/images") return json({ data: await listAssets() });
+    if (req.method === "GET" && path === "/images") return json({ data: await listAssets(true) });
 
     if (req.method === "GET" && path.startsWith("/image/")) {
       const sourceKey = decodeURIComponent(path.slice("/image/".length));
