@@ -359,13 +359,19 @@ export default function Home({ setPage }: Props) {
                 key={i}
                 onClick={() => setTrendStart(i)}
                 className="flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-offset-0"
-                style={{
-                  width: i === trendStart ? '24px' : '6px',
-                  height: '4px',
-                  background: i === trendStart ? '#17665B' : '#8A7B69',
-                }}
                 aria-label={`Go to trend ${i + 1}`}
-              />
+                aria-current={i === trendStart ? 'true' : undefined}
+              >
+                <span
+                  aria-hidden="true"
+                  className="block rounded-full transition-all"
+                  style={{
+                    width: i === trendStart ? '24px' : '6px',
+                    height: '4px',
+                    background: i === trendStart ? '#17665B' : '#8A7B69',
+                  }}
+                />
+              </button>
             ))}
           </div>
         </div>
