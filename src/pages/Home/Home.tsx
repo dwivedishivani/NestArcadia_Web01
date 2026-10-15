@@ -146,6 +146,11 @@ export default function Home({ setPage }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
+    // Remove the static first-paint hero only after the actual Home component commits.
+    document.getElementById('app-bootloader')?.remove();
+  }, []);
+
+  useEffect(() => {
     // Avoid background re-renders and image changes when the page is hidden.
     // Respect reduced-motion preferences and keep the mobile hero still to avoid
     // downloading two additional full-size slide images on the initial visit.
