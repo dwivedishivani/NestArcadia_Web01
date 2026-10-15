@@ -1,3 +1,6 @@
+# Deploys the validated Vite production build to Hostinger via SSH.
+# Repository secrets required: HOSTINGER_SSH_HOST, HOSTINGER_SSH_PORT,
+# HOSTINGER_SSH_USERNAME, HOSTINGER_SSH_PASSWORD.
 name: Deploy NestArcadia to Hostinger
 
 on:
@@ -61,8 +64,8 @@ jobs:
         shell: bash
         run: |
           if [[ -z "$HOSTINGER_SSH_HOST" || -z "$HOSTINGER_SSH_PORT" || -z "$HOSTINGER_SSH_USERNAME" || -z "$HOSTINGER_SSH_PASSWORD" ]]; then
-            echo "::notice::Deployment was not run because Hostinger SSH GitHub Actions secrets are not configured yet. The build succeeded; add the four secrets and use Run workflow once."
-            exit 0
+            echo "::error::Missing one or more Hostinger SSH repository secrets. Expected HOSTINGER_SSH_HOST, HOSTINGER_SSH_PORT, HOSTINGER_SSH_USERNAME, HOSTINGER_SSH_PASSWORD."
+            exit 1
           fi
 
           sudo apt-get update -qq
@@ -70,8 +73,8 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "$HOSTINGER_SSH_PORT" "$HOSTINGER_SSH_HOST" >> ~/.ssh/known_hosts
 
-          # Upload all current production files in one transfer. Do not delete
-          # existing files, and preserve Hostinger's .well-known directory.
+          # Upload the complete built site in one transfer without deleting old
+          # files. Existing Hostinger dot-directories remain untouched.
           tar -C dist --exclude='.well-known' -czf - . |
             SSHPASS="$HOSTINGER_SSH_PASSWORD" sshpass -e ssh \
               -p "$HOSTINGER_SSH_PORT" \
