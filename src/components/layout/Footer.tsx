@@ -128,7 +128,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 mb-5">
             <div>
               <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Service areas</p>
-              <p className="text-[13px] text-[#8A7B69] mt-1">Interior design across Noida, Greater Noida and the wider NCR.</p>
+              <p className="text-[13px] text-[#6B5E4E] mt-1">Interior design across Noida, Greater Noida and the wider NCR.</p>
             </div>
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-7 gap-y-3">
