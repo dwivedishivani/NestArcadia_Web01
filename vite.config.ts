@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
       minify: !emitSourcemaps,
     },
     plugins: [
-react(),
+      react(),
       tailwindcss(),
       nonBlockingProductionCss(),
       figmaSiteConfiguration(siteConfiguration),
@@ -38,7 +38,7 @@ react(),
       watch: {
         ignored: [
           '**/.figma/**',
-],
+        ],
       },
     },
     preview: {
@@ -118,7 +118,8 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
   function hasMetaTag(html: string, attribute: 'name' | 'property', value: string): boolean {
-    return new RegExp(`<meta\\\\b[^>]*\\\\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
+    // In a RegExp constructor string, escape the backslash once so the regex receives \\b.
+    return new RegExp(`<meta\\b[^>]*\\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
   }
 
   const title = config.title ?? "Figma Make App"
@@ -343,7 +344,7 @@ function figmaReactRefreshBoundaryFallback(): Plugin {
  * Serves a blank render-target page at /.figma/make/kit.html that
  * the Figma preview script drives directly. The page exposes a
  * registry of every file matching `storiesGlob` on
- * window.__FIGMA__.stories so the design surface can dynamically
+ * `window.__FIGMA__.stories` so the design surface can dynamically
  * import + mount each entry into its own grid view.
  *
  * Dev-only: `apply: 'serve'` gates the plugin to `vite dev`. Prod
@@ -354,7 +355,7 @@ function figmaMakeKitPlugin(options: { storiesGlob: string | string[] }): Plugin
   const storiesGlob = Array.isArray(options.storiesGlob) ? options.storiesGlob : [options.storiesGlob]
   const ROUTE = '/.figma/make/kit.html'
   const VIRTUAL_ID = 'virtual:figma-stories'
-  const RESOLVED_ID = '\0' + VIRTUAL_ID
+  const RESOLVED_ID = '\\0' + VIRTUAL_ID
   const STORIES_MODULE = `export const stories = import.meta.glob(${JSON.stringify(storiesGlob)})`
   const HTML_BOOTSTRAP = `<!doctype html>
 <html lang="en">
