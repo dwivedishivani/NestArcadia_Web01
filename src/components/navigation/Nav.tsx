@@ -88,7 +88,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             </Link>
 
             <button
-              className="lg:hidden flex flex-col gap-[6px] p-2"
+              className="lg:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-[6px] p-2"
               onClick={() => setMenuOpen(o => !o)}
               aria-label="Menu"
             >

@@ -175,7 +175,7 @@ export default function Home({ setPage }: Props) {
         </div>
 
         <div className="relative w-full pb-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
-          <p className="text-white/55 text-[10px] uppercase tracking-[0.32em] mb-5">{currentHero.eyebrow}</p>
+          <p className="text-white/80 text-[10px] uppercase tracking-[0.32em] mb-5">{currentHero.eyebrow}</p>
           <h1 className="font-display text-[clamp(2.5rem,7vw,5.25rem)] text-white leading-[1.04] mb-7">
             {currentHero.title}
           </h1>
@@ -193,7 +193,7 @@ export default function Home({ setPage }: Props) {
               onClick={() => setPage('story')}
               className="flex items-center gap-2.5 text-white/75 text-[14px] hover:text-white transition-colors"
             >
-              <span className="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-[10px]">▶</span>
+              <span className="min-w-11 min-h-11 rounded-full border border-white/60 flex items-center justify-center text-[12px]">▶</span>
               Watch Our Story
             </button>
           </div>
@@ -210,7 +210,7 @@ export default function Home({ setPage }: Props) {
       <section className="py-24 lg:py-32 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">Every Home Has a Story</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">Every Home Has a Story</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] leading-[1.08]">
               Rooted in Tradition.<br />Designed for You.
             </h2>
@@ -334,7 +334,7 @@ export default function Home({ setPage }: Props) {
                   <img
                     src={t.img}
                     alt={`${t.name} interior design trend for Greater Noida West homes`}
-                    loading={i === 0 ? 'eager' : 'eager'}
+                    loading="lazy"
                     decoding="async"
                     width="600"
                     height="450"
