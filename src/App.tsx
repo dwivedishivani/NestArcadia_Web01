@@ -5,13 +5,15 @@ import Footer from './components/layout/Footer';
 import WhatsApp from './components/layout/WhatsApp';
 import MobileConversionBar from './components/layout/MobileConversionBar';
 const Home = lazy(() => import('./pages/Home/Home'));
+const LocalServicePage = lazy(() => import('./pages/LocalService/LocalServicePage'));
 const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 import EditorialContext from './components/common/EditorialContext';
 import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
-import { getLocalServicePage, type LocalServiceConfig, default as LocalServicePage } from './pages/LocalService/LocalServicePage';
+import type { LocalServiceConfig } from './pages/LocalService/LocalServicePage';
+import { localServicePaths } from './pages/LocalService/localServicePaths';
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 import { setSiteImageOverrides } from './utils/siteImages';
 
@@ -129,7 +131,7 @@ function isKnownPath(pathname: string) {
   if (path === '/start-your-project') return true;
   if (path === '/faqs') return true;
   if (path === '/privacy-policy') return true;
-  return Boolean(getLocalServicePage(path));
+  return localServicePaths.some((servicePath) => servicePath === path);
 }
 
 function SeoManager({ page, localService }: { page: Page; localService?: LocalServiceConfig | null }) {
@@ -523,7 +525,25 @@ function SiteShell() {
   const navigate = useNavigate();
   const normalizedPath = normalizePathname(location.pathname);
   const page = pageFromPath(normalizedPath);
-  const localService = getLocalServicePage(normalizedPath);
+  const isLocalServicePath = localServicePaths.some((servicePath) => servicePath === normalizedPath);
+  const [localServiceState, setLocalServiceState] = useState<{ path: string; config: LocalServiceConfig | null }>({ path: '', config: null });
+  const localServiceReady = !isLocalServicePath || localServiceState.path === normalizedPath;
+  const localService = localServiceState.path === normalizedPath ? localServiceState.config : null;
+
+  useEffect(() => {
+    let active = true;
+    if (!isLocalServicePath) return () => { active = false; };
+
+    import('./pages/LocalService/LocalServicePage')
+      .then(({ getLocalServicePage }) => {
+        if (active) setLocalServiceState({ path: normalizedPath, config: getLocalServicePage(normalizedPath) });
+      })
+      .catch(() => {
+        if (active) setLocalServiceState({ path: normalizedPath, config: null });
+      });
+
+    return () => { active = false; };
+  }, [normalizedPath, isLocalServicePath]);
 
   // Always reset the scroll position when the route changes. This also covers
   // navigation triggered directly by the header/footer links (not only setPage).
@@ -531,7 +551,9 @@ function SiteShell() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  if (isLocalServicePath && !localServiceReady) return <RouteFallback />;
   if (!isKnownPath(normalizedPath)) return <NotFoundPage />;
+  if (isLocalServicePath && !localService) return <NotFoundPage />;
   const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
   const setPage = (next: Page) => { navigate(pagePaths[next]); };
