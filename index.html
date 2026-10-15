@@ -17,22 +17,37 @@
       gtag('set', 'url_passthrough', true);
       gtag('set', 'ads_data_redaction', true);
     </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T7R3TTP5');</script>
-    <!-- End Google Tag Manager -->
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDM2YL1MP5"></script>
+    <!-- Google Tag Manager: defer network work until idle or the first user interaction.
+         Consent defaults and dataLayer are initialized above, so queued events are retained. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-LDM2YL1MP5', { send_page_view: false });
+      (function(w,d){
+        var loaded = false;
+        function loadGTM(){
+          if (loaded) return;
+          loaded = true;
+          w.dataLayer = w.dataLayer || [];
+          w.dataLayer.push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var script = d.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-T7R3TTP5';
+          var first = d.getElementsByTagName('script')[0];
+          first.parentNode.insertBefore(script, first);
+          ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+            w.removeEventListener(eventName, loadGTM, true);
+          });
+        }
+        ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+          w.addEventListener(eventName, loadGTM, {once:true, passive:true, capture:true});
+        });
+        if ('requestIdleCallback' in w) {
+          w.requestIdleCallback(loadGTM, {timeout: 2500});
+        } else {
+          w.setTimeout(loadGTM, 1800);
+        }
+      })(window, document);
     </script>
-    <!-- End Google Analytics 4 -->
+    <!-- End Google Tag Manager -->
+    <!-- GA4 is configured through GTM-T7R3TTP5. Keep the gtag queue for application lead events. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -40,7 +55,8 @@
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" /></noscript>
     <title>NestArcadia | Interior Designers in Greater Noida West & Noida</title>
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="description" content="NestArcadia creates heritage-inspired, contemporary interiors for 2BHK, 3BHK, 4BHK apartments, villas, offices and commercial spaces in Noida, Greater Noida, Greater Noida West and NCR." />
