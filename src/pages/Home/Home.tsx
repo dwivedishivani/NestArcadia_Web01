@@ -8,10 +8,6 @@ interface Props { setPage: (p: Page) => void; }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
-const heroSrcSet = (id: string) => [640, 960, 1280, 1920]
-  .map((width) => `${u(id, width, Math.round(width * 9 / 16))} ${width}w`)
-  .join(', ');
-
 const heroDirectUrls: Record<string, string> = {
   'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-002.jpg',
   'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-015.jpg',
@@ -47,9 +43,9 @@ const cultures = [
 ];
 
 const heroSlides = [
-  { image: IMG.hero, imageId: 'photo-1713192706971-03900dcf5706', eyebrow: 'Tradition Meets Tomorrow', title: <>We Bring<br />Timeless Culture<br />to Modern Living</>, description: <>Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</> },
-  { image: IMG.villa, imageId: 'photo-1613490493576-7fde63acd811', eyebrow: 'A Royal Sense of Arrival', title: <>A Villa Where<br />Everyday Living<br />Feels Grand</>, description: <>Sun-washed verandahs. Tailored details.<br />A farmhouse spirit, finished with quiet grandeur.</> },
-  { image: IMG.home3, imageId: 'photo-1644057501622-dfa7dd26dbfb', eyebrow: 'Rooted, Not Repeated', title: <>Heritage Details.<br />A Home That<br />Feels Like Yours.</>, description: <>Indian craft, interpreted with restraint.<br />Designed for your life, not a passing trend.</> },
+  { image: heroDirectUrls['photo-1713192706971-03900dcf5706'], imageId: 'photo-1713192706971-03900dcf5706', eyebrow: 'Tradition Meets Tomorrow', title: <>We Bring<br />Timeless Culture<br />to Modern Living</>, description: <>Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</> },
+  { image: heroDirectUrls['photo-1613490493576-7fde63acd811'], imageId: 'photo-1613490493576-7fde63acd811', eyebrow: 'A Royal Sense of Arrival', title: <>A Villa Where<br />Everyday Living<br />Feels Grand</>, description: <>Sun-washed verandahs. Tailored details.<br />A farmhouse spirit, finished with quiet grandeur.</> },
+  { image: heroDirectUrls['photo-1644057501622-dfa7dd26dbfb'], imageId: 'photo-1644057501622-dfa7dd26dbfb', eyebrow: 'Rooted, Not Repeated', title: <>Heritage Details.<br />A Home That<br />Feels Like Yours.</>, description: <>Indian craft, interpreted with restraint.<br />Designed for your life, not a passing trend.</> },
 ];
 
 const allTrends = [
@@ -171,7 +167,7 @@ export default function Home({ setPage }: Props) {
         <div className="absolute inset-0 bg-[#1C3A5A]">
           <img
             src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
-            {...(!heroImageFallback ? { srcSet: heroSrcSet(currentHero.imageId), sizes: '100vw' } : {})}
+            data-site-image-key={currentHero.imageId}
             alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes"
             width="1920"
             height="1080"
