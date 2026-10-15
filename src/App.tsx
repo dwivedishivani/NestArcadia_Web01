@@ -568,8 +568,6 @@ function SiteShell() {
 const router = createBrowserRouter([{ path: '*', Component: SiteShell, errorElement: <RouteErrorElement /> }]);
 
 function SiteImageBootstrap() {
-  const [, setVersion] = useState(0);
-
   useEffect(() => {
     fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
       headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
@@ -577,7 +575,6 @@ function SiteImageBootstrap() {
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
       .then((payload) => {
         setSiteImageOverrides(payload.data || []);
-        setVersion((value) => value + 1);
       })
       .catch((error) => console.warn('Site image registry unavailable; using local image fallbacks.', error));
   }, []);
