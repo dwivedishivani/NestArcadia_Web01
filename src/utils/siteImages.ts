@@ -41,7 +41,7 @@ function readCachedOverrides(): Record<string, SiteImageOverride> {
       return {};
     }
 
-    return Object.fromEntries(cached.items.flatMap((entry: unknown) => {
+    const entries = cached.items.flatMap((entry: unknown): Array<[string, SiteImageOverride]> => {
       if (!entry || typeof entry !== 'object') return [];
       const item = entry as SiteImageRegistryItem;
       if (typeof item.source_key !== 'string' || !item.source_key) return [];
@@ -55,7 +55,8 @@ function readCachedOverrides(): Record<string, SiteImageOverride> {
         focal_x: typeof item.focal_x === 'number' && Number.isFinite(item.focal_x) ? item.focal_x : 50,
         focal_y: typeof item.focal_y === 'number' && Number.isFinite(item.focal_y) ? item.focal_y : 50,
       }]];
-    }));
+    });
+    return Object.fromEntries(entries);
   } catch {
     // Storage can be disabled or full; the site still works without this cache.
     return {};
