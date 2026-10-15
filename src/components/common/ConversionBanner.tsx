@@ -26,7 +26,7 @@ export default function ConversionBanner({ page, setPage }: Props) {
           <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/60">{item.eyebrow}</p>
           <h2 className="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-tight text-white">{item.title}</h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/75">{item.text}</p>
-          <button onClick={() => setPage('project')} className="mt-7 w-fit border border-white/50 px-6 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#2D8C7E]">{item.cta} →</button>
+          <button onClick={() => setPage('project')} className="mt-7 w-fit border border-white/50 px-6 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#17665B]">{item.cta} →</button>
         </div>
       </div>
     </section>
