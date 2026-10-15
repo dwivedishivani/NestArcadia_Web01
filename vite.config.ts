@@ -117,7 +117,15 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
   function hasMetaTag(html: string, attribute: 'name' | 'property', value: string): boolean {
-    return new RegExp(`<meta\b[^>]*\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
+    // Inspect each actual meta element and compare the requested attribute literally.
+    // This avoids escape/encoding edge cases in dynamically constructed regular expressions.
+    const expected = [`${attribute}="${value}"`, `${attribute}='${value}'`].map((item) => item.toLowerCase())
+    const metaTags = html.match(/<meta\b[^>]*>/gi) ?? []
+    return metaTags.some((tag) => {
+      const normalized = tag.toLowerCase()
+      return expected.some((attributeValue) => normalized.includes(attributeValue))
+    })
+  }
   }
 
   const title = config.title ?? "Figma Make App"
