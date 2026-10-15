@@ -48,6 +48,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           <Link to="/" className="flex items-center text-left shrink-0" aria-label="NestArcadia Home">
             <img
               src={transparent ? logoWhiteImg : logoImg}
+              width="200"
+              height="200"
               alt="NestArcadia — heritage Indian interiors"
               className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
             />
