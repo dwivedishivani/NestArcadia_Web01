@@ -85,7 +85,7 @@ export default function OurStory({ setPage }: Props) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {values.map((v, i) => (
             <div key={v.name}>
-              <p className="font-display text-[#2D8C7E] text-sm mb-3">0{i + 1}</p>
+              <p className="font-display text-[#17665B] text-sm mb-3">0{i + 1}</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-3">{v.name}</h3>
               <p className="text-xs text-[#6B5E4E] leading-[1.8]">{v.desc}</p>
             </div>
@@ -101,7 +101,7 @@ export default function OurStory({ setPage }: Props) {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {timeline.map(t => (
               <div key={t.year} className="border-t border-[#D4CBBB] pt-6">
-                <p className="font-display text-[#2D8C7E] text-lg mb-1">{t.year}</p>
+                <p className="font-display text-[#17665B] text-lg mb-1">{t.year}</p>
                 <p className="font-medium text-[#1A1714] text-sm mb-2">{t.event}</p>
                 <p className="text-xs text-[#6B5E4E] leading-relaxed">{t.desc}</p>
               </div>

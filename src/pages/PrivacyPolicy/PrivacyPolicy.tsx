@@ -74,7 +74,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="pt-20 lg:pt-[90px]">
       <header className="max-w-[1100px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Privacy</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Privacy</p>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">
           Privacy Policy
         </h1>
@@ -107,14 +107,14 @@ export default function PrivacyPolicy() {
               <h2 className="font-display text-2xl text-[#1A1714] mb-4">10. Contact us</h2>
               <p className="text-[14px] leading-7 text-[#52677E]">
                 For privacy questions, correction or deletion requests, contact NestArcadia at{' '}
-                <a href="mailto:info@nestarcadia.com" className="text-[#2D8C7E] underline">info@nestarcadia.com</a>{' '}
-                or call <a href="tel:+918448061997" className="text-[#2D8C7E] underline">+91 84480 61997</a>.
+                <a href="mailto:info@nestarcadia.com" className="text-[#17665B] underline">info@nestarcadia.com</a>{' '}
+                or call <a href="tel:+918448061997" className="text-[#17665B] underline">+91 84480 61997</a>.
               </p>
             </section>
           </div>
 
           <div className="mt-14 pt-8 border-t border-[#D4CBBB]">
-            <Link to="/" className="text-[14px] font-medium text-[#1C3A5A] hover:text-[#2D8C7E]">
+            <Link to="/" className="text-[14px] font-medium text-[#1C3A5A] hover:text-[#17665B]">
               ← Back to NestArcadia
             </Link>
           </div>

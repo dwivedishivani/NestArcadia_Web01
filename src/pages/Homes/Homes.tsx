@@ -150,7 +150,7 @@ export default function Homes({ setPage }: Props) {
           <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-5">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] uppercase tracking-[0.22em] text-[#6B5E4E]">Concept Gallery</p>
-              <p className="text-[11px] text-[#2D8C7E]">Select a view</p>
+              <p className="text-[11px] text-[#17665B]">Select a view</p>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
               {selected.gallery.map((img, i) => (
@@ -164,12 +164,12 @@ export default function Homes({ setPage }: Props) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
           <button
             onClick={() => setSelected(null)}
-            className="text-[13px] font-semibold text-[#52677E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
+            className="text-[13px] font-semibold text-[#52677E] hover:text-[#17665B] transition-colors mb-10 flex items-center gap-2"
           >
             ← Back to Our Projects
           </button>
           <div className="max-w-[780px]">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">{selected.style} India · {selected.style}</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[#17665B] mb-4">{selected.style} India · {selected.style}</p>
               <h1 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] mb-4">{selected.name}</h1>
               <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-8">{selected.desc}</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-[#D4CBBB] mb-8">
@@ -188,7 +188,7 @@ export default function Homes({ setPage }: Props) {
               </div>
               <button
                 onClick={() => setPage('project')}
-                className="text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#2D8C7E] hover:border-[#2D8C7E] transition-all"
+                className="text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#17665B] hover:border-[#2D8C7E] transition-all"
               >
                 Use This Concept as a Reference →
               </button>
@@ -255,8 +255,8 @@ export default function Homes({ setPage }: Props) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D8C7E] mb-1.5">{h.style} · {h.location}</p>
-                <p className="font-display text-lg text-[#1C3A5A] group-hover:text-[#2D8C7E] transition-colors">{h.name}</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#17665B] mb-1.5">{h.style} · {h.location}</p>
+                <p className="font-display text-lg text-[#1C3A5A] group-hover:text-[#17665B] transition-colors">{h.name}</p>
                 <p className="text-xs text-[#6B5E4E] mt-1">{h.type} · {h.area}</p>
               </button>
             ))}

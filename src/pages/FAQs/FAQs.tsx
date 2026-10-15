@@ -62,7 +62,7 @@ export default function FAQs({ setPage }: Props) {
     <div className="pt-20 lg:pt-[90px]">
       <header className="border-b border-[#D4CBBB] bg-[#F2EDE4]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">NestArcadia FAQs</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">NestArcadia FAQs</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] text-[#1A1714]">Interior design questions, answered clearly.</h1>
           <p className="mt-5 max-w-2xl text-[15px] leading-[1.9] text-[#6B5E4E]">Helpful answers for homeowners and businesses in Greater Noida West, Noida Extension, Greater Noida, Noida and NCR — from apartment interiors and modular kitchens to turnkey execution and commercial spaces.</p>
         </div>
@@ -89,7 +89,7 @@ export default function FAQs({ setPage }: Props) {
                 {group.items.map(([question, answer]) => (
                   <div key={question} className="border-b border-[#D4CBBB]">
                     <button type="button" className="flex w-full items-center justify-between gap-6 py-5 text-left text-[16px] font-medium text-[#1A1714]" onClick={() => setOpen(open === question ? null : question)} aria-expanded={open === question}>
-                      {question}<span className="text-xl font-normal text-[#2D8C7E]" aria-hidden="true">{open === question ? '−' : '+'}</span>
+                      {question}<span className="text-xl font-normal text-[#17665B]" aria-hidden="true">{open === question ? '−' : '+'}</span>
                     </button>
                     {open === question && <p className="max-w-3xl pb-6 pr-10 text-[15px] leading-[1.9] text-[#6B5E4E]">{answer}</p>}
                   </div>
@@ -103,7 +103,7 @@ export default function FAQs({ setPage }: Props) {
       <section className="bg-[#1C3A5A] px-6 lg:px-20 py-16">
         <div className="max-w-[1120px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div><h2 className="font-display text-3xl text-white">Still have a question about your space?</h2><p className="mt-2 text-[14px] text-white/65">Tell us about your home or workplace and we will guide the next step.</p></div>
-          <button onClick={() => setPage('project')} className="shrink-0 border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#2D8C7E]">Get Answers for Your Home →</button>
+          <button onClick={() => setPage('project')} className="shrink-0 border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#17665B]">Get Answers for Your Home →</button>
         </div>
       </section>
     </div>

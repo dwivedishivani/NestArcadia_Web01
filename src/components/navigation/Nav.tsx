@@ -59,10 +59,10 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#2D8C7E]"
+                className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#17665B]"
                 style={{
                   color: page === l.page
-                    ? '#2D8C7E'
+                    ? (transparent ? '#FFFFFF' : '#17665B')
                     : transparent
                     ? 'rgba(255,255,255,0.85)'
                     : '#1C3A5A',
@@ -78,7 +78,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           <div className="flex items-center gap-4">
             <Link
               to="/start-your-project"
-              className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white"
+              className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white"
               style={{
                 color: transparent ? '#ffffff' : '#1C3A5A',
                 borderColor: transparent ? 'rgba(255,255,255,0.62)' : '#1C3A5A',
@@ -121,7 +121,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             ))}
             <Link
               to="/start-your-project"
-              className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+              className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white transition-all"
             >
               Start Your Project →
             </Link>

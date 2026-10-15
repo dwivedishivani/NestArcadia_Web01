@@ -82,10 +82,10 @@ export default function EditorialContext({ page }: { page: Page }) {
       <details className="group border-t border-[#B8D8D1] pt-6">
         <summary className="list-none cursor-pointer flex items-center justify-between gap-6 text-[#1C3A5A]">
           <span>
-            <span className="block text-[11px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-2">{item.label}</span>
+            <span className="block text-[11px] uppercase tracking-[0.22em] text-[#17665B] mb-2">{item.label}</span>
             <span id={`editorial-${page}`} className="font-display text-2xl leading-tight">{item.title}</span>
           </span>
-          <span aria-hidden="true" className="text-2xl text-[#2D8C7E] transition-transform group-open:rotate-45">+</span>
+          <span aria-hidden="true" className="text-2xl text-[#17665B] transition-transform group-open:rotate-45">+</span>
         </summary>
         <div className="grid lg:grid-cols-3 gap-6 pt-7 max-w-6xl">
           {item.paragraphs.map((paragraph) => <p key={paragraph} className="text-[15px] leading-[1.85] text-[#52677E]">{paragraph}</p>)}
