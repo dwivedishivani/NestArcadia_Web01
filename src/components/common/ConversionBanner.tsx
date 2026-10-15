@@ -3,6 +3,16 @@ import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { page: Page; setPage: (page: Page) => void; }
 
+const directImageUrls: Record<string, string> = {
+  'photo-1761679296802-09d4d4687723': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-146-20261006221446373.webp',
+  'photo-1758448511320-05d7d28f4298': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-147-20261006221448400.webp',
+  'photo-1723639904882-cb83cb0629e8': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-148-20261006221450183.webp',
+  'photo-1764923431150-c97f3f9e6813': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-149-20261006221454436.webp',
+  'photo-1600210491892-03d54c0aaf87': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-150-20261006221457891.webp',
+  'photo-1729108281317-a6c01b07ed92': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-151-20261006221459954.webp',
+  'photo-1722605090433-41d1183a792d': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/shared/shared-srccomponentscommonconversionbannertsx-shared-shared-image-152-20261006221501812.webp',
+};
+
 const content: Partial<Record<Page, { image: string; eyebrow: string; title: string; text: string; cta: string }>> = {
   home: { image: 'photo-1761679296802-09d4d4687723', eyebrow: 'Make the first decision easier', title: 'Planning a home in Noida or Greater Noida West?', text: 'Tell us your property type, possession timeline and what you want the space to do better. We will help you find the right starting point.', cta: 'Plan Your Home Interior' },
   cultures: { image: 'photo-1758448511320-05d7d28f4298', eyebrow: 'Find your design language', title: 'Bring a rooted point of view to your new home.', text: 'From one crafted detail to a complete interior direction, we translate what you respond to into a practical, personal plan.', cta: 'Discuss Your Design Direction' },
@@ -16,11 +26,11 @@ const content: Partial<Record<Page, { image: string; eyebrow: string; title: str
 export default function ConversionBanner({ page, setPage }: Props) {
   const item = content[page];
   if (!item) return null;
-  const source = resolveSiteImage(item.image);
+  const source = directImageUrls[item.image] || resolveSiteImage(item.image);
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
       <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
-        <img src={source} alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+        <img src={source} data-site-image-key={item.image} alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/90 via-[#1C3A5A]/65 to-[#1C3A5A]/20" />
         <div className="relative flex min-h-72 max-w-2xl flex-col justify-center px-7 py-10 lg:px-14">
           <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/60">{item.eyebrow}</p>
