@@ -10,7 +10,7 @@ interface Props { setPage: (p: Page) => void; }
 // pay an Edge Function 302 redirect (or start a second request after registry load).
 // Registry overrides still update these URLs if an image is changed in the media library.
 const homeDirectImageUrls: Record<string, string> = {
-  'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
+  'photo-1713192706971-03900dcf5706': import.meta.env.PROD ? '/images/home-hero-optimized.webp' : 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
   'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-2-20261006220651654.webp',
   'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-3-20261006220654107.webp',
   'photo-1604578762246-41134e37f9cc': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-22-20261006220546641.webp',
@@ -38,7 +38,7 @@ const homeImageKeysByUrl = Object.fromEntries(Object.entries(homeDirectImageUrls
 const directImageKey = (url: string) => homeImageKeysByUrl[url];
 
 const heroDirectUrls: Record<string, string> = {
-  'photo-1713192706971-03900dcf5706': homeDirectImageUrls['photo-1713192706971-03900dcf5706'],
+  'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
   'photo-1613490493576-7fde63acd811': homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
   'photo-1644057501622-dfa7dd26dbfb': homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
 };
@@ -206,6 +206,7 @@ export default function Home({ setPage }: Props) {
           <img
             src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
             data-site-image-key={currentHero.imageId}
+            data-site-image-optimized-source-url={currentHero.imageId === 'photo-1713192706971-03900dcf5706' ? 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' : undefined}
             alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes"
             width="1920"
             height="1080"
