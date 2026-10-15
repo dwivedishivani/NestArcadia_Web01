@@ -102,6 +102,9 @@ function replaceImageSources() {
 
     const resolvedPublicUrl = new URL(publicUrl, document.baseURI).href;
     if (img.src !== resolvedPublicUrl) {
+      // Drop the local responsive source if the Media Library's stored image changed.
+      img.closest('picture')?.querySelectorAll<HTMLSourceElement>('source[data-site-image-optimized="true"]')
+        .forEach((source) => source.remove());
       // The site-media image endpoint redirects to the original stored object;
       // use the direct URL after an override arrives to avoid a proxy redirect.
       img.removeAttribute('srcset');
