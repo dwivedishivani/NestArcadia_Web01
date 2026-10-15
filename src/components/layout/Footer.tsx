@@ -61,7 +61,7 @@ export default function Footer() {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-[14px] text-[#6B5E4E] text-left hover:text-[#2D8C7E] transition-colors"
+                className="text-[14px] text-[#6B5E4E] text-left hover:text-[#17665B] transition-colors"
               >
                 {l.label}
               </Link>
@@ -69,14 +69,14 @@ export default function Footer() {
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services</p>
               <div className="flex flex-col gap-2">
-                <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Greater Noida West</a>
-                <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Interior design in Noida Extension</a>
-                <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E]">Commercial interiors in Greater Noida West</a>
+                <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Greater Noida West</a>
+                <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Noida Extension</a>
+                <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Commercial interiors in Greater Noida West</a>
               </div>
             </div>
             <Link
               to="/start-your-project"
-              className="text-[14px] text-[#2D8C7E] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
+              className="text-[14px] text-[#17665B] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
             >
               Share Your Project Brief →
             </Link>
@@ -93,7 +93,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`NestArcadia on ${s.label}`}
-                  className="w-9 h-9 border border-[#B8D8D1] text-[#1C3A5A] flex items-center justify-center hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-colors"
+                  className="w-9 h-9 border border-[#B8D8D1] text-[#1C3A5A] flex items-center justify-center hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-colors"
                 >
                   <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">{s.icon}</svg>
                 </a>
@@ -107,18 +107,18 @@ export default function Footer() {
                 window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
               }}
             >
-              <div className="w-10 h-10 bg-[#2D8C7E] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#1C3A5A] transition-colors">
+              <div className="w-10 h-10 bg-[#17665B] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#1C3A5A] transition-colors">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.93 1.395 5.6L0 24l6.585-1.371A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.373l-.36-.213-3.712.974.991-3.625-.235-.373A9.818 9.818 0 012.182 12c0-5.421 4.397-9.818 9.818-9.818 5.421 0 9.818 4.397 9.818 9.818 0 5.421-4.397 9.818-9.818 9.818z"/>
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">WhatsApp Us</p>
+                <p className="text-sm font-medium text-[#1A1714] group-hover:text-[#17665B] transition-colors">WhatsApp Us</p>
                 <p className="text-xs text-[#6B5E4E]">Talk to NestArcadia</p>
               </div>
             </div>
-            <a href="mailto:info@nestarcadia.com" className="mt-5 inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#2D8C7E] transition-colors">
+            <a href="mailto:info@nestarcadia.com" className="mt-5 inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#17665B] transition-colors">
               info@nestarcadia.com
             </a>
           </div>
@@ -133,7 +133,7 @@ export default function Footer() {
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-7 gap-y-3">
             {serviceAreas.map(area => (
-              <a key={area.label} href={area.href} className="whitespace-nowrap text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">
+              <a key={area.label} href={area.href} className="whitespace-nowrap text-[13px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">
                 {area.label}
               </a>
             ))}
@@ -143,7 +143,7 @@ export default function Footer() {
         <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link to="/privacy-policy" className="text-[12px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors">Privacy Policy</Link>
+            <Link to="/privacy-policy" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
             <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
           </div>
         </div>
