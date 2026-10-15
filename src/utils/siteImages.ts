@@ -15,23 +15,28 @@ function replaceImageSources() {
   document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
     const src = img.currentSrc || img.src;
     const match = src.match(/\/site-media\/image\/([^?]+)/);
-    const sourceKey = match ? decodeURIComponent(match[1]) : null;
+    const sourceKey = img.dataset.siteImageKey || (match ? decodeURIComponent(match[1]) : null);
     if (!sourceKey) return;
     const item = overrides[sourceKey];
     const publicUrl = item?.public_url;
     if (!publicUrl || publicUrl.startsWith('/images/')) return;
-    img.removeAttribute('srcset');
-    img.src = publicUrl;
+
+    const resolvedPublicUrl = new URL(publicUrl, document.baseURI).href;
+    if (img.src !== resolvedPublicUrl) {
+      // The site-media image endpoint redirects to the original stored object;
+      // use the direct URL after an override arrives to avoid a proxy redirect.
+      img.removeAttribute('srcset');
+      img.src = resolvedPublicUrl;
+    }
   });
 }
-
 function applyFocalPoint(img: HTMLImageElement) {
   const src = img.currentSrc || img.src;
   const match = src.match(/\/site-media\/image\/([^?]+)/);
-  const sourceKey = match ? decodeURIComponent(match[1]) : Object.keys(overrides).find((key) => {
+  const sourceKey = img.dataset.siteImageKey || (match ? decodeURIComponent(match[1]) : Object.keys(overrides).find((key) => {
     const url = overrides[key]?.public_url;
     return Boolean(url && src.startsWith(url));
-  });
+  }));
   if (!sourceKey) return;
   const item = overrides[sourceKey];
   if (!item) return;
