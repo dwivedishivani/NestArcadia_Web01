@@ -75,6 +75,38 @@ type FigmaSiteConfiguration = {
 }
 
 /** Applies /.figma/make/site.json to the generated document shell. */
+/**
+ * Load generated production CSS without blocking first paint.
+ *
+ * Vite injects stylesheet links into the built HTML after the pre-transform
+ * hooks. This post-transform changes only local production CSS links to a
+ * preload that applies as a stylesheet when fetched. A noscript stylesheet
+ * preserves styling for visitors with JavaScript disabled.
+ *
+ * Development HTML and external stylesheets are left unchanged.
+ */
+function nonBlockingProductionCss(): Plugin {
+  return {
+    name: 'non-blocking-production-css',
+    apply: 'build',
+    enforce: 'post',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html) {
+        return html.replace(
+          /<link\s+rel="stylesheet"\s+crossorigin(?:\s+)?href="([^"]+\.css)"\s*\/?>(?!\s*<)/g,
+          (_match, href: string) =>
+            `<link rel="preload" as="style" href="${href}" crossorigin onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}" crossorigin></noscript>`
+        ).replace(
+          /<link\s+rel="stylesheet"\s+href="([^"]+\.css)"\s*\/?>(?!\s*<)/g,
+          (_match, href: string) =>
+            `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`
+        )
+      },
+    },
+  }
+}
+
 function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   function sanitizeHtmlValue(value: string | undefined): string {
     return value?.replace(/[^a-zA-Z0-9_-]/g, '') || ''
