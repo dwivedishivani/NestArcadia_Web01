@@ -212,14 +212,14 @@ export default function StartProject({ setPage }: Props) {
     `text-[13px] px-4 py-2 border cursor-pointer transition-all select-none ${
       active
         ? 'bg-[#1C3A5A] border-[#1C3A5A] text-white'
-        : 'border-[#D4CBBB] text-[#6B5E4E] hover:border-[#2D8C7E] hover:text-[#2D8C7E]'
+        : 'border-[#D4CBBB] text-[#6B5E4E] hover:border-[#2D8C7E] hover:text-[#17665B]'
     }`;
 
   if (submitted) {
     return (
       <div className="pt-20 lg:pt-[90px] min-h-screen flex items-center justify-center px-6">
         <div className="text-center max-w-md">
-          <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#2D8C7E] text-xl">✓</div>
+          <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#17665B] text-xl">✓</div>
           <h2 className="font-display text-3xl text-[#1A1714] mb-4">We will be in touch.</h2>
           <p className="text-[#6B5E4E] text-[15px] leading-relaxed mb-8">
             Thank you{form.name ? `, ${form.name}` : ''}. We have received your brief and will reach out within 24 hours to schedule a discovery call.
@@ -249,7 +249,7 @@ export default function StartProject({ setPage }: Props) {
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Let's Begin</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Let's Begin</p>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">
           Start Your Project
         </h1>
@@ -389,7 +389,7 @@ export default function StartProject({ setPage }: Props) {
                 type="submit"
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
-                className="w-full bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#2D8C7E] transition-colors font-medium"
+                className="w-full bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#17665B] transition-colors font-medium"
               >
                 {isSubmitting ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
               </button>
@@ -416,7 +416,7 @@ export default function StartProject({ setPage }: Props) {
                   href={`https://wa.me/918448061997`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#2D8C7E] underline"
+                  className="text-[#17665B] underline"
                 >
                   WhatsApp us directly
                 </a>{' '}
