@@ -217,7 +217,11 @@ export default function Home({ setPage }: Props) {
             loading="eager"
             fetchPriority={heroSlide === 0 ? 'high' : 'auto'}
             decoding="async"
-            onError={() => setHeroImageFallback(true)}
+            onError={(event) => {
+              event.currentTarget.closest('picture')?.querySelectorAll('source[data-site-image-optimized="true"]')
+                .forEach((source) => source.remove());
+              setHeroImageFallback(true);
+            }}
               className="w-full h-full object-cover transition-opacity duration-700"
             />
           </picture>
