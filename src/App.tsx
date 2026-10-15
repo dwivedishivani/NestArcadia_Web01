@@ -453,7 +453,7 @@ function ConsentManager() {
       <div className="mx-auto max-w-5xl rounded-2xl border border-[#C9BDAA] bg-[#F8F5EF] p-5 shadow-2xl sm:p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#2D8C7E]">Privacy choices</p>
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#17665B]">Privacy choices</p>
             <h2 className="font-display text-xl text-[#1C3A5A] sm:text-2xl">A little control stays with you.</h2>
             <p className="mt-2 text-sm leading-6 text-[#52677E]">
               NestArcadia uses Google Analytics and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
