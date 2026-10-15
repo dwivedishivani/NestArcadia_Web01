@@ -17,12 +17,35 @@
       gtag('set', 'url_passthrough', true);
       gtag('set', 'ads_data_redaction', true);
     </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T7R3TTP5');</script>
+    <!-- Google Tag Manager: defer network work until idle or the first user interaction.
+         Consent defaults and dataLayer are initialized above, so queued events are retained. -->
+    <script>
+      (function(w,d){
+        var loaded = false;
+        function loadGTM(){
+          if (loaded) return;
+          loaded = true;
+          w.dataLayer = w.dataLayer || [];
+          w.dataLayer.push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+          var script = d.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-T7R3TTP5';
+          var first = d.getElementsByTagName('script')[0];
+          first.parentNode.insertBefore(script, first);
+          ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+            w.removeEventListener(eventName, loadGTM, true);
+          });
+        }
+        ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+          w.addEventListener(eventName, loadGTM, {once:true, passive:true, capture:true});
+        });
+        if ('requestIdleCallback' in w) {
+          w.requestIdleCallback(loadGTM, {timeout: 2500});
+        } else {
+          w.setTimeout(loadGTM, 1800);
+        }
+      })(window, document);
+    </script>
     <!-- End Google Tag Manager -->
     <!-- GA4 is configured through GTM-T7R3TTP5. Keep the gtag queue for application lead events. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
