@@ -90,7 +90,18 @@ Deno.serve(async (req) => {
           : pathname;
 
   try {
-    if (req.method === "GET" && path === "/images") return json({ data: await listAssets(true) });
+    if (req.method === "GET" && path === "/images") {
+      const data = await listAssets(true);
+      return new Response(JSON.stringify({ data }), {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          // The public registry changes infrequently; short-lived caching avoids
+          // repeating the full database read on every page view.
+          "Cache-Control": "public, max-age=300, s-maxage=300, stale-while-revalidate=600",
+        },
+      });
+    }
 
     if (req.method === "GET" && path.startsWith("/image/")) {
       const sourceKey = decodeURIComponent(path.slice("/image/".length));
