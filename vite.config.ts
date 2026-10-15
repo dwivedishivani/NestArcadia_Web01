@@ -116,6 +116,9 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   function replaceHtmlCommentSlot(html: string, slotName: string, content: string): string {
     return html.replace(`<!-- ${slotName} -->`, content)
   }
+  function hasMetaTag(html: string, attribute: 'name' | 'property', value: string): boolean {
+    return new RegExp(`<meta\\\\b[^>]*\\\\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
+  }
 
   const title = config.title ?? "Figma Make App"
   const description = config.description ?? ''
@@ -160,27 +163,31 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         result = replaceHtmlCommentSlot(result, 'figma:body-end', bodyEnd)
 
         const tags: HtmlTagDescriptor[] = []
-        if (description) {
+        if (description && !hasMetaTag(result, 'name', 'description')) {
           tags.push({ tag: 'meta', attrs: { name: 'description', content: description }, injectTo: 'head' })
         }
-        if (config.robots?.index === false) {
+        if (config.robots?.index === false && !hasMetaTag(result, 'name', 'robots')) {
           tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
         }
-        if (favicon) {
+        if (favicon && !result.includes('rel="icon"') && !result.includes("rel='icon'")) {
           tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })
         }
-        if (title) {
+        if (title && !hasMetaTag(result, 'property', 'og:title')) {
           tags.push({ tag: 'meta', attrs: { property: 'og:title', content: title }, injectTo: 'head' })
         }
-        if (description) {
+        if (description && !hasMetaTag(result, 'property', 'og:description')) {
           tags.push({ tag: 'meta', attrs: { property: 'og:description', content: description }, injectTo: 'head' })
         }
         if (socialImage) {
-          tags.push(
-            { tag: 'meta', attrs: { property: 'og:image', content: socialImage }, injectTo: 'head' },
-            { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' },
-            { tag: 'meta', attrs: { name: 'twitter:image', content: socialImage }, injectTo: 'head' },
-          )
+          if (!hasMetaTag(result, 'property', 'og:image')) {
+            tags.push({ tag: 'meta', attrs: { property: 'og:image', content: socialImage }, injectTo: 'head' })
+          }
+          if (!hasMetaTag(result, 'name', 'twitter:card')) {
+            tags.push({ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' })
+          }
+          if (!hasMetaTag(result, 'name', 'twitter:image')) {
+            tags.push({ tag: 'meta', attrs: { name: 'twitter:image', content: socialImage }, injectTo: 'head' })
+          }
         }
 
         if (googleAnalyticsId) {
