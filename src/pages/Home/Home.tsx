@@ -6,12 +6,38 @@ import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
 
-const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
-
-const heroDirectUrls: Record<string, string> = {
+// Use each homepage image's stored public URL directly so first visits do not
+// pay an Edge Function 302 redirect (or start a second request after registry load).
+// Registry overrides still update these URLs if an image is changed in the media library.
+const homeDirectImageUrls: Record<string, string> = {
   'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
   'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-2-20261006220651654.webp',
   'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-3-20261006220654107.webp',
+  'photo-1604578762246-41134e37f9cc': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-22-20261006220546641.webp',
+  'photo-1713192704825-74a0017f585d': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-4-20261006220635091.webp',
+  'photo-1640357264948-24beb7df5216': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-24-20261006220548018.webp',
+  'photo-1746439315937-79a9cb4c1521': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-25-20261006220550703.webp',
+  'photo-1746173098001-2ae330a6a763': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-26-20261006220553243.webp',
+  'photo-1643148636639-c4f28543a5cc': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-8-20261006220644041.webp',
+  'photo-1781232756080-c81ff43ff8f7': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-9-20261006220646986.webp',
+  'photo-1758486561455-ebd0d3ba7423': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-10-20261006220607705.webp',
+  'photo-1773846012618-0d05a562d792': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-11-20261006220611025.webp',
+  'photo-1667375186016-db03fabfc259': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-12-20261006220613000.webp',
+  'photo-1699800900071-ae073285ca02': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-13-20261006220614671.webp',
+  'photo-1629946488804-217c002178cf': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-14-20261006220616254.webp',
+  'photo-1642541070065-3912f347e7c6': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-17-20261006220617522.webp',
+  'photo-1786596552312-cd6a3e6ae24a': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-18-20261006220620742.webp',
+  'photo-1775113895544-40f0efa4dac4': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-19-20261006220622580.webp',
+  'photo-1693362335015-34a7ca00aa37': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-20-20261006220627040.webp',
+  'photo-1643785450216-2f4fb7d38fb6': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-21-20261006220629000.webp',
+};
+
+const u = (id: string, _w: number, _h: number) => homeDirectImageUrls[id] || resolveSiteImage(id, _w);
+
+const heroDirectUrls: Record<string, string> = {
+  'photo-1713192706971-03900dcf5706': homeDirectImageUrls['photo-1713192706971-03900dcf5706'],
+  'photo-1613490493576-7fde63acd811': homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
+  'photo-1644057501622-dfa7dd26dbfb': homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
 };
 
 const IMG = {
@@ -118,8 +144,10 @@ export default function Home({ setPage }: Props) {
 
   useEffect(() => {
     // Avoid background re-renders and image changes when the page is hidden.
-    // Respect reduced-motion preferences without changing the visible hero layout.
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Respect reduced-motion preferences and keep the mobile hero still to avoid
+    // downloading two additional full-size slide images on the initial visit.
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mobileViewport = window.matchMedia('(max-width: 767px)');
     let timer: number | undefined;
 
     const stop = () => {
@@ -128,7 +156,7 @@ export default function Home({ setPage }: Props) {
     };
     const start = () => {
       stop();
-      if (document.hidden || media.matches) return;
+      if (document.hidden || reducedMotion.matches || mobileViewport.matches) return;
       timer = window.setInterval(() => {
         if (!document.hidden) setHeroSlide(current => (current + 1) % heroSlides.length);
       }, 6500);
@@ -137,12 +165,14 @@ export default function Home({ setPage }: Props) {
 
     start();
     document.addEventListener('visibilitychange', start);
-    media.addEventListener?.('change', onMotionChange);
+    reducedMotion.addEventListener?.('change', onMotionChange);
+    mobileViewport.addEventListener?.('change', onMotionChange);
 
     return () => {
       stop();
       document.removeEventListener('visibilitychange', start);
-      media.removeEventListener?.('change', onMotionChange);
+      reducedMotion.removeEventListener?.('change', onMotionChange);
+      mobileViewport.removeEventListener?.('change', onMotionChange);
     };
   }, []);
 
