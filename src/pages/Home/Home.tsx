@@ -9,9 +9,9 @@ interface Props { setPage: (p: Page) => void; }
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const heroDirectUrls: Record<string, string> = {
-  'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-002.jpg',
-  'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-015.jpg',
-  'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/home-interior-design-016.jpg',
+  'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
+  'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-2-20261006220651654.webp',
+  'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-3-20261006220654107.webp',
 };
 
 const IMG = {
