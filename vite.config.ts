@@ -119,7 +119,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   }
   function hasMetaTag(html: string, attribute: 'name' | 'property', value: string): boolean {
     // In a RegExp constructor string, escape the backslash once so the regex receives \\b.
-    return new RegExp(`<meta\\b[^>]*\\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
+    return new RegExp(`<meta\b[^>]*\b${attribute}=["']${value}["'][^>]*>`, 'i').test(html)
   }
 
   const title = config.title ?? "Figma Make App"
