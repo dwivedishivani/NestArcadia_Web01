@@ -169,7 +169,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         if (config.robots?.index === false && !hasMetaTag(result, 'name', 'robots')) {
           tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' }, injectTo: 'head' })
         }
-        if (favicon && !/<link\\b[^>]*\\brel=["']icon["']/i.test(result)) {
+        if (favicon && !result.includes('rel="icon"') && !result.includes("rel='icon'")) {
           tags.push({ tag: 'link', attrs: { rel: 'icon', href: favicon }, injectTo: 'head' })
         }
         if (title && !hasMetaTag(result, 'property', 'og:title')) {
