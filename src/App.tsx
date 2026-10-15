@@ -12,7 +12,7 @@ import ConversionBanner from './components/common/ConversionBanner';
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { getLocalServicePage, type LocalServiceConfig, default as LocalServicePage } from './pages/LocalService/LocalServicePage';
-import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 import { setSiteImageOverrides } from './utils/siteImages';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
