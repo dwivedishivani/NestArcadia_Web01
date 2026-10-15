@@ -121,8 +121,33 @@ export default function Home({ setPage }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
-    const timer = window.setInterval(() => setHeroSlide(current => (current + 1) % heroSlides.length), 6500);
-    return () => window.clearInterval(timer);
+    // Avoid background re-renders and image changes when the page is hidden.
+    // Respect reduced-motion preferences without changing the visible hero layout.
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer: number | undefined;
+
+    const stop = () => {
+      if (timer !== undefined) window.clearInterval(timer);
+      timer = undefined;
+    };
+    const start = () => {
+      stop();
+      if (document.hidden || media.matches) return;
+      timer = window.setInterval(() => {
+        if (!document.hidden) setHeroSlide(current => (current + 1) % heroSlides.length);
+      }, 6500);
+    };
+    const onMotionChange = () => start();
+
+    start();
+    document.addEventListener('visibilitychange', start);
+    media.addEventListener?.('change', onMotionChange);
+
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', start);
+      media.removeEventListener?.('change', onMotionChange);
+    };
   }, []);
 
   const n = allTrends.length;
