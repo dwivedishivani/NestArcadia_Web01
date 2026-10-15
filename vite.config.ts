@@ -93,20 +93,19 @@ function nonBlockingProductionCss(): Plugin {
     transformIndexHtml: {
       order: 'post',
       handler(html) {
+        // Match generated local stylesheet links regardless of following tags or whitespace.
+        // Replace each link only once, preserving crossorigin when Vite adds it.
         return html.replace(
-          /<link\s+rel="stylesheet"\s+crossorigin(?:\s+)?href="([^"]+\.css)"\s*\/?>(?!\s*<)/g,
-          (_match, href: string) =>
-            `<link rel="preload" as="style" href="${href}" crossorigin onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}" crossorigin></noscript>`
-        ).replace(
-          /<link\s+rel="stylesheet"\s+href="([^"]+\.css)"\s*\/?>(?!\s*<)/g,
-          (_match, href: string) =>
-            `<link rel="preload" as="style" href="${href}" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`
+          /<link\s+rel="stylesheet"(?:(\s+crossorigin))?\s+href="([^"]+\.css)"\s*\/?\s*>/g,
+          (_match, crossoriginAttr: string | undefined, href: string) => {
+            const crossorigin = crossoriginAttr ? ' crossorigin' : ''
+            return `<link rel="preload" as="style" href="${href}"${crossorigin} onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"${crossorigin}></noscript>`
+          }
         )
       },
     },
   }
 }
-
 function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   function sanitizeHtmlValue(value: string | undefined): string {
     return value?.replace(/[^a-zA-Z0-9_-]/g, '') || ''
