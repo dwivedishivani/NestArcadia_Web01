@@ -89,17 +89,30 @@ Deno.serve(async (req) => {
 
       const requestedWidth = Number(url.searchParams.get('width') || 0);
       const requestedQuality = Number(url.searchParams.get('quality') || 78);
-      const sourceUrl = requestedWidth > 0 && asset.public_url.includes('/storage/v1/object/public/')
-        ? asset.public_url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + `?width=${Math.min(Math.max(Math.round(requestedWidth), 320), 1920)}&quality=${Math.min(Math.max(Math.round(requestedQuality), 40), 90)}&resize=contain`
+      const canTransform = requestedWidth > 0 && asset.public_url.includes('/storage/v1/object/public/');
+      const optimizedUrl = canTransform
+        ? asset.public_url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/')
+          + `?width=${Math.min(Math.max(Math.round(requestedWidth), 320), 1920)}&quality=${Math.min(Math.max(Math.round(requestedQuality), 40), 90)}&resize=contain&format=webp`
         : asset.public_url;
-      const imageResponse = await fetch(sourceUrl);
-      if (!imageResponse.ok || !imageResponse.body) return json({ error: "Stored image unavailable" }, 502);
+
+      // Storage image transformations can fail for individual objects or temporarily
+      // return 5xx. Fall back to the original public object rather than returning a
+      // broken image to the website. The optimized response remains the normal path.
+      let imageResponse = await fetch(optimizedUrl);
+      if ((!imageResponse.ok || !imageResponse.body) && optimizedUrl !== asset.public_url) {
+        imageResponse = await fetch(asset.public_url);
+      }
+      if (!imageResponse.ok || !imageResponse.body) {
+        return json({ error: "Stored image unavailable" }, 502);
+      }
+
       return new Response(imageResponse.body, {
         status: 200,
         headers: {
           ...corsHeaders,
           "Content-Type": imageResponse.headers.get("content-type") || "image/jpeg",
           "Cache-Control": "public, max-age=31536000, immutable",
+          "Vary": "Accept",
         },
       });
     }
