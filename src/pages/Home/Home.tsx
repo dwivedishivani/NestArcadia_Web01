@@ -203,8 +203,12 @@ export default function Home({ setPage }: Props) {
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
         <div className="absolute inset-0 bg-[#1C3A5A]">
-          <img
-            src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
+          <picture className="absolute inset-0 block">
+            {currentHero.imageId === 'photo-1713192706971-03900dcf5706' && import.meta.env.PROD && (
+              <source data-site-image-optimized="true" media="(max-width: 767px)" srcSet="/images/home-hero-mobile.webp" type="image/webp" />
+            )}
+            <img
+              src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
             data-site-image-key={currentHero.imageId}
             data-site-image-optimized-source-url={currentHero.imageId === 'photo-1713192706971-03900dcf5706' ? 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' : undefined}
             alt="NestArcadia modern Indian interior design for Noida and Greater Noida homes"
@@ -214,8 +218,9 @@ export default function Home({ setPage }: Props) {
             fetchPriority={heroSlide === 0 ? 'high' : 'auto'}
             decoding="async"
             onError={() => setHeroImageFallback(true)}
-            className="w-full h-full object-cover transition-opacity duration-700"
-          />
+              className="w-full h-full object-cover transition-opacity duration-700"
+            />
+          </picture>
         </div>
         <div
           className={heroSlide === 1
