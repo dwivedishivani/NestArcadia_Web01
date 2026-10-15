@@ -25,30 +25,52 @@ function replaceImageSources() {
   });
 }
 
+function applyFocalPoint(img: HTMLImageElement) {
+  const src = img.currentSrc || img.src;
+  const match = src.match(/\/site-media\/image\/([^?]+)/);
+  const sourceKey = match ? decodeURIComponent(match[1]) : Object.keys(overrides).find((key) => {
+    const url = overrides[key]?.public_url;
+    return Boolean(url && src.startsWith(url));
+  });
+  if (!sourceKey) return;
+  const item = overrides[sourceKey];
+  if (!item) return;
+  const x = Number.isFinite(Number(item.focal_x)) ? Number(item.focal_x) : 50;
+  const y = Number.isFinite(Number(item.focal_y)) ? Number(item.focal_y) : 50;
+  img.style.objectPosition = `${x}% ${y}%`;
+}
+
 function applyFocalPoints() {
   if (typeof document === 'undefined') return;
-  document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
-    const src = img.currentSrc || img.src;
-    const match = src.match(/\/site-media\/image\/([^?]+)/);
-    const sourceKey = match ? decodeURIComponent(match[1]) : Object.keys(overrides).find((key) => {
-      const url = overrides[key]?.public_url;
-      return Boolean(url && src.startsWith(url));
-    });
-    if (!sourceKey) return;
-    const item = overrides[sourceKey];
-    if (!item) return;
-    const x = Number.isFinite(Number(item.focal_x)) ? Number(item.focal_x) : 50;
-    const y = Number.isFinite(Number(item.focal_y)) ? Number(item.focal_y) : 50;
-    img.style.objectPosition = `${x}% ${y}%`;
-  });
+  document.querySelectorAll<HTMLImageElement>('img').forEach(applyFocalPoint);
 }
 
 function ensureFocalObserver() {
   if (focalObserverStarted || typeof document === 'undefined') return;
   focalObserverStarted = true;
-  const observer = new MutationObserver(() => applyFocalPoints());
+  const pendingImages = new Set<HTMLImageElement>();
+  let frameScheduled = false;
+
+  const observer = new MutationObserver((records) => {
+    for (const record of records) {
+      record.addedNodes.forEach((node) => {
+        if (!(node instanceof Element)) return;
+        if (node instanceof HTMLImageElement) pendingImages.add(node);
+        node.querySelectorAll<HTMLImageElement>('img').forEach((img) => pendingImages.add(img));
+      });
+    }
+
+    if (pendingImages.size === 0 || frameScheduled) return;
+    frameScheduled = true;
+    requestAnimationFrame(() => {
+      pendingImages.forEach(applyFocalPoint);
+      pendingImages.clear();
+      frameScheduled = false;
+    });
+  });
+
   observer.observe(document.body, { childList: true, subtree: true });
-  window.addEventListener('load', applyFocalPoints);
+  window.addEventListener('load', applyFocalPoints, { once: true });
 }
 
 export function setSiteImageOverrides(
