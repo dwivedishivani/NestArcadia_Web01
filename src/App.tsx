@@ -604,4 +604,11 @@ function SiteImageBootstrap() {
   return <RouterProvider router={router} />;
 }
 
-export default function App() { return <SiteErrorBoundary><SiteImageBootstrap /></SiteErrorBoundary>; }
+export default function App() {
+  useEffect(() => {
+    // Keep the static hero visible until React has committed the real page.
+    document.getElementById('app-bootloader')?.remove();
+  }, []);
+
+  return <SiteErrorBoundary><SiteImageBootstrap /></SiteErrorBoundary>;
+}
