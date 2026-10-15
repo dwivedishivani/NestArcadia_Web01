@@ -47,8 +47,13 @@ jobs:
           cwebp -quiet -mt -resize 1600 0 -q 78 \
             "$RUNNER_TEMP/home-hero-source.webp" \
             -o public/images/home-hero-optimized.webp
+          cwebp -quiet -mt -resize 1100 0 -q 72 \
+            "$RUNNER_TEMP/home-hero-source.webp" \
+            -o public/images/home-hero-mobile.webp
           test -s public/images/home-hero-optimized.webp
-          echo "Optimized homepage hero image size: $(du -h public/images/home-hero-optimized.webp | cut -f1)"
+          test -s public/images/home-hero-mobile.webp
+          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized.webp | cut -f1)"
+          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile.webp | cut -f1)"
       - name: Build production site
         run: pnpm build
 
