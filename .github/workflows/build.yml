@@ -30,6 +30,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Prepare optimized homepage hero image
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
+          mkdir -p public/images
+          curl --fail --location --silent --show-error --retry 3 \
+            'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' \
+            --output "$RUNNER_TEMP/home-hero-source.webp"
+          cwebp -quiet -mt -resize 1600 0 -q 78 \
+            "$RUNNER_TEMP/home-hero-source.webp" \
+            -o public/images/home-hero-optimized.webp
+          cwebp -quiet -mt -resize 1100 0 -q 72 \
+            "$RUNNER_TEMP/home-hero-source.webp" \
+            -o public/images/home-hero-mobile.webp
+          test -s public/images/home-hero-optimized.webp
+          test -s public/images/home-hero-mobile.webp
+          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized.webp | cut -f1)"
+          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile.webp | cut -f1)"
       - name: Production build
         run: pnpm build
 

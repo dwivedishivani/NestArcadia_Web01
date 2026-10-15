@@ -56,12 +56,18 @@
       // Start the LCP image request early on the homepage only. Other routes must
       // not download a homepage hero image they will never display.
       if (window.location.pathname === '/' || window.location.pathname === '') {
-        const heroPreload = document.createElement('link');
-        heroPreload.rel = 'preload';
-        heroPreload.as = 'image';
-        heroPreload.href = 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp';
-        heroPreload.fetchPriority = 'high';
-        document.head.appendChild(heroPreload);
+        [
+          { href: '/images/home-hero-mobile.webp', media: '(max-width: 767px)' },
+          { href: '/images/home-hero-optimized.webp', media: '(min-width: 768px)' },
+        ].forEach((candidate) => {
+          const heroPreload = document.createElement('link');
+          heroPreload.rel = 'preload';
+          heroPreload.as = 'image';
+          heroPreload.href = candidate.href;
+          heroPreload.media = candidate.media;
+          heroPreload.fetchPriority = 'high';
+          document.head.appendChild(heroPreload);
+        });
       }
     </script>
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
@@ -159,6 +165,7 @@
       height: 100vh; min-height: 640px; overflow: hidden;
       align-items: flex-end; background: #1C3A5A; color: #fff;
     }
+    #app-bootloader .boot-picture { position: absolute; inset: 0; display: block; }
     #app-bootloader .boot-image { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
     #app-bootloader .boot-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.75), rgba(0,0,0,.40) 60%, rgba(0,0,0,.10)); }
     #app-bootloader .boot-wordmark { position: absolute; z-index: 2; top: 20px; left: 24px; color: #fff; font: 600 22px/1 Georgia, serif; letter-spacing: .01em; }
@@ -189,7 +196,10 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Instant, static first-paint hero. React removes this overlay immediately after its first commit. -->
     <div id="app-bootloader" hidden>
-      <img class="boot-image" data-boot-src="https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+      <picture class="boot-picture">
+        <source data-site-image-optimized="true" media="(max-width: 767px)" srcset="/images/home-hero-mobile.webp" type="image/webp" />
+        <img class="boot-image" data-boot-src="/images/home-hero-optimized.webp" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+      </picture>
       <div class="boot-shade"></div>
       <div class="boot-wordmark">NestArcadia</div>
       <div class="boot-content">
