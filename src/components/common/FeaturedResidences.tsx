@@ -7,7 +7,7 @@ export default function FeaturedResidences() {
     <section className="bg-[#EAE4DA] px-6 py-20 lg:px-20" aria-labelledby="featured-residences-title">
       <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
         <div>
-          <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E]">NCR neighbourhood knowledge</p>
+          <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#17665B]">NCR neighbourhood knowledge</p>
           <h2 id="featured-residences-title" className="font-display text-[clamp(2rem,3.6vw,3.25rem)] leading-[1.06] text-[#1A1714]">Featured Residences<br />&amp; Societies</h2>
           <p className="mt-5 max-w-md text-[15px] leading-[1.85] text-[#6B5E4E]">From compact family apartments to larger villas, we shape interiors around the layouts, light and real routines of Noida, Greater Noida and Greater Noida West.</p>
         </div>
