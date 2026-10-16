@@ -17,7 +17,7 @@
       gtag('set', 'url_passthrough', true);
       gtag('set', 'ads_data_redaction', true);
     </script>
-    <!-- Google Tag Manager: defer network work until idle or the first user interaction.
+    <!-- Google Tag Manager: defer network work until idle or deliberate user interaction.
          Consent defaults and dataLayer are initialized above, so queued events are retained. -->
     <script>
       (function(w,d){
@@ -32,11 +32,11 @@
           script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-T7R3TTP5';
           var first = d.getElementsByTagName('script')[0];
           first.parentNode.insertBefore(script, first);
-          ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+          ['click','keydown'].forEach(function(eventName){
             w.removeEventListener(eventName, loadGTM, true);
           });
         }
-        ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+        ['click','keydown'].forEach(function(eventName){
           w.addEventListener(eventName, loadGTM, {once:true, passive:true, capture:true});
         });
         // For passive visits, wait until the page's eager resources (especially
@@ -44,8 +44,7 @@
         // still triggers GTM immediately; queued dataLayer events are preserved.
         function loadAfterPageLoad(){
           // On passive visits, keep third-party tag work out of the full initial
-          // mobile rendering/settling window. Real user input above still loads GTM
-          // immediately; queued page_view and lead events are preserved in dataLayer.
+          // mobile rendering/settling window. Deliberate user input above loads GTM immediately; passive scroll gestures do not. Queued page_view and lead events stay in dataLayer.
           w.setTimeout(function(){
             if ('requestIdleCallback' in w) {
               w.requestIdleCallback(loadGTM, {timeout: 12000});
