@@ -112,7 +112,31 @@ Deno.serve(async (req) => {
         .eq("source_key", sourceKey)
         .maybeSingle();
       if (assetError) throw assetError;
-      if (!asset?.public_url) return json({ error: "Image not found" }, 404);
+      if (!asset?.public_url) {
+        // Older and newly authored editorial content can reference original Unsplash
+        // photo IDs that are not yet present in the Site Media registry. Fall back
+        // only for a strict Unsplash photo-ID shape; never accept arbitrary URLs.
+        if (!/^photo-\d+-[a-z0-9]+$/i.test(sourceKey)) {
+          return json({ error: "Image not found" }, 404);
+        }
+        const requestedWidth = Number(url.searchParams.get("width") ?? "800");
+        const requestedQuality = Number(url.searchParams.get("quality") ?? "78");
+        const width = Math.min(1920, Math.max(320, Number.isFinite(requestedWidth) ? Math.round(requestedWidth) : 800));
+        const quality = Math.min(90, Math.max(50, Number.isFinite(requestedQuality) ? Math.round(requestedQuality) : 78));
+        const fallbackUrl = new URL("https://images.unsplash.com/" + sourceKey);
+        fallbackUrl.searchParams.set("auto", "format");
+        fallbackUrl.searchParams.set("fit", "crop");
+        fallbackUrl.searchParams.set("w", String(width));
+        fallbackUrl.searchParams.set("q", String(quality));
+        return new Response(null, {
+          status: 302,
+          headers: {
+            ...corsHeaders,
+            "Location": fallbackUrl.toString(),
+            "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        });
+      }
 
       // Supabase Storage Image Transformations are not enabled on this project.
       // Most website assets are already optimized WebP files in the public bucket.
