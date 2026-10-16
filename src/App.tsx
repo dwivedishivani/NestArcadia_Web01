@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useEffect, useRef, useState, type ErrorInfo, type ReactNode } from 'react';
 import { createBrowserRouter, RouterProvider, useLocation, useNavigate, useRouteError } from 'react-router';
 import Nav from './components/navigation/Nav';
 import Footer from './components/layout/Footer';
@@ -139,6 +139,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
   const articleSlug = page === 'journal' ? location.pathname.match(/^\/journal\/([^/]+)\/?$/)?.[1] : undefined;
   const [article, setArticle] = useState<{ id: string; title: string; excerpt: string; img: string; category: string; author: string; publishedAt: string | null; modifiedAt: string | null } | null>(null);
   const [articleMetaLoaded, setArticleMetaLoaded] = useState(false);
+  const lastTrackedPathRef = useRef<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -282,23 +283,21 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       : (articleSchema
         ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
         : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : []), ...(faqSchema ? [faqSchema] : [])] }));
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: 'page_view',
-      page_path: pathname,
-      page_location: window.location.href,
-      page_title: document.title,
-      page_type: localService ? 'local_service' : page,
-      content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
-    });
-
-    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-    gtag?.('event', 'page_view', {
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: pathname,
-      send_to: 'G-LDM2YL1MP5',
-    });
+    // Emit one page_view through GTM for each route path. Journal metadata loads
+    // asynchronously, so wait until its article title is ready before measuring it.
+    const articleReady = !articleSlug || (articleMetaLoaded && (article?.id === articleSlug || article === null));
+    if (articleReady && lastTrackedPathRef.current !== pathname) {
+      lastTrackedPathRef.current = pathname;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'page_view',
+        page_path: pathname,
+        page_location: window.location.href,
+        page_title: document.title,
+        page_type: localService ? 'local_service' : page,
+        content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
+      });
+    }
   }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
   return null;
 }
