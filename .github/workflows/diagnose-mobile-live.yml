@@ -1,0 +1,103 @@
+name: Diagnose live mobile performance
+
+on:
+  push:
+    branches: [diagnose/mobile-perf-live]
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout diagnostic branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run Lighthouse on the live homepage
+        run: |
+          npx --yes lighthouse@12.8.2 https://nestarcadia.com/ \
+            --output=json \
+            --output-path=./lighthouse-mobile.json \
+            --form-factor=mobile \
+            --throttling-method=simulate \
+            --chrome-flags="--headless --no-sandbox --disable-gpu --disable-dev-shm-usage" \
+            --quiet
+
+      - name: Print LCP element and redirecting requests
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const report = require('./lighthouse-mobile.json');
+          const audits = report.audits || {};
+          const metricIds = [
+            'first-contentful-paint',
+            'largest-contentful-paint',
+            'speed-index',
+            'total-blocking-time',
+            'interactive',
+            'cumulative-layout-shift',
+          ];
+          console.log('PERFORMANCE_SCORE', report.categories?.performance?.score);
+          for (const id of metricIds) {
+            const audit = audits[id];
+            console.log('METRIC', id, audit?.displayValue || audit?.numericValue || 'n/a');
+          }
+
+          const lcpItems = audits['largest-contentful-paint-element']?.details?.items || [];
+          console.log('LCP_ELEMENT', JSON.stringify(lcpItems.slice(0, 2).map((item) => ({
+            url: item.url,
+            type: item.type,
+            node: item.node ? {
+              type: item.node.type,
+              snippet: item.node.snippet,
+              selector: item.node.selector,
+              nodeLabel: item.node.nodeLabel,
+            } : undefined,
+            timing: item.timing,
+          }))));
+
+          const redirectItems = audits.redirects?.details?.items || [];
+          console.log('REDIRECT_OPPORTUNITY', JSON.stringify(redirectItems.slice(0, 20).map((item) => ({
+            url: item.url,
+            wastedMs: item.wastedMs,
+            totalBytes: item.totalBytes,
+            node: item.node?.snippet,
+          }))));
+
+          const requests = audits['network-requests']?.details?.items || [];
+          const relevant = requests.filter((item) =>
+            (Number(item.redirectDuration || 0) > 0) ||
+            /nestarcadia\.com|supabase\.co|googletagmanager|googleapis\.com|gstatic\.com/i.test(item.url || '')
+          );
+          console.log('NETWORK_REQUESTS', JSON.stringify(relevant.map((item) => ({
+            url: item.url,
+            resourceType: item.resourceType,
+            statusCode: item.statusCode,
+            protocol: item.protocol,
+            transferSize: item.transferSize,
+            resourceSize: item.resourceSize,
+            startTime: item.startTime,
+            endTime: item.endTime,
+            duration: item.duration,
+            redirectDuration: item.redirectDuration,
+            priority: item.priority,
+            isLinkPreload: item.isLinkPreload,
+          }))));
+          for (const id of ['unused-javascript', 'lcp-discovery-insight', 'lcp-discovery']) {
+            const audit = audits[id];
+            if (audit) console.log('DETAIL', id, audit.displayValue || '', JSON.stringify(audit.details?.items?.slice?.(0, 5) || []));
+          }
+          NODE
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nestarcadia-live-lighthouse-mobile
+          path: lighthouse-mobile.json
+          if-no-files-found: error
+          retention-days: 3
