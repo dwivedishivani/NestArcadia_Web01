@@ -63,38 +63,25 @@ try {
     };
   });
 
-  // Load the real GTM container, but block all downstream measurement requests:
-  // this verifies tag wiring without sending a fake conversion to GA4 or Google Ads.
-  let gtmContainerStatus = null;
-  const ga4MeasurementAttempts = [];
-  const adsConversionAttempts = [];
-  page.on('response', (response) => {
-    const url = response.url();
-    if (url.includes('googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) {
-      gtmContainerStatus = response.status();
-    }
-  });
-
+  // Isolate the form smoke from third-party tags. A separate tag-only browser
+  // below loads the real GTM container and records collector attempts without
+  // allowing any synthetic event to reach Google Analytics or Google Ads.
+  await page.route('**/googletagmanager.com/**', (route) => route.abort());
   for (const pattern of [
     '**/google-analytics.com/**',
     '**/analytics.google.com/**',
     '**/g/collect*',
   ]) {
-    await page.route(pattern, async (route) => {
-      ga4MeasurementAttempts.push(route.request().url());
-      await route.abort();
-    });
+    await page.route(pattern, (route) => route.abort());
   }
   for (const pattern of [
     '**/googleadservices.com/**',
     '**/doubleclick.net/**',
+    '**/googlesyndication.com/ccm/**',
     '**/google.com/pagead/**',
     '**/google.com/ccm/**',
   ]) {
-    await page.route(pattern, async (route) => {
-      adsConversionAttempts.push(route.request().url());
-      await route.abort();
-    });
+    await page.route(pattern, (route) => route.abort());
   }
 
   await page.route('**/functions/v1/site-media/images*', async (route) => {
@@ -185,37 +172,9 @@ try {
       queuedEvents: window.__nestarcadiaSmokeEvents,
     }));
     console.error('LEAD_FORM_DEBUG', JSON.stringify({
-      debugState, mockedPayload, gtmContainerStatus, ga4MeasurementAttempts,
-      adsConversionAttempts, pageErrors, consoleErrors, failedRequests,
+      debugState, mockedPayload, pageErrors, consoleErrors, failedRequests,
     }));
     throw error;
-  }
-
-  // Simulate an explicit consent grant only in this isolated test browser and replay
-  // the lead events through the real GTM container. Collector URLs remain intercepted
-  // below, so no fake GA4 or Google Ads conversion can leave this browser.
-  await page.evaluate(() => {
-    const w = window;
-    w.gtag?.('consent', 'update', {
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted',
-      analytics_storage: 'granted',
-    });
-    w.dataLayer.push({
-      event: 'lead_submit',
-      lead_source: 'smoke-test',
-      page_path: window.location.pathname,
-    });
-    w.gtag?.('event', 'generate_lead', {
-      lead_source: 'smoke-test',
-      page_path: window.location.pathname,
-      send_to: 'G-LDM2YL1MP5',
-    });
-  });
-  const trackingDeadline = Date.now() + 10000;
-  while ((gtmContainerStatus === null || ga4MeasurementAttempts.length === 0) && Date.now() < trackingDeadline) {
-    await page.waitForTimeout(200);
   }
 
   const events = await page.evaluate(() => window.__nestarcadiaSmokeEvents);
@@ -224,8 +183,6 @@ try {
   assert.ok(ga4Event, 'GA4 generate_lead event was not queued');
   assert.equal(ga4Event.detail?.send_to, 'G-LDM2YL1MP5', 'generate_lead destination ID mismatch');
   assert.ok(mockedPayload, 'form did not call the expected lead endpoint');
-  assert.equal(gtmContainerStatus, 200, `GTM container failed to load (HTTP ${gtmContainerStatus ?? 'no response'})`);
-  assert.ok(ga4MeasurementAttempts.length > 0, 'GTM did not attempt a GA4 measurement request for generate_lead');
   assert.ok(!pageErrors.length, `browser page errors: ${pageErrors.join('; ')}`);
 
   console.log('LEAD_FORM_SMOKE', JSON.stringify({
@@ -233,12 +190,101 @@ try {
     postgrestPayloadShape: true,
     dataLayerLeadSubmit: true,
     ga4GenerateLeadQueued: true,
+    realAnalyticsNetworkBlocked: true,
+    pageErrors,
+  }));
+
+  // Separate GTM-only smoke: the real container is allowed to load, but every
+  // downstream GA4 / Ads collector is intercepted and aborted before it can log
+  // any data. This keeps synthetic conversions out of the actual analytics account.
+  const tagContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    locale: 'en-IN',
+  });
+  const tagPage = await tagContext.newPage();
+  let gtmContainerStatus = null;
+  const ga4MeasurementAttempts = [];
+  const adsConversionAttempts = [];
+
+  await tagPage.addInitScript(() => {
+    try { localStorage.setItem('nestarcadia_consent_v2', 'denied'); } catch {}
+  });
+
+  tagPage.on('response', (response) => {
+    if (response.url().includes('googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) {
+      gtmContainerStatus = response.status();
+    }
+  });
+
+  for (const pattern of [
+    '**/google-analytics.com/**',
+    '**/analytics.google.com/**',
+    '**/g/collect*',
+  ]) {
+    await tagPage.route(pattern, async (route) => {
+      ga4MeasurementAttempts.push(route.request().url());
+      await route.abort();
+    });
+  }
+  for (const pattern of [
+    '**/googleadservices.com/**',
+    '**/doubleclick.net/**',
+    '**/googlesyndication.com/ccm/**',
+    '**/google.com/pagead/**',
+    '**/google.com/ccm/**',
+  ]) {
+    await tagPage.route(pattern, async (route) => {
+      adsConversionAttempts.push(route.request().url());
+      await route.abort();
+    });
+  }
+
+  await tagPage.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
+  // Trigger the same interaction-driven loader installed by index.html.
+  await tagPage.evaluate(() => window.dispatchEvent(new Event('pointerdown', { bubbles: true })));
+
+  const gtmDeadline = Date.now() + 10000;
+  while (gtmContainerStatus === null && Date.now() < gtmDeadline) {
+    await tagPage.waitForTimeout(200);
+  }
+  assert.equal(gtmContainerStatus, 200, `GTM container failed to load (HTTP ${gtmContainerStatus ?? 'no response'})`);
+
+  // Only this ephemeral QA browser is consented in order to prove that the tag
+  // path attempts a GA4 hit. The interceptors prevent that hit from reaching Google.
+  await tagPage.evaluate(() => {
+    window.gtag?.('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted',
+    });
+    window.dataLayer.push({
+      event: 'lead_submit',
+      lead_source: 'smoke-test',
+      page_path: window.location.pathname,
+    });
+    window.gtag?.('event', 'generate_lead', {
+      lead_source: 'smoke-test',
+      page_path: window.location.pathname,
+      send_to: 'G-LDM2YL1MP5',
+    });
+  });
+
+  const measurementDeadline = Date.now() + 10000;
+  while (ga4MeasurementAttempts.length === 0 && Date.now() < measurementDeadline) {
+    await tagPage.waitForTimeout(200);
+  }
+  assert.ok(
+    ga4MeasurementAttempts.length > 0,
+    'GTM loaded but did not attempt a GA4 measurement request for generate_lead'
+  );
+  console.log('GTM_PATH_SMOKE', JSON.stringify({
     gtmContainerStatus,
     ga4MeasurementAttempts: ga4MeasurementAttempts.length,
     adsConversionAttempts: adsConversionAttempts.length,
     measurementNetworkBlocked: true,
-    pageErrors,
   }));
+  await tagContext.close();
 } finally {
   await browser.close();
 }
