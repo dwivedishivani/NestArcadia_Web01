@@ -600,25 +600,7 @@ function SiteImageBootstrap() {
   useEffect(() => {
     let started = false;
     let disposed = false;
-    let idleCallbackId: number | undefined;
-    let timeoutId: number | undefined;
     const interactionEvents = ['pointerdown', 'keydown', 'touchstart', 'scroll'] as const;
-    const browserWindow = window as Window & {
-      requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
-      cancelIdleCallback?: (handle: number) => void;
-    };
-
-    const clearDeferredLoad = () => {
-      if (idleCallbackId !== undefined) {
-        browserWindow.cancelIdleCallback?.(idleCallbackId);
-        idleCallbackId = undefined;
-      }
-      if (timeoutId !== undefined) {
-        window.clearTimeout(timeoutId);
-        timeoutId = undefined;
-      }
-      window.removeEventListener('load', scheduleDeferredLoad);
-    };
 
     const removeInteractionListeners = () => {
       interactionEvents.forEach((eventName) => {
@@ -629,7 +611,6 @@ function SiteImageBootstrap() {
     const loadRegistry = () => {
       if (started || disposed) return;
       started = true;
-      clearDeferredLoad();
       removeInteractionListeners();
 
       fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
@@ -644,36 +625,21 @@ function SiteImageBootstrap() {
         });
     };
 
-    function scheduleDeferredLoad() {
-      if (started || disposed) return;
-      if (browserWindow.requestIdleCallback) {
-        idleCallbackId = browserWindow.requestIdleCallback(loadRegistry, { timeout: 4000 });
-      } else {
-        timeoutId = window.setTimeout(loadRegistry, 1500);
-      }
-    }
-
     interactionEvents.forEach((eventName) => {
       window.addEventListener(eventName, loadRegistry, { once: true, passive: true, capture: true });
     });
 
-    // Home already renders its critical hero from local optimized assets. Defer
-    // this non-critical registry refresh there so it doesn't compete with the
-    // initial mobile render; other routes keep the existing eager refresh.
-    if (window.location.pathname === '/') {
-      if (document.readyState === 'complete') {
-        scheduleDeferredLoad();
-      } else {
-        window.addEventListener('load', scheduleDeferredLoad, { once: true });
-      }
-    } else {
+    // The homepage hero is served from responsive, self-hosted assets. Don't force
+    // a registry request after four seconds on passive visits: it can compete with
+    // the mobile LCP. The first real interaction refreshes overrides; other routes
+    // still load the registry immediately because they rely on the shared image set.
+    if (window.location.pathname !== '/') {
       loadRegistry();
     }
 
     return () => {
       disposed = true;
       removeInteractionListeners();
-      clearDeferredLoad();
     };
   }, []);
 
