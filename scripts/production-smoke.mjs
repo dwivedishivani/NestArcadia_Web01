@@ -23,9 +23,27 @@ try {
   });
   const page = await context.newPage();
   page.on('pageerror', (error) => pageErrors.push(error.message));
+  const cdp = await context.newCDPSession(page);
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+  await cdp.send('Network.enable');
+  await cdp.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 150,
+    downloadThroughput: 200 * 1024,
+    uploadThroughput: 75 * 1024,
+    connectionType: 'cellular3g',
+  });
 
   await page.addInitScript(() => {
     try { localStorage.setItem('nestarcadia_consent_v2', 'denied'); } catch {}
+    window.__nestarcadiaLcpMs = null;
+    try {
+      const lcpObserver = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        if (entries.length) window.__nestarcadiaLcpMs = Math.round(entries[entries.length - 1].startTime);
+      });
+      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch {}
     window.__nestarcadiaSmokeEvents = [];
     window.dataLayer = window.dataLayer || [];
     const originalPush = window.dataLayer.push.bind(window.dataLayer);
@@ -106,18 +124,19 @@ try {
     return Boolean(image && image.complete && image.naturalWidth > 0);
   }, undefined, { timeout: 20000 });
 
+  await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
   const heroMetrics = await page.evaluate(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
-    const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
     return {
       heroLoaded: Boolean(image && image.complete && image.naturalWidth > 0),
       heroWidth: image?.naturalWidth || 0,
       currentSrc: image?.currentSrc || '',
-      lcpMs: lcpEntries.length ? Math.round(lcpEntries[lcpEntries.length - 1].startTime) : null,
+      lcpMs: window.__nestarcadiaLcpMs,
     };
   });
   assert.equal(heroMetrics.heroLoaded, true, 'homepage hero image did not load');
   assert.ok(heroMetrics.currentSrc.includes('/images/home-hero-mobile-v2.webp'), `mobile viewport did not select optimized mobile hero: ${heroMetrics.currentSrc}`);
+  assert.ok(heroMetrics.lcpMs < 4500, `simulated mobile LCP exceeded 4.5 seconds: ${heroMetrics.lcpMs} ms`);
   console.log('MOBILE_HERO_SMOKE', JSON.stringify(heroMetrics));
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
