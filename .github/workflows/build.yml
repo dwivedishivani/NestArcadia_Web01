@@ -40,14 +40,14 @@ jobs:
             --output "$RUNNER_TEMP/home-hero-source.webp"
           cwebp -quiet -mt -resize 1600 0 -q 78 \
             "$RUNNER_TEMP/home-hero-source.webp" \
-            -o public/images/home-hero-optimized.webp
+            -o public/images/home-hero-optimized-v2.webp
           cwebp -quiet -mt -resize 1100 0 -q 72 \
             "$RUNNER_TEMP/home-hero-source.webp" \
-            -o public/images/home-hero-mobile.webp
-          test -s public/images/home-hero-optimized.webp
-          test -s public/images/home-hero-mobile.webp
-          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized.webp | cut -f1)"
-          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile.webp | cut -f1)"
+            -o public/images/home-hero-mobile-v2.webp
+          test -s public/images/home-hero-optimized-v2.webp
+          test -s public/images/home-hero-mobile-v2.webp
+          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized-v2.webp | cut -f1)"
+          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile-v2.webp | cut -f1)"
       - name: Production build
         run: pnpm build
 
