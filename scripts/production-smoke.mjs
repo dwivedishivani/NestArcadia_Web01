@@ -35,7 +35,7 @@ try {
   });
 
   await page.addInitScript(() => {
-    try { localStorage.setItem('nestarcadia_consent_v2', 'denied'); } catch {}
+    try { localStorage.setItem('nestarcadia_consent_v2', 'granted'); } catch {}
     window.__nestarcadiaLcpMs = null;
     try {
       const lcpObserver = new PerformanceObserver((list) => {
@@ -59,15 +59,38 @@ try {
     };
   });
 
-  // Never send synthetic test conversions to real Google Analytics/Ads.
+  // Load the real GTM container, but block all downstream measurement requests:
+  // this verifies tag wiring without sending a fake conversion to GA4 or Google Ads.
+  let gtmContainerStatus = null;
+  const ga4MeasurementAttempts = [];
+  const adsConversionAttempts = [];
+  page.on('response', (response) => {
+    const url = response.url();
+    if (url.includes('googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) {
+      gtmContainerStatus = response.status();
+    }
+  });
+
   for (const pattern of [
-    '**/googletagmanager.com/**',
     '**/google-analytics.com/**',
     '**/analytics.google.com/**',
+    '**/g/collect*',
+  ]) {
+    await page.route(pattern, async (route) => {
+      ga4MeasurementAttempts.push(route.request().url());
+      await route.abort();
+    });
+  }
+  for (const pattern of [
     '**/googleadservices.com/**',
     '**/doubleclick.net/**',
+    '**/google.com/pagead/**',
+    '**/google.com/ccm/**',
   ]) {
-    await page.route(pattern, (route) => route.abort());
+    await page.route(pattern, async (route) => {
+      adsConversionAttempts.push(route.request().url());
+      await route.abort();
+    });
   }
 
   await page.route('**/functions/v1/site-media/images*', async (route) => {
@@ -140,7 +163,7 @@ try {
   console.log('MOBILE_HERO_SMOKE', JSON.stringify(heroMetrics));
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
+  await page.getByPlaceholder('Full Name *').click(); // deliberately trigger GTM's real interaction loader\n  await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
   await page.getByPlaceholder('Email Address *').fill('qa-smoke@example.invalid');
   await page.getByPlaceholder('Phone Number *').fill('9876543210');
   await page.getByRole('combobox').selectOption('Noida');
@@ -158,6 +181,14 @@ try {
   assert.ok(ga4Event, 'GA4 generate_lead event was not queued');
   assert.equal(ga4Event.detail?.send_to, 'G-LDM2YL1MP5', 'generate_lead destination ID mismatch');
   assert.ok(mockedPayload, 'form did not call the expected lead endpoint');
+  // Wait briefly for the actual container to process the queued events. Measurement
+  // endpoints above are intercepted, so this cannot create a real conversion.
+  const trackingDeadline = Date.now() + 8000;
+  while ((gtmContainerStatus === null || ga4MeasurementAttempts.length === 0) && Date.now() < trackingDeadline) {
+    await page.waitForTimeout(200);
+  }
+  assert.equal(gtmContainerStatus, 200, `GTM container failed to load (HTTP ${gtmContainerStatus ?? 'no response'})`);
+  assert.ok(ga4MeasurementAttempts.length > 0, 'GTM did not attempt a GA4 measurement request after lead submission');
   assert.ok(!pageErrors.length, `browser page errors: ${pageErrors.join('; ')}`);
 
   console.log('LEAD_FORM_SMOKE', JSON.stringify({
@@ -165,7 +196,10 @@ try {
     postgrestPayloadShape: true,
     dataLayerLeadSubmit: true,
     ga4GenerateLeadQueued: true,
-    realAnalyticsNetworkBlocked: true,
+    gtmContainerStatus,
+    ga4MeasurementAttempts: ga4MeasurementAttempts.length,
+    adsConversionAttempts: adsConversionAttempts.length,
+    measurementNetworkBlocked: true,
     pageErrors,
   }));
 } finally {
