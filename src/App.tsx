@@ -599,54 +599,14 @@ const router = createBrowserRouter([{ path: '*', Component: SiteShell, errorElem
 
 function SiteImageBootstrap() {
   useEffect(() => {
-    let cancelled = false;
-    let timeoutHandle: number | undefined;
-    let idleHandle: number | undefined;
-    const idleWindow = window as unknown as {
-      requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
-      cancelIdleCallback?: (handle: number) => void;
-    };
-
-    const loadRegistry = () => {
-      if (cancelled) return;
-      fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
-        headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+    fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
+      headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
+      .then((payload) => {
+        setSiteImageOverrides(payload.data || []);
       })
-        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
-        .then((payload) => {
-          if (!cancelled) setSiteImageOverrides(payload.data || []);
-        })
-        .catch((error) => {
-          if (!cancelled) console.warn('Site image registry unavailable; using local image fallbacks.', error);
-        });
-    };
-
-    const isHomepage = window.location.pathname === '/' || window.location.pathname === '';
-    if (!isHomepage) {
-      loadRegistry();
-      return () => { cancelled = true; };
-    }
-
-    // Homepage imagery has direct, responsive URLs in the initial HTML/component.
-    // Fetch the editable media registry after the critical image/text has loaded
-    // so this extra request and DOM scan do not compete with the LCP path.
-    const scheduleRegistry = () => {
-      if (idleWindow.requestIdleCallback) {
-        idleHandle = idleWindow.requestIdleCallback(loadRegistry, { timeout: 4000 });
-      } else {
-        timeoutHandle = window.setTimeout(loadRegistry, 2500);
-      }
-    };
-
-    if (document.readyState === 'complete') scheduleRegistry();
-    else window.addEventListener('load', scheduleRegistry, { once: true });
-
-    return () => {
-      cancelled = true;
-      window.removeEventListener('load', scheduleRegistry);
-      if (idleHandle !== undefined) idleWindow.cancelIdleCallback?.(idleHandle);
-      if (timeoutHandle !== undefined) window.clearTimeout(timeoutHandle);
-    };
+      .catch((error) => console.warn('Site image registry unavailable; using local image fallbacks.', error));
   }, []);
 
   return <RouterProvider router={router} />;
