@@ -54,6 +54,31 @@ jobs:
       - name: Production build
         run: pnpm build
 
+      - name: Start production preview for browser tests
+        run: |
+          pnpm exec vite preview --host 127.0.0.1 --port 4173 > "$RUNNER_TEMP/vite-preview.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/vite-preview.pid"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
+              echo "Production preview is ready."
+              exit 0
+            fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/vite-preview.log"
+          exit 1
+
+      - name: Install Playwright Chromium for production smoke tests
+        run: |
+          npm install --prefix "$RUNNER_TEMP/playwright-smoke" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/playwright-smoke/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Test mobile hero and lead conversion event flow
+        env:
+          PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/playwright-smoke/node_modules/playwright/index.mjs
+          SMOKE_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/production-smoke.mjs
+
       - name: Upload production build artifact
         uses: actions/upload-artifact@v4
         with:
