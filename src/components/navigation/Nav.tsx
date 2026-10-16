@@ -55,7 +55,6 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 aria-hidden="true"
                 loading="eager"
                 decoding="async"
-                fetchPriority="high"
                 className="block h-full w-full object-contain object-left"
                 style={{ fontSize: 0, lineHeight: 0 }}
               />
