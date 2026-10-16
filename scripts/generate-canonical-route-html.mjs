@@ -6,7 +6,7 @@ const baseUrl = 'https://nestarcadia.com';
 const distDir = path.resolve('dist');
 const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
-const urls = [...sitemap.matchAll(/<loc>\\s*(https?:[^<]+)\\s*<\\/loc>/g)].map((match) => match[1].trim());
+const urls = [...sitemap.matchAll(/<loc>\s*(https?:[^<]+)\s*<\/loc>/g)].map((match) => match[1].trim());
 
 if (!urls.includes(baseUrl + '/')) {
   throw new Error('Canonical route generation stopped: homepage is missing from sitemap.xml');
@@ -66,7 +66,7 @@ function titleCaseSlug(slug) {
 }
 
 function shortenDescription(value, limit = 158) {
-  const normalized = String(value || '').replace(/\\s+/g, ' ').trim();
+  const normalized = String(value || '').replace(/\s+/g, ' ').trim();
   if (normalized.length <= limit) return normalized;
   const trimmed = normalized.slice(0, limit - 1);
   const lastSpace = trimmed.lastIndexOf(' ');
@@ -80,18 +80,18 @@ function escapeAttribute(value) {
 function replaceTag(html, pattern, replacement, insertBeforeHeadEnd = true) {
   if (pattern.test(html)) return html.replace(pattern, replacement);
   if (!insertBeforeHeadEnd) throw new Error('Required HTML tag missing: ' + pattern);
-  return html.replace('</head>', replacement + '\\n  </head>');
+  return html.replace('</head>', replacement + '\n  </head>');
 }
 
 function replaceMeta(html, selectorPattern, attribute, value, fallbackTag) {
   const safeValue = escapeAttribute(value);
   const match = html.match(selectorPattern);
-  if (!match) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\\n  </head>');
+  if (!match) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\n  </head>');
   const tag = match[0];
-  const attributePattern = new RegExp('\\\\b' + attribute + '="[^"]*"');
+  const attributePattern = new RegExp('\\b' + attribute + '="[^"]*"');
   const changed = attributePattern.test(tag)
     ? tag.replace(attributePattern, attribute + '="' + safeValue + '"')
-    : tag.replace(/\\s*\\/?\\s*>$/, ' ' + attribute + '="' + safeValue + '" />');
+    : tag.replace(/\s*\/?\s*>$/, ' ' + attribute + '="' + safeValue + '" />');
   return html.replace(tag, changed);
 }
 
@@ -160,7 +160,7 @@ function routeMetadata(pathname) {
   const service = serviceMeta.get(pathname);
   if (service) return service;
   if (pathname.startsWith('/journal/')) {
-    const slug = pathname.slice('/journal/'.length).replace(/\\/$/, '');
+    const slug = pathname.slice('/journal/'.length).replace(/\/$/, '');
     const article = articleMeta.get(slug);
     if (article) return article;
     const title = titleCaseSlug(slug);
@@ -171,7 +171,7 @@ function routeMetadata(pathname) {
     };
   }
   if (pathname.startsWith('/interior-design-') || pathname.startsWith('/commercial-interior-design-')) {
-    const slug = pathname.replace(/^\\//, '').replace(/^commercial-interior-design-/, '').replace(/^interior-design-/, '');
+    const slug = pathname.replace(/^\//, '').replace(/^commercial-interior-design-/, '').replace(/^interior-design-/, '');
     const area = titleCaseSlug(slug);
     const title = pathname.startsWith('/commercial-')
       ? 'Commercial Interior Design in ' + area
@@ -182,7 +182,7 @@ function routeMetadata(pathname) {
       type: 'service',
     };
   }
-  const fallback = titleCaseSlug(pathname.replace(/^\\//, '').replace(/\\/$/, '')) || 'NestArcadia';
+  const fallback = titleCaseSlug(pathname.replace(/^\//, '').replace(/\/$/, '')) || 'NestArcadia';
   return {
     title: fallback + ' | NestArcadia',
     description: 'Explore NestArcadia interior design services, practical planning advice and project information for Noida, Greater Noida and Delhi NCR.',
@@ -199,7 +199,7 @@ for (const rawUrl of urls) {
     throw new Error('Unexpected sitemap URL; refusing to generate canonical HTML: ' + rawUrl);
   }
   const routePath = parsed.pathname || '/';
-  const route = routePath === '/' ? '' : routePath.replace(/^\\/+|\\/+$/g, '');
+  const route = routePath === '/' ? '' : routePath.replace(/^\/+|\/+$/g, '');
   const outputDir = path.join(distDir, route);
   const canonical = baseUrl + (routePath === '/' ? '/' : routePath);
   const metadata = routeMetadata(routePath);
@@ -210,22 +210,22 @@ for (const rawUrl of urls) {
     : originalOgImage;
 
   let html = template;
-  html = replaceTag(html, /<title>[\\s\\S]*?<\\/title>/i, '<title>' + escapeAttribute(title) + '</title>');
-  html = html.replace(/<link rel="canonical" href="[^"]*"\\s*\\/>/i, '<link rel="canonical" href="' + escapeAttribute(canonical) + '" />');
-  html = replaceMeta(html, /<meta name="description"[^>]*\\/?>/i, 'content', description, '<meta name="description" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta property="og:title"[^>]*\\/?>/i, 'content', title, '<meta property="og:title" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta property="og:description"[^>]*\\/?>/i, 'content', description, '<meta property="og:description" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta property="og:url"[^>]*\\/?>/i, 'content', canonical, '<meta property="og:url" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta property="og:image"[^>]*\\/?>/i, 'content', imageUrl, '<meta property="og:image" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta name="twitter:title"[^>]*\\/?>/i, 'content', title, '<meta name="twitter:title" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta name="twitter:description"[^>]*\\/?>/i, 'content', description, '<meta name="twitter:description" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta name="twitter:image"[^>]*\\/?>/i, 'content', imageUrl, '<meta name="twitter:image" content="__VALUE__" />');
-  html = replaceMeta(html, /<meta property="og:type"[^>]*\\/?>/i, 'content', metadata.type === 'article' ? 'article' : 'website', '<meta property="og:type" content="__VALUE__" />');
+  html = replaceTag(html, /<title>[\s\S]*?<\/title>/i, '<title>' + escapeAttribute(title) + '</title>');
+  html = html.replace(/<link rel="canonical" href="[^"]*"\s*\/>/i, '<link rel="canonical" href="' + escapeAttribute(canonical) + '" />');
+  html = replaceMeta(html, /<meta name="description"[^>]*\/?>/i, 'content', description, '<meta name="description" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta property="og:title"[^>]*\/?>/i, 'content', title, '<meta property="og:title" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta property="og:description"[^>]*\/?>/i, 'content', description, '<meta property="og:description" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta property="og:url"[^>]*\/?>/i, 'content', canonical, '<meta property="og:url" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta property="og:image"[^>]*\/?>/i, 'content', imageUrl, '<meta property="og:image" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta name="twitter:title"[^>]*\/?>/i, 'content', title, '<meta name="twitter:title" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta name="twitter:description"[^>]*\/?>/i, 'content', description, '<meta name="twitter:description" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta name="twitter:image"[^>]*\/?>/i, 'content', imageUrl, '<meta name="twitter:image" content="__VALUE__" />');
+  html = replaceMeta(html, /<meta property="og:type"[^>]*\/?>/i, 'content', metadata.type === 'article' ? 'article' : 'website', '<meta property="og:type" content="__VALUE__" />');
 
   // Don't download the homepage LCP image for every other route.
   if (routePath !== '/') {
-    html = html.replace(/\\s*<link rel="preload" as="image" href="\\/images\\/home-hero-mobile-v2\\.webp"[^>]*\\/?>/gi, '');
-    html = html.replace(/\\s*<link rel="preload" as="image" href="\\/images\\/home-hero-optimized-v2\\.webp"[^>]*\\/?>/gi, '');
+    html = html.replace(/\s*<link rel="preload" as="image" href="\/images\/home-hero-mobile-v2\.webp"[^>]*\/?>/gi, '');
+    html = html.replace(/\s*<link rel="preload" as="image" href="\/images\/home-hero-optimized-v2\.webp"[^>]*\/?>/gi, '');
   }
 
   if (!html.includes('<link rel="canonical" href="' + canonical + '"')) {
