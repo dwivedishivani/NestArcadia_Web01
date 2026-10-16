@@ -52,24 +52,10 @@
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <link rel="preconnect" href="https://etmrhxapfvyaispuvnft.supabase.co" crossorigin />
-    <script>
-      // Start the LCP image request early on the homepage only. Other routes must
-      // not download a homepage hero image they will never display.
-      if (window.location.pathname === '/' || window.location.pathname === '') {
-        [
-          { href: '/images/home-hero-mobile.webp', media: '(max-width: 767px)' },
-          { href: '/images/home-hero-optimized.webp', media: '(min-width: 768px)' },
-        ].forEach((candidate) => {
-          const heroPreload = document.createElement('link');
-          heroPreload.rel = 'preload';
-          heroPreload.as = 'image';
-          heroPreload.href = candidate.href;
-          heroPreload.media = candidate.media;
-          heroPreload.fetchPriority = 'high';
-          document.head.appendChild(heroPreload);
-        });
-      }
-    </script>
+    <!-- Preload only the hero asset suited to the current viewport. Static links let the
+         browser's preload scanner discover the LCP image before running application JS. -->
+    <link rel="preload" as="image" href="/images/home-hero-mobile.webp" media="(max-width: 767px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/home-hero-optimized.webp" media="(min-width: 768px)" fetchpriority="high" />
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
