@@ -8,8 +8,8 @@ const Home = lazy(() => import('./pages/Home/Home'));
 const LocalServicePage = lazy(() => import('./pages/LocalService/LocalServicePage'));
 const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
-import EditorialContext from './components/common/EditorialContext';
-import ConversionBanner from './components/common/ConversionBanner';
+const EditorialContext = lazy(() => import('./components/common/EditorialContext'));
+const ConversionBanner = lazy(() => import('./components/common/ConversionBanner'));
 import logoImg from './assets/images/branding/nestarcadia-logo-transparent.png';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import type { LocalServiceConfig } from './pages/LocalService/LocalServicePage';
@@ -577,8 +577,16 @@ function SiteShell() {
           {page === 'faq' && <FAQs setPage={setPage} />}
           {page === 'privacy' && <PrivacyPolicy />}
         </Suspense>
-        {!localService && page !== 'privacy' && <EditorialContext page={page} />}
-        {!localService && <ConversionBanner page={page} setPage={setPage} />}
+        {!localService && page !== 'privacy' && (
+          <Suspense fallback={null}>
+            <EditorialContext page={page} />
+          </Suspense>
+        )}
+        {!localService && (
+          <Suspense fallback={null}>
+            <ConversionBanner page={page} setPage={setPage} />
+          </Suspense>
+        )}
       </main>
       <Footer />
       <WhatsApp />
