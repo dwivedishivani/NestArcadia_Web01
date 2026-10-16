@@ -43,15 +43,16 @@
         // the LCP hero image) finish before starting GTM. Real user interaction
         // still triggers GTM immediately; queued dataLayer events are preserved.
         function loadAfterPageLoad(){
-          // On passive visits, keep third-party tag work out of the initial mobile
-          // rendering window. Real input above still loads GTM immediately.
+          // On passive visits, keep third-party tag work out of the full initial
+          // mobile rendering/settling window. Real user input above still loads GTM
+          // immediately; queued page_view and lead events are preserved in dataLayer.
           w.setTimeout(function(){
             if ('requestIdleCallback' in w) {
-              w.requestIdleCallback(loadGTM, {timeout: 8000});
+              w.requestIdleCallback(loadGTM, {timeout: 12000});
             } else {
-              w.setTimeout(loadGTM, 3500);
+              w.setTimeout(loadGTM, 6000);
             }
-          }, 4000);
+          }, 8000);
         }
         if (d.readyState === 'complete') {
           loadAfterPageLoad();
