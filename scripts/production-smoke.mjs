@@ -12,6 +12,8 @@ const browser = await chromium.launch({
 });
 let mockedPayload;
 const pageErrors = [];
+let homepageSiteMediaRequests = 0;
+let homepageGtmRequests = 0;
 const consoleErrors = [];
 const failedRequests = [];
 
@@ -25,6 +27,10 @@ try {
   });
   const page = await context.newPage();
   page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('request', (request) => {
+    if (request.url().includes('/functions/v1/site-media/images')) homepageSiteMediaRequests += 1;
+    if (request.url().includes('googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) homepageGtmRequests += 1;
+  });
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
   const cdp = await context.newCDPSession(page);
@@ -128,6 +134,16 @@ try {
   }, undefined, { timeout: 20000 });
 
   await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
+  // Lighthouse-style passive scrolling must not kick off analytics or the image
+  // registry while the initial mobile page is still settling.
+  await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
+  await page.waitForTimeout(250);
+  assert.equal(homepageSiteMediaRequests, 0, 'passive homepage scroll unexpectedly loaded the image registry');
+  assert.equal(homepageGtmRequests, 0, 'passive homepage scroll unexpectedly loaded Google Tag Manager');
+  console.log('PASSIVE_SCROLL_SMOKE', JSON.stringify({
+    siteMediaRequests: homepageSiteMediaRequests,
+    gtmRequests: homepageGtmRequests,
+  }));
   const heroMetrics = await page.evaluate(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return {
@@ -232,7 +248,7 @@ try {
 
   await tagPage.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
   // Trigger the real interaction-driven loader installed in index.html.
-  await tagPage.evaluate(() => window.dispatchEvent(new Event('pointerdown', { bubbles: true })));
+  await tagPage.evaluate(() => document.body.dispatchEvent(new MouseEvent('click', { bubbles: true })));
 
   const gtmDeadline = Date.now() + 10000;
   while (gtmContainerStatus === null && Date.now() < gtmDeadline) {
