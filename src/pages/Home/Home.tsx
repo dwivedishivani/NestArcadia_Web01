@@ -146,8 +146,44 @@ export default function Home({ setPage }: Props) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
-    // Remove the static first-paint hero only after the actual Home component commits.
-    document.getElementById('app-bootloader')?.remove();
+    // Keep the static first-paint hero visible until the actual responsive hero
+    // image has loaded. The Home chunk can commit before its image is ready on
+    // slower mobile connections; removing the bootloader immediately can expose
+    // an empty hero and push the real LCP paint later.
+    const bootloader = document.getElementById('app-bootloader');
+    if (!bootloader) return;
+
+    const heroImage = document.querySelector<HTMLImageElement>(
+      'main img[data-site-image-key="photo-1713192706971-03900dcf5706"]'
+    );
+    if (!heroImage) {
+      bootloader.remove();
+      return;
+    }
+
+    let fallbackTimer: number | undefined;
+    const removeBootloader = () => {
+      bootloader.remove();
+      if (fallbackTimer !== undefined) window.clearTimeout(fallbackTimer);
+      heroImage.removeEventListener('load', removeBootloader);
+    };
+
+    if (heroImage.complete && heroImage.naturalWidth > 0) {
+      bootloader.remove();
+      return;
+    }
+
+    // If the local image fails, the component's onError handler switches to its
+    // direct image fallback on the same element; its next successful load removes
+    // the bootloader. The timeout prevents a broken/slow image from trapping the
+    // static hero indefinitely.
+    heroImage.addEventListener('load', removeBootloader, { once: true });
+    fallbackTimer = window.setTimeout(removeBootloader, 2500);
+
+    return () => {
+      heroImage.removeEventListener('load', removeBootloader);
+      if (fallbackTimer !== undefined) window.clearTimeout(fallbackTimer);
+    };
   }, []);
 
   useEffect(() => {
