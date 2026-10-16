@@ -46,14 +46,20 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
 
           {/* Logo */}
           <Link to="/" className="flex items-center text-left shrink-0" aria-label="NestArcadia Home">
-            <img
-              src={transparent ? logoWhiteImg : logoImg}
-              width="200"
-              height="200"
-              alt=""
-              aria-hidden="true"
-              className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
-            />
+            <span className="flex h-14 sm:h-16 lg:h-[78px] w-[112px] sm:w-[128px] lg:w-[156px] shrink-0 items-center justify-start overflow-hidden">
+              <img
+                src={transparent ? logoWhiteImg : logoImg}
+                width="200"
+                height="200"
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="block h-full w-full object-contain object-left"
+                style={{ fontSize: 0, lineHeight: 0 }}
+              />
+            </span>
           </Link>
 
           {/* Desktop links */}
