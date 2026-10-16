@@ -63,26 +63,15 @@ try {
     };
   });
 
-  // Isolate the form smoke from third-party tags. A separate tag-only browser
-  // below loads the real GTM container and records collector attempts without
-  // allowing any synthetic event to reach Google Analytics or Google Ads.
-  await page.route('**/googletagmanager.com/**', (route) => route.abort());
-  for (const pattern of [
-    '**/google-analytics.com/**',
-    '**/analytics.google.com/**',
-    '**/g/collect*',
-  ]) {
-    await page.route(pattern, (route) => route.abort());
-  }
-  for (const pattern of [
-    '**/googleadservices.com/**',
-    '**/doubleclick.net/**',
-    '**/googlesyndication.com/ccm/**',
-    '**/google.com/pagead/**',
-    '**/google.com/ccm/**',
-  ]) {
-    await page.route(pattern, (route) => route.abort());
-  }
+  // Isolate the form smoke from third-party tags. Regex route matchers account
+  // for actual hostnames with "www." or provider subdomains.
+  await page.route(/^https:\/\/www\.googletagmanager\.com\//, (route) => route.abort());
+  await page.route(/^https:\/\/(www\.)?google-analytics\.com\//, (route) => route.abort());
+  await page.route(/^https:\/\/analytics\.google\.com\//, (route) => route.abort());
+  await page.route(/^https:\/\/(www\.)?googleadservices\.com\//, (route) => route.abort());
+  await page.route(/^https:\/\/(www\.)?doubleclick\.net\//, (route) => route.abort());
+  await page.route(/^https:\/\/pagead2\.googlesyndication\.com\/ccm\//, (route) => route.abort());
+  await page.route(/^https:\/\/(www\.)?google\.com\/(pagead|ccm)\//, (route) => route.abort());
 
   await page.route('**/functions/v1/site-media/images*', async (route) => {
     const request = route.request();
@@ -195,8 +184,8 @@ try {
   }));
 
   // Separate GTM-only smoke: the real container is allowed to load, but every
-  // downstream GA4 / Ads collector is intercepted and aborted before it can log
-  // any data. This keeps synthetic conversions out of the actual analytics account.
+  // downstream GA4 / Ads collector is intercepted and aborted before any event
+  // can reach the analytics accounts.
   const tagContext = await browser.newContext({
     viewport: { width: 390, height: 844 },
     locale: 'en-IN',
@@ -211,36 +200,38 @@ try {
   });
 
   tagPage.on('response', (response) => {
-    if (response.url().includes('googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) {
+    if (response.url().includes('www.googletagmanager.com/gtm.js?id=GTM-T7R3TTP5')) {
       gtmContainerStatus = response.status();
     }
   });
 
-  for (const pattern of [
-    '**/google-analytics.com/**',
-    '**/analytics.google.com/**',
-    '**/g/collect*',
-  ]) {
-    await tagPage.route(pattern, async (route) => {
-      ga4MeasurementAttempts.push(route.request().url());
-      await route.abort();
-    });
-  }
-  for (const pattern of [
-    '**/googleadservices.com/**',
-    '**/doubleclick.net/**',
-    '**/googlesyndication.com/ccm/**',
-    '**/google.com/pagead/**',
-    '**/google.com/ccm/**',
-  ]) {
-    await tagPage.route(pattern, async (route) => {
-      adsConversionAttempts.push(route.request().url());
-      await route.abort();
-    });
-  }
+  await tagPage.route(/^https:\/\/(www\.)?google-analytics\.com\//, async (route) => {
+    ga4MeasurementAttempts.push(route.request().url());
+    await route.abort();
+  });
+  await tagPage.route(/^https:\/\/analytics\.google\.com\//, async (route) => {
+    ga4MeasurementAttempts.push(route.request().url());
+    await route.abort();
+  });
+  await tagPage.route(/^https:\/\/pagead2\.googlesyndication\.com\/ccm\//, async (route) => {
+    adsConversionAttempts.push(route.request().url());
+    await route.abort();
+  });
+  await tagPage.route(/^https:\/\/(www\.)?googleadservices\.com\//, async (route) => {
+    adsConversionAttempts.push(route.request().url());
+    await route.abort();
+  });
+  await tagPage.route(/^https:\/\/(www\.)?doubleclick\.net\//, async (route) => {
+    adsConversionAttempts.push(route.request().url());
+    await route.abort();
+  });
+  await tagPage.route(/^https:\/\/(www\.)?google\.com\/(pagead|ccm)\//, async (route) => {
+    adsConversionAttempts.push(route.request().url());
+    await route.abort();
+  });
 
   await tagPage.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  // Trigger the same interaction-driven loader installed by index.html.
+  // Trigger the real interaction-driven loader installed in index.html.
   await tagPage.evaluate(() => window.dispatchEvent(new Event('pointerdown', { bubbles: true })));
 
   const gtmDeadline = Date.now() + 10000;
@@ -249,8 +240,6 @@ try {
   }
   assert.equal(gtmContainerStatus, 200, `GTM container failed to load (HTTP ${gtmContainerStatus ?? 'no response'})`);
 
-  // Only this ephemeral QA browser is consented in order to prove that the tag
-  // path attempts a GA4 hit. The interceptors prevent that hit from reaching Google.
   await tagPage.evaluate(() => {
     window.gtag?.('consent', 'update', {
       ad_storage: 'granted',
@@ -274,13 +263,16 @@ try {
   while (ga4MeasurementAttempts.length === 0 && Date.now() < measurementDeadline) {
     await tagPage.waitForTimeout(200);
   }
-  assert.ok(
-    ga4MeasurementAttempts.length > 0,
-    'GTM loaded but did not attempt a GA4 measurement request for generate_lead'
-  );
+  const ga4EventNames = ga4MeasurementAttempts.flatMap((url) => {
+    try { return [new URL(url).searchParams.get('en')].filter(Boolean); }
+    catch { return []; }
+  });
+  assert.ok(ga4EventNames.includes('generate_lead'),
+    `GTM loaded but generate_lead never reached a GA4 collector; events=${JSON.stringify(ga4EventNames)}`);
   console.log('GTM_PATH_SMOKE', JSON.stringify({
     gtmContainerStatus,
     ga4MeasurementAttempts: ga4MeasurementAttempts.length,
+    ga4EventNames,
     adsConversionAttempts: adsConversionAttempts.length,
     measurementNetworkBlocked: true,
   }));
