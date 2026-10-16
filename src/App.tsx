@@ -600,7 +600,7 @@ function SiteImageBootstrap() {
   useEffect(() => {
     let started = false;
     let disposed = false;
-    const interactionEvents = ['pointerdown', 'keydown', 'touchstart', 'scroll'] as const;
+    const interactionEvents = ['click', 'keydown'] as const;
 
     const removeInteractionListeners = () => {
       interactionEvents.forEach((eventName) => {
@@ -629,10 +629,10 @@ function SiteImageBootstrap() {
       window.addEventListener(eventName, loadRegistry, { once: true, passive: true, capture: true });
     });
 
-    // The homepage hero is served from responsive, self-hosted assets. Don't force
-    // a registry request after four seconds on passive visits: it can compete with
-    // the mobile LCP. The first real interaction refreshes overrides; other routes
-    // still load the registry immediately because they rely on the shared image set.
+    // The homepage hero is served from responsive, self-hosted assets. Don't let
+    // scroll/touch gestures trigger a Supabase registry request during initial
+    // mobile rendering. Refresh overrides on deliberate click/keyboard input;
+    // other routes still load the registry immediately because they rely on it.
     if (window.location.pathname !== '/') {
       loadRegistry();
     }
