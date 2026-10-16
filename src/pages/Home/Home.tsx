@@ -10,7 +10,7 @@ interface Props { setPage: (p: Page) => void; }
 // pay an Edge Function 302 redirect (or start a second request after registry load).
 // Registry overrides still update these URLs if an image is changed in the media library.
 const homeDirectImageUrls: Record<string, string> = {
-  'photo-1713192706971-03900dcf5706': import.meta.env.PROD ? '/images/home-hero-optimized.webp' : 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
+  'photo-1713192706971-03900dcf5706': import.meta.env.PROD ? '/images/home-hero-optimized-v2.webp' : 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
   'photo-1613490493576-7fde63acd811': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-2-20261006220651654.webp',
   'photo-1644057501622-dfa7dd26dbfb': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-3-20261006220654107.webp',
   'photo-1604578762246-41134e37f9cc': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/designcultures/designcultures-srcpagesdesignculturesdesignculturestsx-designcultures-designcultures-image-22-20261006220546641.webp',
@@ -205,7 +205,7 @@ export default function Home({ setPage }: Props) {
         <div className="absolute inset-0 bg-[#1C3A5A]">
           <picture className="absolute inset-0 block">
             {currentHero.imageId === 'photo-1713192706971-03900dcf5706' && import.meta.env.PROD && (
-              <source data-site-image-optimized="true" media="(max-width: 767px)" srcSet="/images/home-hero-mobile.webp" type="image/webp" />
+              <source data-site-image-optimized="true" media="(max-width: 767px)" srcSet="/images/home-hero-mobile-v2.webp" type="image/webp" />
             )}
             <img
               src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
