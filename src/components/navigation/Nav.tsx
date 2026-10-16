@@ -50,7 +50,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               src={transparent ? logoWhiteImg : logoImg}
               width="200"
               height="200"
-              alt="NestArcadia — heritage Indian interiors"
+              alt=""
+              aria-hidden="true"
               className="h-14 sm:h-16 lg:h-[78px] w-auto object-contain"
             />
           </Link>
