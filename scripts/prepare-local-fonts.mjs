@@ -15,7 +15,7 @@ const userAgent =
 
 const cssResponse = await fetch(cssUrl, { headers: { 'User-Agent': userAgent } });
 if (!cssResponse.ok) {
-  throw new Error(\`Google Fonts CSS request failed: HTTP \${cssResponse.status}\`);
+  throw new Error('Google Fonts CSS request failed: HTTP ' + cssResponse.status);
 }
 const remoteCss = await cssResponse.text();
 
@@ -27,7 +27,7 @@ const latinBlocks = faceMatches
 
 function property(block, name) {
   const match = block.match(new RegExp('(?:^|\\n)\\s*' + name + '\\s*:\\s*([^;]+);', 'i'));
-  return match?.[1]?.trim() ?? '';
+  return match ? match[1].trim() : '';
 }
 
 const faces = [];
@@ -41,7 +41,7 @@ for (const block of latinBlocks) {
   const source = block.match(/url\((https:\/\/fonts\.gstatic\.com\/[^)]+\.woff2)\)/i)?.[1];
 
   if (!source || !weight || !unicodeRange) continue;
-  if (!['DM Sans', 'Playfair Display'].includes(family)) continue;
+  if (family !== 'DM Sans' && family !== 'Playfair Display') continue;
 
   const parsed = new URL(source);
   if (parsed.hostname !== 'fonts.gstatic.com') {
@@ -62,7 +62,7 @@ for (const block of latinBlocks) {
   if (!downloaded.has(filename)) {
     const fontResponse = await fetch(source);
     if (!fontResponse.ok) {
-      throw new Error(\`Font download failed for \${filename}: HTTP \${fontResponse.status}\`);
+      throw new Error('Font download failed for ' + filename + ': HTTP ' + fontResponse.status);
     }
     await writeFile(path.join(outDir, filename), Buffer.from(await fontResponse.arrayBuffer()));
     downloaded.set(filename, source);
@@ -70,12 +70,12 @@ for (const block of latinBlocks) {
 
   faces.push([
     '@font-face {',
-    \`  font-family: '\${family}';\`,
-    \`  font-style: \${style};\`,
-    \`  font-weight: \${weight};\`,
+    "  font-family: '" + family + "';",
+    '  font-style: ' + style + ';',
+    '  font-weight: ' + weight + ';',
     '  font-display: swap;',
-    \`  src: url('/fonts/\${filename}') format('woff2');\`,
-    \`  unicode-range: \${unicodeRange};\`,
+    "  src: url('/fonts/" + filename + "') format('woff2');",
+    '  unicode-range: ' + unicodeRange + ';',
     '}',
   ].join('\n'));
 }
@@ -88,14 +88,16 @@ const expected = [
 for (const filename of expected) {
   if (!downloaded.has(filename)) {
     throw new Error(
-      \`Expected font \${filename} was not found in the Latin subset. \` +
+      'Expected font ' + filename + ' was not found in the Latin subset. ' +
       'The Google Fonts response shape may have changed; refusing to generate a partial font stylesheet.'
     );
   }
 }
 
 const fontCss = faces.join('\n\n') + '\n';
-if ((fontCss.match(/@font-face/g) || []).length < 3 || fontCss.includes('fonts.googleapis.com') || fontCss.includes('fonts.gstatic.com')) {
+if ((fontCss.match(/@font-face/g) || []).length < 3 ||
+    fontCss.includes('fonts.googleapis.com') ||
+    fontCss.includes('fonts.gstatic.com')) {
   throw new Error('Generated local font CSS failed validation.');
 }
 await writeFile(path.join(outDir, 'fonts-v1.css'), fontCss, 'utf8');
@@ -106,21 +108,21 @@ for (const [family, slug] of [
   ['Playfair Display', 'playfairdisplay'],
 ]) {
   try {
-    const license = await fetch(\`https://raw.githubusercontent.com/google/fonts/main/ofl/\${slug}/OFL.txt\`);
+    const license = await fetch('https://raw.githubusercontent.com/google/fonts/main/ofl/' + slug + '/OFL.txt');
     if (license.ok) {
-      await writeFile(path.join(outDir, \`OFL-\${slug}.txt\`), await license.text(), 'utf8');
+      await writeFile(path.join(outDir, 'OFL-' + slug + '.txt'), await license.text(), 'utf8');
     } else {
-      console.warn(\`License fetch for \${family} returned HTTP \${license.status}; font build will continue.\`);
+      console.warn('License fetch for ' + family + ' returned HTTP ' + license.status + '; font build will continue.');
     }
   } catch {
-    console.warn(\`Could not fetch the \${family} OFL license during this build.\`);
+    console.warn('Could not fetch the ' + family + ' OFL license during this build.');
   }
 }
 
 const sizes = [];
 for (const filename of expected) {
   const info = await stat(path.join(outDir, filename));
-  sizes.push(\`\${filename}: \${Math.round(info.size / 1024)} KB\`);
+  sizes.push(filename + ': ' + Math.round(info.size / 1024) + ' KB');
 }
 console.log('Self-hosted Latin fonts generated:');
 console.log(sizes.join('\n'));
