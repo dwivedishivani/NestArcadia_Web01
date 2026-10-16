@@ -12,6 +12,8 @@ const browser = await chromium.launch({
 });
 let mockedPayload;
 const pageErrors = [];
+const consoleErrors = [];
+const failedRequests = [];
 
 try {
   const context = await browser.newContext({
@@ -193,7 +195,7 @@ try {
   // the lead events through the real GTM container. Collector URLs remain intercepted
   // below, so no fake GA4 or Google Ads conversion can leave this browser.
   await page.evaluate(() => {
-    const w = window as Window & { gtag?: (...args: unknown[]) => void; dataLayer: Array<unknown> };
+    const w = window;
     w.gtag?.('consent', 'update', {
       ad_storage: 'granted',
       ad_user_data: 'granted',
