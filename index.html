@@ -39,10 +39,20 @@
         ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
           w.addEventListener(eventName, loadGTM, {once:true, passive:true, capture:true});
         });
-        if ('requestIdleCallback' in w) {
-          w.requestIdleCallback(loadGTM, {timeout: 2500});
+        // For passive visits, wait until the page's eager resources (especially
+        // the LCP hero image) finish before starting GTM. Real user interaction
+        // still triggers GTM immediately; queued dataLayer events are preserved.
+        function loadAfterPageLoad(){
+          if ('requestIdleCallback' in w) {
+            w.requestIdleCallback(loadGTM, {timeout: 4000});
+          } else {
+            w.setTimeout(loadGTM, 1200);
+          }
+        }
+        if (d.readyState === 'complete') {
+          loadAfterPageLoad();
         } else {
-          w.setTimeout(loadGTM, 1800);
+          w.addEventListener('load', loadAfterPageLoad, {once:true});
         }
       })(window, document);
     </script>
