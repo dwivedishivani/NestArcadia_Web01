@@ -46,14 +46,14 @@ jobs:
             --output "$RUNNER_TEMP/home-hero-source.webp"
           cwebp -quiet -mt -resize 1600 0 -q 78 \
             "$RUNNER_TEMP/home-hero-source.webp" \
-            -o public/images/home-hero-optimized.webp
+            -o public/images/home-hero-optimized-v2.webp
           cwebp -quiet -mt -resize 1100 0 -q 72 \
             "$RUNNER_TEMP/home-hero-source.webp" \
-            -o public/images/home-hero-mobile.webp
-          test -s public/images/home-hero-optimized.webp
-          test -s public/images/home-hero-mobile.webp
-          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized.webp | cut -f1)"
-          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile.webp | cut -f1)"
+            -o public/images/home-hero-mobile-v2.webp
+          test -s public/images/home-hero-optimized-v2.webp
+          test -s public/images/home-hero-mobile-v2.webp
+          echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized-v2.webp | cut -f1)"
+          echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile-v2.webp | cut -f1)"
       - name: Build production site
         run: pnpm build
 
@@ -63,7 +63,9 @@ jobs:
           test -d dist/assets
           test -s dist/robots.txt
           test -s dist/sitemap.xml
-          echo "Production build validated."
+          test -s dist/images/home-hero-mobile-v2.webp
+          test -s dist/images/home-hero-optimized-v2.webp
+          echo "Production build and responsive hero assets validated."
 
       - name: Upload production artifact
         uses: actions/upload-artifact@v4
@@ -98,6 +100,11 @@ jobs:
               -p "$HOSTINGER_SSH_PORT" \
               -o StrictHostKeyChecking=yes \
               "$HOSTINGER_SSH_USERNAME@$HOSTINGER_SSH_HOST" \
-              'mkdir -p "$HOME/domains/nestarcadia.com/public_html" && tar -xzf - -C "$HOME/domains/nestarcadia.com/public_html"'
+              'set -eu; target="$HOME/domains/nestarcadia.com/public_html"; mkdir -p "$target"; tar -xzf - -C "$target"; test -s "$target/index.html"; test -s "$target/images/home-hero-mobile-v2.webp"; test -s "$target/images/home-hero-optimized-v2.webp"; echo "Remote production files and hero images verified."'
 
           echo "Production files uploaded to Hostinger."
+          for url in "https://nestarcadia.com/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp"; do
+            status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{http_code}' "$url")
+            echo "$url -> HTTP $status"
+            test "$status" = "200"
+          done
