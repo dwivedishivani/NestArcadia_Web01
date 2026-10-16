@@ -598,14 +598,83 @@ const router = createBrowserRouter([{ path: '*', Component: SiteShell, errorElem
 
 function SiteImageBootstrap() {
   useEffect(() => {
-    fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
-      headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
-      .then((payload) => {
-        setSiteImageOverrides(payload.data || []);
+    let started = false;
+    let disposed = false;
+    let idleCallbackId: number | undefined;
+    let timeoutId: number | undefined;
+    const interactionEvents = ['pointerdown', 'keydown', 'touchstart', 'scroll'] as const;
+    const browserWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    const clearDeferredLoad = () => {
+      if (idleCallbackId !== undefined) {
+        browserWindow.cancelIdleCallback?.(idleCallbackId);
+        idleCallbackId = undefined;
+      }
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+        timeoutId = undefined;
+      }
+      window.removeEventListener('load', scheduleDeferredLoad);
+    };
+
+    const removeInteractionListeners = () => {
+      interactionEvents.forEach((eventName) => {
+        window.removeEventListener(eventName, loadRegistry, true);
+      });
+    };
+
+    const loadRegistry = () => {
+      if (started || disposed) return;
+      started = true;
+      clearDeferredLoad();
+      removeInteractionListeners();
+
+      fetch(`https://${projectId}.supabase.co/functions/v1/site-media/images`, {
+        headers: { apikey: publicAnonKey, Authorization: `Bearer ${publicAnonKey}` },
       })
-      .catch((error) => console.warn('Site image registry unavailable; using local image fallbacks.', error));
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Image registry unavailable'))))
+        .then((payload) => {
+          if (!disposed) setSiteImageOverrides(payload.data || []);
+        })
+        .catch((error) => {
+          if (!disposed) console.warn('Site image registry unavailable; using local image fallbacks.', error);
+        });
+    };
+
+    function scheduleDeferredLoad() {
+      if (started || disposed) return;
+      if (browserWindow.requestIdleCallback) {
+        idleCallbackId = browserWindow.requestIdleCallback(loadRegistry, { timeout: 4000 });
+      } else {
+        timeoutId = window.setTimeout(loadRegistry, 1500);
+      }
+    }
+
+    interactionEvents.forEach((eventName) => {
+      window.addEventListener(eventName, loadRegistry, { once: true, passive: true, capture: true });
+    });
+
+    // Home already renders its critical hero from local optimized assets. Defer
+    // this non-critical registry refresh there so it doesn't compete with the
+    // initial mobile render; other routes keep the existing eager refresh.
+    if (window.location.pathname === '/') {
+      if (document.readyState === 'complete') {
+        scheduleDeferredLoad();
+      } else {
+        window.addEventListener('load', scheduleDeferredLoad, { once: true });
+      }
+    } else {
+      loadRegistry();
+    }
+
+    return () => {
+      disposed = true;
+      removeInteractionListeners();
+      clearDeferredLoad();
+    };
   }, []);
 
   return <RouterProvider router={router} />;
