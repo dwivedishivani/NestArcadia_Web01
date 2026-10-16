@@ -143,7 +143,7 @@ try {
   console.log('MOBILE_HERO_SMOKE', JSON.stringify(heroMetrics));
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.getByPlaceholder('Full Name *').click(); // deliberately trigger GTM's real interaction loader\n  await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
+  await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
   await page.getByPlaceholder('Email Address *').fill('qa-smoke@example.invalid');
   await page.getByPlaceholder('Phone Number *').fill('9876543210');
   await page.getByRole('combobox').selectOption('Noida');
