@@ -241,7 +241,10 @@ export default function Home({ setPage }: Props) {
         <div className="absolute inset-0 bg-[#1C3A5A]">
           <picture className="absolute inset-0 block">
             {currentHero.imageId === 'photo-1713192706971-03900dcf5706' && import.meta.env.PROD && (
-              <source data-site-image-optimized="true" media="(max-width: 767px)" srcSet="/images/home-hero-mobile-v2.webp" type="image/webp" />
+              <>
+                <source data-site-image-optimized="true" media="(max-width: 767px)" srcSet="/images/home-hero-mobile-v2.webp" type="image/webp" />
+                <source data-site-image-optimized="true" media="(min-width: 768px)" srcSet="/images/home-hero-optimized-v2.webp" type="image/webp" />
+              </>
             )}
             <img
               src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
@@ -258,7 +261,7 @@ export default function Home({ setPage }: Props) {
                 .forEach((source) => source.remove());
               setHeroImageFallback(true);
             }}
-              className="w-full h-full object-cover transition-opacity duration-700"
+              className={heroSlide === 0 ? "w-full h-full object-cover transition-none" : "w-full h-full object-cover transition-opacity duration-700"}
             />
           </picture>
         </div>
