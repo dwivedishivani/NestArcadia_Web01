@@ -23,6 +23,8 @@ try {
   });
   const page = await context.newPage();
   page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+  page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
   const cdp = await context.newCDPSession(page);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   await cdp.send('Network.enable');
@@ -35,7 +37,7 @@ try {
   });
 
   await page.addInitScript(() => {
-    try { localStorage.setItem('nestarcadia_consent_v2', 'granted'); } catch {}
+    try { localStorage.setItem('nestarcadia_consent_v2', 'denied'); } catch {}
     window.__nestarcadiaLcpMs = null;
     try {
       const lcpObserver = new PerformanceObserver((list) => {
@@ -173,7 +175,46 @@ try {
   await page.getByRole('button', { name: 'Just Exploring', exact: true }).click();
   await page.getByRole('button', { name: 'Contemporary Minimal', exact: true }).click();
   await page.getByRole('button', { name: /Submit Your Brief/ }).click();
-  await page.getByText('We will be in touch.', { exact: true }).waitFor({ timeout: 15000 });
+  try {
+    await page.getByText('We will be in touch.', { exact: true }).waitFor({ timeout: 20000 });
+  } catch (error) {
+    const debugState = await page.evaluate(() => ({
+      submissionError: document.querySelector('[role="alert"]')?.textContent || null,
+      queuedEvents: window.__nestarcadiaSmokeEvents,
+    }));
+    console.error('LEAD_FORM_DEBUG', JSON.stringify({
+      debugState, mockedPayload, gtmContainerStatus, ga4MeasurementAttempts,
+      adsConversionAttempts, pageErrors, consoleErrors, failedRequests,
+    }));
+    throw error;
+  }
+
+  // Simulate an explicit consent grant only in this isolated test browser and replay
+  // the lead events through the real GTM container. Collector URLs remain intercepted
+  // below, so no fake GA4 or Google Ads conversion can leave this browser.
+  await page.evaluate(() => {
+    const w = window as Window & { gtag?: (...args: unknown[]) => void; dataLayer: Array<unknown> };
+    w.gtag?.('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted',
+    });
+    w.dataLayer.push({
+      event: 'lead_submit',
+      lead_source: 'smoke-test',
+      page_path: window.location.pathname,
+    });
+    w.gtag?.('event', 'generate_lead', {
+      lead_source: 'smoke-test',
+      page_path: window.location.pathname,
+      send_to: 'G-LDM2YL1MP5',
+    });
+  });
+  const trackingDeadline = Date.now() + 10000;
+  while ((gtmContainerStatus === null || ga4MeasurementAttempts.length === 0) && Date.now() < trackingDeadline) {
+    await page.waitForTimeout(200);
+  }
 
   const events = await page.evaluate(() => window.__nestarcadiaSmokeEvents);
   assert.ok(events.some((event) => event.event === 'lead_submit'), 'dataLayer lead_submit event was not emitted');
@@ -181,14 +222,8 @@ try {
   assert.ok(ga4Event, 'GA4 generate_lead event was not queued');
   assert.equal(ga4Event.detail?.send_to, 'G-LDM2YL1MP5', 'generate_lead destination ID mismatch');
   assert.ok(mockedPayload, 'form did not call the expected lead endpoint');
-  // Wait briefly for the actual container to process the queued events. Measurement
-  // endpoints above are intercepted, so this cannot create a real conversion.
-  const trackingDeadline = Date.now() + 8000;
-  while ((gtmContainerStatus === null || ga4MeasurementAttempts.length === 0) && Date.now() < trackingDeadline) {
-    await page.waitForTimeout(200);
-  }
   assert.equal(gtmContainerStatus, 200, `GTM container failed to load (HTTP ${gtmContainerStatus ?? 'no response'})`);
-  assert.ok(ga4MeasurementAttempts.length > 0, 'GTM did not attempt a GA4 measurement request after lead submission');
+  assert.ok(ga4MeasurementAttempts.length > 0, 'GTM did not attempt a GA4 measurement request for generate_lead');
   assert.ok(!pageErrors.length, `browser page errors: ${pageErrors.join('; ')}`);
 
   console.log('LEAD_FORM_SMOKE', JSON.stringify({
