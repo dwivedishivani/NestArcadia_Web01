@@ -135,7 +135,7 @@ try {
   const residentialSourceResponse = await page.request.get(baseUrl + '/interior-design-noida-extension/');
   assert.equal(residentialSourceResponse.status(), 200, 'residential page source must return HTTP 200');
   const residentialSource = await residentialSourceResponse.text();
-  assert.ok(residentialSource.includes('<title>Interior Designers in Noida Extension</title>'),
+  assert.ok(residentialSource.includes('<title>Interior Designers in Noida Extension | NestArcadia</title>'),
     'Noida Extension raw HTML title should be unique and keyword-specific');
   const residentialStatic = residentialSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const residentialStaticWords = residentialStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
@@ -198,7 +198,7 @@ try {
   console.log('MOBILE_HERO_SMOKE', JSON.stringify(heroMetrics));
   const residentialResponse = await page.goto(baseUrl + '/interior-design-noida-extension/', { waitUntil: 'domcontentloaded', timeout: 45000 });
   assert.equal(residentialResponse?.status(), 200, 'Noida Extension residential page must serve HTTP 200');
-  await page.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.getAttribute('href') === 'https://nestarcadia.com/interior-design-noida-extension/', undefined, { timeout: 10000 });
+  await page.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.getAttribute('href') === 'https://nestarcadia.com/interior-design-noida-extension/' && document.title === 'Interior Designers in Noida Extension | NestArcadia', undefined, { timeout: 10000 });
   assert.equal(await page.title(), 'Interior Designers in Noida Extension | NestArcadia',
     'residential route should use its unique primary local SEO title');
   console.log('RESIDENTIAL_SEO_ROUTE_SMOKE', JSON.stringify({
