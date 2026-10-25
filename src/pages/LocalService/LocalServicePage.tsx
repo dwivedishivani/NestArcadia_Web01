@@ -468,7 +468,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
   {
     path: '/interior-design-delhi-ncr',
     eyebrow: 'Delhi NCR · Interior Design',
-    title: 'Interior Design across Delhi NCR',
+    title: 'Interior Designers in Delhi NCR',
     description: 'NestArcadia designs residential and commercial interiors across Delhi NCR, with practical planning, Indian material character and turnkey execution support.',
     area: 'Delhi NCR',
     heroImage: gallery[0],
