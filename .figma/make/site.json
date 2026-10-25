@@ -14,5 +14,8 @@
   },
   "robots": {
     "index": true
+  },
+  "analytics": {
+    "googleAnalyticsId": "G-LDM2YL1MP5"
   }
 }
