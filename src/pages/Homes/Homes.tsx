@@ -142,7 +142,7 @@ export default function Homes({ setPage }: Props) {
     return (
       <div className="pt-20 lg:pt-[90px]">
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
-          <img src={selected.gallery[activeImage]} alt={`${selected.name}, ${selected.type} interior design concept in ${selected.location} — gallery image ${activeImage + 1}`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={selected.gallery[activeImage]} alt={`${selected.name}: ${selected.desc} (${selected.type}, ${selected.location}) — selected interior design concept`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
           <p className="absolute right-6 bottom-5 lg:right-20 text-[11px] tracking-[0.2em] text-white/80">{String(activeImage + 1).padStart(2, '0')} / {String(selected.gallery.length).padStart(2, '0')}</p>
         </div>
@@ -247,7 +247,7 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
-                    alt={`NestArcadia ${h.type} interior design concept in ${h.location}`}
+                    alt={`${h.name}: ${h.desc} (${h.type}, ${h.location}) — selected interior design concept`}
                     loading="lazy"
                     decoding="async"
                     width="800"
