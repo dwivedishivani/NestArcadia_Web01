@@ -612,6 +612,19 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               ))}
             </div>
           </section>
+
+          <section className="mt-14 border-t border-[#D4CBBB] pt-10" aria-labelledby="local-interior-services">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">Local interior design support</p>
+            <h2 id="local-interior-services" className="font-display text-3xl text-[#1A1714] mb-4">Planning a home in Noida or Greater Noida West?</h2>
+            <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-5">
+              Use these material and planning ideas as a starting point. For guidance shaped around your floor plan, budget and execution scope, explore our local residential services and turnkey options.
+            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 text-[14px] font-semibold">
+              <a href="/interior-design-noida-extension/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Noida Extension</a>
+              <a href="/interior-design-greater-noida-west/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Greater Noida West</a>
+              <a href="/interior-design-services/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior design and turnkey services</a>
+            </div>
+          </section>
           {conclusion && (
             <p className="mt-10 border-t border-[#D4CBBB] pt-8 text-[15px] leading-[1.9] text-[#1A1714]">
               <strong>Conclusion.</strong> {conclusion}
