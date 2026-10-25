@@ -135,6 +135,8 @@ try {
   const residentialSourceResponse = await page.request.get(baseUrl + '/interior-design-noida-extension/');
   assert.equal(residentialSourceResponse.status(), 200, 'residential page source must return HTTP 200');
   const residentialSource = await residentialSourceResponse.text();
+  assert.ok(residentialSource.includes('<title>Interior Designers in Noida Extension | NestArcadia</title>'),
+    'Noida Extension raw HTML title should be unique and keyword-specific');
   const residentialStatic = residentialSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const residentialStaticWords = residentialStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(residentialStaticWords >= 220, `Noida Extension raw HTML SEO content is too thin (${residentialStaticWords} words)`);
@@ -145,6 +147,24 @@ try {
     noidaExtensionWords: residentialStaticWords,
     homepageStatus: homepageSourceResponse.status(),
     residentialStatus: residentialSourceResponse.status(),
+  }));
+
+  const journalSourceResponse = await page.request.get(baseUrl + '/journal/rattan/');
+  assert.equal(journalSourceResponse.status(), 200, 'Journal article source must return HTTP 200');
+  const journalSource = await journalSourceResponse.text();
+  const journalStatic = journalSource.match(/<main id="na-seo-static-content"[^>]*>([\\s\\S]*?)<\\/main>/i)?.[1] || '';
+  for (const requiredLink of [
+    'href="/interior-design-noida-extension/"',
+    'href="/interior-design-greater-noida-west/"',
+    'href="/interior-design-services/"',
+  ]) {
+    assert.ok(journalStatic.includes(requiredLink), 'Journal raw HTML is missing local service link: ' + requiredLink);
+  }
+  console.log('JOURNAL_INTERNAL_LINK_SMOKE', JSON.stringify({
+    status: journalSourceResponse.status(),
+    noidaExtensionLink: true,
+    greaterNoidaWestLink: true,
+    turnkeyServicesLink: true,
   }));
 
   const sitemapResponse = await page.request.get(baseUrl + '/sitemap.xml');
@@ -179,7 +199,8 @@ try {
   const residentialResponse = await page.goto(baseUrl + '/interior-design-noida-extension/', { waitUntil: 'domcontentloaded', timeout: 45000 });
   assert.equal(residentialResponse?.status(), 200, 'Noida Extension residential page must serve HTTP 200');
   await page.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.getAttribute('href') === 'https://nestarcadia.com/interior-design-noida-extension/', undefined, { timeout: 10000 });
-  assert.match(await page.title(), /Noida Extension/i, 'residential route title should be location-specific');
+  assert.equal(await page.title(), 'Interior Designers in Noida Extension | NestArcadia',
+    'residential route should use its unique primary local SEO title');
   console.log('RESIDENTIAL_SEO_ROUTE_SMOKE', JSON.stringify({
     status: residentialResponse?.status(),
     canonical: await page.locator('link[rel="canonical"]').getAttribute('href'),
