@@ -135,7 +135,7 @@ try {
   const residentialSourceResponse = await page.request.get(baseUrl + '/interior-design-noida-extension/');
   assert.equal(residentialSourceResponse.status(), 200, 'residential page source must return HTTP 200');
   const residentialSource = await residentialSourceResponse.text();
-  assert.ok(residentialSource.includes('<title>Interior Designers in Noida Extension | NestArcadia</title>'),
+  assert.ok(residentialSource.includes('<title>Interior Designers in Noida Extension</title>'),
     'Noida Extension raw HTML title should be unique and keyword-specific');
   const residentialStatic = residentialSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const residentialStaticWords = residentialStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
