@@ -208,7 +208,7 @@ function routeMetadata(pathname) {
   const main = mainRouteMeta.get(pathname);
   if (main?.title && main?.description) return { ...main, type: 'website' };
   const service = serviceMeta.get(pathname);
-  if (service) return service;
+  if (service) return { ...service, title: service.title + ' | NestArcadia' };
   if (pathname.startsWith('/journal/')) {
     const slug = pathname.slice('/journal/'.length).replace(/\/$/, '');
     const article = articleMeta.get(slug);
