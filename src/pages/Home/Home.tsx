@@ -563,7 +563,7 @@ export default function Home({ setPage }: Props) {
           {homes.map(h => (
             <button key={h.name} onClick={() => setPage('homes')} className="text-left group flex h-full flex-col">
               <div className="overflow-hidden bg-[#D4CBBB] mb-4 shrink-0" style={{ aspectRatio: '4/3' }}>
-                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} alt={`${h.name}: ${h.desc} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714] min-h-[3.5rem]">{h.name}</p>
               <p className="text-[13px] text-[#17665B] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
