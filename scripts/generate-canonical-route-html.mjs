@@ -7,6 +7,10 @@ const distDir = path.resolve('dist');
 const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
 const urls = [...sitemap.matchAll(/<loc>\s*(https?:[^<]+)\s*<\/loc>/g)].map((match) => match[1].trim());
+const duplicateUrls = urls.filter((url, index) => urls.indexOf(url) !== index);
+if (duplicateUrls.length) {
+  throw new Error('Sitemap contains duplicate URLs: ' + [...new Set(duplicateUrls)].join(', '));
+}
 
 if (!urls.includes(baseUrl + '/')) {
   throw new Error('Canonical route generation stopped: homepage is missing from sitemap.xml');
@@ -96,21 +100,31 @@ function escapeAttribute(value) {
 }
 
 function replaceTag(html, pattern, replacement, insertBeforeHeadEnd = true) {
-  if (pattern.test(html)) return html.replace(pattern, replacement);
+  const flags = pattern.flags.includes('g') ? pattern.flags : pattern.flags + 'g';
+  const globalPattern = new RegExp(pattern.source, flags);
+  const matches = [...html.matchAll(globalPattern)];
+  if (matches.length) {
+    let output = html.replace(matches[0][0], replacement);
+    for (const duplicate of matches.slice(1)) output = output.replace(duplicate[0], '');
+    return output;
+  }
   if (!insertBeforeHeadEnd) throw new Error('Required HTML tag missing: ' + pattern);
   return html.replace('</head>', replacement + '\n  </head>');
 }
 
 function replaceMeta(html, selectorPattern, attribute, value, fallbackTag) {
   const safeValue = escapeAttribute(value);
-  const match = html.match(selectorPattern);
-  if (!match) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\n  </head>');
-  const tag = match[0];
+  const flags = selectorPattern.flags.includes('g') ? selectorPattern.flags : selectorPattern.flags + 'g';
+  const matches = [...html.matchAll(new RegExp(selectorPattern.source, flags))];
+  if (!matches.length) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\n  </head>');
+  const tag = matches[0][0];
   const attributePattern = new RegExp('\\b' + attribute + '="[^"]*"');
   const changed = attributePattern.test(tag)
     ? tag.replace(attributePattern, attribute + '="' + safeValue + '"')
     : tag.replace(/\s*\/?\s*>$/, ' ' + attribute + '="' + safeValue + '" />');
-  return html.replace(tag, changed);
+  let output = html.replace(tag, changed);
+  for (const duplicate of matches.slice(1)) output = output.replace(duplicate[0], '');
+  return output;
 }
 
 async function readSource(filePath) {
@@ -353,7 +367,7 @@ for (const rawUrl of urls) {
   if (!html.includes(rootPlaceholder)) throw new Error('Static SEO content generation stopped: #root placeholder is missing for ' + rawUrl);
   html = html.replace(rootPlaceholder, '<div id="root">' + staticMarkup + '</div>');
   html = replaceTag(html, /<title>[\s\S]*?<\/title>/i, '<title>' + escapeAttribute(title) + '</title>');
-  html = html.replace(/<link rel="canonical" href="[^"]*"\s*\/>/i, '<link rel="canonical" href="' + escapeAttribute(canonical) + '" />');
+  html = replaceTag(html, /<link\b(?=[^>]*\brel="canonical")[^>]*>/i, '<link rel="canonical" href="' + escapeAttribute(canonical) + '" />', false);
   html = replaceMeta(html, /<meta name="description"[^>]*\/?>/i, 'content', description, '<meta name="description" content="__VALUE__" />');
   html = replaceMeta(html, /<meta property="og:title"[^>]*\/?>/i, 'content', title, '<meta property="og:title" content="__VALUE__" />');
   html = replaceMeta(html, /<meta property="og:description"[^>]*\/?>/i, 'content', description, '<meta property="og:description" content="__VALUE__" />');
@@ -378,6 +392,19 @@ for (const rawUrl of urls) {
   }
   if (!html.includes('property="og:url" content="' + escapeAttribute(canonical) + '"')) {
     throw new Error('Route-specific Open Graph URL generation failed for ' + rawUrl);
+  }
+
+  const requiredSingleTags = [
+    ['title', /<title\b[^>]*>[\s\S]*?<\/title>/gi],
+    ['canonical', /<link\b(?=[^>]*\brel="canonical")[^>]*>/gi],
+    ['meta description', /<meta\b(?=[^>]*\bname="description")[^>]*>/gi],
+    ['Open Graph title', /<meta\b(?=[^>]*\bproperty="og:title")[^>]*>/gi],
+    ['Open Graph description', /<meta\b(?=[^>]*\bproperty="og:description")[^>]*>/gi],
+    ['Open Graph URL', /<meta\b(?=[^>]*\bproperty="og:url")[^>]*>/gi],
+  ];
+  for (const [label, pattern] of requiredSingleTags) {
+    const count = [...html.matchAll(pattern)].length;
+    if (count !== 1) throw new Error('Expected exactly one ' + label + ' tag for ' + rawUrl + ', found ' + count);
   }
 
   await mkdir(outputDir, { recursive: true });
