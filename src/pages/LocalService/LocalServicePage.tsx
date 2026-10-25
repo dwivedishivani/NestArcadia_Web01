@@ -26,8 +26,8 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-greater-noida-west',
     eyebrow: 'Greater Noida West · Interior Design',
-    title: 'Interior Design in Greater Noida West',
-    description: 'Interior design and turnkey execution for apartments, villas and new-possession homes in Greater Noida West — with practical planning for storage, kitchens, lighting and site execution.',
+    title: 'Interior Designers in Greater Noida West',
+    description: 'Interior designers in Greater Noida West for apartments and villas, with space planning, kitchens, storage, lighting and turnkey execution tailored to the property.',
     area: 'Greater Noida West',
     heroImage: image('photo-1600210492486-724fe5c67fb0'),
     introLabel: 'A local design brief',
@@ -57,8 +57,8 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-noida-extension',
     eyebrow: 'Noida Extension · Interior Design',
-    title: 'Interior Design for Homes in Noida Extension',
-    description: 'Practical residential interior design for Noida Extension apartments, from space planning and modular kitchens to custom storage, lighting and turnkey execution.',
+    title: 'Interior Designers in Noida Extension',
+    description: 'Interior designers in Noida Extension for 2BHK and 3BHK apartments, space planning, modular kitchens, custom storage, lighting and turnkey execution.',
     area: 'Noida Extension',
     heroImage: image('photo-1618221195710-dd6b41faaea6'),
     introLabel: 'Designing for apartment life',

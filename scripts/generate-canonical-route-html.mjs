@@ -208,7 +208,7 @@ function routeMetadata(pathname) {
   const main = mainRouteMeta.get(pathname);
   if (main?.title && main?.description) return { ...main, type: 'website' };
   const service = serviceMeta.get(pathname);
-  if (service) return service;
+  if (service) return { ...service, title: service.title + ' | NestArcadia' };
   if (pathname.startsWith('/journal/')) {
     const slug = pathname.slice('/journal/'.length).replace(/\/$/, '');
     const article = articleMeta.get(slug);
@@ -299,9 +299,13 @@ function renderStaticRoute(pathname, metadata) {
   if (article) {
     const paragraphs = article.body.map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
     const related = article.related.map((slug) => '<li style="margin:0 0 9px">' + inlineLink('/journal/' + slug.replace(/\/+$/, '') + '/', titleCaseSlug(slug)) + '</li>').join('');
+    const localServiceLinks = '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Planning a home in Noida or Greater Noida West?</h2><p style="' + staticParagraphStyle + '">For guidance shaped around your floor plan, budget and execution scope, explore our ' +
+      inlineLink('/interior-design-noida-extension/', 'interior design services in Noida Extension') + ', ' +
+      inlineLink('/interior-design-greater-noida-west/', 'interior design in Greater Noida West') + ', and ' +
+      inlineLink('/interior-design-services/', 'interior design and turnkey services') + '.</p></section>';
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header +
       '<p style="margin:-4px 0 22px;color:#6B5E4E;font-size:13px">' + escapeText(article.category) + (article.readTime ? ' · ' + escapeText(article.readTime) : '') + ' · By ' + escapeText(article.author) + '</p>' +
-      paragraphs + (related ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Related articles</h2><ul style="padding-left:22px">' + related + '</ul></section>' : '') +
+      paragraphs + localServiceLinks + (related ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Related articles</h2><ul style="padding-left:22px">' + related + '</ul></section>' : '') +
       '<p style="' + staticParagraphStyle + '">For project-specific advice, ' + inlineLink('/start-your-project/', 'share your interior design brief') + ' with NestArcadia.</p></main>';
   }
 

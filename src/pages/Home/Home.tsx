@@ -359,7 +359,7 @@ export default function Home({ setPage }: Props) {
               <img
                 src={IMG[c.img]}
                 data-site-image-key={directImageKey(IMG[c.img])}
-                alt={`${c.name} Indian interior design inspiration for Noida and Greater Noida homes`}
+                alt={`${c.name} Indian interior design inspiration — ${c.desc}`}
                 loading="lazy" fetchPriority="low"
                 decoding="async"
                 width="600"
@@ -380,7 +380,7 @@ export default function Home({ setPage }: Props) {
       <section className="grid lg:grid-cols-2">
         {/* Left */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '520px' }}>
-          <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} alt="Heritage-inspired wood and craft interior design for Noida homes" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
+          <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} alt="Heritage-inspired Indian woodwork, natural materials and craft details in a contemporary interior" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A1714]/65 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-10 lg:p-16 text-white min-h-[520px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -443,7 +443,7 @@ export default function Home({ setPage }: Props) {
                   <img
                     src={t.img}
                     data-site-image-key={directImageKey(t.img)}
-                    alt={`${t.name} interior design trend for Greater Noida West homes`}
+                    alt={`${t.name}: ${t.tag} interior design inspiration`}
                     loading="lazy" fetchPriority="low"
                     decoding="async"
                     width="600"
@@ -563,7 +563,7 @@ export default function Home({ setPage }: Props) {
           {homes.map(h => (
             <button key={h.name} onClick={() => setPage('homes')} className="text-left group flex h-full flex-col">
               <div className="overflow-hidden bg-[#D4CBBB] mb-4 shrink-0" style={{ aspectRatio: '4/3' }}>
-                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} alt={`NestArcadia ${h.name} ${h.loc} home interior design`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714] min-h-[3.5rem]">{h.name}</p>
               <p className="text-[13px] text-[#17665B] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
