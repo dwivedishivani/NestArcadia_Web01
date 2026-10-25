@@ -325,7 +325,13 @@ try {
   });
 
   const measurementDeadline = Date.now() + 10000;
-  while (ga4MeasurementAttempts.length === 0 && Date.now() < measurementDeadline) {
+  const isGenerateLeadRequest = (url) => {
+    try { return new URL(url).searchParams.get('en') === 'generate_lead'; }
+    catch { return false; }
+  };
+  // A page_view may already be in flight before the test event is sent. Wait
+  // specifically for generate_lead instead of treating any earlier GA4 hit as success.
+  while (!ga4MeasurementAttempts.some(isGenerateLeadRequest) && Date.now() < measurementDeadline) {
     await tagPage.waitForTimeout(200);
   }
   const ga4EventNames = ga4MeasurementAttempts.flatMap((url) => {
