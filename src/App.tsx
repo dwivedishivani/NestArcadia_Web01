@@ -76,15 +76,15 @@ class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
 
 const pagePaths: Record<Page, string> = {
   home: '/',
-  cultures: '/design-cultures',
-  services: '/interior-design-services',
-  story: '/our-story',
-  journal: '/journal',
-  homes: '/our-projects',
-  project: '/start-your-project',
-  faq: '/faqs',
-  privacy: '/privacy-policy',
-  admin: '/admin',
+  cultures: '/design-cultures/',
+  services: '/interior-design-services/',
+  story: '/our-story/',
+  journal: '/journal/',
+  homes: '/our-projects/',
+  project: '/start-your-project/',
+  faq: '/faqs/',
+  privacy: '/privacy-policy/',
+  admin: '/admin/',
 };
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
@@ -223,7 +223,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
         : invalidJournalArticle
           ? { title: 'Page not found | NestArcadia', description: 'The journal article you requested does not exist on NestArcadia.', image: SOCIAL_IMAGE, type: 'website' }
           : { ...pageMeta[page], image: SOCIAL_IMAGE, type: 'website' };
-    const canonical = `${SITE_URL}${pathname}`;
+    const canonical = pathname === '/' ? `${SITE_URL}/` : `${SITE_URL}${pathname}/`;
     document.title = meta.title;
     const setMeta = (name: string, content: string, property = false) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
@@ -309,7 +309,7 @@ function NotFoundPage() {
 
   useEffect(() => {
     const pathname = normalizePathname(location.pathname);
-    const canonical = `${SITE_URL}${pathname}`;
+    const canonical = pathname === '/' ? `${SITE_URL}/` : `${SITE_URL}${pathname}/`;
     document.title = 'Page not found | NestArcadia';
 
     const setMeta = (name: string, content: string, property = false) => {
