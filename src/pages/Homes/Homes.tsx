@@ -247,7 +247,7 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
-                    alt={`NestArcadia ${h.type} interior design concept in ${h.location}`}
+                    alt={`NestArcadia ${h.style} ${h.type} interior design concept, ${h.name}, in ${h.location}`}
                     loading="lazy"
                     decoding="async"
                     width="800"
