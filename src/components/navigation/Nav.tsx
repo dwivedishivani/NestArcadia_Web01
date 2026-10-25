@@ -18,7 +18,7 @@ const links: { label: string; page: Page }[] = [
 ];
 
 export default function Nav({ page, forceSolid = false }: NavProps) {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', admin: '/admin' };
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', admin: '/admin/' };
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
