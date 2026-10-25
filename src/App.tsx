@@ -88,7 +88,7 @@ const pagePaths: Record<Page, string> = {
 };
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
-  home: { title: 'NestArcadia | Interior Designers in Greater Noida West & Noida', description: 'NestArcadia creates heritage-inspired, contemporary interiors for 2BHK, 3BHK, 4BHK apartments, villas and farmhouses in Noida, Greater Noida, Greater Noida West and NCR.' },
+  home: { title: 'Interior Designers in Noida Extension | NestArcadia', description: 'Plan 2BHK, 3BHK and villa interiors in Noida Extension and Greater Noida West. Get practical space planning and turnkey execution with NestArcadia.' },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design Services in Noida, Greater Noida & NCR', description: 'Residential and commercial interior design, turnkey execution, custom furniture, Vastu-led planning and decor for Noida, Greater Noida West, Noida Extension, Ghaziabad, Faridabad, Delhi and Gurugram.' },
   story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India’s material heritage into homes made for modern living.' },
@@ -227,8 +227,14 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     document.title = meta.title;
     const setMeta = (name: string, content: string, property = false) => {
       const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
-      let element = document.head.querySelector(selector) as HTMLMetaElement | null;
-      if (!element) { element = document.createElement('meta'); element.setAttribute(property ? 'property' : 'name', name); document.head.appendChild(element); }
+      const matches = document.head.querySelectorAll(selector);
+      let element = matches[0] as HTMLMetaElement | undefined;
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(property ? 'property' : 'name', name);
+        document.head.appendChild(element);
+      }
+      Array.from(matches).slice(1).forEach((duplicate) => duplicate.remove());
       element.content = content;
     };
     setMeta('description', meta.description);
@@ -246,8 +252,14 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     setMeta('twitter:title', meta.title);
     setMeta('twitter:description', meta.description);
     setMeta('twitter:image', meta.image);
-    let link = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!link) { link = document.createElement('link'); link.rel = 'canonical'; document.head.appendChild(link); }
+    const canonicalLinks = document.head.querySelectorAll('link[rel="canonical"]');
+    let link = canonicalLinks[0] as HTMLLinkElement | undefined;
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      document.head.appendChild(link);
+    }
+    Array.from(canonicalLinks).slice(1).forEach((duplicate) => duplicate.remove());
     link.href = canonical;
     let schema = document.getElementById('nestarcadia-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
