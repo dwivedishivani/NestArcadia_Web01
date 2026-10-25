@@ -7,6 +7,10 @@ const distDir = path.resolve('dist');
 const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
 const urls = [...sitemap.matchAll(/<loc>\s*(https?:[^<]+)\s*<\/loc>/g)].map((match) => match[1].trim());
+const duplicateUrls = urls.filter((url, index) => urls.indexOf(url) !== index);
+if (duplicateUrls.length) {
+  throw new Error('Sitemap contains duplicate URLs: ' + [...new Set(duplicateUrls)].join(', '));
+}
 
 if (!urls.includes(baseUrl + '/')) {
   throw new Error('Canonical route generation stopped: homepage is missing from sitemap.xml');
@@ -96,21 +100,31 @@ function escapeAttribute(value) {
 }
 
 function replaceTag(html, pattern, replacement, insertBeforeHeadEnd = true) {
-  if (pattern.test(html)) return html.replace(pattern, replacement);
+  const flags = pattern.flags.includes('g') ? pattern.flags : pattern.flags + 'g';
+  const globalPattern = new RegExp(pattern.source, flags);
+  const matches = [...html.matchAll(globalPattern)];
+  if (matches.length) {
+    let output = html.replace(matches[0][0], replacement);
+    for (const duplicate of matches.slice(1)) output = output.replace(duplicate[0], '');
+    return output;
+  }
   if (!insertBeforeHeadEnd) throw new Error('Required HTML tag missing: ' + pattern);
   return html.replace('</head>', replacement + '\n  </head>');
 }
 
 function replaceMeta(html, selectorPattern, attribute, value, fallbackTag) {
   const safeValue = escapeAttribute(value);
-  const match = html.match(selectorPattern);
-  if (!match) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\n  </head>');
-  const tag = match[0];
+  const flags = selectorPattern.flags.includes('g') ? selectorPattern.flags : selectorPattern.flags + 'g';
+  const matches = [...html.matchAll(new RegExp(selectorPattern.source, flags))];
+  if (!matches.length) return html.replace('</head>', fallbackTag.replace('__VALUE__', safeValue) + '\n  </head>');
+  const tag = matches[0][0];
   const attributePattern = new RegExp('\\b' + attribute + '="[^"]*"');
   const changed = attributePattern.test(tag)
     ? tag.replace(attributePattern, attribute + '="' + safeValue + '"')
     : tag.replace(/\s*\/?\s*>$/, ' ' + attribute + '="' + safeValue + '" />');
-  return html.replace(tag, changed);
+  let output = html.replace(tag, changed);
+  for (const duplicate of matches.slice(1)) output = output.replace(duplicate[0], '');
+  return output;
 }
 
 async function readSource(filePath) {
@@ -208,7 +222,7 @@ function routeMetadata(pathname) {
   const main = mainRouteMeta.get(pathname);
   if (main?.title && main?.description) return { ...main, type: 'website' };
   const service = serviceMeta.get(pathname);
-  if (service) return service;
+  if (service) return { ...service, title: service.title + ' | NestArcadia' };
   if (pathname.startsWith('/journal/')) {
     const slug = pathname.slice('/journal/'.length).replace(/\/$/, '');
     const article = articleMeta.get(slug);
@@ -302,6 +316,7 @@ function renderStaticRoute(pathname, metadata) {
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header +
       '<p style="margin:-4px 0 22px;color:#6B5E4E;font-size:13px">' + escapeText(article.category) + (article.readTime ? ' · ' + escapeText(article.readTime) : '') + ' · By ' + escapeText(article.author) + '</p>' +
       paragraphs + (related ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Related articles</h2><ul style="padding-left:22px">' + related + '</ul></section>' : '') +
+      '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Plan your interior with NestArcadia</h2><p style="' + staticParagraphStyle + '">Explore our ' + inlineLink('/interior-design-services/', 'interior design and turnkey services') + ', with local guidance for ' + inlineLink('/interior-design-noida-extension/', 'Noida Extension') + ' and ' + inlineLink('/interior-design-greater-noida-west/', 'Greater Noida West') + '.</p></section>' +
       '<p style="' + staticParagraphStyle + '">For project-specific advice, ' + inlineLink('/start-your-project/', 'share your interior design brief') + ' with NestArcadia.</p></main>';
   }
 
