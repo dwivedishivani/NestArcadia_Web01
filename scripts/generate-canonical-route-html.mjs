@@ -198,11 +198,18 @@ for (const rawUrl of urls) {
   if (parsed.origin !== baseUrl || parsed.search || parsed.hash) {
     throw new Error('Unexpected sitemap URL; refusing to generate canonical HTML: ' + rawUrl);
   }
-  const routePath = parsed.pathname || '/';
+  // Publish only canonical slash-terminated URLs (except the homepage). This must match
+  // the directory index.html output that Vite preview/Hostinger serves with HTTP 200.
+  const routePath = parsed.pathname === '/' ? '/' : parsed.pathname.replace(/\/+$/, '') + '/';
+  const expectedUrl = baseUrl + routePath;
+  if (rawUrl !== expectedUrl) {
+    throw new Error('Sitemap URL is not canonical; expected trailing slash URL ' + expectedUrl + ' but received ' + rawUrl);
+  }
+  const routeKey = routePath === '/' ? '/' : routePath.slice(0, -1);
   const route = routePath === '/' ? '' : routePath.replace(/^\/+|\/+$/g, '');
   const outputDir = path.join(distDir, route);
-  const canonical = baseUrl + (routePath === '/' ? '/' : routePath);
-  const metadata = routeMetadata(routePath);
+  const canonical = expectedUrl;
+  const metadata = routeMetadata(routeKey);
   const title = metadata.title || 'NestArcadia | Interior Design in Noida & Greater Noida';
   const description = shortenDescription(metadata.description || title);
   const imageUrl = metadata.imageId
