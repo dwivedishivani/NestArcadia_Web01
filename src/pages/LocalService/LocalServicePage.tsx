@@ -26,7 +26,7 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-greater-noida-west',
     eyebrow: 'Greater Noida West · Interior Design',
-    title: 'Interior Design in Greater Noida West',
+    title: 'Interior Designers in Greater Noida West',
     description: 'Interior design and turnkey execution for apartments, villas and new-possession homes in Greater Noida West — with practical planning for storage, kitchens, lighting and site execution.',
     area: 'Greater Noida West',
     heroImage: image('photo-1600210492486-724fe5c67fb0'),
@@ -57,7 +57,7 @@ export const localServicePages: LocalServiceConfig[] = [
   {
     path: '/interior-design-noida-extension',
     eyebrow: 'Noida Extension · Interior Design',
-    title: 'Interior Design for Homes in Noida Extension',
+    title: 'Interior Designers in Noida Extension',
     description: 'Practical residential interior design for Noida Extension apartments, from space planning and modular kitchens to custom storage, lighting and turnkey execution.',
     area: 'Noida Extension',
     heroImage: image('photo-1618221195710-dd6b41faaea6'),
@@ -468,7 +468,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
   {
     path: '/interior-design-delhi-ncr',
     eyebrow: 'Delhi NCR · Interior Design',
-    title: 'Interior Design across Delhi NCR',
+    title: 'Interior Designers in Delhi NCR',
     description: 'NestArcadia designs residential and commercial interiors across Delhi NCR, with practical planning, Indian material character and turnkey execution support.',
     area: 'Delhi NCR',
     heroImage: gallery[0],
