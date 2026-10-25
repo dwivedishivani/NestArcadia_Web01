@@ -37,19 +37,21 @@ export const localServicePages: LocalServiceConfig[] = [
       { title: 'New-possession planning', body: 'The best time to resolve kitchen layouts, wardrobes, lighting and electrical points is before execution gathers speed. Early planning reduces avoidable changes later.' },
       { title: 'Storage without crowding', body: 'Apartment interiors need storage, but not at the cost of circulation. We look at full-height opportunities, furniture scale and what needs to stay accessible every day.' },
       { title: 'A home that feels personal', body: 'A local interior should still feel like your home, not a model apartment. Materials, colour, furniture and details are developed around your routines and preferences.' },
+      { title: 'Set a realistic scope before execution', body: 'For a raw or newly handed-over apartment, NestArcadia’s published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. The final quote depends on what is already complete, the storage and furniture scope, materials and customisation.' },
     ],
     services: ['2BHK, 3BHK and 4BHK apartment interior planning','Turnkey interior design and site coordination','Modular kitchens, wardrobes and custom storage','Lighting, material and finish planning','Vastu-led layout discussions when requested','Commercial office interiors for local businesses'],
     fit: ['New-possession apartments where electrical, lighting and storage decisions need to be made before execution','Families that need flexible rooms, concealed storage and practical everyday circulation','Homeowners who want a single design direction carried through drawings, materials and site work','Small commercial teams planning a client-facing office in Greater Noida West'],
     process: ['Property and brief review — understand the layout, possession status, household and scope.','Space planning — resolve circulation, storage, kitchen, furniture and major services before styling.','Design development — material palette, 3D visualisation, drawings and execution decisions.','Execution coordination — align vendors, craftsmen, site work and quality checks.','Handover — review the completed work against the agreed scope and practical use.'],
     faqs: [
       { question: 'Do you design 2BHK and 3BHK interiors in Greater Noida West?', answer: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, with the scope shaped around the actual layout, household routines, storage needs and material choices.' },
+      { question: 'What is the typical 2BHK or 3BHK interior design budget in Greater Noida West?', answer: 'For a raw or newly handed-over apartment, NestArcadia’s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already complete, the cost may be lower; premium materials, custom furniture and extensive decor can increase it. The property and exact scope need to be reviewed for a quote.' },
       { question: 'Can you handle turnkey execution in Greater Noida West?', answer: 'Depending on the project scope, turnkey work can include design development, material coordination, custom and modular furniture, site coordination, lighting and final handover.' },
       { question: 'When should I contact an interior designer for a new-possession flat?', answer: 'Ideally before civil work and major service decisions begin. Early planning gives the design team more control over electrical points, kitchen planning, storage, lighting and sequencing.' },
     ],
     related: [
-      { href: '/interior-design-services', label: 'Explore interior design and turnkey services' },
-      { href: '/journal/buying-new-flat-interior-checklist', label: 'Read the new-flat interior checklist' },
-      { href: '/journal/space-saving-interiors-noida', label: 'Read the space-saving guide for NCR apartments' },
+      { href: '/interior-design-services/', label: 'Explore interior design and turnkey services' },
+      { href: '/journal/buying-new-flat-interior-checklist/', label: 'Read the new-flat interior checklist' },
+      { href: '/journal/space-saving-interiors-noida/', label: 'Read the space-saving guide for NCR apartments' },
     ],
   },
   {
@@ -66,19 +68,21 @@ export const localServicePages: LocalServiceConfig[] = [
       { title: 'Make every square foot work', body: 'Compact rooms benefit from deliberate furniture sizes, vertical storage and clear circulation. The goal is not to fill the apartment; it is to make it easier to live in.' },
       { title: 'Design around real routines', body: 'Work-from-home, guests, children, appliances and everyday storage all compete for space. We plan the home around how your household actually moves through it.' },
       { title: 'Plan before the site gets busy', body: 'Drawings, materials, lighting and service decisions are easier to coordinate before execution starts. That creates a clearer brief for the people building the work.' },
+      { title: 'Match the finish to the budget', body: 'The starting budget depends on the condition of the apartment and what is included. For newly handed-over homes, NestArcadia’s published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK, before adjustments for customisation and scope.' },
     ],
     services: ['2BHK, 3BHK and 4BHK apartment interiors','Space planning and furniture layouts','Modular kitchen and wardrobe planning','Custom storage for compact apartments','Lighting and material selection','Turnkey design-to-handover coordination'],
     fit: ['New homeowners preparing a flat for possession','Compact apartments where every storage decision affects circulation','Families combining work-from-home, guest and everyday living needs','Homeowners who want a clear scope before committing to execution'],
     process: ['Understand the property — review drawings, site conditions, household requirements and budget direction.','Plan the space — define room roles, circulation, storage and fixed-service requirements.','Develop the design — visualise the palette and document the details needed for execution.','Coordinate execution — manage the sequence of civil, electrical, ceiling, joinery and finish work.','Review handover — check the finished space for function, fit and agreed scope.'],
     faqs: [
       { question: 'Can you design a compact 2BHK in Noida Extension?', answer: 'Yes. Compact homes benefit from early space planning, especially around entry storage, kitchen workflow, wardrobes, flexible rooms and furniture scale.' },
+      { question: 'How much does a 2BHK or 3BHK interior cost in Noida Extension?', answer: 'For a raw or newly handed-over apartment, NestArcadia’s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. Completed flooring, electrical or civil work can change the cost; premium materials, custom furniture and extensive decor can increase it. A detailed estimate needs the floor plan and agreed scope.' },
       { question: 'Do you work with new-possession apartments?', answer: 'Yes. Early involvement can help coordinate layout, electrical, lighting, storage and material decisions before execution begins.' },
       { question: 'Do you provide only design, or execution too?', answer: 'The scope can be tailored. You can discuss focused design support or a broader turnkey process depending on the project requirements.' },
     ],
     related: [
-      { href: '/interior-design-services', label: 'See the full service scope' },
-      { href: '/journal/modular-kitchen-noida', label: 'Read the modular kitchen guide' },
-      { href: '/journal/apartment-renovation-noida', label: 'Read the apartment renovation sequence' },
+      { href: '/interior-design-services/', label: 'See the full service scope' },
+      { href: '/journal/modular-kitchen-noida/', label: 'Read the modular kitchen guide' },
+      { href: '/journal/apartment-renovation-noida/', label: 'Read the apartment renovation sequence' },
     ],
   },
   {
@@ -105,9 +109,9 @@ export const localServicePages: LocalServiceConfig[] = [
       { question: 'Do you also handle execution?', answer: 'Execution support can be included where the project scope calls for it. The exact responsibilities, materials and handover requirements are agreed during project planning.' },
     ],
     related: [
-      { href: '/interior-design-services', label: 'Explore commercial and turnkey services' },
-      { href: '/journal/commercial-office-interior-greater-noida-west', label: 'Read the commercial office design guide' },
-      { href: '/journal/office-reception-design-ncr', label: 'Read the office reception guide' },
+      { href: '/interior-design-services/', label: 'Explore commercial and turnkey services' },
+      { href: '/journal/commercial-office-interior-greater-noida-west/', label: 'Read the commercial office design guide' },
+      { href: '/journal/office-reception-design-ncr/', label: 'Read the office reception guide' },
     ],
   },
 ];
@@ -158,7 +162,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you design homes in Greater Noida?', answer: 'Yes. NestArcadia works on apartments, villas and other residential interiors in Greater Noida, with scope shaped around the property and household.' },
       { question: 'Can you manage turnkey execution?', answer: 'Turnkey execution can be included where the project scope calls for it, from design decisions through site coordination and handover.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'See all interior design services' }, { href: '/start-your-project', label: 'Share your project brief' }],
+    related: [{ href: '/interior-design-services/', label: 'See all interior design services' }, { href: '/start-your-project/', label: 'Share your project brief' }],
     gallery,
   },
   {
@@ -183,7 +187,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'What type of projects do you take in Noida?', answer: 'Residential apartments, villas and selected commercial or office interiors, depending on project scope and requirements.' },
       { question: 'Can you help with both design and execution?', answer: 'Yes. The engagement can cover design only or extend through execution coordination and handover.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore our services' }, { href: '/start-your-project', label: 'Start a project conversation' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
     gallery,
   },
   {
@@ -208,7 +212,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you take residential projects in Ghaziabad?', answer: 'Yes, subject to project scope and location. We focus on practical residential interiors and can discuss the property before defining the engagement.' },
       { question: 'Do you also work on offices?', answer: 'Yes. Commercial work can include zoning, reception, meeting areas, workstations, storage, lighting and execution coordination.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'View interior design services' }, { href: '/start-your-project', label: 'Discuss your property' }],
+    related: [{ href: '/interior-design-services/', label: 'View interior design services' }, { href: '/start-your-project/', label: 'Discuss your property' }],
     gallery,
   },
   {
@@ -233,7 +237,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Can you redesign an existing Indirapuram apartment?', answer: 'Yes. Existing homes can be reviewed for layout, storage, lighting, furniture and finish improvements before the scope is defined.' },
       { question: 'Do you provide custom storage?', answer: 'Yes. Storage can be planned around the room, furniture scale and what the household actually needs to keep accessible.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore home interior services' }, { href: '/start-your-project', label: 'Share your project brief' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore home interior services' }, { href: '/start-your-project/', label: 'Share your project brief' }],
     gallery,
   },
   {
@@ -258,7 +262,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you design apartments in Crossing Republik?', answer: 'Yes. Apartment interiors are planned around the actual floor plan, family needs, storage and budget direction.' },
       { question: 'Can you work on a partial renovation?', answer: 'Yes. The scope can be focused on selected rooms or expanded into a broader interior project.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore our services' }, { href: '/start-your-project', label: 'Start your project' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Start your project' }],
     gallery,
   },
   {
@@ -283,7 +287,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you work on independent homes in Faridabad?', answer: 'Yes. Larger homes can be planned room by room while keeping the overall material and design language coherent.' },
       { question: 'Can the project include commercial interiors?', answer: 'Yes. Office and selected commercial projects can be discussed based on scope and requirements.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'View our services' }, { href: '/start-your-project', label: 'Discuss your project' }],
+    related: [{ href: '/interior-design-services/', label: 'View our services' }, { href: '/start-your-project/', label: 'Discuss your project' }],
     gallery,
   },
   {
@@ -308,7 +312,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you take interior projects in Delhi?', answer: 'Yes, project scope and location are reviewed before confirming the engagement.' },
       { question: 'What makes NestArcadia different from a package interior?', answer: 'The design starts from the property and the client’s routines, rather than a fixed package of finishes and furniture.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore interior design services' }, { href: '/start-your-project', label: 'Start a project conversation' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore interior design services' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
     gallery,
   },
   {
@@ -333,7 +337,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Can you optimise storage in a smaller East Delhi home?', answer: 'Yes. Storage is planned around circulation, furniture scale and the household’s actual needs.' },
       { question: 'Do you handle complete interiors?', answer: 'The scope can cover design through execution coordination depending on the project.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'See interior design services' }, { href: '/start-your-project', label: 'Share your brief' }],
+    related: [{ href: '/interior-design-services/', label: 'See interior design services' }, { href: '/start-your-project/', label: 'Share your brief' }],
     gallery,
   },
   {
@@ -358,7 +362,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Can the design be highly customised?', answer: 'Yes. Customisation can extend from space planning and furniture to materials, lighting and detailing, depending on scope.' },
       { question: 'Do you provide turnkey execution?', answer: 'Turnkey execution can be included where appropriate and is defined as part of the project scope.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore our services' }, { href: '/start-your-project', label: 'Discuss your project' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Discuss your project' }],
     gallery,
   },
   {
@@ -383,7 +387,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you work on residential interiors in Gurugram?', answer: 'Yes, subject to project scope and location. Residential and selected commercial briefs can be discussed.' },
       { question: 'Can you coordinate the full project?', answer: 'The scope can extend from design development through execution coordination and handover.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'See the service scope' }, { href: '/start-your-project', label: 'Start your project' }],
+    related: [{ href: '/interior-design-services/', label: 'See the service scope' }, { href: '/start-your-project/', label: 'Start your project' }],
     gallery,
   },
   {
@@ -408,7 +412,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you take projects in Dadri?', answer: 'Projects can be discussed based on location, scope and site requirements.' },
       { question: 'Can you help with the full interior?', answer: 'Yes. The scope can cover design and, where agreed, execution coordination.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore our services' }, { href: '/start-your-project', label: 'Share your project brief' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Share your project brief' }],
     gallery,
   },
   {
@@ -433,7 +437,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you design new homes in Jewar?', answer: 'Yes, subject to project scope and site requirements. Early planning can be especially useful for new construction or possession-stage homes.' },
       { question: 'Can you plan for future changes?', answer: 'Yes. Flexible rooms, storage and service planning can be considered where the property and brief allow it.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore our services' }, { href: '/start-your-project', label: 'Discuss your project' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Discuss your project' }],
     gallery,
   },
   {
@@ -458,7 +462,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you cover the Yamuna Expressway area?', answer: 'Projects can be discussed based on the exact site, scope and execution requirements.' },
       { question: 'Can you help before possession?', answer: 'Yes. Early planning can help resolve layout, storage, kitchen, lighting and material decisions before execution starts.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'View interior design services' }, { href: '/start-your-project', label: 'Share your project brief' }],
+    related: [{ href: '/interior-design-services/', label: 'View interior design services' }, { href: '/start-your-project/', label: 'Share your project brief' }],
     gallery,
   },
   {
@@ -483,7 +487,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Where in NCR does NestArcadia work?', answer: 'The studio is rooted in Greater Noida West and can discuss projects across Noida, Greater Noida, Ghaziabad, Delhi, Faridabad, Gurugram and nearby NCR markets.' },
       { question: 'Can the project be design-only?', answer: 'Yes. The engagement can be tailored to design, documentation or a broader turnkey scope depending on what the project needs.' },
     ],
-    related: [{ href: '/interior-design-services', label: 'Explore the full service scope' }, { href: '/start-your-project', label: 'Start a project conversation' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore the full service scope' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
     gallery,
   },
 ];
