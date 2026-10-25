@@ -629,6 +629,11 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             >
               Apply This to My Home →
             </a>
+            <nav aria-label="Related interior design services" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-3 text-[13px]">
+              <a href="/interior-design-services/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Explore interior design services</a>
+              <a href="/interior-design-noida-extension/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Noida Extension</a>
+              <a href="/interior-design-greater-noida-west/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Greater Noida West</a>
+            </nav>
           </div>
         </div>
 
