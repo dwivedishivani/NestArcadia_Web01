@@ -126,8 +126,8 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
-  const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\\s\\S]*?)<\\/main>/i)?.[1] || '';
-  const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\\s+/).filter(Boolean).length;
+  const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
+  const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
   assert.ok(homepageStatic.includes('Residential Interior Designers in Noida Extension and Greater Noida West'),
     'homepage raw HTML is missing its main residential service/location section');
@@ -135,8 +135,8 @@ try {
   const residentialSourceResponse = await page.request.get(baseUrl + '/interior-design-noida-extension/');
   assert.equal(residentialSourceResponse.status(), 200, 'residential page source must return HTTP 200');
   const residentialSource = await residentialSourceResponse.text();
-  const residentialStatic = residentialSource.match(/<main id="na-seo-static-content"[^>]*>([\\s\\S]*?)<\\/main>/i)?.[1] || '';
-  const residentialStaticWords = residentialStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\\s+/).filter(Boolean).length;
+  const residentialStatic = residentialSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
+  const residentialStaticWords = residentialStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(residentialStaticWords >= 220, `Noida Extension raw HTML SEO content is too thin (${residentialStaticWords} words)`);
   assert.ok(residentialStatic.includes('How much does a 2BHK or 3BHK interior cost in Noida Extension?'),
     'residential HTML snapshot is missing the page-specific budget FAQ');
