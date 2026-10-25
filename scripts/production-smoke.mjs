@@ -122,6 +122,16 @@ try {
   });
 
   await page.goto(baseUrl + '/', { waitUntil: 'load', timeout: 45000 });
+  const sitemapResponse = await page.request.get(baseUrl + '/sitemap.xml');
+  assert.equal(sitemapResponse.status(), 200, 'sitemap.xml must return HTTP 200');
+  const sitemapText = await sitemapResponse.text();
+  const sitemapUrls = [...sitemapText.matchAll(/<loc>(https:\/\/nestarcadia\.com\/[^<]*)<\/loc>/g)].map((match) => match[1]);
+  assert.ok(sitemapUrls.length >= 50, `expected at least 50 sitemap URLs, found ${sitemapUrls.length}`);
+  assert.ok(sitemapUrls.every((url) => {
+    const pathname = url.slice('https://nestarcadia.com'.length);
+    return pathname === '/' || pathname.endsWith('/');
+  }), 'sitemap contains non-canonical URLs without a trailing slash');
+  console.log('SITEMAP_CANONICAL_SMOKE', JSON.stringify({ sitemapStatus: sitemapResponse.status(), urls: sitemapUrls.length, allCanonical: true }));
   await page.waitForFunction(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return Boolean(image && image.complete && image.naturalWidth > 0);
@@ -141,6 +151,15 @@ try {
   assert.ok(heroMetrics.currentSrc.includes('/images/home-hero-mobile-v2.webp'), `mobile viewport did not select optimized mobile hero: ${heroMetrics.currentSrc}`);
   assert.ok(heroMetrics.lcpMs < 4500, `simulated mobile LCP exceeded 4.5 seconds: ${heroMetrics.lcpMs} ms`);
   console.log('MOBILE_HERO_SMOKE', JSON.stringify(heroMetrics));
+  const residentialResponse = await page.goto(baseUrl + '/interior-design-noida-extension/', { waitUntil: 'domcontentloaded', timeout: 45000 });
+  assert.equal(residentialResponse?.status(), 200, 'Noida Extension residential page must serve HTTP 200');
+  await page.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.getAttribute('href') === 'https://nestarcadia.com/interior-design-noida-extension/', undefined, { timeout: 10000 });
+  assert.match(await page.title(), /Noida Extension/i, 'residential route title should be location-specific');
+  console.log('RESIDENTIAL_SEO_ROUTE_SMOKE', JSON.stringify({
+    status: residentialResponse?.status(),
+    canonical: await page.locator('link[rel="canonical"]').getAttribute('href'),
+    title: await page.title(),
+  }));
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
   await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
