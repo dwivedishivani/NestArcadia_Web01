@@ -152,7 +152,7 @@ try {
   const journalSourceResponse = await page.request.get(baseUrl + '/journal/rattan/');
   assert.equal(journalSourceResponse.status(), 200, 'Journal article source must return HTTP 200');
   const journalSource = await journalSourceResponse.text();
-  const journalStatic = journalSource.match(/<main id="na-seo-static-content"[^>]*>([\\s\\S]*?)<\\/main>/i)?.[1] || '';
+  const journalStatic = journalSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   for (const requiredLink of [
     'href="/interior-design-noida-extension/"',
     'href="/interior-design-greater-noida-west/"',
