@@ -548,12 +548,12 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Featured Homes ───────────────────────────── */}
+      {/* ── Featured Home Concepts ──────────────────── */}
       <section className="py-24 lg:py-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Featured Homes</h2>
-            <p className="text-[#6B5E4E] text-[15px] mt-1.5">Real spaces. Real people. Real stories.</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Featured Home Concepts</h2>
+            <p className="text-[#6B5E4E] text-[15px] mt-1.5">Selected design studies for apartments, villas and family homes.</p>
           </div>
           <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All Homes →
