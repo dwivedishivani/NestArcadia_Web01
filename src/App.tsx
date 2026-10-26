@@ -263,14 +263,36 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     link.href = canonical;
     let schema = document.getElementById('nestarcadia-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
-    const businessSchema = { '@type': 'ProfessionalService', name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida'], url: SITE_URL, telephone: '+918448061997', contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', contactType: 'customer service', areaServed: 'IN' }, image: SOCIAL_IMAGE, description: meta.description, serviceType: ['Interior Design', 'Turnkey Interior Execution', 'Custom Furniture Design', 'Commercial Office Interior Design'], areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida', 'Ghaziabad', 'Indirapuram', 'Crossing Republik', 'Faridabad', 'Delhi', 'East Delhi', 'South Delhi', 'Gurugram', 'Dadri', 'Jewar', 'Yamuna Expressway', 'Delhi NCR'], sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'] };
+    const businessSchema = {
+      '@type': 'ProfessionalService',
+      '@id': `${SITE_URL}/#business`,
+      name: 'NestArcadia',
+      alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida'],
+      url: SITE_URL,
+      telephone: '+918448061997',
+      contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', contactType: 'customer service', areaServed: 'IN' },
+      image: SOCIAL_IMAGE,
+      description: meta.description,
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Interior Design Services',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Interior Design' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Turnkey Interior Execution' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Custom Furniture Design' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Commercial Office Interior Design' } },
+        ],
+      },
+      areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida', 'Ghaziabad', 'Indirapuram', 'Crossing Republik', 'Faridabad', 'Delhi', 'East Delhi', 'South Delhi', 'Gurugram', 'Dadri', 'Jewar', 'Yamuna Expressway', 'Delhi NCR'],
+      sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'],
+    };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
     const articleAuthor = activeArticle && (activeArticle.author === 'NestArcadia'
       ? { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL }
       : { '@type': 'Person', name: activeArticle.author });
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
-    const websiteSchema = page === 'home' && !localService ? { '@type': 'WebSite', name: 'NestArcadia', url: SITE_URL } : null;
+    const websiteSchema = page === 'home' && !localService ? { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } } : null;
     const faqSchema = page === 'faq' && !localService ? {
       '@type': 'FAQPage',
       mainEntity: [
