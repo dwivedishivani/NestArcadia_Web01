@@ -312,8 +312,8 @@ try {
   });
 
   await tagPage.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  // Trigger the real interaction-driven loader installed in index.html.
-  await tagPage.evaluate(() => window.dispatchEvent(new Event('pointerdown', { bubbles: true })));
+  // Do not simulate input here: this path verifies passive page-load/idle loading.
+  // User-triggered loading is covered by the loader's explicit interaction listeners.
 
   const gtmDeadline = Date.now() + 10000;
   while (gtmContainerStatus === null && Date.now() < gtmDeadline) {

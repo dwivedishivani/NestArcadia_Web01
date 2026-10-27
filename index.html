@@ -17,13 +17,34 @@
       gtag('set', 'url_passthrough', true);
       gtag('set', 'ads_data_redaction', true);
     </script>
-    <!-- Google Tag Manager: standard snippet for reliable tag detection -->
+    <!-- Google Tag Manager: queue immediately, load after initial rendering or on interaction -->
     <script>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GTM-T7R3TTP5');
+      (function(w,d){
+        w.dataLayer = w.dataLayer || [];
+        w.dataLayer.push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+        var started = false;
+        function loadGTM(){
+          if (started) return;
+          started = true;
+          var script = d.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-T7R3TTP5';
+          var firstScript = d.getElementsByTagName('script')[0];
+          firstScript.parentNode.insertBefore(script, firstScript);
+        }
+        ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+          w.addEventListener(eventName, loadGTM, { once: true, passive: true });
+        });
+        function loadWhenIdle(){
+          if (typeof w.requestIdleCallback === 'function') {
+            w.requestIdleCallback(loadGTM, { timeout: 1800 });
+          } else {
+            w.setTimeout(loadGTM, 800);
+          }
+        }
+        if (d.readyState === 'complete') loadWhenIdle();
+        else w.addEventListener('load', loadWhenIdle, { once: true });
+      })(window, document);
     </script>
     <!-- End Google Tag Manager -->
     <!-- GA4 Google tag is generated from .figma/make/site.json; GTM manages Ads tags. Both use the shared dataLayer for lead events. -->
