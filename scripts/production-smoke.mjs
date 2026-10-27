@@ -26,7 +26,7 @@ try {
   const page = await context.newPage();
   const heroAssetResponses = [];
   page.on('response', (response) => {
-    if (/home-hero-(mobile|optimized)-v2\\.webp/.test(response.url())) {
+    if (/home-hero-(mobile|optimized)-v2\.webp/.test(response.url())) {
       heroAssetResponses.push({
         url: response.url(),
         status: response.status(),
