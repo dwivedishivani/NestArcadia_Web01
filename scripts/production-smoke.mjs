@@ -24,6 +24,17 @@ try {
     locale: 'en-IN',
   });
   const page = await context.newPage();
+  const heroAssetResponses = [];
+  page.on('response', (response) => {
+    if (/home-hero-(mobile|optimized)-v2\.webp/.test(response.url())) {
+      heroAssetResponses.push({
+        url: response.url(),
+        status: response.status(),
+        contentType: response.headers()['content-type'] || '',
+        bytes: Number(response.headers()['content-length'] || 0),
+      });
+    }
+  });
   page.on('pageerror', (error) => pageErrors.push(error.message));
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
@@ -66,7 +77,9 @@ try {
   // Isolate the form smoke from third-party tags. Regex route matchers account
   // for actual hostnames with "www." or provider subdomains.
   await page.route(/^https:\/\/www\.googletagmanager\.com\//, (route) => route.abort());
-  await page.route(/^https:\/\/(www\.)?google-analytics\.com\//, (route) => route.abort());
+  // Block all collector subdomains as well (e.g. region1.google-analytics.com)
+  // so smoke-test hits never reach production Analytics accounts.
+  await page.route(/^https:\/\/([a-z0-9-]+\.)*google-analytics\.com\//i, (route) => route.abort());
   await page.route(/^https:\/\/analytics\.google\.com\//, (route) => route.abort());
   await page.route(/^https:\/\/(www\.)?googleadservices\.com\//, (route) => route.abort());
   await page.route(/^https:\/\/(www\.)?doubleclick\.net\//, (route) => route.abort());
@@ -192,6 +205,7 @@ try {
       lcpMs: window.__nestarcadiaLcpMs,
     };
   });
+  heroMetrics.assetResponses = heroAssetResponses;
   assert.equal(heroMetrics.heroLoaded, true, 'homepage hero image did not load');
   assert.ok(heroMetrics.currentSrc.includes('/images/home-hero-mobile-v2.webp'), `mobile viewport did not select optimized mobile hero: ${heroMetrics.currentSrc}`);
   assert.ok(heroMetrics.lcpMs < 4500, `simulated mobile LCP exceeded 4.5 seconds: ${heroMetrics.lcpMs} ms`);
@@ -270,7 +284,9 @@ try {
     }
   });
 
-  await tagPage.route(/^https:\/\/(www\.)?google-analytics\.com\//, async (route) => {
+  // Catch the root, www, and regional GA4 collectors; Google may choose a
+  // region-specific host, which must still be blocked and captured in this test.
+  await tagPage.route(/^https:\/\/([a-z0-9-]+\.)*google-analytics\.com\//i, async (route) => {
     ga4MeasurementAttempts.push(route.request().url());
     await route.abort();
   });
@@ -325,7 +341,12 @@ try {
   });
 
   const measurementDeadline = Date.now() + 10000;
-  while (ga4MeasurementAttempts.length === 0 && Date.now() < measurementDeadline) {
+  const isGenerateLeadRequest = (url) => {
+    try { return new URL(url).searchParams.get('en') === 'generate_lead'; }
+    catch { return false; }
+  };
+  // Wait for the specific conversion event, not a page_view already in flight.
+  while (!ga4MeasurementAttempts.some(isGenerateLeadRequest) && Date.now() < measurementDeadline) {
     await tagPage.waitForTimeout(200);
   }
   const ga4EventNames = ga4MeasurementAttempts.flatMap((url) => {

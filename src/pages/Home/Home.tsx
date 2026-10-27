@@ -247,7 +247,11 @@ export default function Home({ setPage }: Props) {
               </>
             )}
             <img
-              src={heroImageFallback ? heroDirectUrls[currentHero.imageId] : currentHero.image}
+              src={heroImageFallback
+                ? heroDirectUrls[currentHero.imageId]
+                : (import.meta.env.PROD && currentHero.imageId === 'photo-1713192706971-03900dcf5706'
+                  ? '/images/home-hero-optimized-v2.webp'
+                  : currentHero.image)}
             data-site-image-key={currentHero.imageId}
             data-site-image-optimized-source-url={currentHero.imageId === 'photo-1713192706971-03900dcf5706' ? 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' : undefined}
             alt="NestArcadia heritage-inspired modern Indian home interior design for Noida Extension and Greater Noida West"
