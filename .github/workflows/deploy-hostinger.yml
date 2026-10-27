@@ -115,3 +115,15 @@ jobs:
             echo "$url -> HTTP $status"
             test "$status" = "200"
           done
+
+          # A 200 response may still be the SPA fallback HTML rather than an image.
+          # Verify the two critical hero assets have a real WebP response MIME type
+          # before marking a deployment successful.
+          for url in "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp"; do
+            content_type=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{content_type}' "$url")
+            echo "$url -> Content-Type $content_type"
+            case "$content_type" in
+              image/webp*) ;;
+              *) echo "::error::Hero asset was not served as image/webp: $url ($content_type)"; exit 1 ;;
+            esac
+          done
