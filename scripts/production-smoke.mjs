@@ -183,6 +183,17 @@ try {
   }, undefined, { timeout: 20000 });
 
   await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
+  const heroAssetResponses = [];
+  page.on('response', (response) => {
+    if (/home-hero-(mobile|optimized)-v2\\.webp/.test(response.url())) {
+      heroAssetResponses.push({
+        url: response.url(),
+        status: response.status(),
+        contentType: response.headers()['content-type'] || '',
+        bytes: Number(response.headers()['content-length'] || 0),
+      });
+    }
+  });
   const heroMetrics = await page.evaluate(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return {
@@ -192,6 +203,7 @@ try {
       lcpMs: window.__nestarcadiaLcpMs,
     };
   });
+  heroMetrics.assetResponses = heroAssetResponses;
   assert.equal(heroMetrics.heroLoaded, true, 'homepage hero image did not load');
   assert.ok(heroMetrics.currentSrc.includes('/images/home-hero-mobile-v2.webp'), `mobile viewport did not select optimized mobile hero: ${heroMetrics.currentSrc}`);
   assert.ok(heroMetrics.lcpMs < 4500, `simulated mobile LCP exceeded 4.5 seconds: ${heroMetrics.lcpMs} ms`);
