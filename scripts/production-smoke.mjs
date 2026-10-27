@@ -24,6 +24,17 @@ try {
     locale: 'en-IN',
   });
   const page = await context.newPage();
+  const heroAssetResponses = [];
+  page.on('response', (response) => {
+    if (/home-hero-(mobile|optimized)-v2\\.webp/.test(response.url())) {
+      heroAssetResponses.push({
+        url: response.url(),
+        status: response.status(),
+        contentType: response.headers()['content-type'] || '',
+        bytes: Number(response.headers()['content-length'] || 0),
+      });
+    }
+  });
   page.on('pageerror', (error) => pageErrors.push(error.message));
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText || 'unknown' }));
@@ -183,17 +194,6 @@ try {
   }, undefined, { timeout: 20000 });
 
   await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
-  const heroAssetResponses = [];
-  page.on('response', (response) => {
-    if (/home-hero-(mobile|optimized)-v2\\.webp/.test(response.url())) {
-      heroAssetResponses.push({
-        url: response.url(),
-        status: response.status(),
-        contentType: response.headers()['content-type'] || '',
-        bytes: Number(response.headers()['content-length'] || 0),
-      });
-    }
-  });
   const heroMetrics = await page.evaluate(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return {
