@@ -379,8 +379,8 @@ export const articles = [
     author: luxuryArticleSnapshot.author,
     date: 'Oct 2026',
     readTime: luxuryArticleSnapshot.readTime,
-    img: 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/shared-interior-design-001.jpg',
-    thumb: 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/shared-interior-design-001.jpg',
+    img: u('photo-1771328756144-02bde5549a9a', 1200, 700),
+    thumb: u('photo-1771328756144-02bde5549a9a', 800, 560),
     body: luxuryArticleSnapshot.blocks.map((block) => block.text),
     related: [],
   },
@@ -689,7 +689,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </p>
             <div className="grid sm:grid-cols-2 gap-8">
               {relatedArticles.map(a => (
-                <a key={a.id} href={`/journal/${a.id}`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
+                <a key={a.id} href={`/journal/${a.id}/`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
                   <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                     <img
                     src={a.thumb}
@@ -779,7 +779,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         {/* Featured article */}
         {featured && (
           <a
-            href={`/journal/${featured.id}`}
+            href={`/journal/${featured.id}/`}
             onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
