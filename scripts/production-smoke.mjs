@@ -159,26 +159,6 @@ try {
     assert.equal(iconResponse.status(), 200, 'app icon must return HTTP 200: ' + iconPath);
     assert.ok((iconResponse.headers()['content-type'] || '').startsWith('image/png'), 'app icon has wrong MIME type: ' + iconPath);
   }
-  const imageDiagnostics = await page.locator('main img').evaluateAll((images) => images.slice(0, 18).map((image) => ({
-    key: image.getAttribute('data-site-image-key'),
-    src: image.getAttribute('src'),
-    srcset: image.getAttribute('srcset'),
-  })));
-  const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
-  console.log('RESPONSIVE_SRCSET_DIAGNOSTIC', JSON.stringify({ responsiveImageCount, images: imageDiagnostics }));
-  assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
-  const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
-  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(' ')[0];
-  assert.ok(firstCandidate, 'responsive image srcset has no usable candidate');
-  const responsiveImageResponse = await page.request.get(new URL(firstCandidate, baseUrl).toString());
-  assert.equal(responsiveImageResponse.status(), 200, 'responsive WebP candidate must return HTTP 200');
-  assert.ok((responsiveImageResponse.headers()['content-type'] || '').startsWith('image/webp'), 'responsive image candidate must be served as WebP');
-  console.log('APP_ICONS_AND_RESPONSIVE_IMAGES_SMOKE', JSON.stringify({
-    manifestIcons: appManifest.icons.length,
-    responsiveImageCount,
-    responsiveCandidate: firstCandidate,
-  }));
-
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
@@ -234,6 +214,26 @@ try {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return Boolean(image && image.complete && image.naturalWidth > 0);
   }, undefined, { timeout: 20000 });
+
+  const imageDiagnostics = await page.locator('main img').evaluateAll((images) => images.slice(0, 18).map((image) => ({
+    key: image.getAttribute('data-site-image-key'),
+    src: image.getAttribute('src'),
+    srcset: image.getAttribute('srcset'),
+  })));
+  const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
+  console.log('RESPONSIVE_SRCSET_DIAGNOSTIC', JSON.stringify({ responsiveImageCount, images: imageDiagnostics }));
+  assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
+  const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
+  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(' ')[0];
+  assert.ok(firstCandidate, 'responsive image srcset has no usable candidate');
+  const responsiveImageResponse = await page.request.get(new URL(firstCandidate, baseUrl).toString());
+  assert.equal(responsiveImageResponse.status(), 200, 'responsive WebP candidate must return HTTP 200');
+  assert.ok((responsiveImageResponse.headers()['content-type'] || '').startsWith('image/webp'), 'responsive image candidate must be served as WebP');
+  console.log('APP_ICONS_AND_RESPONSIVE_IMAGES_SMOKE', JSON.stringify({
+    manifestIcons: appManifest.icons.length,
+    responsiveImageCount,
+    responsiveCandidate: firstCandidate,
+  }));
 
   await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
   const heroMetrics = await page.evaluate(() => {
