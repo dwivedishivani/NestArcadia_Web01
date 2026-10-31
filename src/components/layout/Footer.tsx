@@ -15,22 +15,10 @@ const navLinks: { label: string; page: Page }[] = [
 ];
 
 const serviceAreas = [
-  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west' },
-  { label: 'Noida Extension', href: '/interior-design-noida-extension' },
-  { label: 'Greater Noida', href: '/interior-design-greater-noida' },
-  { label: 'Noida', href: '/interior-design-noida' },
-  { label: 'Ghaziabad', href: '/interior-design-ghaziabad' },
-  { label: 'Indirapuram', href: '/interior-design-indirapuram' },
-  { label: 'Crossing Republik', href: '/interior-design-crossing-republik' },
-  { label: 'Faridabad', href: '/interior-design-faridabad' },
-  { label: 'Delhi', href: '/interior-design-delhi' },
-  { label: 'East Delhi', href: '/interior-design-east-delhi' },
-  { label: 'South Delhi', href: '/interior-design-south-delhi' },
-  { label: 'Gurugram', href: '/interior-design-gurugram' },
-  { label: 'Dadri', href: '/interior-design-dadri' },
-  { label: 'Jewar', href: '/interior-design-jewar' },
-  { label: 'Yamuna Expressway', href: '/interior-design-yamuna-expressway' },
-  { label: 'Delhi NCR', href: '/interior-design-delhi-ncr' },
+  { label: 'Noida Extension', href: '/interior-design-noida-extension/' },
+  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
+  { label: 'Noida', href: '/interior-design-noida/' },
+  { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
 ];
 
 const socials = [
@@ -41,7 +29,7 @@ const socials = [
 ];
 
 export default function Footer() {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', privacy: '/privacy-policy', admin: '/admin' };
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', privacy: '/privacy-policy/', admin: '/admin' };
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
@@ -69,13 +57,13 @@ export default function Footer() {
             <div className="mt-5 pt-4 border-t border-[#D4CBBB]">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Services</p>
               <div className="flex flex-col gap-2">
-                <a href="/interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Greater Noida West</a>
-                <a href="/interior-design-noida-extension" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Noida Extension</a>
-                <a href="/commercial-interior-design-greater-noida-west" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Commercial interiors in Greater Noida West</a>
+                <a href="/interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Greater Noida West</a>
+                <a href="/interior-design-noida-extension/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Noida Extension</a>
+                <a href="/commercial-interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Commercial interiors in Greater Noida West</a>
               </div>
             </div>
             <Link
-              to="/start-your-project"
+              to="/start-your-project/"
               className="text-[14px] text-[#17665B] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
             >
               Share Your Project Brief →
@@ -128,7 +116,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 mb-5">
             <div>
               <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Service areas</p>
-              <p className="text-[13px] text-[#6B5E4E] mt-1">Interior design across Noida, Greater Noida and the wider NCR.</p>
+              <p className="text-[13px] text-[#6B5E4E] mt-1">Primary focus: Noida Extension and Greater Noida West, with nearby Noida and Greater Noida.</p>
             </div>
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-7 gap-y-3">
@@ -143,7 +131,7 @@ export default function Footer() {
         <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link to="/privacy-policy" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
+            <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
             <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
           </div>
         </div>
