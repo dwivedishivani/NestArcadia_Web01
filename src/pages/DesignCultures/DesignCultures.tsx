@@ -13,8 +13,6 @@ const cultures = [
     materials: ['Carved teak and sheesham wood', 'Brass and copper finishes', 'Jali lattice screens', 'Rich block-print textiles', 'Terracotta and sandstone floors'],
     imageKey: 'photo-1604578762246-41134e37f9cc',
     img: u('photo-1604578762246-41134e37f9cc', 1200, 800),
-    thumb: u('photo-1604578762246-41134e37f9cc', 600, 400),
-    accent: '#2D8C7E',
   },
   {
     name: 'South',
@@ -23,8 +21,6 @@ const cultures = [
     materials: ['Rosewood and teak columns', 'Granite and Athangudi tiles', 'Woven cane furniture', 'Bronze temple lamps', 'Mango wood accents'],
     imageKey: 'photo-1713192704825-74a0017f585d',
     img: u('photo-1713192704825-74a0017f585d', 1200, 800),
-    thumb: u('photo-1713192704825-74a0017f585d', 600, 400),
-    accent: '#2D8C7E',
   },
   {
     name: 'East',
@@ -33,8 +29,6 @@ const cultures = [
     materials: ['Bamboo and cane structures', 'Kantha-embroidered textiles', 'Terracotta pottery and tiles', 'Dokra metalwork', 'Patachitra-inspired wall art'],
     imageKey: 'photo-1640357264948-24beb7df5216',
     img: u('photo-1640357264948-24beb7df5216', 1200, 800),
-    thumb: u('photo-1640357264948-24beb7df5216', 600, 400),
-    accent: '#2D8C7E',
   },
   {
     name: 'West',
@@ -43,8 +37,6 @@ const cultures = [
     materials: ['Mirror and glass inlay (shisha)', 'Lacquered furniture', 'Block-print and bandhani textiles', 'Teak and mango wood', 'White lime plaster walls'],
     imageKey: 'photo-1746439315937-79a9cb4c1521',
     img: u('photo-1746439315937-79a9cb4c1521', 1200, 800),
-    thumb: u('photo-1746439315937-79a9cb4c1521', 600, 400),
-    accent: '#2D8C7E',
   },
   {
     name: 'Central',
@@ -53,8 +45,6 @@ const cultures = [
     materials: ['Raw earth and lime plaster', 'Hand-carved stone', 'Bastar dhokra craft', 'Channapatna wooden toys as decor', 'Natural fibre weaves'],
     imageKey: 'photo-1746173098001-2ae330a6a763',
     img: u('photo-1746173098001-2ae330a6a763', 1200, 800),
-    thumb: u('photo-1746173098001-2ae330a6a763', 600, 400),
-    accent: '#2D8C7E',
   },
 ];
 
