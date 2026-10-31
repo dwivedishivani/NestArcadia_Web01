@@ -199,6 +199,9 @@ try {
     browserErrors: pageErrors,
   }));
 
+  // Return to the homepage before the mobile hero/LCP assertions below.
+  await page.goto(baseUrl + '/', { waitUntil: 'load', timeout: 45000 });
+
   const sitemapResponse = await page.request.get(baseUrl + '/sitemap.xml');
   assert.equal(sitemapResponse.status(), 200, 'sitemap.xml must return HTTP 200');
   const sitemapText = await sitemapResponse.text();
