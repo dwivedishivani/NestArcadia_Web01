@@ -497,13 +497,20 @@ for (const rawUrl of urls) {
     });
   }
   if (routePath !== '/') {
+    const breadcrumbItems = metadata.articleTitle
+      ? [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
+          { '@type': 'ListItem', position: 2, name: 'Journal', item: baseUrl + '/journal/' },
+          { '@type': 'ListItem', position: 3, name: metadata.articleTitle, item: canonical },
+        ]
+      : [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
+          { '@type': 'ListItem', position: 2, name: metadata.area || title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
+        ];
     routeGraph.push({
       '@type': 'BreadcrumbList',
       '@id': canonical + '#breadcrumb',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
-        { '@type': 'ListItem', position: 2, name: metadata.area || (metadata.articleTitle ? 'Journal' : title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '')), item: canonical },
-      ],
+      itemListElement: breadcrumbItems,
     });
   }
   schemaDocument['@graph'] = [
