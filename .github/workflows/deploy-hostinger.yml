@@ -121,6 +121,17 @@ jobs:
               'set -eu; target="$HOME/domains/nestarcadia.com/public_html"; mkdir -p "$target"; tar -xzf - -C "$target"; test -s "$target/index.html"; test -s "$target/images/home-hero-mobile-v2.webp"; test -s "$target/images/home-hero-optimized-v2.webp"; test -s "$target/apple-touch-icon.png"; test -s "$target/favicon.ico"; test -s "$target/android-chrome-192x192.png"; test -s "$target/android-chrome-512x512.png"; test -s "$target/site.webmanifest"; test -s "$target/fonts/fonts-v1.css"; test -s "$target/fonts/dm-sans-latin-v1.woff2"; test -s "$target/fonts/playfair-display-latin-v1.woff2"; test -s "$target/fonts/playfair-display-italic-latin-v1.woff2"; echo "Remote production files, hero images, and fonts verified."'
 
           echo "Production files uploaded to Hostinger."
+
+          # The public HTML is identical for visitors and contains no private data.
+          # Require revalidation without a blanket no-store policy on the SPA shell.
+          html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -I "https://nestarcadia.com/" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
+          echo "Homepage Cache-Control: $html_cache_control"
+          case "$html_cache_control" in
+            *no-store*) echo "::error::Public homepage still sends Cache-Control: no-store."; exit 1 ;;
+            *no-cache*) ;;
+            *) echo "::error::Homepage must use Cache-Control: no-cache for safe revalidation."; exit 1 ;;
+          esac
+
           for url in "https://nestarcadia.com/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon.ico" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png" "https://nestarcadia.com/site.webmanifest" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
             status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{http_code}' "$url")
             echo "$url -> HTTP $status"
