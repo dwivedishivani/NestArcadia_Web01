@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build && node scripts/generate-canonical-route-html.mjs",
     "preview": "vite preview",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "assets:responsive": "node scripts/prepare-responsive-site-images.mjs",
+    "assets:icons": "node scripts/prepare-app-icons.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
