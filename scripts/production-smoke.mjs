@@ -180,6 +180,25 @@ try {
     turnkeyServicesLink: true,
   }));
 
+  // Exercise the project-gallery lazy chunk directly. The homepage smoke alone
+  // cannot detect a missing/stale Homes bundle, which previously surfaced as the
+  // generic "Something interrupted this page" route error.
+  const projectsResponse = await page.goto(baseUrl + '/our-projects/', {
+    waitUntil: 'domcontentloaded',
+    timeout: 45000,
+  });
+  assert.equal(projectsResponse?.status(), 200, 'Our Projects route must serve HTTP 200');
+  await page.getByRole('heading', { name: 'Our Projects', exact: true }).waitFor({ timeout: 15000 });
+  assert.equal(await page.title(), 'Our Projects | NestArcadia Interior Design',
+    'Our Projects route should use its unique page title');
+  assert.ok(!pageErrors.length, `Our Projects route raised browser errors: ${pageErrors.join('; ')}`);
+  console.log('PROJECTS_ROUTE_SMOKE', JSON.stringify({
+    status: projectsResponse?.status(),
+    title: await page.title(),
+    heading: 'Our Projects',
+    browserErrors: pageErrors,
+  }));
+
   const sitemapResponse = await page.request.get(baseUrl + '/sitemap.xml');
   assert.equal(sitemapResponse.status(), 200, 'sitemap.xml must return HTTP 200');
   const sitemapText = await sitemapResponse.text();
