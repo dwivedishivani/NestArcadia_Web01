@@ -47,12 +47,10 @@ const imageSrcSet = (url: string) => {
 
 const heroDirectUrls: Record<string, string> = {
   'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
-  'photo-1613490493576-7fde63acd811': import.meta.env.PROD
-    ? resolveSiteImage('photo-1613490493576-7fde63acd811', 1200)
-    : homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
-  'photo-1644057501622-dfa7dd26dbfb': import.meta.env.PROD
-    ? resolveSiteImage('photo-1644057501622-dfa7dd26dbfb', 1200)
-    : homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
+  // Keep the original storage URLs as a true fallback; srcSet selects the
+  // pre-generated local WebP variants when they are available.
+  'photo-1613490493576-7fde63acd811': homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
+  'photo-1644057501622-dfa7dd26dbfb': homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
 };
 
 const IMG = {
@@ -275,6 +273,7 @@ export default function Home({ setPage }: Props) {
             fetchPriority={heroSlide === 0 ? 'high' : 'auto'}
             decoding="async"
             onError={(event) => {
+              event.currentTarget.removeAttribute('srcset');
               event.currentTarget.closest('picture')?.querySelectorAll('source[data-site-image-optimized="true"]')
                 .forEach((source) => source.remove());
               setHeroImageFallback(true);
