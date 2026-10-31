@@ -206,6 +206,26 @@ if (articlesArray && ts.isArrayLiteralExpression(articlesArray)) {
   }
 }
 
+
+const publishedArticleSnapshot = JSON.parse(await readFile(
+  path.resolve('src/data/seo/luxury-interior-design-noida-extension.json'),
+  'utf8'
+));
+if (publishedArticleSnapshot?.id && Array.isArray(publishedArticleSnapshot.blocks)) {
+  articleMeta.set(publishedArticleSnapshot.id, {
+    id: publishedArticleSnapshot.id,
+    title: publishedArticleSnapshot.title + ' | NestArcadia Journal',
+    articleTitle: publishedArticleSnapshot.title,
+    description: publishedArticleSnapshot.excerpt,
+    type: 'article',
+    category: publishedArticleSnapshot.category || 'Journal',
+    author: publishedArticleSnapshot.author || 'NestArcadia',
+    readTime: publishedArticleSnapshot.readTime || '',
+    body: publishedArticleSnapshot.blocks.map((block) => block.text).filter(Boolean),
+    related: [],
+  });
+}
+
 const mainRouteMeta = new Map([
   ['/', pageMeta.get('home')],
   ['/design-cultures', pageMeta.get('cultures')],
