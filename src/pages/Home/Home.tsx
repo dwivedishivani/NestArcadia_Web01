@@ -288,8 +288,8 @@ export default function Home({ setPage }: Props) {
 
         <div className="relative w-full pb-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
           <p className="text-white/80 text-[10px] uppercase tracking-[0.32em] mb-5">{currentHero.eyebrow}</p>
-          <h1 className="font-display text-[clamp(2.5rem,7vw,5.25rem)] text-white leading-[1.04] mb-7">
-            {currentHero.title}
+          <h1 className="font-display text-[clamp(2.35rem,6.5vw,4.9rem)] text-white leading-[1.04] mb-7">
+            Interior Designers in<br />Noida Extension &amp;<br className="hidden sm:block" /> Greater Noida West
           </h1>
           <p className="text-white/65 text-[15px] leading-relaxed mb-9 max-w-[300px]">
             {currentHero.description}
