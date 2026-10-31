@@ -542,7 +542,7 @@ export default function Home({ setPage }: Props) {
             'Inspired by the craft and wisdom of the past',
             "Designed for today's ways of living",
             'Personalised to the way you use your home',
-            'Delivered with care, everywhere in India',
+            'Delivered with care, across Noida & NCR',
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-7 py-6 border-b border-white/[0.08] last:border-b-0">
               <span className="font-display text-[#B8D8D1] text-sm shrink-0 mt-px">0{i + 1}</span>
