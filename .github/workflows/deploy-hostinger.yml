@@ -39,7 +39,7 @@ jobs:
 
       - name: Prepare optimized homepage hero image
         run: |
-          timeout 180s timeout 180s sudo apt-get update -qq
+          timeout 180s sudo apt-get update -qq
           timeout 180s sudo apt-get install -y webp imagemagick
           mkdir -p public/images
           timeout 180s curl --fail --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 60 \
@@ -154,7 +154,7 @@ jobs:
             local url="$1"
             local expected="$2"
             local actual
-            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
+            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
             echo "$url -> Content-Type $actual"
             case "$actual" in
               "$expected"*) ;;
