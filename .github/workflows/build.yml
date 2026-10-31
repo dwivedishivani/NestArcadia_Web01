@@ -60,10 +60,14 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y apache2
           sudo a2enmod rewrite headers
+          sudo rm -rf /var/www/nestarcadia
+          sudo mkdir -p /var/www/nestarcadia
+          sudo cp -a dist/. /var/www/nestarcadia/
+          sudo chown -R www-data:www-data /var/www/nestarcadia
           sudo tee /etc/apache2/sites-available/000-default.conf > /dev/null <<EOF
           <VirtualHost *:80>
-            DocumentRoot "$GITHUB_WORKSPACE/dist"
-            <Directory "$GITHUB_WORKSPACE/dist">
+            DocumentRoot "/var/www/nestarcadia"
+            <Directory "/var/www/nestarcadia">
               Options FollowSymLinks
               AllowOverride All
               Require all granted
