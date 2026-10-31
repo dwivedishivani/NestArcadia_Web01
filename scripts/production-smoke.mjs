@@ -162,7 +162,7 @@ try {
   const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
   assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
   const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
-  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(/\\s+/)[0];
+  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(' ')[0];
   assert.ok(firstCandidate, 'responsive image srcset has no usable candidate');
   const responsiveImageResponse = await page.request.get(new URL(firstCandidate, baseUrl).toString());
   assert.equal(responsiveImageResponse.status(), 200, 'responsive WebP candidate must return HTTP 200');
