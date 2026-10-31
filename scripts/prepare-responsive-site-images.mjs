@@ -26,7 +26,7 @@ let totalBytes = 0;
 
 try {
   for (const item of manifest) {
-    if (!/^photo-\\d+-[a-z0-9]+$/i.test(item.key) || !Array.isArray(item.widths) || !item.widths.length) {
+    if (!/^photo-\d+-[a-z0-9]+$/i.test(item.key) || !Array.isArray(item.widths) || !item.widths.length) {
       throw new Error('Invalid responsive image manifest entry: ' + JSON.stringify(item));
     }
     const response = await fetch(item.url, { signal: AbortSignal.timeout(45000) });
