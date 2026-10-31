@@ -586,10 +586,10 @@ export default function Home({ setPage }: Props) {
           </div>
           <div className="lg:pt-2">
             <p className="text-[15px] leading-[1.9] text-[#6B5E4E] mb-5">
-              NestArcadia designs 2BHK, 3BHK and 4BHK interiors, villas and farmhouses across Noida, Greater Noida and Greater Noida West. We pair a practical understanding of apartment living with India’s material heritage — from efficient storage and modular kitchens to calm, characterful living spaces.
+              NestArcadia designs 2BHK, 3BHK and 4BHK interiors, villas and farmhouses with a primary focus on Noida Extension and Greater Noida West, alongside nearby Noida and Greater Noida. We pair practical apartment planning with India’s material heritage — from efficient storage and modular kitchens to calm, characterful living spaces.
             </p>
             <p className="text-[15px] leading-[1.9] text-[#6B5E4E]">
-              Our interior design and turnkey execution services also support homes and commercial spaces in Delhi, Gurgaon, Faridabad and Ghaziabad. Every project begins with the way you live and ends with a home or workplace that feels personal, functional and made to last.
+              Our primary local service focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets. For a property elsewhere in NCR, share its location and scope so the team can confirm whether the project is a fit.
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[13px] font-medium">
               <a href="/interior-design-noida-extension/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Noida Extension →</a>
