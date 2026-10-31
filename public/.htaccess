@@ -5,9 +5,14 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
 RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
-
 # Preserve the old portfolio URL for SEO/bookmarks.
-RewriteRule ^homes/?$ /our-projects [R=301,L]
+RewriteRule ^homes/?$ /our-projects/ [R=301,L]
+
+# Canonicalize extensionless public routes to the slash-terminated URLs in the sitemap.
+# File URLs (images, fonts, scripts, sitemap, robots, etc.) are left unchanged.
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L,NE]
 
 # HTML must always check for the latest deployment so browsers do not keep
 # an old Vite entry file that points at deleted hashed JavaScript chunks.
