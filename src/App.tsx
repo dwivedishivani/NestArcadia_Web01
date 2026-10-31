@@ -333,6 +333,30 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       });
     }
   }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
+
+  // A BFCache restore does not remount React or rerun the route effect above.
+  // Emit one page_view on persisted restores so analytics still reflects the
+  // page the visitor returned to, without reloading the whole application.
+  useEffect(() => {
+    const trackRestoredPage = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      const pathname = normalizePathname(window.location.pathname);
+      lastTrackedPathRef.current = pathname;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'page_view',
+        page_path: pathname,
+        page_location: window.location.href,
+        page_title: document.title,
+        page_type: localService ? 'local_service' : page,
+        content_group: localService ? 'local_service' : (page === 'journal' && pathname !== '/journal' ? 'journal_article' : page),
+      });
+    };
+
+    window.addEventListener('pageshow', trackRestoredPage);
+    return () => window.removeEventListener('pageshow', trackRestoredPage);
+  }, [page, localService]);
+
   return null;
 }
 
