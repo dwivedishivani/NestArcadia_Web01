@@ -48,6 +48,9 @@ jobs:
           test -s public/images/home-hero-mobile-v2.webp
           echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized-v2.webp | cut -f1)"
           echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile-v2.webp | cut -f1)"
+      - name: Prepare responsive site image variants
+        run: node scripts/prepare-responsive-site-images.mjs
+
       - name: Prepare self-hosted Latin fonts
         run: node scripts/prepare-local-fonts.mjs
 
