@@ -625,7 +625,7 @@ export default function Home({ setPage }: Props) {
 
             <div className="flex flex-wrap items-center gap-3 pt-6">
               <Link
-                to="/faqs"
+                to="/faqs/"
                 className="border border-[#1C3A5A] px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
               >
                 See All FAQs →

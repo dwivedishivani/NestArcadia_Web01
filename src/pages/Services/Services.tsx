@@ -210,17 +210,17 @@ export default function Services({ setPage }: Props) {
             <p className="text-[#6B5E4E] text-sm leading-[1.8]">From compact 2BHK apartments to larger homes, offices and commercial spaces, we shape the scope around the property, location and way you need to use it.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
-            <a href="/interior-design-greater-noida-west" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Residential</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">2BHK, 3BHK & 4BHK homes</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Space planning, modular kitchens, wardrobes, custom storage, lighting and complete home interiors.</p>
             </a>
-            <a href="/commercial-interior-design-greater-noida-west" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/commercial-interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Commercial</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Office & business interiors</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Workflow-led planning for offices, reception areas, meeting rooms, storage, lighting and acoustics.</p>
             </a>
-            <a href="/interior-design-noida-extension" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/interior-design-noida-extension/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Budget & planning</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Cost, scope & turnkey planning</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Plan your interior budget, priorities, materials and execution sequence before committing to the site.</p>

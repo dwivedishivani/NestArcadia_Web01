@@ -162,6 +162,20 @@ try {
     residentialStatus: residentialSourceResponse.status(),
   }));
 
+  const nonCanonicalHomepageLinks = await page.locator('a[href^="/"]').evaluateAll((anchors) =>
+    anchors.map((anchor) => anchor.getAttribute('href')).filter((href) => {
+      if (!href) return false;
+      const pathname = href.split(/[?#]/)[0];
+      return pathname !== '/' && !pathname.endsWith('/') && !/\.[a-z0-9]{2,5}$/i.test(pathname);
+    })
+  );
+  assert.deepEqual(nonCanonicalHomepageLinks, [],
+    'homepage internal route links must use the trailing-slash canonical URL');
+  console.log('INTERNAL_LINK_CANONICAL_SMOKE', JSON.stringify({
+    checkedLinks: await page.locator('a[href^="/"]').count(),
+    nonCanonicalLinks: nonCanonicalHomepageLinks,
+  }));
+
   const journalSourceResponse = await page.request.get(baseUrl + '/journal/rattan/');
   assert.equal(journalSourceResponse.status(), 200, 'Journal article source must return HTTP 200');
   const journalSource = await journalSourceResponse.text();

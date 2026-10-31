@@ -537,7 +537,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia Journal</p>
         <h1 className="font-display text-5xl mb-5">Page not found.</h1>
         <p className="text-[#6B5E4E] mb-8">The journal article you requested does not exist.</p>
-        <a href="/journal" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
+        <a href="/journal/" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
           Back to Journal
         </a>
       </div>
@@ -590,7 +590,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </p>
           </div>
           <a
-            href="/journal"
+            href="/journal/"
             onClick={(event) => { event.preventDefault(); setArticleId(null); }}
             className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
           >
@@ -636,7 +636,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             <h3 className="font-display text-2xl text-[#1A1714] mb-2">Want to bring this into your home?</h3>
             <p className="text-[#6B5E4E] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
             <a
-              href="/start-your-project"
+              href="/start-your-project/"
               onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
             >
