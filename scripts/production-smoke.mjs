@@ -143,7 +143,7 @@ try {
   assert.equal(initialH1Count, 1, 'homepage initial HTML must contain one semantic H1');
   assert.ok(homepageSource.includes('<p class="boot-heading" aria-hidden="true">'),
     'temporary boot overlay must not introduce a second semantic heading');
-  const homepageSchemaText = homepageSource.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i)?.[1];
+  const homepageSchemaText = homepageSource.match(/<script id="nestarcadia-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
   assert.ok(homepageSchemaText, 'homepage must contain initial business JSON-LD');
   const homepageSchema = JSON.parse(homepageSchemaText);
   const businessEntity = homepageSchema['@graph']?.find((entity) => entity['@id'] === 'https://nestarcadia.com/#business');
