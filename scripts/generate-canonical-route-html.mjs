@@ -222,6 +222,7 @@ if (publishedArticleSnapshot?.id && Array.isArray(publishedArticleSnapshot.block
     author: publishedArticleSnapshot.author || 'NestArcadia',
     readTime: publishedArticleSnapshot.readTime || '',
     body: publishedArticleSnapshot.blocks.map((block) => block.text).filter(Boolean),
+    bodyBlocks: publishedArticleSnapshot.blocks,
     related: [],
     datePublished: publishedArticleSnapshot.publishedAt || null,
     dateModified: publishedArticleSnapshot.updatedAt || publishedArticleSnapshot.publishedAt || null,
@@ -382,7 +383,15 @@ function renderStaticRoute(pathname, metadata) {
   const articleSlug = pathname.startsWith('/journal/') ? pathname.slice('/journal/'.length) : '';
   const article = articleSlug ? articleMeta.get(articleSlug) : null;
   if (article) {
-    const paragraphs = article.body.map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
+    const paragraphs = article.bodyBlocks?.length
+      ? article.bodyBlocks.map((block) => {
+          if (block.type === 'h2' || block.type === 'h3') {
+            return '<' + block.type + ' style="' + staticHeadingStyle + ';font-size:' + (block.type === 'h2' ? '1.7rem' : '1.25rem') + '">' + escapeText(block.text) + '</' + block.type + '>';
+          }
+          if (block.type === 'li') return '<p style="' + staticParagraphStyle + '">• ' + escapeText(block.text) + '</p>';
+          return '<p style="' + staticParagraphStyle + '">' + escapeText(block.text) + '</p>';
+        }).join('')
+      : article.body.map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
     const related = article.related.map((slug) => '<li style="margin:0 0 9px">' + inlineLink('/journal/' + slug.replace(/\/+$/, '') + '/', titleCaseSlug(slug)) + '</li>').join('');
     const localServiceLinks = '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Planning a home in Noida or Greater Noida West?</h2><p style="' + staticParagraphStyle + '">For guidance shaped around your floor plan, budget and execution scope, explore our ' +
       inlineLink('/interior-design-noida-extension/', 'interior design services in Noida Extension') + ', ' +
