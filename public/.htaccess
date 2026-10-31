@@ -18,9 +18,9 @@ RewriteRule ^homes/?$ /our-projects [R=301,L]
 # an old Vite entry file that points at deleted hashed JavaScript chunks.
 <IfModule mod_headers.c>
   <FilesMatch "\.(html)$">
-    Header set Cache-Control "no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
+    # Revalidate the public SPA shell on normal requests while keeping browser
+    # back/forward page restores eligible for the BFCache.
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 
   # Vite's hashed assets are safe to cache aggressively because their filenames
