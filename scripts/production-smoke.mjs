@@ -222,6 +222,39 @@ try {
     publishedArticleSnapshot: true,
   }));
 
+
+  const journalFeedResponsePromise = page.waitForResponse((response) =>
+    response.url().includes('/rest/v1/blogs_078be9eb') && response.request().method() === 'GET'
+  );
+  await page.goto(baseUrl + '/journal/');
+  const journalFeedResponse = await journalFeedResponsePromise;
+  assert.equal(journalFeedResponse.status(), 200, 'published journal feed must return HTTP 200');
+  const journalFeedBody = await journalFeedResponse.text();
+  assert.ok(!journalFeedBody.includes('data:image/'), 'journal feed must not transfer embedded base64 cover images');
+  const luxuryArticleLink = page.locator('a[href="/journal/luxury-interior-design-noida-extension/"]').first();
+  await luxuryArticleLink.waitFor({ state: 'visible' });
+  const luxuryArticleImage = luxuryArticleLink.locator('img').first();
+  assert.ok((await luxuryArticleImage.getAttribute('src'))?.length, 'bundled journal article must have a non-empty cover image source');
+  const nonCanonicalJournalLinks = await page.locator('a[href^="/journal/"]').evaluateAll((anchors) =>
+    anchors.map((anchor) => anchor.getAttribute('href')).filter((href) => {
+      if (!href || href === '/journal/') return false;
+      const pathname = href.split(/[?#]/)[0];
+      return !pathname.endsWith('/');
+    })
+  );
+  assert.deepEqual(nonCanonicalJournalLinks, [], 'journal article links must use trailing-slash canonical URLs');
+  await luxuryArticleLink.click();
+  await page.waitForURL(/\\/journal\\/luxury-interior-design-noida-extension\\/$/);
+  assert.ok(await page.getByRole('heading', { name: /Luxury Interior Design in Noida Extension/i }).count(),
+    'bundled journal article should open through canonical client-side navigation');
+  console.log('JOURNAL_RUNTIME_SMOKE', JSON.stringify({
+    feedStatus: journalFeedResponse.status(),
+    noBase64ImagePayload: true,
+    articleCoverPresent: true,
+    canonicalArticleLinks: true,
+    canonicalClientNavigation: true,
+  }));
+
   // Exercise the project-gallery lazy chunk directly. The homepage smoke alone
   // cannot detect a missing/stale Homes bundle, which previously surfaced as the
   // generic "Something interrupted this page" route error.
