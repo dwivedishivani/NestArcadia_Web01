@@ -198,26 +198,42 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
         }
 
         if (googleAnalyticsId) {
-          tags.push(
-            {
-              tag: 'script',
-              attrs: {
-                async: true,
-                src: `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`,
-              },
-              injectTo: 'head',
-            },
-            {
-              tag: 'script',
-              children: `
+          // Queue GA4 commands immediately so consent updates and route/lead events
+          // are never lost, but defer the external analytics download until after
+          // the page load/idle period or the visitor's first interaction.
+          tags.push({
+            tag: 'script',
+            children: `
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', ${JSON.stringify(googleAnalyticsId)});
+  window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+  window.gtag('js', new Date());
+  window.gtag('config', ${JSON.stringify(googleAnalyticsId)});
+  (function(w,d){
+    var started = false;
+    function loadGoogleAnalytics(){
+      if (started) return;
+      started = true;
+      var script = d.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + ${JSON.stringify(googleAnalyticsId)};
+      d.head.appendChild(script);
+    }
+    ['pointerdown','keydown','touchstart','scroll'].forEach(function(eventName){
+      w.addEventListener(eventName, loadGoogleAnalytics, { once: true, passive: true });
+    });
+    function loadWhenIdle(){
+      if (typeof w.requestIdleCallback === 'function') {
+        w.requestIdleCallback(loadGoogleAnalytics, { timeout: 2500 });
+      } else {
+        w.setTimeout(loadGoogleAnalytics, 1000);
+      }
+    }
+    if (d.readyState === 'complete') loadWhenIdle();
+    else w.addEventListener('load', loadWhenIdle, { once: true });
+  })(window, document);
 `,
-              injectTo: 'head',
-            },
-          )
+            injectTo: 'head',
+          })
         }
 
         if (config.accessibility?.addBypassLinks) {
