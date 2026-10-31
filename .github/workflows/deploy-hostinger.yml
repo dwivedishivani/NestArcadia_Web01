@@ -39,7 +39,7 @@ jobs:
       - name: Prepare optimized homepage hero image
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y webp
+          sudo apt-get install -y webp imagemagick
           mkdir -p public/images
           curl --fail --location --silent --show-error --retry 3 \
             'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' \
@@ -57,6 +57,9 @@ jobs:
       - name: Prepare responsive site image variants
         run: node scripts/prepare-responsive-site-images.mjs
 
+      - name: Prepare NestArcadia app icons
+        run: node scripts/prepare-app-icons.mjs
+
       - name: Prepare self-hosted Latin fonts
         run: node scripts/prepare-local-fonts.mjs
 
@@ -71,6 +74,11 @@ jobs:
           test -s dist/sitemap.xml
           test -s dist/images/home-hero-mobile-v2.webp
           test -s dist/images/home-hero-optimized-v2.webp
+          test -s dist/apple-touch-icon.png
+          test -s dist/favicon.ico
+          test -s dist/android-chrome-192x192.png
+          test -s dist/android-chrome-512x512.png
+          test -s dist/site.webmanifest
           test -s dist/fonts/fonts-v1.css
           test -s dist/fonts/dm-sans-latin-v1.woff2
           test -s dist/fonts/playfair-display-latin-v1.woff2
@@ -110,10 +118,10 @@ jobs:
               -p "$HOSTINGER_SSH_PORT" \
               -o StrictHostKeyChecking=yes \
               "$HOSTINGER_SSH_USERNAME@$HOSTINGER_SSH_HOST" \
-              'set -eu; target="$HOME/domains/nestarcadia.com/public_html"; mkdir -p "$target"; tar -xzf - -C "$target"; test -s "$target/index.html"; test -s "$target/images/home-hero-mobile-v2.webp"; test -s "$target/images/home-hero-optimized-v2.webp"; test -s "$target/fonts/fonts-v1.css"; test -s "$target/fonts/dm-sans-latin-v1.woff2"; test -s "$target/fonts/playfair-display-latin-v1.woff2"; test -s "$target/fonts/playfair-display-italic-latin-v1.woff2"; echo "Remote production files, hero images, and fonts verified."'
+              'set -eu; target="$HOME/domains/nestarcadia.com/public_html"; mkdir -p "$target"; tar -xzf - -C "$target"; test -s "$target/index.html"; test -s "$target/images/home-hero-mobile-v2.webp"; test -s "$target/images/home-hero-optimized-v2.webp"; test -s "$target/apple-touch-icon.png"; test -s "$target/favicon.ico"; test -s "$target/android-chrome-192x192.png"; test -s "$target/android-chrome-512x512.png"; test -s "$target/site.webmanifest"; test -s "$target/fonts/fonts-v1.css"; test -s "$target/fonts/dm-sans-latin-v1.woff2"; test -s "$target/fonts/playfair-display-latin-v1.woff2"; test -s "$target/fonts/playfair-display-italic-latin-v1.woff2"; echo "Remote production files, hero images, and fonts verified."'
 
           echo "Production files uploaded to Hostinger."
-          for url in "https://nestarcadia.com/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
+          for url in "https://nestarcadia.com/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon.ico" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png" "https://nestarcadia.com/site.webmanifest" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
             status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{http_code}' "$url")
             echo "$url -> HTTP $status"
             test "$status" = "200"
