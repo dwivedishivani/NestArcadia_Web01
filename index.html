@@ -56,8 +56,8 @@
     <link rel="preload" as="image" href="/images/home-hero-optimized-v2.webp" media="(min-width: 768px)" fetchpriority="high" />
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
     <!-- Self-hosted fonts avoid an external stylesheet and font-file connection in the critical path. -->
-    <link rel="preload" href="/fonts/dm-sans-latin-v1.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/playfair-display-latin-v1.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Let the self-hosted font stylesheet request only the font faces actually used.
+         Avoid preloading both families before CSS confirms they are needed. -->
     <link rel="preload" as="style" href="/fonts/fonts-v1.css" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="/fonts/fonts-v1.css" /></noscript>
     <link rel="canonical" href="https://nestarcadia.com/" />
