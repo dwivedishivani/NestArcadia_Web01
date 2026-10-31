@@ -139,6 +139,40 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  // App/home-screen icon contract: links, manifest and real image responses.
+  for (const requiredLink of [
+    'rel="icon" type="image/x-icon" href="/favicon.ico"',
+    'rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"',
+    'rel="manifest" href="/site.webmanifest"',
+  ]) {
+    assert.ok(homepageSource.includes(requiredLink), 'homepage is missing icon link: ' + requiredLink);
+  }
+  const appManifestResponse = await page.request.get(baseUrl + '/site.webmanifest');
+  assert.equal(appManifestResponse.status(), 200, 'site.webmanifest must return HTTP 200');
+  const appManifest = await appManifestResponse.json();
+  assert.equal(appManifest.name, 'NestArcadia Interiors', 'app manifest name mismatch');
+  for (const expectedIcon of ['/android-chrome-192x192.png', '/android-chrome-512x512.png']) {
+    assert.ok(appManifest.icons?.some((icon) => icon.src === expectedIcon), 'manifest is missing icon: ' + expectedIcon);
+  }
+  for (const iconPath of ['/apple-touch-icon.png', '/android-chrome-192x192.png', '/android-chrome-512x512.png', '/favicon-32x32.png']) {
+    const iconResponse = await page.request.get(baseUrl + iconPath);
+    assert.equal(iconResponse.status(), 200, 'app icon must return HTTP 200: ' + iconPath);
+    assert.ok((iconResponse.headers()['content-type'] || '').startsWith('image/png'), 'app icon has wrong MIME type: ' + iconPath);
+  }
+  const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
+  assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
+  const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
+  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(/\\s+/)[0];
+  assert.ok(firstCandidate, 'responsive image srcset has no usable candidate');
+  const responsiveImageResponse = await page.request.get(new URL(firstCandidate, baseUrl).toString());
+  assert.equal(responsiveImageResponse.status(), 200, 'responsive WebP candidate must return HTTP 200');
+  assert.ok((responsiveImageResponse.headers()['content-type'] || '').startsWith('image/webp'), 'responsive image candidate must be served as WebP');
+  console.log('APP_ICONS_AND_RESPONSIVE_IMAGES_SMOKE', JSON.stringify({
+    manifestIcons: appManifest.icons.length,
+    responsiveImageCount,
+    responsiveCandidate: firstCandidate,
+  }));
+
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
