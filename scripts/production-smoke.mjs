@@ -201,6 +201,7 @@ try {
     ['/our-story/', 'A design approach rooted in how people live'],
     ['/our-projects/', 'Selected home concepts and interior design studies'],
     ['/start-your-project/', 'Tell us about your property'],
+    ['/faqs/', 'Which areas does NestArcadia serve?'],
     ['/journal/luxury-interior-design-noida-extension/', '5 Core Elements of High-End Residential Interiors'],
   ];
   for (const [route, expectedContent] of staticRouteChecks) {
@@ -210,6 +211,9 @@ try {
     assert.ok(html.includes('href="https://nestarcadia.com' + route + '"'), route + ' must have its canonical URL');
     assert.ok(html.includes(expectedContent), route + ' must contain its page-specific static content');
     assert.ok(html.includes('"@type":"WebPage"'), route + ' must contain route-specific WebPage JSON-LD');
+    if (route === '/faqs/') {
+      assert.ok(html.includes('"@type":"FAQPage"'), 'FAQ route must contain FAQPage JSON-LD');
+    }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
       assert.ok(!html.includes('data:image/'), 'static article HTML must not embed a base64 image');
