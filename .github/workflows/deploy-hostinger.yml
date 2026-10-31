@@ -13,11 +13,12 @@ permissions:
 
 concurrency:
   group: nestarcadia-hostinger-deploy
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -38,8 +39,8 @@ jobs:
 
       - name: Prepare optimized homepage hero image
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y webp imagemagick
+          timeout 180s sudo apt-get update -qq
+          timeout 180s sudo apt-get install -y webp imagemagick
           mkdir -p public/images
           curl --fail --location --silent --show-error --retry 3 \
             'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' \
@@ -127,6 +128,7 @@ jobs:
             SSHPASS="$HOSTINGER_SSH_PASSWORD" sshpass -e ssh \
               -p "$HOSTINGER_SSH_PORT" \
               -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=20 \
               "$HOSTINGER_SSH_USERNAME@$HOSTINGER_SSH_HOST" \
               'set -eu; target="$HOME/domains/nestarcadia.com/public_html"; mkdir -p "$target"; tar -xzf - -C "$target"; test -s "$target/index.html"; test -s "$target/images/home-hero-mobile-v2.webp"; test -s "$target/images/home-hero-optimized-v2.webp"; test -s "$target/apple-touch-icon.png"; test -s "$target/favicon.ico"; test -s "$target/android-chrome-192x192.png"; test -s "$target/android-chrome-512x512.png"; test -s "$target/site.webmanifest"; test -s "$target/fonts/fonts-v1.css"; test -s "$target/fonts/dm-sans-latin-v1.woff2"; test -s "$target/fonts/playfair-display-latin-v1.woff2"; test -s "$target/fonts/playfair-display-italic-latin-v1.woff2"; echo "Remote production files, hero images, and fonts verified."'
 
@@ -134,7 +136,7 @@ jobs:
 
           # The public HTML is identical for visitors and contains no private data.
           # Require revalidation without a blanket no-store policy on the SPA shell.
-          html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -I "https://nestarcadia.com/" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
+          html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -I "https://nestarcadia.com/" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
           echo "Homepage Cache-Control: $html_cache_control"
           case "$html_cache_control" in
             *no-store*) echo "::error::Public homepage still sends Cache-Control: no-store."; exit 1 ;;
@@ -143,7 +145,7 @@ jobs:
           esac
 
           for url in "https://nestarcadia.com/" "https://nestarcadia.com/interior-design-services/" "https://nestarcadia.com/interior-design-noida-extension/" "https://nestarcadia.com/interior-design-greater-noida-west/" "https://nestarcadia.com/journal/rattan/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon.ico" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png" "https://nestarcadia.com/site.webmanifest" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
-            status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{http_code}' "$url")
+            status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{http_code}' "$url")
             echo "$url -> HTTP $status"
             test "$status" = "200"
           done
@@ -152,7 +154,7 @@ jobs:
             local url="$1"
             local expected="$2"
             local actual
-            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{content_type}' "$url")
+            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
             echo "$url -> Content-Type $actual"
             case "$actual" in
               "$expected"*) ;;
