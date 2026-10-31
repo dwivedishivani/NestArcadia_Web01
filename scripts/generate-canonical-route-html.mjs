@@ -223,6 +223,8 @@ if (publishedArticleSnapshot?.id && Array.isArray(publishedArticleSnapshot.block
     readTime: publishedArticleSnapshot.readTime || '',
     body: publishedArticleSnapshot.blocks.map((block) => block.text).filter(Boolean),
     related: [],
+    datePublished: publishedArticleSnapshot.publishedAt || null,
+    dateModified: publishedArticleSnapshot.updatedAt || publishedArticleSnapshot.publishedAt || null,
   });
 }
 
@@ -411,6 +413,67 @@ for (const rawUrl of urls) {
   html = replaceMeta(html, /<meta name="twitter:image"[^>]*\/?>/i, 'content', imageUrl, '<meta name="twitter:image" content="__VALUE__" />');
   html = replaceMeta(html, /<meta property="og:type"[^>]*\/?>/i, 'content', metadata.type === 'article' ? 'article' : 'website', '<meta property="og:type" content="__VALUE__" />');
 
+  // Keep the business entity graph, but make the page-level structured data
+  // accurate in the initial HTML (before the React application runs).
+  const schemaMatch = html.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
+  if (!schemaMatch) throw new Error('Route schema generation stopped: base JSON-LD script is missing for ' + rawUrl);
+  const schemaDocument = JSON.parse(schemaMatch[1]);
+  const schemaGraph = Array.isArray(schemaDocument['@graph']) ? schemaDocument['@graph'] : [];
+  const pageSchema = {
+    '@type': 'WebPage',
+    '@id': canonical + '#webpage',
+    url: canonical,
+    name: title,
+    description,
+    isPartOf: { '@id': baseUrl + '/#website' },
+    about: { '@id': baseUrl + '/#business' },
+  };
+  const routeGraph = [pageSchema];
+  if (metadata.type === 'article') {
+    routeGraph.push({
+      '@type': 'BlogPosting',
+      '@id': canonical + '#article',
+      url: canonical,
+      mainEntityOfPage: { '@id': canonical + '#webpage' },
+      headline: metadata.articleTitle || title,
+      description,
+      author: { '@type': 'Person', name: metadata.author || 'NestArcadia' },
+      publisher: { '@id': baseUrl + '/#business' },
+      image: imageUrl,
+      articleSection: metadata.category || 'Journal',
+      ...(metadata.datePublished ? { datePublished: metadata.datePublished } : {}),
+      ...(metadata.dateModified ? { dateModified: metadata.dateModified } : {}),
+    });
+  } else if (metadata.type === 'service') {
+    routeGraph.push({
+      '@type': 'Service',
+      '@id': canonical + '#service',
+      name: title,
+      description,
+      serviceType: 'Interior design and turnkey execution',
+      provider: { '@id': baseUrl + '/#business' },
+      ...(metadata.area ? { areaServed: { '@type': 'Place', name: metadata.area } } : {}),
+    });
+  }
+  if (routePath !== '/') {
+    routeGraph.push({
+      '@type': 'BreadcrumbList',
+      '@id': canonical + '#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: metadata.area || (metadata.articleTitle ? 'Journal' : heading), item: canonical },
+      ],
+    });
+  }
+  schemaDocument['@graph'] = [
+    ...schemaGraph.filter((item) => !['WebPage', 'BlogPosting', 'Service', 'BreadcrumbList'].some((type) =>
+      item['@type'] === type || (Array.isArray(item['@type']) && item['@type'].includes(type))
+    )),
+    ...routeGraph,
+  ];
+  html = html.replace(schemaMatch[0], '<script id="nestarcadia-schema" type="application/ld+json">' + JSON.stringify(schemaDocument) + '</script>');
+
+
   // Don't download the homepage LCP image for every other route.
   if (routePath !== '/') {
     html = html.replace(/\s*<link rel="preload" as="image" href="\/images\/home-hero-mobile-v2\.webp"[^>]*\/?>/gi, '');
@@ -425,6 +488,15 @@ for (const rawUrl of urls) {
   }
   if (!html.includes('property="og:url" content="' + escapeAttribute(canonical) + '"')) {
     throw new Error('Route-specific Open Graph URL generation failed for ' + rawUrl);
+  }
+  const finalSchemaMatch = html.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
+  if (!finalSchemaMatch) throw new Error('Route JSON-LD missing after generation for ' + rawUrl);
+  const finalSchema = JSON.parse(finalSchemaMatch[1]);
+  if (!finalSchema['@graph']?.some((item) => item['@type'] === 'WebPage' && item.url === canonical)) {
+    throw new Error('Canonical WebPage JSON-LD missing for ' + rawUrl);
+  }
+  if (metadata.type === 'article' && !finalSchema['@graph']?.some((item) => item['@type'] === 'BlogPosting' && item.url === canonical)) {
+    throw new Error('BlogPosting JSON-LD missing for ' + rawUrl);
   }
 
   const requiredSingleTags = [
