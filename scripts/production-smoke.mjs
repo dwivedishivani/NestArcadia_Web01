@@ -245,8 +245,7 @@ try {
   assert.deepEqual(nonCanonicalJournalLinks, [], 'journal article links must use trailing-slash canonical URLs');
   await luxuryArticleLink.click();
   await page.waitForURL((url) => url.pathname === '/journal/luxury-interior-design-noida-extension/');
-  assert.ok(await page.getByRole('heading', { name: /Luxury Interior Design in Noida Extension/i }).count(),
-    'bundled journal article should open through canonical client-side navigation');
+  await page.getByRole('heading', { name: /Luxury Interior Design in Noida Extension/i }).waitFor({ state: 'visible' });
   console.log('JOURNAL_RUNTIME_SMOKE', JSON.stringify({
     feedStatus: journalFeedResponse.status(),
     noBase64ImagePayload: true,
