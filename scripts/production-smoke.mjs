@@ -159,7 +159,13 @@ try {
     assert.equal(iconResponse.status(), 200, 'app icon must return HTTP 200: ' + iconPath);
     assert.ok((iconResponse.headers()['content-type'] || '').startsWith('image/png'), 'app icon has wrong MIME type: ' + iconPath);
   }
+  const imageDiagnostics = await page.locator('main img').evaluateAll((images) => images.slice(0, 18).map((image) => ({
+    key: image.getAttribute('data-site-image-key'),
+    src: image.getAttribute('src'),
+    srcset: image.getAttribute('srcset'),
+  })));
   const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
+  console.log('RESPONSIVE_SRCSET_DIAGNOSTIC', JSON.stringify({ responsiveImageCount, images: imageDiagnostics }));
   assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
   const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
   const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(' ')[0];
