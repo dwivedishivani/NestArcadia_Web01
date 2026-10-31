@@ -391,6 +391,11 @@ for (const rawUrl of urls) {
 
   let html = template;
   const staticMarkup = renderStaticRoute(routeKey, metadata);
+  if (routeKey === '/journal/luxury-interior-design-noida-extension') {
+    if (!metadata.body?.length || !staticMarkup.includes('5 Core Elements of High-End Residential Interiors')) {
+      throw new Error('Published Noida Extension journal article is missing its static content snapshot.');
+    }
+  }
   const rootPlaceholder = '<div id="root"></div>';
   if (!html.includes(rootPlaceholder)) throw new Error('Static SEO content generation stopped: #root placeholder is missing for ' + rawUrl);
   html = html.replace(rootPlaceholder, '<div id="root">' + staticMarkup + '</div>');
