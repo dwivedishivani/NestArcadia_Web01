@@ -18,15 +18,15 @@ jobs:
               "keyLocation": "https://nestarcadia.com/indexnow-key.txt",
               "urlList": [
                 "https://nestarcadia.com/",
-                "https://nestarcadia.com/design-cultures",
-                "https://nestarcadia.com/interior-design-services",
-                "https://nestarcadia.com/our-story",
-                "https://nestarcadia.com/our-projects",
-                "https://nestarcadia.com/journal",
-                "https://nestarcadia.com/faqs",
-                "https://nestarcadia.com/start-your-project",
-                "https://nestarcadia.com/interior-design-greater-noida-west",
-                "https://nestarcadia.com/interior-design-noida-extension",
-                "https://nestarcadia.com/commercial-interior-design-greater-noida-west"
+                "https://nestarcadia.com/design-cultures/",
+                "https://nestarcadia.com/interior-design-services/",
+                "https://nestarcadia.com/our-story/",
+                "https://nestarcadia.com/our-projects/",
+                "https://nestarcadia.com/journal/",
+                "https://nestarcadia.com/faqs/",
+                "https://nestarcadia.com/start-your-project/",
+                "https://nestarcadia.com/interior-design-greater-noida-west/",
+                "https://nestarcadia.com/interior-design-noida-extension/",
+                "https://nestarcadia.com/commercial-interior-design-greater-noida-west/"
               ]
             }'
