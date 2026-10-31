@@ -1,5 +1,5 @@
 import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -11,6 +11,7 @@ const cultures = [
     tagline: 'Warmth. Grandeur. Rich textures.',
     desc: "Northern India's design language is built on opulence and warmth — carved wood, brass accents, deep jewel tones, and heavy drapes. Spaces feel ceremonial yet welcoming, drawing from the courts of Rajasthan and the havelis of Old Delhi.",
     materials: ['Carved teak and sheesham wood', 'Brass and copper finishes', 'Jali lattice screens', 'Rich block-print textiles', 'Terracotta and sandstone floors'],
+    imageKey: 'photo-1604578762246-41134e37f9cc',
     img: u('photo-1604578762246-41134e37f9cc', 1200, 800),
     thumb: u('photo-1604578762246-41134e37f9cc', 600, 400),
     accent: '#2D8C7E',
@@ -20,6 +21,7 @@ const cultures = [
     tagline: 'Wood. Light. Timeless elegance.',
     desc: 'South Indian design breathes with natural light and unadorned wood. Rosewood pillars, granite floors, and woven cane — simplicity is the luxury. Spaces are open, airy, and grounded in a deep respect for natural materials.',
     materials: ['Rosewood and teak columns', 'Granite and Athangudi tiles', 'Woven cane furniture', 'Bronze temple lamps', 'Mango wood accents'],
+    imageKey: 'photo-1713192704825-74a0017f585d',
     img: u('photo-1713192704825-74a0017f585d', 1200, 800),
     thumb: u('photo-1713192704825-74a0017f585d', 600, 400),
     accent: '#2D8C7E',
@@ -29,6 +31,7 @@ const cultures = [
     tagline: 'Art. Craft. Soulful simplicity.',
     desc: "Eastern India's aesthetic is rooted in artisanal craft and artistic expression. Kantha embroidery, terracotta pottery, bamboo furniture, and Madhubani murals breathe life into every surface. Design here tells a story.",
     materials: ['Bamboo and cane structures', 'Kantha-embroidered textiles', 'Terracotta pottery and tiles', 'Dokra metalwork', 'Patachitra-inspired wall art'],
+    imageKey: 'photo-1640357264948-24beb7df5216',
     img: u('photo-1640357264948-24beb7df5216', 1200, 800),
     thumb: u('photo-1640357264948-24beb7df5216', 600, 400),
     accent: '#2D8C7E',
@@ -38,6 +41,7 @@ const cultures = [
     tagline: 'Colour. Character. Craftsmanship.',
     desc: "Western India is alive with colour and craft. Mirror work, lacquer furniture, and vibrant hand-block prints create spaces that are bold yet refined. Gujarat's step-well geometry and Mumbai's Art Deco legacy sit side by side.",
     materials: ['Mirror and glass inlay (shisha)', 'Lacquered furniture', 'Block-print and bandhani textiles', 'Teak and mango wood', 'White lime plaster walls'],
+    imageKey: 'photo-1746439315937-79a9cb4c1521',
     img: u('photo-1746439315937-79a9cb4c1521', 1200, 800),
     thumb: u('photo-1746439315937-79a9cb4c1521', 600, 400),
     accent: '#2D8C7E',
@@ -47,6 +51,7 @@ const cultures = [
     tagline: 'Raw. Earthy. Grounded.',
     desc: "Central India's design identity is built from the land itself — raw earth plaster, hand-carved stone, tribal textile patterns, and materials gathered from forests and rivers. It is primal, organic, and deeply rooted.",
     materials: ['Raw earth and lime plaster', 'Hand-carved stone', 'Bastar dhokra craft', 'Channapatna wooden toys as decor', 'Natural fibre weaves'],
+    imageKey: 'photo-1746173098001-2ae330a6a763',
     img: u('photo-1746173098001-2ae330a6a763', 1200, 800),
     thumb: u('photo-1746173098001-2ae330a6a763', 600, 400),
     accent: '#2D8C7E',
@@ -54,9 +59,9 @@ const cultures = [
 ];
 
 const trending = [
-  { name: 'Rattan Mesh', img: u('photo-1746439304975-9792af19277a', 600, 400), desc: 'Light. Breezy. Eternal.' },
-  { name: 'Lime Plaster', img: u('photo-1713192707180-74d7affad614', 600, 400), desc: 'Earthy. Elegant. Modern.' },
-  { name: 'Antique Doors', img: u('photo-1746812659296-69ab75a02db9', 600, 400), desc: 'A new life in modern homes.' },
+  { name: 'Rattan Mesh', imageKey: 'photo-1746439304975-9792af19277a', img: u('photo-1746439304975-9792af19277a', 600, 400), desc: 'Light. Breezy. Eternal.' },
+  { name: 'Lime Plaster', imageKey: 'photo-1713192707180-74d7affad614', img: u('photo-1713192707180-74d7affad614', 600, 400), desc: 'Earthy. Elegant. Modern.' },
+  { name: 'Antique Doors', imageKey: 'photo-1746812659296-69ab75a02db9', img: u('photo-1746812659296-69ab75a02db9', 600, 400), desc: 'A new life in modern homes.' },
 ];
 
 export default function DesignCultures({ setPage }: Props) {
@@ -66,6 +71,9 @@ export default function DesignCultures({ setPage }: Props) {
       <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '380px' }}>
         <img
           src={u('photo-1788612994420-36d5696585ca', 1440, 500)}
+          data-site-image-key="photo-1788612994420-36d5696585ca"
+          srcSet={resolveSiteImageSrcSet('photo-1788612994420-36d5696585ca')}
+          sizes="100vw"
           alt="Indian design cultures interpreted for modern Noida and Greater Noida homes"
           width="1440"
           height="500"
@@ -96,6 +104,9 @@ export default function DesignCultures({ setPage }: Props) {
             >
               <img
                 src={c.img}
+                data-site-image-key={c.imageKey}
+                srcSet={resolveSiteImageSrcSet(c.imageKey)}
+                sizes="(max-width: 1023px) 100vw, 50vw"
                 alt={`${c.name} Indian heritage interior design for Noida and Greater Noida homes`}
                 loading={i < 2 ? 'eager' : 'lazy'}
                 fetchPriority={i < 2 ? 'high' : 'auto'}
@@ -147,6 +158,9 @@ export default function DesignCultures({ setPage }: Props) {
               <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                 <img
                   src={t.img}
+                  data-site-image-key={t.imageKey}
+                  srcSet={resolveSiteImageSrcSet(t.imageKey)}
+                  sizes="(max-width: 639px) 90vw, 33vw"
                   alt={`${t.name} detail for heritage-inspired interiors in Noida and Greater Noida`}
                   loading="lazy"
                   decoding="async"
