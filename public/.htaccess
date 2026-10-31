@@ -1,6 +1,11 @@
 # NestArcadia SPA redirects
 RewriteEngine On
 
+# Serve the Web App Manifest with its registered media type.
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
 # Canonicalize the host so search engines see one authoritative domain.
 RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
 RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
