@@ -206,8 +206,8 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
 
   const journalSeoOverrides: Record<string, { title: string; description: string }> = {
     'luxury-interior-design-noida-extension': {
-      title: 'Luxury Interior Designers in Noida Extension | Premium Turnkey Execution by Nest Arcadia',
-      description: 'Elevate your apartment with Nest Arcadia, the premier luxury interior design studio in Greater Noida West. Discover our guide to high-end, turnkey 3BHK/4BHK interiors, spatial planning, and smart home integration.',
+      title: 'Luxury Interior Design in Noida Extension: Planning Guide | NestArcadia Journal',
+      description: 'A practical guide to high-end 3BHK and 4BHK apartment interiors in Noida Extension, covering spatial planning, finish selection and smart-home considerations.',
     },
   };
 
