@@ -617,7 +617,7 @@ function SiteShell() {
           {page === 'cultures' && <DesignCultures setPage={setPage} />}
           {page === 'services' && <Services setPage={setPage} />}
           {page === 'story' && <OurStory setPage={setPage} />}
-          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />}
+          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
           {page === 'homes' && <Homes setPage={setPage} />}
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}
