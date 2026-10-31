@@ -179,6 +179,11 @@ try {
   for (const requiredLink of requiredHomepageServiceLinks) {
     assert.ok(homepageHrefValues.includes(requiredLink), 'homepage is missing contextual service link: ' + requiredLink);
   }
+  const footerServiceAreaLinks = await page.locator('nav[aria-label="NestArcadia service areas"] a').evaluateAll((anchors) =>
+    anchors.map((anchor) => anchor.getAttribute('href'))
+  );
+  assert.deepEqual(footerServiceAreaLinks, requiredHomepageServiceLinks,
+    'footer service-area links must prioritise only the four core Noida markets');
   const nonCanonicalHomepageLinks = await page.locator('a[href^="/"]').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href')).filter((href) => {
       if (!href) return false;
