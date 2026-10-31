@@ -194,6 +194,34 @@ try {
     turnkeyServicesLink: true,
   }));
 
+
+  const staticRouteChecks = [
+    ['/design-cultures/', 'Regional inspiration, interpreted for modern homes'],
+    ['/interior-design-services/', 'Residential interior design'],
+    ['/our-story/', 'A design approach rooted in how people live'],
+    ['/our-projects/', 'Selected home concepts and interior design studies'],
+    ['/start-your-project/', 'Tell us about your property'],
+    ['/journal/luxury-interior-design-noida-extension/', '5 Core Elements of High-End Residential Interiors'],
+  ];
+  for (const [route, expectedContent] of staticRouteChecks) {
+    const response = await page.request.get(baseUrl + route);
+    assert.equal(response.status(), 200, route + ' must return HTTP 200');
+    const html = await response.text();
+    assert.ok(html.includes('href="https://nestarcadia.com' + route + '"'), route + ' must have its canonical URL');
+    assert.ok(html.includes(expectedContent), route + ' must contain its page-specific static content');
+    assert.ok(html.includes('"@type":"WebPage"'), route + ' must contain route-specific WebPage JSON-LD');
+    if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
+      assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
+      assert.ok(!html.includes('data:image/'), 'static article HTML must not embed a base64 image');
+    }
+  }
+  console.log('CORE_STATIC_SEO_ROUTES_SMOKE', JSON.stringify({
+    routesChecked: staticRouteChecks.length,
+    allStatus200: true,
+    uniqueCanonicalAndSchema: true,
+    publishedArticleSnapshot: true,
+  }));
+
   // Exercise the project-gallery lazy chunk directly. The homepage smoke alone
   // cannot detect a missing/stale Homes bundle, which previously surfaced as the
   // generic "Something interrupted this page" route error.
