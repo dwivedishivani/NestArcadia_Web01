@@ -8,7 +8,7 @@ export const faqGroups = [
   {
     label: 'Working with NestArcadia',
     items: [
-      ['Which areas does NestArcadia serve?', 'NestArcadia serves Noida, Greater Noida, Greater Noida West, Noida Extension, Delhi, Gurgaon, Faridabad and Ghaziabad for residential and commercial interior design projects.'],
+      ["Which areas does NestArcadia serve?", "NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope."],
       ['Do you provide turnkey interior design and execution?', 'Yes. Depending on the project, we can manage the process from planning and design through materials, site execution and final handover.'],
       ['When should I contact an interior designer?', 'Ideally, before possession or before major civil and electrical work begins. Planning early gives you more flexibility with kitchen layouts, wardrobes, storage, lighting and electrical points.'],
       ['Can I meet the team before committing to a project?', 'Yes. A consultation helps us understand the property, your requirements and the kind of design support you need before you decide on the project.'],
@@ -64,7 +64,7 @@ export default function FAQs({ setPage }: Props) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
           <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">NestArcadia FAQs</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] text-[#1A1714]">Interior design questions, answered clearly.</h1>
-          <p className="mt-5 max-w-2xl text-[15px] leading-[1.9] text-[#6B5E4E]">Helpful answers for homeowners and businesses in Greater Noida West, Noida Extension, Greater Noida, Noida and NCR — from apartment interiors and modular kitchens to turnkey execution and commercial spaces.</p>
+          <p className="mt-5 max-w-2xl text-[15px] leading-[1.9] text-[#6B5E4E]">Helpful answers for homeowners and businesses in Noida Extension and Greater Noida West, with nearby Noida and Greater Noida also in focus — from apartment interiors and modular kitchens to turnkey execution and commercial spaces.</p>
         </div>
       </header>
 

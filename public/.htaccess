@@ -1,31 +1,38 @@
-# NestArcadia SPA redirects
+# NestArcadia canonical redirects, MIME types and SPA fallback
 RewriteEngine On
 
-# Serve the Web App Manifest with its registered media type.
+# Preserve manifest and favicon MIME types.
 <IfModule mod_mime.c>
   AddType application/manifest+json .webmanifest
   AddType image/x-icon .ico
 </IfModule>
 
-# Canonicalize the host so search engines see one authoritative domain.
+# Redirect the legacy portfolio route only on the production domain.
+RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
+
+# Redirect www to apex and add the trailing slash in the same hop where needed.
+RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
 RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
 RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
+# Canonicalize extensionless routes on the apex domain; leave static files alone.
+RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
-# Preserve the old portfolio URL for SEO/bookmarks.
-RewriteRule ^homes/?$ /our-projects [R=301,L]
-
-# HTML must always check for the latest deployment so browsers do not keep
-# an old Vite entry file that points at deleted hashed JavaScript chunks.
+# Revalidate HTML while preserving the BFCache-friendly policy from main.
 <IfModule mod_headers.c>
   <FilesMatch "\.(html)$">
-    # Revalidate the public SPA shell on normal requests while keeping browser
-    # back/forward page restores eligible for the BFCache.
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 
-  # Vite's hashed assets are safe to cache aggressively because their filenames
-  # change whenever their contents change.
+  # Hashed assets can be cached aggressively.
   <FilesMatch "\.(js|mjs|css|png|jpg|jpeg|gif|svg|webp|ico|woff2?)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>

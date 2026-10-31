@@ -190,11 +190,11 @@ export default function Services({ setPage }: Props) {
         <div className="max-w-[1440px] mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Where We Work</p>
-            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior Design Across NCR</h2>
-            <p className="text-[#6B5E4E] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West, with residential and commercial design work across nearby NCR markets.</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior Design in Noida Extension &amp; Greater Noida West</h2>
+            <p className="text-[#6B5E4E] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West. Our primary focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 pt-1">
-            {['Greater Noida West','Noida Extension','Greater Noida','Noida','Ghaziabad','Indirapuram','Crossing Republik','Faridabad','Delhi','Gurugram','Dadri','Jewar','Yamuna Expressway','Delhi NCR'].map(area => (
+            {['Noida Extension','Greater Noida West','Noida','Greater Noida'].map(area => (
               <span key={area} className="border-b border-[#D4CBBB] pb-2 text-xs text-[#1A1714]">{area}</span>
             ))}
           </div>
@@ -210,17 +210,17 @@ export default function Services({ setPage }: Props) {
             <p className="text-[#6B5E4E] text-sm leading-[1.8]">From compact 2BHK apartments to larger homes, offices and commercial spaces, we shape the scope around the property, location and way you need to use it.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
-            <a href="/interior-design-greater-noida-west" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Residential</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">2BHK, 3BHK & 4BHK homes</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Space planning, modular kitchens, wardrobes, custom storage, lighting and complete home interiors.</p>
             </a>
-            <a href="/commercial-interior-design-greater-noida-west" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/commercial-interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Commercial</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Office & business interiors</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Workflow-led planning for offices, reception areas, meeting rooms, storage, lighting and acoustics.</p>
             </a>
-            <a href="/interior-design-noida-extension" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/interior-design-noida-extension/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Budget & planning</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Cost, scope & turnkey planning</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Plan your interior budget, priorities, materials and execution sequence before committing to the site.</p>

@@ -15,7 +15,7 @@ import { projectId, publicAnonKey } from '../utils/supabase/info';
 import type { LocalServiceConfig } from './pages/LocalService/LocalServicePage';
 import { localServicePaths } from './pages/LocalService/localServicePaths';
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
-import { setSiteImageOverrides } from './utils/siteImages';
+import { resolveSiteImageReference, setSiteImageOverrides } from './utils/siteImages';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
@@ -155,6 +155,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           select: 'slug,title,excerpt,category,author,image_url,published_at,created_at,updated_at',
           slug: 'eq.' + articleSlug,
           status: 'eq.published',
+          image_url: 'not.like.data:image*',
           limit: '1',
         });
         const response = await fetch(
@@ -170,7 +171,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
                 id: row.slug || articleSlug,
                 title: row.title || 'NestArcadia Journal',
                 excerpt: row.excerpt || '',
-                img: row.image_url || SOCIAL_IMAGE,
+                img: resolveSiteImageReference(row.image_url || '') || SOCIAL_IMAGE,
                 category: row.category || 'Journal',
                 author: row.author || 'NestArcadia',
                 publishedAt: row.published_at || row.created_at || null,
@@ -272,7 +273,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       telephone: '+918448061997',
       contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', contactType: 'customer service', areaServed: 'IN' },
       image: SOCIAL_IMAGE,
-      description: meta.description,
+      description: 'Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.',
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Interior Design Services',
@@ -283,7 +284,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Commercial Office Interior Design' } },
         ],
       },
-      areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida', 'Ghaziabad', 'Indirapuram', 'Crossing Republik', 'Faridabad', 'Delhi', 'East Delhi', 'South Delhi', 'Gurugram', 'Dadri', 'Jewar', 'Yamuna Expressway', 'Delhi NCR'],
+      areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida'],
       sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'],
     };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
@@ -292,11 +293,12 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       : { '@type': 'Person', name: activeArticle.author });
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
-    const websiteSchema = page === 'home' && !localService ? { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } } : null;
+    const websiteSchema = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } };
+    const webPageSchema = { '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: meta.title, description: meta.description, isPartOf: { '@id': `${SITE_URL}/#website` }, about: { '@id': `${SITE_URL}/#business` } };
     const faqSchema = page === 'faq' && !localService ? {
       '@type': 'FAQPage',
       mainEntity: [
-        { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: 'NestArcadia serves Greater Noida West, Noida Extension, Greater Noida, Noida and nearby NCR markets including Ghaziabad, Faridabad, Delhi and Gurugram.' } },
+        { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: "NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope." } },
         { '@type': 'Question', name: 'Do you design 2BHK, 3BHK and 4BHK interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the scope adapted to the property and household requirements.' } },
         { '@type': 'Question', name: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', acceptedAnswer: { '@type': 'Answer', text: 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' } },
         { '@type': 'Question', name: 'Do you provide turnkey interior design and execution?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Depending on the project, NestArcadia can manage planning and design through materials, site execution and final handover.' } },
@@ -305,18 +307,29 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     } : null;
     const breadcrumbSchema = activeArticle && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-      { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal` },
+      { '@type': 'ListItem', position: 2, name: 'Journal', item: `${SITE_URL}/journal/` },
       { '@type': 'ListItem', position: 3, name: activeArticle.title, item: canonical },
     ] };
+    const pageBreadcrumb = !activeArticle && !localService && page !== 'home' ? { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: meta.title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
+    ] } : null;
       const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
       { '@type': 'ListItem', position: 2, name: localService.area, item: canonical },
     ] };
-    schema.textContent = JSON.stringify(localService
-      ? { '@context': 'https://schema.org', '@graph': [businessSchema, localServiceSchema, localBreadcrumb].filter(Boolean) }
-      : (articleSchema
-        ? { '@context': 'https://schema.org', '@graph': [businessSchema, articleSchema, breadcrumbSchema].filter(Boolean) }
-        : { '@context': 'https://schema.org', '@graph': [businessSchema, ...(websiteSchema ? [websiteSchema] : []), ...(faqSchema ? [faqSchema] : [])] }));
+    schema.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        businessSchema,
+        websiteSchema,
+        webPageSchema,
+        ...(localServiceSchema ? [localServiceSchema, localBreadcrumb] : []),
+        ...(articleSchema ? [articleSchema, breadcrumbSchema] : []),
+        ...(pageBreadcrumb ? [pageBreadcrumb] : []),
+        ...(faqSchema ? [faqSchema] : []),
+      ].filter(Boolean),
+    });
     // Emit one page_view through GTM for each route path. Journal metadata loads
     // asynchronously, so wait until its article title is ready before measuring it.
     const articleReady = !articleSlug || (articleMetaLoaded && (article?.id === articleSlug || article === null));
@@ -640,7 +653,7 @@ function SiteShell() {
           {page === 'cultures' && <DesignCultures setPage={setPage} />}
           {page === 'services' && <Services setPage={setPage} />}
           {page === 'story' && <OurStory setPage={setPage} />}
-          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}` : '/journal')} />}
+          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
           {page === 'homes' && <Homes setPage={setPage} />}
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}

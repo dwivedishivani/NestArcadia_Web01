@@ -56,8 +56,8 @@
     <link rel="preload" as="image" href="/images/home-hero-optimized-v2.webp" media="(min-width: 768px)" fetchpriority="high" />
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
     <!-- Self-hosted fonts avoid an external stylesheet and font-file connection in the critical path. -->
-    <link rel="preload" href="/fonts/dm-sans-latin-v1.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/playfair-display-latin-v1.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Let the self-hosted font stylesheet request only the font faces actually used.
+         Avoid preloading both families before CSS confirms they are needed. -->
     <link rel="preload" as="style" href="/fonts/fonts-v1.css" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="/fonts/fonts-v1.css" /></noscript>
     <link rel="canonical" href="https://nestarcadia.com/" />
@@ -85,97 +85,7 @@
     <meta property="og:image:height" content="1200" />
     <meta name="twitter:title" content="Interior Designers in Noida Extension & Greater Noida West | NestArcadia" />
     <meta name="twitter:description" content="Plan 2BHK, 3BHK and villa interiors across Noida Extension and Greater Noida West with practical space planning and turnkey execution." />
-    <script id="nestarcadia-schema" type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "ProfessionalService",
-            "@id": "https://nestarcadia.com/#business",
-            "name": "NestArcadia",
-            "alternateName": ["Nest Arcadia", "Nest Arcadia Interiors", "Nest Arcadia Noida"],
-            "url": "https://nestarcadia.com/",
-            "telephone": "+918448061997",
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+918448061997",
-              "contactType": "customer service",
-              "areaServed": "IN"
-            },
-            "description": "Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida, Greater Noida and Delhi NCR.",
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Interior Design Services",
-              "itemListElement": [
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Interior Design"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Turnkey Interior Execution"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Custom Furniture Design"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Commercial Office Interior Design"
-                  }
-                }
-              ]
-            },
-            "areaServed": [
-              "Greater Noida West",
-              "Noida Extension",
-              "Greater Noida",
-              "Noida",
-              "Delhi",
-              "Gurgaon",
-              "Faridabad",
-              "Ghaziabad",
-              "Indirapuram",
-              "Crossing Republik",
-              "East Delhi",
-              "South Delhi",
-              "Gurugram",
-              "Dadri",
-              "Jewar",
-              "Yamuna Expressway",
-              "Delhi NCR"
-            ],
-            "sameAs": [
-              "https://www.instagram.com/nestarcadia/",
-              "https://www.facebook.com/people/Nest-Arcadia/61577890484320/",
-              "https://www.linkedin.com/company/nest-arcadia",
-              "https://www.youtube.com/@NestArcadiaOfficial"
-            ]
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://nestarcadia.com/#website",
-            "name": "NestArcadia",
-            "alternateName": ["Nest Arcadia", "Nest Arcadia Interiors", "Nest Arcadia Noida", "Nest Arcadia Greater Noida"],
-            "url": "https://nestarcadia.com/",
-            "publisher": {
-              "@id": "https://nestarcadia.com/#business"
-            }
-          }
-        ]
-      }
-    </script>
+    <script id="nestarcadia-schema" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://nestarcadia.com/#business","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida"],"url":"https://nestarcadia.com/","telephone":"+918448061997","contactPoint":{"@type":"ContactPoint","telephone":"+918448061997","contactType":"customer service","areaServed":"IN"},"description":"Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Interior Design Services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Interior Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Turnkey Interior Execution"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Furniture Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Commercial Office Interior Design"}}]},"areaServed":["Greater Noida West","Noida Extension","Greater Noida","Noida"],"sameAs":["https://www.instagram.com/nestarcadia/","https://www.facebook.com/people/Nest-Arcadia/61577890484320/","https://www.linkedin.com/company/nest-arcadia","https://www.youtube.com/@NestArcadiaOfficial"]},{"@type":"WebSite","@id":"https://nestarcadia.com/#website","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida","Nest Arcadia Greater Noida"],"url":"https://nestarcadia.com/","publisher":{"@id":"https://nestarcadia.com/#business"}}]}</script>
     <!-- figma:head-end -->
   <style>
     #app-bootloader[hidden] { display: none !important; }
@@ -190,7 +100,7 @@
     #app-bootloader .boot-wordmark { position: absolute; z-index: 2; top: 20px; left: 24px; color: #fff; font: 600 22px/1 Georgia, serif; letter-spacing: .01em; }
     #app-bootloader .boot-content { position: relative; z-index: 2; width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 24px 112px; }
     #app-bootloader .boot-eyebrow { margin: 0 0 20px; color: rgba(255,255,255,.8); font: 500 10px/1.5 Arial, sans-serif; letter-spacing: .32em; text-transform: uppercase; }
-    #app-bootloader h1 { margin: 0 0 28px; max-width: 800px; color: #fff; font: 500 clamp(2.5rem, 7vw, 5.25rem)/1.04 Georgia, 'Times New Roman', serif; letter-spacing: -.02em; }
+    #app-bootloader .boot-heading { margin: 0 0 28px; max-width: 800px; color: #fff; font: 500 clamp(2.5rem, 7vw, 5.25rem)/1.04 Georgia, 'Times New Roman', serif; letter-spacing: -.02em; }
     #app-bootloader .boot-description { max-width: 300px; margin: 0 0 36px; color: rgba(255,255,255,.68); font: 400 15px/1.65 Arial, sans-serif; }
     #app-bootloader .boot-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
     #app-bootloader .boot-primary { display: inline-block; border: 1px solid rgba(255,255,255,.5); padding: 12px 28px; color: #fff; font: 400 14px/1.5 Arial, sans-serif; text-decoration: none; }
@@ -222,11 +132,11 @@
       <div class="boot-shade"></div>
       <div class="boot-content">
         <p class="boot-eyebrow">Tradition Meets Tomorrow</p>
-        <h1>We Bring<br />Timeless Culture<br />to Modern Living</h1>
+        <p class="boot-heading" aria-hidden="true">Interior Designers in Noida Extension &amp; Greater Noida West</p>
         <p class="boot-description">Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</p>
         <div class="boot-actions">
-          <a class="boot-primary" href="/our-projects">Explore Our Homes →</a>
-          <a class="boot-secondary" href="/our-story"><span class="boot-play">▶</span>Watch Our Story</a>
+          <a class="boot-primary" href="/our-projects/">Explore Our Homes →</a>
+          <a class="boot-secondary" href="/our-story/"><span class="boot-play">▶</span>Watch Our Story</a>
         </div>
       </div>
       <div class="boot-counter"><span>01</span><span class="boot-rule"></span><span style="color:rgba(255,255,255,.4)">03</span></div>
