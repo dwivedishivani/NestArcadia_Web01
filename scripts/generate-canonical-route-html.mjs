@@ -216,6 +216,7 @@ if (publishedArticleSnapshot?.id && Array.isArray(publishedArticleSnapshot.block
     id: publishedArticleSnapshot.id,
     title: publishedArticleSnapshot.title + ' | NestArcadia Journal',
     articleTitle: publishedArticleSnapshot.title,
+    imageId: publishedArticleSnapshot.imageId || null,
     description: publishedArticleSnapshot.excerpt,
     type: 'article',
     category: publishedArticleSnapshot.category || 'Journal',
@@ -356,7 +357,7 @@ const mainPageContent = {
 };
 
 function renderStaticRoute(pathname, metadata) {
-  const heading = (metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
+  const heading = (metadata.articleTitle || metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
   const header = '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">' +
     escapeText(metadata.eyebrow || 'NestArcadia · Interior Design') + '</p><h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">' +
     escapeText(heading) + '</h1><p style="' + staticParagraphStyle + '">' + escapeText(metadata.description || '') + '</p></header>';
