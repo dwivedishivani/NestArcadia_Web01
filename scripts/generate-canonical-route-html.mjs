@@ -244,7 +244,12 @@ const mainRouteMeta = new Map([
 
 function routeMetadata(pathname) {
   const main = mainRouteMeta.get(pathname);
-  if (main?.title && main?.description) return { ...main, type: 'website' };
+  if (main?.title && main?.description) {
+    if (pathname === '/interior-design-services') {
+      return { ...main, type: 'service', area: 'Noida Extension and Greater Noida West' };
+    }
+    return { ...main, type: 'website' };
+  }
   const service = serviceMeta.get(pathname);
   if (service) return { ...service, title: service.title + ' | NestArcadia' };
   if (pathname.startsWith('/journal/')) {
