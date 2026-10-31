@@ -136,9 +136,67 @@ try {
 
   await page.goto(baseUrl + '/', { waitUntil: 'load', timeout: 45000 });
 
+  await page.waitForFunction(
+    () => (window.__nestarcadiaSmokeEvents || []).some((item) => item.event === 'page_view'),
+    undefined,
+    { timeout: 10000 }
+  );
+  const bfcacheRestoreCheck = await page.evaluate(() => {
+    const countPageViews = () => window.__nestarcadiaSmokeEvents
+      .filter((item) => item.event === 'page_view').length;
+    const before = countPageViews();
+
+    window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterFirstRestore = countPageViews();
+
+    // A duplicate pageshow without a new pagehide must not double-count.
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterDuplicateRestore = countPageViews();
+
+    // A second real restore cycle must still count, even on the same pathname.
+    window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterNextRestore = countPageViews();
+
+    return { before, afterFirstRestore, afterDuplicateRestore, afterNextRestore };
+  });
+  assert.equal(bfcacheRestoreCheck.afterFirstRestore, bfcacheRestoreCheck.before + 1,
+    'one page_view must be emitted for a persisted BFCache restore');
+  assert.equal(bfcacheRestoreCheck.afterDuplicateRestore, bfcacheRestoreCheck.afterFirstRestore,
+    'duplicate pageshow event must not emit another page_view');
+  assert.equal(bfcacheRestoreCheck.afterNextRestore, bfcacheRestoreCheck.afterDuplicateRestore + 1,
+    'a later BFCache restore cycle must emit one new page_view');
+  console.log('BF_CACHE_RESTORE_SMOKE', JSON.stringify(bfcacheRestoreCheck));
+
+
+
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  const serviceSourceResponse = await page.request.get(baseUrl + '/interior-design-services/');
+  assert.equal(serviceSourceResponse.status(), 200, 'interior design services page must return HTTP 200');
+  const serviceSource = await serviceSourceResponse.text();
+  assert.ok(serviceSource.includes('<title>Interior Design Services in Noida'),
+    'service page must expose its dedicated static title');
+
+  const localServiceSourceResponse = await page.request.get(baseUrl + '/interior-design-greater-noida-west/');
+  assert.equal(localServiceSourceResponse.status(), 200, 'Greater Noida West local service page must return HTTP 200');
+  const localServiceSource = await localServiceSourceResponse.text();
+  assert.ok(localServiceSource.includes('<title>Interior Designers in Greater Noida West | NestArcadia</title>'),
+    'Greater Noida West page must expose its dedicated static title');
+
+  for (const [routeName, source] of [
+    ['services', serviceSource],
+    ['Greater Noida West', localServiceSource],
+  ]) {
+    assert.ok(/<meta[^>]+property="og:image"/i.test(source),
+      routeName + ' page is missing an Open Graph image');
+    assert.ok(/<meta[^>]+name="twitter:image"/i.test(source),
+      routeName + ' page is missing a Twitter preview image');
+  }
+
+
   // App/home-screen icon contract: links, manifest and real image responses.
   for (const requiredLink of [
     'rel="icon" type="image/x-icon" href="/favicon.ico"',
@@ -147,6 +205,14 @@ try {
   ]) {
     assert.ok(homepageSource.includes(requiredLink), 'homepage is missing icon link: ' + requiredLink);
   }
+  const faviconResponse = await page.request.get(baseUrl + '/favicon.ico');
+  assert.equal(faviconResponse.status(), 200, 'favicon.ico must return HTTP 200');
+  assert.match(faviconResponse.headers()['content-type'] || '', /^image\/(x-icon|vnd\.microsoft\.icon)/i,
+    'favicon.ico must be served with an icon image MIME type');
+  const faviconBytes = await faviconResponse.body();
+  assert.deepEqual([...faviconBytes.subarray(0, 4)], [0, 0, 1, 0],
+    'favicon.ico must contain a valid ICO header');
+
   const appManifestResponse = await page.request.get(baseUrl + '/site.webmanifest');
   assert.equal(appManifestResponse.status(), 200, 'site.webmanifest must return HTTP 200');
   const appManifest = await appManifestResponse.json();

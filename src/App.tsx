@@ -335,11 +335,19 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
   }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
 
   // A BFCache restore does not remount React or rerun the route effect above.
-  // Emit one page_view on persisted restores so analytics still reflects the
-  // page the visitor returned to, without reloading the whole application.
+  // Count one page_view for each pagehide -> persisted pageshow restoration cycle.
+  // Do not dedupe by pathname: returning to the same URL is a legitimate new view.
   useEffect(() => {
+    let restoredSinceLastPageHide = false;
+
+    const resetRestoreGuard = () => {
+      restoredSinceLastPageHide = false;
+    };
+
     const trackRestoredPage = (event: PageTransitionEvent) => {
-      if (!event.persisted) return;
+      if (!event.persisted || restoredSinceLastPageHide) return;
+      restoredSinceLastPageHide = true;
+
       const pathname = normalizePathname(window.location.pathname);
       lastTrackedPathRef.current = pathname;
       window.dataLayer = window.dataLayer || [];
@@ -353,8 +361,12 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       });
     };
 
+    window.addEventListener('pagehide', resetRestoreGuard);
     window.addEventListener('pageshow', trackRestoredPage);
-    return () => window.removeEventListener('pageshow', trackRestoredPage);
+    return () => {
+      window.removeEventListener('pagehide', resetRestoreGuard);
+      window.removeEventListener('pageshow', trackRestoredPage);
+    };
   }, [page, localService]);
 
   return null;
