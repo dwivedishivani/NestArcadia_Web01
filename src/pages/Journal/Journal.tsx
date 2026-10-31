@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import RichArticleContent from '../../components/common/RichArticleContent';
+import luxuryArticleSnapshot from '../../data/seo/luxury-interior-design-noida-extension.json';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import type { Page } from '../../App';
 import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
@@ -150,8 +151,8 @@ export const articles = [
     author: 'Shivani',
     date: 'Sep 2026',
     readTime: '9 min read',
-    img: u('photo-1771328756144-02bde5549a9a', 1200, 700),
-    thumb: u('photo-1771328756144-02bde5549a9a', 800, 560),
+    img: u('photo-1682418460518-848f7aa242bb', 1200, 700),
+    thumb: u('photo-1682418460518-848f7aa242bb', 800, 560),
     body: [
       'A 2BHK in Noida, Greater Noida or Greater Noida West is often asked to do a surprising amount. It is a place to work, host family, eat together, keep children’s things, store luggage, and occasionally take a quiet breath after a long day. The answer is not to fill every wall with storage. A home feels larger when it is planned around the life happening inside it, rather than around the fear of not having enough cupboards.',
       'The first design decision is to identify what truly needs a permanent home. Seasonal luggage, extra bedding, festival decor and documents need enclosed storage. Daily objects need easy access. Things that are rarely used should not occupy the most valuable shelves at eye level. This small audit changes the brief from “we need more storage” to a much more useful one: “we need the right storage in the right place.”',
@@ -370,6 +371,19 @@ export const articles = [
   {
     id: 'foldable-home-bar-design-noida', category: 'Craft', title: 'Foldable Home Bar Design for Noida Homes: A Compact Entertaining Idea', excerpt: 'A stylish, compact bar cabinet can open for a party and close back into a calm living room when the evening is over.', author: 'Alok Tripathi', date: 'Jun 2025', readTime: '7 min read', img: u('photo-1783018563064-bd08fcc49f8d', 1200, 700), thumb: u('photo-1783018563064-bd08fcc49f8d', 800, 560), pullQuote: 'A small bar works best when it looks like furniture first and an entertaining station second.', conclusion: 'NestArcadia designs foldable home bars as a compact, tailored layer for entertaining—easy to store, satisfying to use and proportioned for real Noida apartments.', body: ['A home bar no longer needs a dedicated room. In a compact Noida apartment, a foldable or concealed bar cabinet can hold glassware, bottles, an ice bucket and a small serving surface while remaining quiet when it is not in use.', 'The design should begin with the closed condition. When shut, the bar can read as a slim sideboard, wall cabinet or display unit. When opened, folding shutters, a pull-out shelf and integrated warm lighting can create a useful entertaining station without taking over the living room.', 'Inside, practical details matter: bottle height, stemware support, a wipeable surface, ventilation where needed and a secure closure. The cabinet should also be positioned near a convenient serving zone without blocking circulation during a gathering.', 'A compact bar is most successful when it matches the larger interior palette. Timber, cane, metal or a softly lit niche can make it feel collected and personal rather than like a standalone product placed into the room.'], related: ['living-room-dos-donts-noida', 'interior-material-selection-ncr']
   },
+  {
+    id: luxuryArticleSnapshot.id,
+    category: luxuryArticleSnapshot.category,
+    title: luxuryArticleSnapshot.title,
+    excerpt: luxuryArticleSnapshot.excerpt,
+    author: luxuryArticleSnapshot.author,
+    date: 'Oct 2026',
+    readTime: luxuryArticleSnapshot.readTime,
+    img: u('photo-1771328756144-02bde5549a9a', 1200, 700),
+    thumb: u('photo-1771328756144-02bde5549a9a', 800, 560),
+    body: luxuryArticleSnapshot.blocks.map((block) => block.text),
+    related: [],
+  },
 ];
 
 export const getJournalArticle = (slug?: string) => articles.find((article) => article.id === slug);
@@ -447,6 +461,8 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         const params = new URLSearchParams({
           select: 'id,title,slug,excerpt,content,category,author,image_url,status,read_time,created_at,published_at,updated_at',
           status: 'eq.published',
+          // Exclude the legacy data-URI cover image from the API payload; this article is bundled locally.
+          or: '(slug.neq.luxury-interior-design-noida-extension,image_url.not.like.data:image*)',
           order: 'published_at.desc.nullslast,created_at.desc',
         });
         const response = await fetch(
@@ -483,7 +499,9 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           related: [],
           ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
         }));
-        setLiveArticles(normalized);
+        const withoutBundledSnapshot = normalized.filter((article) => article.id !== luxuryArticleSnapshot.id);
+        const bundledSnapshot = articles.find((article) => article.id === luxuryArticleSnapshot.id);
+        setLiveArticles(bundledSnapshot ? [...withoutBundledSnapshot, bundledSnapshot] : withoutBundledSnapshot);
         setArticlesLoaded(true);
       } catch {
         if (!cancelled) {
@@ -537,7 +555,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia Journal</p>
         <h1 className="font-display text-5xl mb-5">Page not found.</h1>
         <p className="text-[#6B5E4E] mb-8">The journal article you requested does not exist.</p>
-        <a href="/journal" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
+        <a href="/journal/" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
           Back to Journal
         </a>
       </div>
@@ -590,7 +608,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </p>
           </div>
           <a
-            href="/journal"
+            href="/journal/"
             onClick={(event) => { event.preventDefault(); setArticleId(null); }}
             className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
           >
@@ -636,7 +654,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             <h3 className="font-display text-2xl text-[#1A1714] mb-2">Want to bring this into your home?</h3>
             <p className="text-[#6B5E4E] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
             <a
-              href="/start-your-project"
+              href="/start-your-project/"
               onClick={(event) => { event.preventDefault(); setPage('project'); }}
               className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
             >
@@ -671,7 +689,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             </p>
             <div className="grid sm:grid-cols-2 gap-8">
               {relatedArticles.map(a => (
-                <a key={a.id} href={`/journal/${a.id}`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
+                <a key={a.id} href={`/journal/${a.id}/`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
                   <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                     <img
                     src={a.thumb}
@@ -761,7 +779,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         {/* Featured article */}
         {featured && (
           <a
-            href={`/journal/${featured.id}`}
+            href={`/journal/${featured.id}/`}
             onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
@@ -796,7 +814,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             {rest.map(a => (
               <a
                 key={a.id}
-                href={`/journal/${a.id}`}
+                href={`/journal/${a.id}/`}
                 onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
                 className="text-left group"
               >
