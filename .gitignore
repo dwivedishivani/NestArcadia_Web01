@@ -1,5 +1,12 @@
 node_modules/
 dist/
+
+# Build-generated responsive WebP variants and branded app/home-screen icons.
+/public/images/responsive/
+/public/favicon.ico
+/public/favicon-*.png
+/public/apple-touch-icon.png
+/public/android-chrome-*.png
 nestarcadia-hostinger-dist.zip
 build/
 .cache/

@@ -3,7 +3,7 @@
   "description": "Best interior designers in Noida & Greater Noida for apartments, flats, and villas. Complete turnkey home interior design. Contact NestArcadia for a quote.",
   "language": "En",
   "icons": {
-    "icon": "/.figma/make/favicon.png"
+    "icon": "/favicon-32x32.png"
   },
   "openGraph": {
     "image": "/.figma/make/social-image.png"

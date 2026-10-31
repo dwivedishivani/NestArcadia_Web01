@@ -346,6 +346,42 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       });
     }
   }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
+
+  // A BFCache restore does not remount React or rerun the route effect above.
+  // Count one page_view for each pagehide -> persisted pageshow restoration cycle.
+  // Do not dedupe by pathname: returning to the same URL is a legitimate new view.
+  useEffect(() => {
+    let restoredSinceLastPageHide = false;
+
+    const resetRestoreGuard = () => {
+      restoredSinceLastPageHide = false;
+    };
+
+    const trackRestoredPage = (event: PageTransitionEvent) => {
+      if (!event.persisted || restoredSinceLastPageHide) return;
+      restoredSinceLastPageHide = true;
+
+      const pathname = normalizePathname(window.location.pathname);
+      lastTrackedPathRef.current = pathname;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'page_view',
+        page_path: pathname,
+        page_location: window.location.href,
+        page_title: document.title,
+        page_type: localService ? 'local_service' : page,
+        content_group: localService ? 'local_service' : (page === 'journal' && pathname !== '/journal' ? 'journal_article' : page),
+      });
+    };
+
+    window.addEventListener('pagehide', resetRestoreGuard);
+    window.addEventListener('pageshow', trackRestoredPage);
+    return () => {
+      window.removeEventListener('pagehide', resetRestoreGuard);
+      window.removeEventListener('pageshow', trackRestoredPage);
+    };
+  }, [page, localService]);
+
   return null;
 }
 

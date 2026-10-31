@@ -136,9 +136,95 @@ try {
 
   await page.goto(baseUrl + '/', { waitUntil: 'load', timeout: 45000 });
 
+  await page.waitForFunction(
+    () => (window.__nestarcadiaSmokeEvents || []).some((item) => item.event === 'page_view'),
+    undefined,
+    { timeout: 10000 }
+  );
+  const bfcacheRestoreCheck = await page.evaluate(() => {
+    const countPageViews = () => window.__nestarcadiaSmokeEvents
+      .filter((item) => item.event === 'page_view').length;
+    const before = countPageViews();
+
+    window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterFirstRestore = countPageViews();
+
+    // A duplicate pageshow without a new pagehide must not double-count.
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterDuplicateRestore = countPageViews();
+
+    // A second real restore cycle must still count, even on the same pathname.
+    window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    const afterNextRestore = countPageViews();
+
+    return { before, afterFirstRestore, afterDuplicateRestore, afterNextRestore };
+  });
+  assert.equal(bfcacheRestoreCheck.afterFirstRestore, bfcacheRestoreCheck.before + 1,
+    'one page_view must be emitted for a persisted BFCache restore');
+  assert.equal(bfcacheRestoreCheck.afterDuplicateRestore, bfcacheRestoreCheck.afterFirstRestore,
+    'duplicate pageshow event must not emit another page_view');
+  assert.equal(bfcacheRestoreCheck.afterNextRestore, bfcacheRestoreCheck.afterDuplicateRestore + 1,
+    'a later BFCache restore cycle must emit one new page_view');
+  console.log('BF_CACHE_RESTORE_SMOKE', JSON.stringify(bfcacheRestoreCheck));
+
+
+
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  const serviceSourceResponse = await page.request.get(baseUrl + '/interior-design-services/');
+  assert.equal(serviceSourceResponse.status(), 200, 'interior design services page must return HTTP 200');
+  const serviceSource = await serviceSourceResponse.text();
+  assert.ok(serviceSource.includes('<title>Interior Design Services in Noida'),
+    'service page must expose its dedicated static title');
+
+  const localServiceSourceResponse = await page.request.get(baseUrl + '/interior-design-greater-noida-west/');
+  assert.equal(localServiceSourceResponse.status(), 200, 'Greater Noida West local service page must return HTTP 200');
+  const localServiceSource = await localServiceSourceResponse.text();
+  assert.ok(localServiceSource.includes('<title>Interior Designers in Greater Noida West | NestArcadia</title>'),
+    'Greater Noida West page must expose its dedicated static title');
+
+  for (const [routeName, source] of [
+    ['services', serviceSource],
+    ['Greater Noida West', localServiceSource],
+  ]) {
+    assert.ok(/<meta[^>]+property="og:image"/i.test(source),
+      routeName + ' page is missing an Open Graph image');
+    assert.ok(/<meta[^>]+name="twitter:image"/i.test(source),
+      routeName + ' page is missing a Twitter preview image');
+  }
+
+
+  // App/home-screen icon contract: links, manifest and real image responses.
+  for (const requiredLink of [
+    'rel="icon" type="image/x-icon" href="/favicon.ico"',
+    'rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"',
+    'rel="manifest" href="/site.webmanifest"',
+  ]) {
+    assert.ok(homepageSource.includes(requiredLink), 'homepage is missing icon link: ' + requiredLink);
+  }
+  const faviconResponse = await page.request.get(baseUrl + '/favicon.ico');
+  assert.equal(faviconResponse.status(), 200, 'favicon.ico must return HTTP 200');
+  assert.match(faviconResponse.headers()['content-type'] || '', /^image\/(x-icon|vnd\.microsoft\.icon)/i,
+    'favicon.ico must be served with an icon image MIME type');
+  const faviconBytes = await faviconResponse.body();
+  assert.deepEqual([...faviconBytes.subarray(0, 4)], [0, 0, 1, 0],
+    'favicon.ico must contain a valid ICO header');
+
+  const appManifestResponse = await page.request.get(baseUrl + '/site.webmanifest');
+  assert.equal(appManifestResponse.status(), 200, 'site.webmanifest must return HTTP 200');
+  const appManifest = await appManifestResponse.json();
+  assert.equal(appManifest.name, 'NestArcadia Interiors', 'app manifest name mismatch');
+  for (const expectedIcon of ['/android-chrome-192x192.png', '/android-chrome-512x512.png']) {
+    assert.ok(appManifest.icons?.some((icon) => icon.src === expectedIcon), 'manifest is missing icon: ' + expectedIcon);
+  }
+  for (const iconPath of ['/apple-touch-icon.png', '/android-chrome-192x192.png', '/android-chrome-512x512.png', '/favicon-32x32.png']) {
+    const iconResponse = await page.request.get(baseUrl + iconPath);
+    assert.equal(iconResponse.status(), 200, 'app icon must return HTTP 200: ' + iconPath);
+    assert.ok((iconResponse.headers()['content-type'] || '').startsWith('image/png'), 'app icon has wrong MIME type: ' + iconPath);
+  }
   const initialH1Count = (homepageSource.match(/<h1[ >]/gi) || []).length;
   assert.equal(initialH1Count, 1, 'homepage initial HTML must contain one semantic H1');
   assert.ok(homepageSource.includes('<p class="boot-heading" aria-hidden="true">'),
@@ -360,6 +446,26 @@ try {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return Boolean(image && image.complete && image.naturalWidth > 0);
   }, undefined, { timeout: 20000 });
+
+  const imageDiagnostics = await page.locator('main img').evaluateAll((images) => images.slice(0, 18).map((image) => ({
+    key: image.getAttribute('data-site-image-key'),
+    src: image.getAttribute('src'),
+    srcset: image.getAttribute('srcset'),
+  })));
+  const responsiveImageCount = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').count();
+  console.log('RESPONSIVE_SRCSET_DIAGNOSTIC', JSON.stringify({ responsiveImageCount, images: imageDiagnostics }));
+  assert.ok(responsiveImageCount >= 5, 'homepage is not using responsive local image variants');
+  const firstSrcSet = await page.locator('img[data-site-image-key][srcset*="/images/responsive/"]').first().getAttribute('srcset');
+  const firstCandidate = firstSrcSet?.split(',')[0]?.trim().split(' ')[0];
+  assert.ok(firstCandidate, 'responsive image srcset has no usable candidate');
+  const responsiveImageResponse = await page.request.get(new URL(firstCandidate, baseUrl).toString());
+  assert.equal(responsiveImageResponse.status(), 200, 'responsive WebP candidate must return HTTP 200');
+  assert.ok((responsiveImageResponse.headers()['content-type'] || '').startsWith('image/webp'), 'responsive image candidate must be served as WebP');
+  console.log('APP_ICONS_AND_RESPONSIVE_IMAGES_SMOKE', JSON.stringify({
+    manifestIcons: appManifest.icons.length,
+    responsiveImageCount,
+    responsiveCandidate: firstCandidate,
+  }));
 
   await page.waitForFunction(() => window.__nestarcadiaLcpMs !== null, undefined, { timeout: 10000 });
   const heroMetrics = await page.evaluate(() => {

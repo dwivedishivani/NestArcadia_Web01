@@ -1,4 +1,15 @@
 import { projectId } from '../../utils/supabase/info';
+import responsiveSiteImages from '../data/responsive-site-images.json';
+
+type ResponsiveSiteImage = {
+  key: string;
+  url: string;
+  widths: number[];
+};
+
+const responsiveImages = Object.fromEntries(
+  (responsiveSiteImages as ResponsiveSiteImage[]).map((image) => [image.key, image])
+) as Record<string, ResponsiveSiteImage>;
 
 type SiteImageOverride = {
   public_url?: string | null;
@@ -100,6 +111,16 @@ function replaceImageSources() {
     const optimizedSourceUrl = img.dataset.siteImageOptimizedSourceUrl;
     if (optimizedSourceUrl && publicUrl === optimizedSourceUrl) return;
 
+    // Keep build-generated responsive files when the Media Library still points
+    // at the same approved source asset. A changed admin override falls through
+    // to the original public URL and drops the local srcset below.
+    const responsiveImage = responsiveImages[sourceKey];
+    if (
+      responsiveImage
+      && publicUrl === responsiveImage.url
+      && img.src.includes('/images/responsive/')
+    ) return;
+
     const resolvedPublicUrl = new URL(publicUrl, document.baseURI).href;
     if (img.src !== resolvedPublicUrl) {
       // Drop the local responsive source if the Media Library's stored image changed.
@@ -180,10 +201,35 @@ export function resolveSiteImage(sourceKey: string, requestedWidth?: number) {
   const key = sourceKey.trim();
   if (!key) return '';
   const item = overrides[key];
+  const responsiveImage = responsiveImages[key];
+  const hasUnchangedSource = responsiveImage
+    && (!item?.public_url || item.public_url === responsiveImage.url);
+
+  // The live project does not have Supabase Storage image transformations
+  // enabled. Use pre-generated, self-hosted WebP variants instead.
+  if (import.meta.env.PROD && responsiveImage && hasUnchangedSource) {
+    const targetWidth = Math.min(Math.max(Math.round(requestedWidth || 800), 320), 1920);
+    const selectedWidth = responsiveImage.widths.find((width) => width >= targetWidth)
+      ?? responsiveImage.widths[responsiveImage.widths.length - 1];
+    return `/images/responsive/${key}-${selectedWidth}.webp`;
+  }
+
   const storedUrl = item?.public_url || item?.local_path;
   if (storedUrl && !storedUrl.startsWith('/images/')) return storedUrl;
   const width = requestedWidth ? `?width=${Math.min(Math.max(Math.round(requestedWidth), 320), 1920)}&quality=78` : '';
   return `https://${projectId}.supabase.co/functions/v1/site-media/image/${encodeURIComponent(key)}${width}`;
+}
+
+export function resolveSiteImageSrcSet(sourceKey: string): string | undefined {
+  const key = sourceKey.trim();
+  if (!import.meta.env.PROD) return undefined;
+  const responsiveImage = responsiveImages[key];
+  const item = overrides[key];
+  if (!responsiveImage || (item?.public_url && item.public_url !== responsiveImage.url)) return undefined;
+
+  return responsiveImage.widths
+    .map((width) => `/images/responsive/${key}-${width}.webp ${width}w`)
+    .join(', ');
 }
 
 export function resolveSiteImageReference(value: string) {

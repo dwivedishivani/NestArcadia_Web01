@@ -34,7 +34,7 @@ jobs:
       - name: Prepare optimized homepage hero image
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y webp
+          sudo apt-get install -y webp imagemagick
           mkdir -p public/images
           curl --fail --location --silent --show-error --retry 3 --connect-timeout 15 --max-time 60 \
             'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' \
@@ -49,6 +49,12 @@ jobs:
           test -s public/images/home-hero-mobile-v2.webp
           echo "Optimized desktop hero: $(du -h public/images/home-hero-optimized-v2.webp | cut -f1)"
           echo "Optimized mobile hero: $(du -h public/images/home-hero-mobile-v2.webp | cut -f1)"
+      - name: Prepare responsive site image variants
+        run: node scripts/prepare-responsive-site-images.mjs
+
+      - name: Prepare NestArcadia app icons
+        run: node scripts/prepare-app-icons.mjs
+
       - name: Prepare self-hosted Latin fonts
         run: node scripts/prepare-local-fonts.mjs
 
