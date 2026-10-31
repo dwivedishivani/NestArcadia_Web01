@@ -332,7 +332,7 @@ const mainPageContent = {
     {
       heading: 'Working with NestArcadia',
       faqs: [
-        { question: 'Which areas does NestArcadia serve?', answer: 'NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope.' },
+        { question: 'Which areas does NestArcadia serve?', answer: "NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope." },
         { question: 'Do you provide turnkey interior design and execution?', answer: 'Yes. Depending on the project, we can manage the process from planning and design through materials, site execution and final handover.' },
         { question: 'When should I contact an interior designer?', answer: 'Ideally, before possession or before major civil and electrical work begins. Planning early gives you more flexibility with kitchen layouts, wardrobes, storage, lighting and electrical points.' },
       ],
