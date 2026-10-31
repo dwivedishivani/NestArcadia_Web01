@@ -191,21 +191,30 @@ try {
   }), 'sitemap contains non-canonical URLs without a trailing slash');
   console.log('SITEMAP_CANONICAL_SMOKE', JSON.stringify({ sitemapStatus: sitemapResponse.status(), urls: sitemapUrls.length, allCanonical: true }));
 
-  // The server must merge legacy non-slash routes into the sitemap's slash URLs.
-  for (const routePath of [
-    '/interior-design-noida-extension',
-    '/interior-design-greater-noida-west',
-  ]) {
-    const redirectResponse = await page.request.get(baseUrl + routePath, { maxRedirects: 0 });
-    assert.equal(redirectResponse.status(), 301, `expected a permanent trailing-slash redirect for ${routePath}`);
-    const redirectLocation = new URL(redirectResponse.headers()['location'], baseUrl);
-    assert.equal(redirectLocation.origin, 'https://nestarcadia.com', `redirect must use the apex HTTPS host for ${routePath}`);
-    assert.equal(redirectLocation.pathname, routePath + '/', `redirect must add only the canonical trailing slash for ${routePath}`);
+  // Redirects are owned by Hostinger's Apache .htaccess, not Vite preview.
+  // Exercise them only against the live production host; local build smoke still
+  // validates static HTML, sitemap URLs and canonical metadata.
+  const smokeHostname = new URL(baseUrl).hostname;
+  if (!['localhost', '127.0.0.1', '::1'].includes(smokeHostname)) {
+    for (const routePath of [
+      '/interior-design-noida-extension',
+      '/interior-design-greater-noida-west',
+    ]) {
+      const redirectResponse = await page.request.get(baseUrl + routePath, { maxRedirects: 0 });
+      assert.equal(redirectResponse.status(), 301, `expected a permanent trailing-slash redirect for ${routePath}`);
+      const redirectLocation = new URL(redirectResponse.headers()['location'], baseUrl);
+      assert.equal(redirectLocation.origin, 'https://nestarcadia.com', `redirect must use the apex HTTPS host for ${routePath}`);
+      assert.equal(redirectLocation.pathname, routePath + '/', `redirect must add only the canonical trailing slash for ${routePath}`);
+    }
+    console.log('TRAILING_SLASH_REDIRECT_SMOKE', JSON.stringify({
+      noidaExtension: '301 to slash URL',
+      greaterNoidaWest: '301 to slash URL',
+    }));
+  } else {
+    console.log('TRAILING_SLASH_REDIRECT_SMOKE', JSON.stringify({
+      skipped: 'Vite preview does not execute Hostinger .htaccess; live production smoke verifies redirects',
+    }));
   }
-  console.log('TRAILING_SLASH_REDIRECT_SMOKE', JSON.stringify({
-    noidaExtension: '301 to slash URL',
-    greaterNoidaWest: '301 to slash URL',
-  }));
   await page.waitForFunction(() => {
     const image = document.querySelector('main img[data-site-image-key="photo-1713192706971-03900dcf5706"]');
     return Boolean(image && image.complete && image.naturalWidth > 0);
