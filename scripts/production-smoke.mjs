@@ -139,7 +139,7 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
-  const initialH1Count = (homepageSource.match(/<h1(?:\\s|>)/gi) || []).length;
+  const initialH1Count = (homepageSource.match(/<h1[ >]/gi) || []).length;
   assert.equal(initialH1Count, 1, 'homepage initial HTML must contain one semantic H1');
   assert.ok(homepageSource.includes('<p class="boot-heading" aria-hidden="true">'),
     'temporary boot overlay must not introduce a second semantic heading');
