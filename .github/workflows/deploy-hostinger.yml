@@ -79,6 +79,16 @@ jobs:
           test -s dist/android-chrome-192x192.png
           test -s dist/android-chrome-512x512.png
           test -s dist/site.webmanifest
+          test -d dist/images/responsive
+          node --input-type=module <<'NODE'
+          import { readFile, readdir } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('src/data/responsive-site-images.json', 'utf8'));
+          const expected = manifest.reduce((sum, item) => sum + item.widths.length, 0);
+          const files = await readdir('dist/images/responsive');
+          const actual = files.filter((file) => /^photo-\\d{10,}-[a-z0-9]{8,}-\\d+\\.webp$/i.test(file)).length;
+          if (actual !== expected) throw new Error(`Responsive image output mismatch: expected ${expected}, found ${actual}`);
+          console.log(`Validated ${actual} responsive WebP variants.`);
+          NODE
           test -s dist/fonts/fonts-v1.css
           test -s dist/fonts/dm-sans-latin-v1.woff2
           test -s dist/fonts/playfair-display-latin-v1.woff2
@@ -132,10 +142,39 @@ jobs:
             *) echo "::error::Homepage must use Cache-Control: no-cache for safe revalidation."; exit 1 ;;
           esac
 
-          for url in "https://nestarcadia.com/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon.ico" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png" "https://nestarcadia.com/site.webmanifest" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
+          for url in "https://nestarcadia.com/" "https://nestarcadia.com/interior-design-services/" "https://nestarcadia.com/interior-design-noida-extension/" "https://nestarcadia.com/interior-design-greater-noida-west/" "https://nestarcadia.com/journal/rattan/" "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp" "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon.ico" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png" "https://nestarcadia.com/site.webmanifest" "https://nestarcadia.com/fonts/fonts-v1.css" "https://nestarcadia.com/fonts/dm-sans-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-latin-v1.woff2" "https://nestarcadia.com/fonts/playfair-display-italic-latin-v1.woff2"; do
             status=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{http_code}' "$url")
             echo "$url -> HTTP $status"
             test "$status" = "200"
+          done
+
+          check_content_type() {
+            local url="$1"
+            local expected="$2"
+            local actual
+            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{content_type}' "$url")
+            echo "$url -> Content-Type $actual"
+            case "$actual" in
+              "$expected"*) ;;
+              *) echo "::error::Unexpected Content-Type for $url: $actual (expected $expected)"; exit 1 ;;
+            esac
+          }
+
+          check_content_type "https://nestarcadia.com/site.webmanifest" "application/manifest+json"
+          check_content_type "https://nestarcadia.com/favicon.ico" "image/x-icon"
+          for url in "https://nestarcadia.com/apple-touch-icon.png" "https://nestarcadia.com/favicon-16x16.png" "https://nestarcadia.com/favicon-32x32.png" "https://nestarcadia.com/android-chrome-192x192.png" "https://nestarcadia.com/android-chrome-512x512.png"; do
+            check_content_type "$url" "image/png"
+          done
+
+          # Every generated/static route should revalidate the public HTML shell.
+          for url in "https://nestarcadia.com/" "https://nestarcadia.com/interior-design-services/" "https://nestarcadia.com/interior-design-noida-extension/" "https://nestarcadia.com/interior-design-greater-noida-west/" "https://nestarcadia.com/journal/rattan/"; do
+            html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -I "$url" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
+            echo "$url -> Cache-Control: $html_cache_control"
+            case "$html_cache_control" in
+              *no-store*) echo "::error::Public HTML route still sends Cache-Control: no-store: $url"; exit 1 ;;
+              *no-cache*) ;;
+              *) echo "::error::HTML route must use Cache-Control: no-cache: $url"; exit 1 ;;
+            esac
           done
 
           # A 200 response may still be the SPA fallback HTML rather than an image.
