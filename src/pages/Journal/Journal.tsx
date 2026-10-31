@@ -814,7 +814,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             {rest.map(a => (
               <a
                 key={a.id}
-                href={`/journal/${a.id}`}
+                href={`/journal/${a.id}/`}
                 onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
                 className="text-left group"
               >
