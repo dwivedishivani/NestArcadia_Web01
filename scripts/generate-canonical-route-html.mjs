@@ -508,7 +508,7 @@ for (const rawUrl of urls) {
     about: { '@id': baseUrl + '/#business' },
   };
   const routeGraph = [pageSchema];
-  if (routePath === '/faqs') {
+  if (routeKey === '/faqs') {
     routeGraph.push({
       '@type': 'FAQPage',
       '@id': canonical + '#faq',
