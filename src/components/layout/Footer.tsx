@@ -41,7 +41,7 @@ const socials = [
 ];
 
 export default function Footer() {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures', services: '/interior-design-services', story: '/our-story', journal: '/journal', homes: '/our-projects', project: '/start-your-project', faq: '/faqs', privacy: '/privacy-policy', admin: '/admin' };
+  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', privacy: '/privacy-policy/', admin: '/admin' };
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
