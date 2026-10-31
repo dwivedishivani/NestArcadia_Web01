@@ -38,7 +38,7 @@ const u = (id: string, _w: number, _h: number) => import.meta.env.PROD
 
 const homeImageKeysByUrl = Object.fromEntries(Object.entries(homeDirectImageUrls).map(([key, url]) => [url, key]));
 const directImageKey = (url: string) => homeImageKeysByUrl[url]
-  || url.match(/\\/images\\/responsive\\/(photo-\\d+-[a-z0-9]+)-\\d+\\.webp$/i)?.[1];
+  || url.match(/(photo-\d+-[a-z0-9]+)-\d+\.webp$/i)?.[1];
 
 const imageSrcSet = (url: string) => {
   const key = directImageKey(url);
