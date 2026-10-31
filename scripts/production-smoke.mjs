@@ -139,6 +139,10 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  const initialH1Count = (homepageSource.match(/<h1(?:\\s|>)/gi) || []).length;
+  assert.equal(initialH1Count, 1, 'homepage initial HTML must contain one semantic H1');
+  assert.ok(homepageSource.includes('<p class="boot-heading" aria-hidden="true">'),
+    'temporary boot overlay must not introduce a second semantic heading');
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
