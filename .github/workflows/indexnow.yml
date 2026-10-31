@@ -15,7 +15,7 @@ jobs:
             -d '{
               "host": "nestarcadia.com",
               "key": "9f4d7c2a61be58d0f3e1a6c84b9275d1",
-              "keyLocation": "https://nestarcadia.com/indexnow-key/.txt",
+              "keyLocation": "https://nestarcadia.com/indexnow-key.txt",
               "urlList": [
                 "https://nestarcadia.com/",
                 "https://nestarcadia.com/design-cultures/",
