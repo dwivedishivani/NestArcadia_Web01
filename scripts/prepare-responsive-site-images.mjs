@@ -29,7 +29,14 @@ try {
     if (!/^photo-\d+-[a-z0-9]+$/i.test(item.key) || !Array.isArray(item.widths) || !item.widths.length) {
       throw new Error('Invalid responsive image manifest entry: ' + JSON.stringify(item));
     }
-    const response = await fetch(item.url, { signal: AbortSignal.timeout(45000) });
+    const sourceUrl = new URL(item.url);
+    if (
+      sourceUrl.origin !== 'https://etmrhxapfvyaispuvnft.supabase.co'
+      || !sourceUrl.pathname.startsWith('/storage/v1/object/public/site-images/')
+    ) {
+      throw new Error('Image source must be a public NestArcadia site-images asset: ' + item.url);
+    }
+    const response = await fetch(sourceUrl, { signal: AbortSignal.timeout(45000) });
     if (!response.ok) {
       throw new Error(`Image download failed for ${item.key}: HTTP ${response.status}`);
     }
