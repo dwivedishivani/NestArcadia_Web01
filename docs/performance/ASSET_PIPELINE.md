@@ -30,6 +30,10 @@ pnpm build
 
 The production smoke test verifies the mobile hero, responsive WebP candidate, favicon/Apple/Android icon URLs, web manifest, canonical SEO snapshots, and lead-event flow.
 
+## Browser cache and history restores
+
+Public HTML uses `Cache-Control: no-cache, must-revalidate`: browsers revalidate the static shell on ordinary requests, while the site does not apply a blanket `no-store` directive to a response that contains no visitor-specific data. User-specific form/admin/API responses must continue to set their own appropriate cache policy. The router also queues a `page_view` when a page is restored through the browser's back/forward cache.
+
 ## Ownership boundaries
 
 - Image source metadata and target widths: `src/data/responsive-site-images.json`
