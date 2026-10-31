@@ -15,22 +15,10 @@ const navLinks: { label: string; page: Page }[] = [
 ];
 
 const serviceAreas = [
-  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
   { label: 'Noida Extension', href: '/interior-design-noida-extension/' },
-  { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
+  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
   { label: 'Noida', href: '/interior-design-noida/' },
-  { label: 'Ghaziabad', href: '/interior-design-ghaziabad/' },
-  { label: 'Indirapuram', href: '/interior-design-indirapuram/' },
-  { label: 'Crossing Republik', href: '/interior-design-crossing-republik/' },
-  { label: 'Faridabad', href: '/interior-design-faridabad/' },
-  { label: 'Delhi', href: '/interior-design-delhi/' },
-  { label: 'East Delhi', href: '/interior-design-east-delhi/' },
-  { label: 'South Delhi', href: '/interior-design-south-delhi/' },
-  { label: 'Gurugram', href: '/interior-design-gurugram/' },
-  { label: 'Dadri', href: '/interior-design-dadri/' },
-  { label: 'Jewar', href: '/interior-design-jewar/' },
-  { label: 'Yamuna Expressway', href: '/interior-design-yamuna-expressway/' },
-  { label: 'Delhi NCR', href: '/interior-design-delhi-ncr/' },
+  { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
 ];
 
 const socials = [
@@ -128,7 +116,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 mb-5">
             <div>
               <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Service areas</p>
-              <p className="text-[13px] text-[#6B5E4E] mt-1">Interior design across Noida, Greater Noida and the wider NCR.</p>
+              <p className="text-[13px] text-[#6B5E4E] mt-1">Primary focus: Noida Extension and Greater Noida West, with nearby Noida and Greater Noida.</p>
             </div>
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-7 gap-y-3">
