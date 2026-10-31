@@ -206,6 +206,30 @@ if (articlesArray && ts.isArrayLiteralExpression(articlesArray)) {
   }
 }
 
+
+const publishedArticleSnapshot = JSON.parse(await readFile(
+  path.resolve('src/data/seo/luxury-interior-design-noida-extension.json'),
+  'utf8'
+));
+if (publishedArticleSnapshot?.id && Array.isArray(publishedArticleSnapshot.blocks)) {
+  articleMeta.set(publishedArticleSnapshot.id, {
+    id: publishedArticleSnapshot.id,
+    title: publishedArticleSnapshot.title + ' | NestArcadia Journal',
+    articleTitle: publishedArticleSnapshot.title,
+    imageId: publishedArticleSnapshot.imageId || null,
+    description: publishedArticleSnapshot.excerpt,
+    type: 'article',
+    category: publishedArticleSnapshot.category || 'Journal',
+    author: publishedArticleSnapshot.author || 'NestArcadia',
+    readTime: publishedArticleSnapshot.readTime || '',
+    body: publishedArticleSnapshot.blocks.map((block) => block.text).filter(Boolean),
+    bodyBlocks: publishedArticleSnapshot.blocks,
+    related: [],
+    datePublished: publishedArticleSnapshot.publishedAt || null,
+    dateModified: publishedArticleSnapshot.updatedAt || publishedArticleSnapshot.publishedAt || null,
+  });
+}
+
 const mainRouteMeta = new Map([
   ['/', pageMeta.get('home')],
   ['/design-cultures', pageMeta.get('cultures')],
@@ -220,7 +244,12 @@ const mainRouteMeta = new Map([
 
 function routeMetadata(pathname) {
   const main = mainRouteMeta.get(pathname);
-  if (main?.title && main?.description) return { ...main, type: 'website' };
+  if (main?.title && main?.description) {
+    if (pathname === '/interior-design-services') {
+      return { ...main, type: 'service', area: 'Noida Extension and Greater Noida West' };
+    }
+    return { ...main, type: 'website' };
+  }
   const service = serviceMeta.get(pathname);
   if (service) return { ...service, title: service.title + ' | NestArcadia' };
   if (pathname.startsWith('/journal/')) {
@@ -276,8 +305,64 @@ const staticList = (items, ordered = false) => {
   return '<' + tag + ' style="' + listStyle + '">' + items.map((item) => '<li style="margin:0 0 9px;color:#52677E">' + escapeText(item) + '</li>').join('') + '</' + tag + '>';
 };
 
+
+const mainPageContent = {
+  '/design-cultures': [
+    { heading: 'Regional inspiration, interpreted for modern homes', paragraphs: ['Indian interiors are shaped by climate, craft, materials and the ways families use their homes. NestArcadia draws on regional design languages as a source of inspiration, then adapts the details to contemporary layouts and everyday needs.', 'Explore ideas influenced by North, South, East, West and Central India — from warm wood and woven textures to colour, carved details, natural finishes and thoughtful light.'] },
+    { heading: 'Design details we consider', bullets: ['Material and finish combinations that suit the room and its use','Craft-inspired screens, woodwork, textiles and surface details','Light, ventilation, furniture scale and circulation','A balanced mix of heritage references and contemporary function'] },
+    { heading: 'Bring an idea into your own floor plan', paragraphs: ['A reference image is a starting point, not a ready-made solution. We consider the dimensions, natural light, storage needs and maintenance expectations of your property before translating an inspiration into a practical interior.'], links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/interior-design-services/', label: 'Explore interior design services' }] },
+  ],
+  '/interior-design-services': [
+    { heading: 'Residential interior design', paragraphs: ['Plan 2BHK, 3BHK and 4BHK apartments, villas and family homes around the floor plan, household routines, storage requirements and budget. The design scope can include furniture layouts, kitchens, wardrobes, lighting, materials and decor.'] },
+    { heading: 'Commercial interiors', paragraphs: ['Create functional offices and commercial spaces with considered layouts for reception areas, workstations, meeting rooms, storage, lighting and acoustics. The scope is tailored to the business, site conditions and project brief.'] },
+    { heading: 'Design and execution services', bullets: ['Space planning and furniture layouts','Modular kitchens and custom furniture','Wardrobes and integrated storage','Vastu-led layout discussions when requested','Lighting, materials and decor','Turnkey execution coordination from design through handover'] },
+    { heading: 'Start with the property and the scope', paragraphs: ['The right estimate depends on the property condition, measurements, selected materials and work already completed. Share a floor plan and requirements so the scope can be assessed before a proposal is prepared.'], links: [{ href: '/start-your-project/', label: 'Start an interior design project' }, { href: '/interior-design-noida-extension/', label: 'Interior design in Noida Extension' }, { href: '/interior-design-greater-noida-west/', label: 'Interior design in Greater Noida West' }] },
+  ],
+  '/our-story': [
+    { heading: 'A design approach rooted in how people live', paragraphs: ['NestArcadia brings Indian material heritage and contemporary interior planning together. The starting point is not a style label; it is the way a household uses its rooms, stores everyday things, moves through the home and spends time together.', 'Craft, texture and regional references add character when they are used with intention. Space planning, lighting, storage and execution details make that character work in daily life.'] },
+    { heading: 'From first brief to finished space', bullets: ['Understand the property, floor plan, routines and priorities','Resolve layout, furniture scale, storage and key services','Develop the design direction, materials and execution details','Coordinate the agreed work and review the finished space'] },
+    { heading: 'Design for homes across Noida and NCR', paragraphs: ['NestArcadia focuses on residential and commercial interior requirements across Noida Extension, Greater Noida West, Noida and nearby NCR locations. Each project begins with its own site conditions, brief and agreed scope.'], links: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Talk to NestArcadia' }] },
+  ],
+  '/our-projects': [
+    { heading: 'Selected home concepts and interior design studies', paragraphs: ['Explore a selection of interior design directions for apartments, villas and family homes. The examples illustrate how material palettes, furniture scale, natural light, storage and regional references can shape a coherent living space.', 'The examples are presented as design studies, showing possible design directions rather than claiming every concept is a completed installation.'] },
+    { heading: 'What to look for in a well-planned interior', bullets: ['A layout that protects comfortable movement','Storage planned around actual household routines','Materials chosen for appearance, durability and maintenance','Lighting coordinated with furniture and daily activities','Details that connect the rooms into one consistent design'] },
+    { heading: 'Have a home or floor plan to discuss?', paragraphs: ['Share your property type, location, possession status and priorities. NestArcadia can help define the next planning steps and the scope required for your home.'], links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/journal/', label: 'Read practical interior planning guides' }] },
+  ],
+  '/faqs': [
+    {
+      heading: 'Working with NestArcadia',
+      faqs: [
+        { question: 'Which areas does NestArcadia serve?', answer: 'NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope.' },
+        { question: 'Do you provide turnkey interior design and execution?', answer: 'Yes. Depending on the project, we can manage the process from planning and design through materials, site execution and final handover.' },
+        { question: 'When should I contact an interior designer?', answer: 'Ideally, before possession or before major civil and electrical work begins. Planning early gives you more flexibility with kitchen layouts, wardrobes, storage, lighting and electrical points.' },
+      ],
+    },
+    {
+      heading: 'Homes, layouts and budgets',
+      faqs: [
+        { question: 'Do you design 2BHK, 3BHK and 4BHK interiors?', answer: 'Yes. We work on 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the design adapted to the layout, carpet area, storage needs and level of customisation.' },
+        { question: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', answer: 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' },
+        { question: 'Can you plan space-saving interiors for a compact Noida apartment?', answer: 'Yes. We focus on practical circulation, well-planned storage and furniture that fits the actual space, so the home feels useful without feeling overcrowded.' },
+      ],
+    },
+    {
+      heading: 'Services and next steps',
+      faqs: [
+        { question: 'Do you offer Vastu-friendly interior planning?', answer: 'Yes. If Vastu is important to you, we can consider relevant principles alongside practical layout, daylight, movement, storage and everyday functionality.' },
+        { question: 'How do I begin an interior design project with NestArcadia?', answer: 'Share your property type, location, possession timeline and what you need from the space. We can then guide you on the right next step.' },
+      ],
+      links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/interior-design-services/', label: 'Explore interior design services' }],
+    },
+  ],
+  '/start-your-project': [
+    { heading: 'Tell us about your property', paragraphs: ['A useful first brief includes your property location, apartment or villa configuration, approximate area, possession or renovation status, preferred timeline and the rooms or services you want help with.'] },
+    { heading: 'What happens next', bullets: ['Review the floor plan, site condition and household requirements','Clarify design scope, priorities and budget direction','Identify the drawings, materials and execution decisions required','Prepare the next-step proposal around the agreed brief'] },
+    { heading: 'Make the first conversation useful', paragraphs: ['If you have a floor plan, share it with your enquiry. For a quick starting conversation, you can also contact NestArcadia on WhatsApp at +91 8448061997.'], links: [{ href: 'https://wa.me/918448061997', label: 'Contact NestArcadia on WhatsApp' }, { href: '/interior-design-services/', label: 'Review services before you enquire' }] },
+  ],
+};
+
 function renderStaticRoute(pathname, metadata) {
-  const heading = (metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
+  const heading = (metadata.articleTitle || metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
   const header = '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">' +
     escapeText(metadata.eyebrow || 'NestArcadia · Interior Design') + '</p><h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">' +
     escapeText(heading) + '</h1><p style="' + staticParagraphStyle + '">' + escapeText(metadata.description || '') + '</p></header>';
@@ -285,13 +370,15 @@ function renderStaticRoute(pathname, metadata) {
   if (pathname === '/') {
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' +
       '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">Tradition Meets Tomorrow</p>' +
-      '<h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">We Bring Timeless Culture to Modern Living</h1>' +
+      '<h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">Interior Designers in Noida Extension &amp; Greater Noida West</h1>' +
       '<p style="' + staticParagraphStyle + '">NestArcadia creates heritage-inspired, contemporary interiors for apartments, villas and workspaces. Our design approach brings space planning, storage, kitchens, lighting, materials and execution decisions together around the way people actually live.</p></header>' +
       '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">Residential Interior Designers in Noida Extension and Greater Noida West</h2>' +
       '<p style="' + staticParagraphStyle + '">We plan interiors for 2BHK, 3BHK and 4BHK apartments, villas and other homes across Noida, Greater Noida, Greater Noida West and nearby NCR areas. The work begins with the floor plan: circulation, furniture scale, kitchen workflow, wardrobes, usable storage and the service decisions that should be resolved before site execution.</p>' +
       '<p style="' + staticParagraphStyle + '">A well-planned apartment starts with the builder’s floor plan: furniture scale, everyday circulation, usable storage, kitchen workflow and the service decisions that should be resolved before finishes are finalised. The exact scope depends on the property, what is already complete and the household’s requirements.</p>' +
       '<p>' + inlineLink('/interior-design-noida-extension/', 'Interior design for homes in Noida Extension') + ' · ' +
       inlineLink('/interior-design-greater-noida-west/', 'Interior design in Greater Noida West') + ' · ' +
+      inlineLink('/interior-design-noida/', 'Interior design in Noida') + ' · ' +
+      inlineLink('/interior-design-greater-noida/', 'Interior design in Greater Noida') + ' · ' +
       inlineLink('/interior-design-services/', 'All interior design services') + '</p></section>' +
       '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">Residential and Commercial Interior Services</h2>' +
       staticList(['2BHK, 3BHK and 4BHK apartment planning','Modular kitchens, wardrobes and custom storage','Lighting, material and finish selection','Vastu-led layout discussions when requested','Commercial office space planning, reception, workstations and acoustic considerations','Turnkey design and execution coordination']) +
@@ -316,10 +403,30 @@ function renderStaticRoute(pathname, metadata) {
       '<p style="' + staticParagraphStyle + '">Ready to discuss your property? ' + inlineLink('/start-your-project/', 'Share your project brief with NestArcadia') + '.</p></main>';
   }
 
+  const mainSections = mainPageContent[pathname];
+  if (mainSections) {
+    const sections = mainSections.map((section) => {
+      const paragraphs = (section.paragraphs || []).map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
+      const bullets = staticList(section.bullets || []);
+      const links = (section.links || []).map((link) => inlineLink(link.href, link.label)).join(' · ');
+      const faqs = (section.faqs || []).map((faq) => '<details style="margin:0 0 14px;border-bottom:1px solid #D4CBBB;padding:0 0 14px"><summary style="cursor:pointer;font-weight:600;color:#1C3A5A">' + escapeText(faq.question) + '</summary><p style="' + staticParagraphStyle + ';margin-top:8px">' + escapeText(faq.answer) + '</p></details>').join('');
+      return '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">' + escapeText(section.heading) + '</h2>' + paragraphs + bullets + faqs + (links ? '<p style="' + staticParagraphStyle + '">' + links + '</p>' : '') + '</section>';
+    }).join('');
+    return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header + sections + '</main>';
+  }
+
   const articleSlug = pathname.startsWith('/journal/') ? pathname.slice('/journal/'.length) : '';
   const article = articleSlug ? articleMeta.get(articleSlug) : null;
   if (article) {
-    const paragraphs = article.body.map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
+    const paragraphs = article.bodyBlocks?.length
+      ? article.bodyBlocks.map((block) => {
+          if (block.type === 'h2' || block.type === 'h3') {
+            return '<' + block.type + ' style="' + staticHeadingStyle + ';font-size:' + (block.type === 'h2' ? '1.7rem' : '1.25rem') + '">' + escapeText(block.text) + '</' + block.type + '>';
+          }
+          if (block.type === 'li') return '<p style="' + staticParagraphStyle + '">• ' + escapeText(block.text) + '</p>';
+          return '<p style="' + staticParagraphStyle + '">' + escapeText(block.text) + '</p>';
+        }).join('')
+      : article.body.map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
     const related = article.related.map((slug) => '<li style="margin:0 0 9px">' + inlineLink('/journal/' + slug.replace(/\/+$/, '') + '/', titleCaseSlug(slug)) + '</li>').join('');
     const localServiceLinks = '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Planning a home in Noida or Greater Noida West?</h2><p style="' + staticParagraphStyle + '">For guidance shaped around your floor plan, budget and execution scope, explore our ' +
       inlineLink('/interior-design-noida-extension/', 'interior design services in Noida Extension') + ', ' +
@@ -371,6 +478,11 @@ for (const rawUrl of urls) {
 
   let html = template;
   const staticMarkup = renderStaticRoute(routeKey, metadata);
+  if (routeKey === '/journal/luxury-interior-design-noida-extension') {
+    if (!metadata.body?.length || !staticMarkup.includes('5 Core Elements of High-End Residential Interiors')) {
+      throw new Error('Published Noida Extension journal article is missing its static content snapshot.');
+    }
+  }
   const rootPlaceholder = '<div id="root"></div>';
   if (!html.includes(rootPlaceholder)) throw new Error('Static SEO content generation stopped: #root placeholder is missing for ' + rawUrl);
   html = html.replace(rootPlaceholder, '<div id="root">' + staticMarkup + '</div>');
@@ -386,6 +498,85 @@ for (const rawUrl of urls) {
   html = replaceMeta(html, /<meta name="twitter:image"[^>]*\/?>/i, 'content', imageUrl, '<meta name="twitter:image" content="__VALUE__" />');
   html = replaceMeta(html, /<meta property="og:type"[^>]*\/?>/i, 'content', metadata.type === 'article' ? 'article' : 'website', '<meta property="og:type" content="__VALUE__" />');
 
+  // Keep the business entity graph, but make the page-level structured data
+  // accurate in the initial HTML (before the React application runs).
+  const schemaMatch = html.match(/<script id="nestarcadia-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+  if (!schemaMatch) throw new Error('Route schema generation stopped: base JSON-LD script is missing for ' + rawUrl);
+  const schemaDocument = JSON.parse(schemaMatch[1]);
+  const schemaGraph = Array.isArray(schemaDocument['@graph']) ? schemaDocument['@graph'] : [];
+  const pageSchema = {
+    '@type': 'WebPage',
+    '@id': canonical + '#webpage',
+    url: canonical,
+    name: title,
+    description,
+    isPartOf: { '@id': baseUrl + '/#website' },
+    about: { '@id': baseUrl + '/#business' },
+  };
+  const routeGraph = [pageSchema];
+  if (routeKey === '/faqs') {
+    routeGraph.push({
+      '@type': 'FAQPage',
+      '@id': canonical + '#faq',
+      mainEntity: mainPageContent['/faqs'].flatMap((section) => section.faqs || []).map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    });
+  }
+  if (metadata.type === 'article') {
+    routeGraph.push({
+      '@type': 'BlogPosting',
+      '@id': canonical + '#article',
+      url: canonical,
+      mainEntityOfPage: { '@id': canonical + '#webpage' },
+      headline: metadata.articleTitle || title,
+      description,
+      author: { '@type': 'Person', name: metadata.author || 'NestArcadia' },
+      publisher: { '@id': baseUrl + '/#business' },
+      image: imageUrl,
+      articleSection: metadata.category || 'Journal',
+      ...(metadata.datePublished ? { datePublished: metadata.datePublished } : {}),
+      ...(metadata.dateModified ? { dateModified: metadata.dateModified } : {}),
+    });
+  } else if (metadata.type === 'service') {
+    routeGraph.push({
+      '@type': 'Service',
+      '@id': canonical + '#service',
+      name: title,
+      description,
+      serviceType: 'Interior design and turnkey execution',
+      provider: { '@id': baseUrl + '/#business' },
+      ...(metadata.area ? { areaServed: { '@type': 'Place', name: metadata.area } } : {}),
+    });
+  }
+  if (routePath !== '/') {
+    const breadcrumbItems = metadata.articleTitle
+      ? [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
+          { '@type': 'ListItem', position: 2, name: 'Journal', item: baseUrl + '/journal/' },
+          { '@type': 'ListItem', position: 3, name: metadata.articleTitle, item: canonical },
+        ]
+      : [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
+          { '@type': 'ListItem', position: 2, name: metadata.area || title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
+        ];
+    routeGraph.push({
+      '@type': 'BreadcrumbList',
+      '@id': canonical + '#breadcrumb',
+      itemListElement: breadcrumbItems,
+    });
+  }
+  schemaDocument['@graph'] = [
+    ...schemaGraph.filter((item) => !['WebPage', 'BlogPosting', 'Service', 'BreadcrumbList', 'FAQPage'].some((type) =>
+      item['@type'] === type || (Array.isArray(item['@type']) && item['@type'].includes(type))
+    )),
+    ...routeGraph,
+  ];
+  html = html.replace(schemaMatch[0], '<script id="nestarcadia-schema" type="application/ld+json">' + JSON.stringify(schemaDocument) + '</script>');
+
+
   // Don't download the homepage LCP image for every other route.
   if (routePath !== '/') {
     html = html.replace(/\s*<link rel="preload" as="image" href="\/images\/home-hero-mobile-v2\.webp"[^>]*\/?>/gi, '');
@@ -400,6 +591,15 @@ for (const rawUrl of urls) {
   }
   if (!html.includes('property="og:url" content="' + escapeAttribute(canonical) + '"')) {
     throw new Error('Route-specific Open Graph URL generation failed for ' + rawUrl);
+  }
+  const finalSchemaMatch = html.match(/<script id="nestarcadia-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+  if (!finalSchemaMatch) throw new Error('Route JSON-LD missing after generation for ' + rawUrl);
+  const finalSchema = JSON.parse(finalSchemaMatch[1]);
+  if (!finalSchema['@graph']?.some((item) => item['@type'] === 'WebPage' && item.url === canonical)) {
+    throw new Error('Canonical WebPage JSON-LD missing for ' + rawUrl);
+  }
+  if (metadata.type === 'article' && !finalSchema['@graph']?.some((item) => item['@type'] === 'BlogPosting' && item.url === canonical)) {
+    throw new Error('BlogPosting JSON-LD missing for ' + rawUrl);
   }
 
   const requiredSingleTags = [
