@@ -162,6 +162,19 @@ try {
     residentialStatus: residentialSourceResponse.status(),
   }));
 
+  await page.locator('a[href="/interior-design-greater-noida/"]').waitFor({ state: 'attached', timeout: 15000 });
+  const requiredHomepageServiceLinks = [
+    '/interior-design-noida-extension/',
+    '/interior-design-greater-noida-west/',
+    '/interior-design-noida/',
+    '/interior-design-greater-noida/',
+  ];
+  const homepageHrefValues = await page.locator('a[href^="/"]').evaluateAll((anchors) =>
+    anchors.map((anchor) => anchor.getAttribute('href'))
+  );
+  for (const requiredLink of requiredHomepageServiceLinks) {
+    assert.ok(homepageHrefValues.includes(requiredLink), 'homepage is missing contextual service link: ' + requiredLink);
+  }
   const nonCanonicalHomepageLinks = await page.locator('a[href^="/"]').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href')).filter((href) => {
       if (!href) return false;
