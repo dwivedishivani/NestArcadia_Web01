@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 interface Props { setPage: (p: Page) => void; }
@@ -32,15 +32,27 @@ const homeDirectImageUrls: Record<string, string> = {
   'photo-1643785450216-2f4fb7d38fb6': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-srcpageshomehometsx-home-home-image-21-20261006220629000.webp',
 };
 
-const u = (id: string, _w: number, _h: number) => homeDirectImageUrls[id] || resolveSiteImage(id, _w);
+const u = (id: string, _w: number, _h: number) => import.meta.env.PROD
+  ? resolveSiteImage(id, _w)
+  : homeDirectImageUrls[id] || resolveSiteImage(id, _w);
 
 const homeImageKeysByUrl = Object.fromEntries(Object.entries(homeDirectImageUrls).map(([key, url]) => [url, key]));
-const directImageKey = (url: string) => homeImageKeysByUrl[url];
+const directImageKey = (url: string) => homeImageKeysByUrl[url]
+  || url.match(/\\/images\\/responsive\\/(photo-\\d+-[a-z0-9]+)-\\d+\\.webp$/i)?.[1];
+
+const imageSrcSet = (url: string) => {
+  const key = directImageKey(url);
+  return key ? resolveSiteImageSrcSet(key) : undefined;
+};
 
 const heroDirectUrls: Record<string, string> = {
   'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
-  'photo-1613490493576-7fde63acd811': homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
-  'photo-1644057501622-dfa7dd26dbfb': homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
+  'photo-1613490493576-7fde63acd811': import.meta.env.PROD
+    ? resolveSiteImage('photo-1613490493576-7fde63acd811', 1200)
+    : homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
+  'photo-1644057501622-dfa7dd26dbfb': import.meta.env.PROD
+    ? resolveSiteImage('photo-1644057501622-dfa7dd26dbfb', 1200)
+    : homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
 };
 
 const IMG = {
@@ -253,6 +265,8 @@ export default function Home({ setPage }: Props) {
                   ? '/images/home-hero-optimized-v2.webp'
                   : currentHero.image)}
             data-site-image-key={currentHero.imageId}
+            srcSet={currentHero.imageId === 'photo-1713192706971-03900dcf5706' ? undefined : resolveSiteImageSrcSet(currentHero.imageId)}
+            sizes="100vw"
             data-site-image-optimized-source-url={currentHero.imageId === 'photo-1713192706971-03900dcf5706' ? 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' : undefined}
             alt="NestArcadia heritage-inspired modern Indian home interior design for Noida Extension and Greater Noida West"
             width="1920"
@@ -363,6 +377,8 @@ export default function Home({ setPage }: Props) {
               <img
                 src={IMG[c.img]}
                 data-site-image-key={directImageKey(IMG[c.img])}
+                srcSet={imageSrcSet(IMG[c.img])}
+                sizes="(max-width: 639px) 48vw, (max-width: 1023px) 32vw, 19vw"
                 alt={`${c.name} Indian interior design inspiration — ${c.desc}`}
                 loading="lazy" fetchPriority="low"
                 decoding="async"
@@ -384,7 +400,7 @@ export default function Home({ setPage }: Props) {
       <section className="grid lg:grid-cols-2">
         {/* Left */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '520px' }}>
-          <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} alt="Heritage-inspired Indian woodwork, natural materials and craft details in a contemporary interior" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
+          <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} srcSet={imageSrcSet(IMG.classics)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Heritage-inspired Indian woodwork, natural materials and craft details in a contemporary interior" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A1714]/65 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-10 lg:p-16 text-white min-h-[520px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -447,6 +463,8 @@ export default function Home({ setPage }: Props) {
                   <img
                     src={t.img}
                     data-site-image-key={directImageKey(t.img)}
+                    srcSet={imageSrcSet(t.img)}
+                    sizes="(max-width: 639px) 78vw, (max-width: 1023px) 33vw, 18vw"
                     alt={`${t.name}: ${t.tag} interior design inspiration`}
                     loading="lazy" fetchPriority="low"
                     decoding="async"
@@ -520,7 +538,7 @@ export default function Home({ setPage }: Props) {
       {/* ── Modern Homes. Deeper Roots. ──────────────── */}
       <section className="grid lg:grid-cols-2">
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '460px' }}>
-          <img src={IMG.modern} data-site-image-key={directImageKey(IMG.modern)} alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={IMG.modern} data-site-image-key={directImageKey(IMG.modern)} srcSet={imageSrcSet(IMG.modern)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/60 to-transparent" />
           <div className="relative flex flex-col justify-end p-10 lg:p-16 text-white min-h-[460px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -567,7 +585,7 @@ export default function Home({ setPage }: Props) {
           {homes.map(h => (
             <button key={h.name} onClick={() => setPage('homes')} className="text-left group flex h-full flex-col">
               <div className="overflow-hidden bg-[#D4CBBB] mb-4 shrink-0" style={{ aspectRatio: '4/3' }}>
-                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} srcSet={imageSrcSet(IMG[h.img])} sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 25vw" alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714] min-h-[3.5rem]">{h.name}</p>
               <p className="text-[13px] text-[#17665B] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
@@ -645,7 +663,7 @@ export default function Home({ setPage }: Props) {
 
       {/* ── CTA ──────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '340px' }}>
-        <img src={IMG.cta} data-site-image-key={directImageKey(IMG.cta)} alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <img src={IMG.cta} data-site-image-key={directImageKey(IMG.cta)} srcSet={imageSrcSet(IMG.cta)} sizes="100vw" alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 py-20 grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <h2 className="font-display text-[clamp(1.75rem,4vw,3rem)] text-white leading-tight mb-3">
