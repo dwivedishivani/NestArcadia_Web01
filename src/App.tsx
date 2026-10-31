@@ -284,7 +284,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Commercial Office Interior Design' } },
         ],
       },
-      areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida', 'Ghaziabad', 'Indirapuram', 'Crossing Republik', 'Faridabad', 'Delhi', 'East Delhi', 'South Delhi', 'Gurugram', 'Dadri', 'Jewar', 'Yamuna Expressway', 'Delhi NCR'],
+      areaServed: ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida'],
       sameAs: ['https://www.instagram.com/nestarcadia/', 'https://www.facebook.com/people/Nest-Arcadia/61577890484320/', 'https://www.linkedin.com/company/nest-arcadia', 'https://www.youtube.com/@NestArcadiaOfficial'],
     };
     const publisher = { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL, logo: { '@type': 'ImageObject', url: new URL(logoImg, SITE_URL).toString() } };
@@ -298,7 +298,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     const faqSchema = page === 'faq' && !localService ? {
       '@type': 'FAQPage',
       mainEntity: [
-        { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: 'NestArcadia serves Greater Noida West, Noida Extension, Greater Noida, Noida and nearby NCR markets including Ghaziabad, Faridabad, Delhi and Gurugram.' } },
+        { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: 'NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope.' } },
         { '@type': 'Question', name: 'Do you design 2BHK, 3BHK and 4BHK interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the scope adapted to the property and household requirements.' } },
         { '@type': 'Question', name: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', acceptedAnswer: { '@type': 'Answer', text: 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' } },
         { '@type': 'Question', name: 'Do you provide turnkey interior design and execution?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Depending on the project, NestArcadia can manage planning and design through materials, site execution and final handover.' } },
