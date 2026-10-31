@@ -6,13 +6,27 @@ RewriteEngine On
   AddType application/manifest+json .webmanifest
 </IfModule>
 
-# Canonicalize the host so search engines see one authoritative domain.
+# Preserve the legacy portfolio URL on the production domain.
+# This is deliberately scoped to the real domain so Hostinger PR previews keep working.
+RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
+
+# Redirect www to the apex host. Add the canonical trailing slash in the same hop
+# for extensionless routes to avoid redirect chains.
+RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
 RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
 RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
-
-# Preserve the old portfolio URL for SEO/bookmarks.
-RewriteRule ^homes/?$ /our-projects [R=301,L]
+# Canonicalize extensionless routes on the production apex host only.
+# Preview domains and static files are not redirected to production.
+RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
 # HTML must always check for the latest deployment so browsers do not keep
 # an old Vite entry file that points at deleted hashed JavaScript chunks.
