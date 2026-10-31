@@ -39,10 +39,10 @@ jobs:
 
       - name: Prepare optimized homepage hero image
         run: |
-          timeout 180s sudo apt-get update -qq
+          timeout 180s timeout 180s sudo apt-get update -qq
           timeout 180s sudo apt-get install -y webp imagemagick
           mkdir -p public/images
-          curl --fail --location --silent --show-error --retry 3 \
+          timeout 180s curl --fail --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 60 \
             'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp' \
             --output "$RUNNER_TEMP/home-hero-source.webp"
           cwebp -quiet -mt -resize 1600 0 -q 78 \
@@ -117,15 +117,15 @@ jobs:
             exit 1
           fi
 
-          sudo apt-get update -qq
-          sudo apt-get install -y sshpass
+          timeout 180s sudo apt-get update -qq
+          timeout 180s sudo apt-get install -y sshpass
           mkdir -p ~/.ssh
-          ssh-keyscan -p "$HOSTINGER_SSH_PORT" "$HOSTINGER_SSH_HOST" >> ~/.ssh/known_hosts
+          timeout 30s ssh-keyscan -p "$HOSTINGER_SSH_PORT" "$HOSTINGER_SSH_HOST" >> ~/.ssh/known_hosts
 
           # Upload the complete built site in one transfer without deleting old
           # files. Existing Hostinger dot-directories remain untouched.
           tar -C dist --exclude='.well-known' -czf - . |
-            SSHPASS="$HOSTINGER_SSH_PASSWORD" sshpass -e ssh \
+            SSHPASS="$HOSTINGER_SSH_PASSWORD" timeout 180s sshpass -e ssh \
               -p "$HOSTINGER_SSH_PORT" \
               -o StrictHostKeyChecking=yes \
               -o ConnectTimeout=20 \
@@ -154,7 +154,7 @@ jobs:
             local url="$1"
             local expected="$2"
             local actual
-            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
+            actual=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
             echo "$url -> Content-Type $actual"
             case "$actual" in
               "$expected"*) ;;
@@ -170,7 +170,7 @@ jobs:
 
           # Every generated/static route should revalidate the public HTML shell.
           for url in "https://nestarcadia.com/" "https://nestarcadia.com/interior-design-services/" "https://nestarcadia.com/interior-design-noida-extension/" "https://nestarcadia.com/interior-design-greater-noida-west/" "https://nestarcadia.com/journal/rattan/"; do
-            html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -I "$url" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
+            html_cache_control=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -I "$url" | awk -F': ' 'tolower($1) == "cache-control" { value=tolower($2) } END { gsub("\\r", "", value); print value }')
             echo "$url -> Cache-Control: $html_cache_control"
             case "$html_cache_control" in
               *no-store*) echo "::error::Public HTML route still sends Cache-Control: no-store: $url"; exit 1 ;;
@@ -183,7 +183,7 @@ jobs:
           # Verify the two critical hero assets have a real WebP response MIME type
           # before marking a deployment successful.
           for url in "https://nestarcadia.com/images/home-hero-mobile-v2.webp" "https://nestarcadia.com/images/home-hero-optimized-v2.webp"; do
-            content_type=$(curl --location --silent --show-error --retry 3 --retry-delay 2 -o /dev/null -w '%{content_type}' "$url")
+            content_type=$(curl --location --silent --show-error --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 30 -o /dev/null -w '%{content_type}' "$url")
             echo "$url -> Content-Type $content_type"
             case "$content_type" in
               image/webp*) ;;
