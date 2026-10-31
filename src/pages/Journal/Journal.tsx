@@ -151,8 +151,8 @@ export const articles = [
     author: 'Shivani',
     date: 'Sep 2026',
     readTime: '9 min read',
-    img: u('photo-1771328756144-02bde5549a9a', 1200, 700),
-    thumb: u('photo-1771328756144-02bde5549a9a', 800, 560),
+    img: u('photo-1682418460518-848f7aa242bb', 1200, 700),
+    thumb: u('photo-1682418460518-848f7aa242bb', 800, 560),
     body: [
       'A 2BHK in Noida, Greater Noida or Greater Noida West is often asked to do a surprising amount. It is a place to work, host family, eat together, keep children’s things, store luggage, and occasionally take a quiet breath after a long day. The answer is not to fill every wall with storage. A home feels larger when it is planned around the life happening inside it, rather than around the fear of not having enough cupboards.',
       'The first design decision is to identify what truly needs a permanent home. Seasonal luggage, extra bedding, festival decor and documents need enclosed storage. Daily objects need easy access. Things that are rarely used should not occupy the most valuable shelves at eye level. This small audit changes the brief from “we need more storage” to a much more useful one: “we need the right storage in the right place.”',
