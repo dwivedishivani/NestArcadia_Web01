@@ -202,6 +202,9 @@ try {
     ['/our-projects/', 'Selected home concepts and interior design studies'],
     ['/start-your-project/', 'Tell us about your property'],
     ['/faqs/', 'Which areas does NestArcadia serve?'],
+    ['/interior-design-greater-noida/', 'Good interiors begin with the way a space is actually used.'],
+    ['/interior-design-dadri/', 'Design should respond to the home, not force a template onto it.'],
+    ['/interior-design-yamuna-expressway/', 'Plan the interior before the property starts dictating the decisions.'],
     ['/journal/luxury-interior-design-noida-extension/', '5 Core Elements of High-End Residential Interiors'],
   ];
   for (const [route, expectedContent] of staticRouteChecks) {
