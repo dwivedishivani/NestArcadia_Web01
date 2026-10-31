@@ -85,7 +85,7 @@ jobs:
           const manifest = JSON.parse(await readFile('src/data/responsive-site-images.json', 'utf8'));
           const expected = manifest.reduce((sum, item) => sum + item.widths.length, 0);
           const files = await readdir('dist/images/responsive');
-          const actual = files.filter((file) => /^photo-\\d{10,}-[a-z0-9]{8,}-\\d+\\.webp$/i.test(file)).length;
+          const actual = files.filter((file) => /^photo-\d{10,}-[a-z0-9]{8,}-\d+\.webp$/i.test(file)).length;
           if (actual !== expected) throw new Error(`Responsive image output mismatch: expected ${expected}, found ${actual}`);
           console.log(`Validated ${actual} responsive WebP variants.`);
           NODE
