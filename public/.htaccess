@@ -4,6 +4,7 @@ RewriteEngine On
 # Serve the Web App Manifest with its registered media type.
 <IfModule mod_mime.c>
   AddType application/manifest+json .webmanifest
+  AddType image/x-icon .ico
 </IfModule>
 
 # Canonicalize the host so search engines see one authoritative domain.
