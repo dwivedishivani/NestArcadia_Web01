@@ -143,6 +143,13 @@ try {
   assert.equal(initialH1Count, 1, 'homepage initial HTML must contain one semantic H1');
   assert.ok(homepageSource.includes('<p class="boot-heading" aria-hidden="true">'),
     'temporary boot overlay must not introduce a second semantic heading');
+  const homepageSchemaText = homepageSource.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i)?.[1];
+  assert.ok(homepageSchemaText, 'homepage must contain initial business JSON-LD');
+  const homepageSchema = JSON.parse(homepageSchemaText);
+  const businessEntity = homepageSchema['@graph']?.find((entity) => entity['@id'] === 'https://nestarcadia.com/#business');
+  assert.ok(businessEntity, 'homepage JSON-LD must include the NestArcadia business entity');
+  assert.deepEqual(businessEntity.areaServed, ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida'],
+    'business entity areaServed must match the four priority local markets');
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
@@ -238,6 +245,8 @@ try {
     assert.ok(html.includes('"@type":"WebPage"'), route + ' must contain route-specific WebPage JSON-LD');
     if (route === '/faqs/') {
       assert.ok(html.includes('"@type":"FAQPage"'), 'FAQ route must contain FAQPage JSON-LD');
+      assert.ok(html.includes("primary service focus is Noida Extension and Greater Noida West"),
+        'FAQ route must communicate the priority local service areas accurately');
     }
     if (route === '/interior-design-services/') {
       assert.ok(html.includes('"@type":"Service"'), 'services route must contain route-specific Service JSON-LD');
