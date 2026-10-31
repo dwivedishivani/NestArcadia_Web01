@@ -591,6 +591,12 @@ export default function Home({ setPage }: Props) {
             <p className="text-[15px] leading-[1.9] text-[#6B5E4E]">
               Our interior design and turnkey execution services also support homes and commercial spaces in Delhi, Gurgaon, Faridabad and Ghaziabad. Every project begins with the way you live and ends with a home or workplace that feels personal, functional and made to last.
             </p>
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[13px] font-medium">
+              <a href="/interior-design-noida-extension/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Noida Extension →</a>
+              <a href="/interior-design-greater-noida-west/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Greater Noida West →</a>
+              <a href="/interior-design-noida/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Noida →</a>
+              <a href="/interior-design-greater-noida/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Greater Noida →</a>
+            </div>
           </div>
         </div>
       </section>
