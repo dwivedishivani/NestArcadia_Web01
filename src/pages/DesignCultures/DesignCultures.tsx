@@ -108,8 +108,8 @@ export default function DesignCultures({ setPage }: Props) {
                 srcSet={resolveSiteImageSrcSet(c.imageKey)}
                 sizes="(max-width: 1023px) 100vw, 50vw"
                 alt={`${c.name} Indian heritage interior design for Noida and Greater Noida homes`}
-                loading={i < 2 ? 'eager' : 'lazy'}
-                fetchPriority={i < 2 ? 'high' : 'auto'}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority="auto"
                 decoding="async"
                 width="1200"
                 height="800"
