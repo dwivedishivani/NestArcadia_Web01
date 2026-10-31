@@ -415,7 +415,7 @@ for (const rawUrl of urls) {
 
   // Keep the business entity graph, but make the page-level structured data
   // accurate in the initial HTML (before the React application runs).
-  const schemaMatch = html.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
+  const schemaMatch = html.match(/<script id="nestarcadia-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/i);
   if (!schemaMatch) throw new Error('Route schema generation stopped: base JSON-LD script is missing for ' + rawUrl);
   const schemaDocument = JSON.parse(schemaMatch[1]);
   const schemaGraph = Array.isArray(schemaDocument['@graph']) ? schemaDocument['@graph'] : [];
@@ -489,7 +489,7 @@ for (const rawUrl of urls) {
   if (!html.includes('property="og:url" content="' + escapeAttribute(canonical) + '"')) {
     throw new Error('Route-specific Open Graph URL generation failed for ' + rawUrl);
   }
-  const finalSchemaMatch = html.match(/<script id="nestarcadia-schema" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/i);
+  const finalSchemaMatch = html.match(/<script id="nestarcadia-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/i);
   if (!finalSchemaMatch) throw new Error('Route JSON-LD missing after generation for ' + rawUrl);
   const finalSchema = JSON.parse(finalSchemaMatch[1]);
   if (!finalSchema['@graph']?.some((item) => item['@type'] === 'WebPage' && item.url === canonical)) {
