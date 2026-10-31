@@ -162,7 +162,7 @@ try {
     residentialStatus: residentialSourceResponse.status(),
   }));
 
-  await page.locator('a[href="/interior-design-greater-noida/"]').waitFor({ state: 'attached', timeout: 15000 });
+  await page.locator('a[href="/interior-design-greater-noida/"]').first().waitFor({ state: 'attached', timeout: 15000 });
   const requiredHomepageServiceLinks = [
     '/interior-design-noida-extension/',
     '/interior-design-greater-noida-west/',
