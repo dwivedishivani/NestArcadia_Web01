@@ -226,12 +226,20 @@ function routeMetadata(pathname) {
   if (pathname.startsWith('/journal/')) {
     const slug = pathname.slice('/journal/'.length).replace(/\/$/, '');
     const article = articleMeta.get(slug);
-    if (article) return article;
+    const journalSeoOverrides = {
+      'luxury-interior-design-noida-extension': {
+        title: 'Luxury Interior Design in Noida Extension: Planning Guide | NestArcadia Journal',
+        description: 'A practical guide to high-end 3BHK and 4BHK apartment interiors in Noida Extension, covering spatial planning, finish selection and smart-home considerations.',
+      },
+    };
+    const override = journalSeoOverrides[slug];
+    if (article) return { ...article, ...(override || {}) };
     const title = titleCaseSlug(slug);
     return {
       title: title + ' | NestArcadia Journal',
       description: 'Practical interior design ideas, material guidance and planning advice for homes in Noida, Greater Noida and NCR: ' + title + '.',
       type: 'article',
+      ...(override || {}),
     };
   }
   if (pathname.startsWith('/interior-design-') || pathname.startsWith('/commercial-interior-design-')) {
