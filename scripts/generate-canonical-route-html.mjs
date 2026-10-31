@@ -322,6 +322,32 @@ const mainPageContent = {
     { heading: 'What to look for in a well-planned interior', bullets: ['A layout that protects comfortable movement','Storage planned around actual household routines','Materials chosen for appearance, durability and maintenance','Lighting coordinated with furniture and daily activities','Details that connect the rooms into one consistent design'] },
     { heading: 'Have a home or floor plan to discuss?', paragraphs: ['Share your property type, location, possession status and priorities. NestArcadia can help define the next planning steps and the scope required for your home.'], links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/journal/', label: 'Read practical interior planning guides' }] },
   ],
+  '/faqs': [
+    {
+      heading: 'Working with NestArcadia',
+      faqs: [
+        { question: 'Which areas does NestArcadia serve?', answer: 'NestArcadia serves Noida, Greater Noida, Greater Noida West, Noida Extension, Delhi, Gurgaon, Faridabad and Ghaziabad for residential and commercial interior design projects.' },
+        { question: 'Do you provide turnkey interior design and execution?', answer: 'Yes. Depending on the project, we can manage the process from planning and design through materials, site execution and final handover.' },
+        { question: 'When should I contact an interior designer?', answer: 'Ideally, before possession or before major civil and electrical work begins. Planning early gives you more flexibility with kitchen layouts, wardrobes, storage, lighting and electrical points.' },
+      ],
+    },
+    {
+      heading: 'Homes, layouts and budgets',
+      faqs: [
+        { question: 'Do you design 2BHK, 3BHK and 4BHK interiors?', answer: 'Yes. We work on 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the design adapted to the layout, carpet area, storage needs and level of customisation.' },
+        { question: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', answer: 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' },
+        { question: 'Can you plan space-saving interiors for a compact Noida apartment?', answer: 'Yes. We focus on practical circulation, well-planned storage and furniture that fits the actual space, so the home feels useful without feeling overcrowded.' },
+      ],
+    },
+    {
+      heading: 'Services and next steps',
+      faqs: [
+        { question: 'Do you offer Vastu-friendly interior planning?', answer: 'Yes. If Vastu is important to you, we can consider relevant principles alongside practical layout, daylight, movement, storage and everyday functionality.' },
+        { question: 'How do I begin an interior design project with NestArcadia?', answer: 'Share your property type, location, possession timeline and what you need from the space. We can then guide you on the right next step.' },
+      ],
+      links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/interior-design-services/', label: 'Explore interior design services' }],
+    },
+  ],
   '/start-your-project': [
     { heading: 'Tell us about your property', paragraphs: ['A useful first brief includes your property location, apartment or villa configuration, approximate area, possession or renovation status, preferred timeline and the rooms or services you want help with.'] },
     { heading: 'What happens next', bullets: ['Review the floor plan, site condition and household requirements','Clarify design scope, priorities and budget direction','Identify the drawings, materials and execution decisions required','Prepare the next-step proposal around the agreed brief'] },
@@ -377,7 +403,8 @@ function renderStaticRoute(pathname, metadata) {
       const paragraphs = (section.paragraphs || []).map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
       const bullets = staticList(section.bullets || []);
       const links = (section.links || []).map((link) => inlineLink(link.href, link.label)).join(' · ');
-      return '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">' + escapeText(section.heading) + '</h2>' + paragraphs + bullets + (links ? '<p style="' + staticParagraphStyle + '">' + links + '</p>' : '') + '</section>';
+      const faqs = (section.faqs || []).map((faq) => '<details style="margin:0 0 14px;border-bottom:1px solid #D4CBBB;padding:0 0 14px"><summary style="cursor:pointer;font-weight:600;color:#1C3A5A">' + escapeText(faq.question) + '</summary><p style="' + staticParagraphStyle + ';margin-top:8px">' + escapeText(faq.answer) + '</p></details>').join('');
+      return '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">' + escapeText(section.heading) + '</h2>' + paragraphs + bullets + faqs + (links ? '<p style="' + staticParagraphStyle + '">' + links + '</p>' : '') + '</section>';
     }).join('');
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header + sections + '</main>';
   }
@@ -481,6 +508,17 @@ for (const rawUrl of urls) {
     about: { '@id': baseUrl + '/#business' },
   };
   const routeGraph = [pageSchema];
+  if (routePath === '/faqs') {
+    routeGraph.push({
+      '@type': 'FAQPage',
+      '@id': canonical + '#faq',
+      mainEntity: mainPageContent['/faqs'].flatMap((section) => section.faqs || []).map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    });
+  }
   if (metadata.type === 'article') {
     routeGraph.push({
       '@type': 'BlogPosting',
@@ -525,7 +563,7 @@ for (const rawUrl of urls) {
     });
   }
   schemaDocument['@graph'] = [
-    ...schemaGraph.filter((item) => !['WebPage', 'BlogPosting', 'Service', 'BreadcrumbList'].some((type) =>
+    ...schemaGraph.filter((item) => !['WebPage', 'BlogPosting', 'Service', 'BreadcrumbList', 'FAQPage'].some((type) =>
       item['@type'] === type || (Array.isArray(item['@type']) && item['@type'].includes(type))
     )),
     ...routeGraph,
