@@ -47,8 +47,7 @@ const imageSrcSet = (url: string) => {
 
 const heroDirectUrls: Record<string, string> = {
   'photo-1713192706971-03900dcf5706': 'https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/home/home-hero-carousel-hero-hero-carousel-photo-1-20261006220649229.webp',
-  // Keep the original storage URLs as a true fallback; srcSet selects the
-  // pre-generated local WebP variants when they are available.
+  // Keep original storage URLs as a fallback; srcSet selects pre-generated local WebP variants.
   'photo-1613490493576-7fde63acd811': homeDirectImageUrls['photo-1613490493576-7fde63acd811'],
   'photo-1644057501622-dfa7dd26dbfb': homeDirectImageUrls['photo-1644057501622-dfa7dd26dbfb'],
 };
@@ -301,8 +300,8 @@ export default function Home({ setPage }: Props) {
 
         <div className="relative w-full pb-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
           <p className="text-white/80 text-[10px] uppercase tracking-[0.32em] mb-5">{currentHero.eyebrow}</p>
-          <h1 className="font-display text-[clamp(2.5rem,7vw,5.25rem)] text-white leading-[1.04] mb-7">
-            {currentHero.title}
+          <h1 className="font-display text-[clamp(2.35rem,6.5vw,4.9rem)] text-white leading-[1.04] mb-7">
+            Interior Designers in<br />Noida Extension &amp;<br className="hidden sm:block" /> Greater Noida West
           </h1>
           <p className="text-white/65 text-[15px] leading-relaxed mb-9 max-w-[300px]">
             {currentHero.description}
@@ -559,7 +558,7 @@ export default function Home({ setPage }: Props) {
             'Inspired by the craft and wisdom of the past',
             "Designed for today's ways of living",
             'Personalised to the way you use your home',
-            'Delivered with care, everywhere in India',
+            'Delivered with care, across Noida & NCR',
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-7 py-6 border-b border-white/[0.08] last:border-b-0">
               <span className="font-display text-[#B8D8D1] text-sm shrink-0 mt-px">0{i + 1}</span>
@@ -603,11 +602,17 @@ export default function Home({ setPage }: Props) {
           </div>
           <div className="lg:pt-2">
             <p className="text-[15px] leading-[1.9] text-[#6B5E4E] mb-5">
-              NestArcadia designs 2BHK, 3BHK and 4BHK interiors, villas and farmhouses across Noida, Greater Noida and Greater Noida West. We pair a practical understanding of apartment living with India’s material heritage — from efficient storage and modular kitchens to calm, characterful living spaces.
+              NestArcadia designs 2BHK, 3BHK and 4BHK interiors, villas and farmhouses with a primary focus on Noida Extension and Greater Noida West, alongside nearby Noida and Greater Noida. We pair practical apartment planning with India’s material heritage — from efficient storage and modular kitchens to calm, characterful living spaces.
             </p>
             <p className="text-[15px] leading-[1.9] text-[#6B5E4E]">
-              Our interior design and turnkey execution services also support homes and commercial spaces in Delhi, Gurgaon, Faridabad and Ghaziabad. Every project begins with the way you live and ends with a home or workplace that feels personal, functional and made to last.
+              Our primary local service focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets. For a property elsewhere in NCR, share its location and scope so the team can confirm whether the project is a fit.
             </p>
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[13px] font-medium">
+              <a href="/interior-design-noida-extension/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Noida Extension →</a>
+              <a href="/interior-design-greater-noida-west/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Greater Noida West →</a>
+              <a href="/interior-design-noida/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Noida →</a>
+              <a href="/interior-design-greater-noida/" className="text-[#17665B] underline underline-offset-4 hover:text-[#1A1714]">Interior design in Greater Noida →</a>
+            </div>
           </div>
         </div>
       </section>
@@ -642,7 +647,7 @@ export default function Home({ setPage }: Props) {
 
             <div className="flex flex-wrap items-center gap-3 pt-6">
               <Link
-                to="/faqs"
+                to="/faqs/"
                 className="border border-[#1C3A5A] px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
               >
                 See All FAQs →
