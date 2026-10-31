@@ -18,7 +18,7 @@ try {
 
 const dimensions = execFileSync('identify', ['-format', '%w %h', logoPath], { encoding: 'utf8' })
   .trim()
-  .split(/\\s+/)
+  .split(/\s+/)
   .map(Number);
 const [sourceWidth, sourceHeight] = dimensions;
 if (!Number.isInteger(sourceWidth) || !Number.isInteger(sourceHeight) || sourceWidth < 64 || sourceHeight < 64) {
