@@ -298,6 +298,36 @@ const staticList = (items, ordered = false) => {
   return '<' + tag + ' style="' + listStyle + '">' + items.map((item) => '<li style="margin:0 0 9px;color:#52677E">' + escapeText(item) + '</li>').join('') + '</' + tag + '>';
 };
 
+
+const mainPageContent = {
+  '/design-cultures': [
+    { heading: 'Regional inspiration, interpreted for modern homes', paragraphs: ['Indian interiors are shaped by climate, craft, materials and the ways families use their homes. NestArcadia draws on regional design languages as a source of inspiration, then adapts the details to contemporary layouts and everyday needs.', 'Explore ideas influenced by North, South, East, West and Central India — from warm wood and woven textures to colour, carved details, natural finishes and thoughtful light.'] },
+    { heading: 'Design details we consider', bullets: ['Material and finish combinations that suit the room and its use','Craft-inspired screens, woodwork, textiles and surface details','Light, ventilation, furniture scale and circulation','A balanced mix of heritage references and contemporary function'] },
+    { heading: 'Bring an idea into your own floor plan', paragraphs: ['A reference image is a starting point, not a ready-made solution. We consider the dimensions, natural light, storage needs and maintenance expectations of your property before translating an inspiration into a practical interior.'], links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/interior-design-services/', label: 'Explore interior design services' }] },
+  ],
+  '/interior-design-services': [
+    { heading: 'Residential interior design', paragraphs: ['Plan 2BHK, 3BHK and 4BHK apartments, villas and family homes around the floor plan, household routines, storage requirements and budget. The design scope can include furniture layouts, kitchens, wardrobes, lighting, materials and decor.'] },
+    { heading: 'Commercial interiors', paragraphs: ['Create functional offices and commercial spaces with considered layouts for reception areas, workstations, meeting rooms, storage, lighting and acoustics. The scope is tailored to the business, site conditions and project brief.'] },
+    { heading: 'Design and execution services', bullets: ['Space planning and furniture layouts','Modular kitchens and custom furniture','Wardrobes and integrated storage','Vastu-led layout discussions when requested','Lighting, materials and decor','Turnkey execution coordination from design through handover'] },
+    { heading: 'Start with the property and the scope', paragraphs: ['The right estimate depends on the property condition, measurements, selected materials and work already completed. Share a floor plan and requirements so the scope can be assessed before a proposal is prepared.'], links: [{ href: '/start-your-project/', label: 'Start an interior design project' }, { href: '/interior-design-noida-extension/', label: 'Interior design in Noida Extension' }, { href: '/interior-design-greater-noida-west/', label: 'Interior design in Greater Noida West' }] },
+  ],
+  '/our-story': [
+    { heading: 'A design approach rooted in how people live', paragraphs: ['NestArcadia brings Indian material heritage and contemporary interior planning together. The starting point is not a style label; it is the way a household uses its rooms, stores everyday things, moves through the home and spends time together.', 'Craft, texture and regional references add character when they are used with intention. Space planning, lighting, storage and execution details make that character work in daily life.'] },
+    { heading: 'From first brief to finished space', bullets: ['Understand the property, floor plan, routines and priorities','Resolve layout, furniture scale, storage and key services','Develop the design direction, materials and execution details','Coordinate the agreed work and review the finished space'] },
+    { heading: 'Design for homes across Noida and NCR', paragraphs: ['NestArcadia focuses on residential and commercial interior requirements across Noida Extension, Greater Noida West, Noida and nearby NCR locations. Each project begins with its own site conditions, brief and agreed scope.'], links: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Talk to NestArcadia' }] },
+  ],
+  '/our-projects': [
+    { heading: 'Selected home concepts and interior design studies', paragraphs: ['Explore a selection of interior design directions for apartments, villas and family homes. The examples illustrate how material palettes, furniture scale, natural light, storage and regional references can shape a coherent living space.', 'A concept study is an exploration of design possibilities; it should not be confused with a completed client project. Project pages should identify the status, location and scope of each example clearly.'] },
+    { heading: 'What to look for in a well-planned interior', bullets: ['A layout that protects comfortable movement','Storage planned around actual household routines','Materials chosen for appearance, durability and maintenance','Lighting coordinated with furniture and daily activities','Details that connect the rooms into one consistent design'] },
+    { heading: 'Have a home or floor plan to discuss?', paragraphs: ['Share your property type, location, possession status and priorities. NestArcadia can help define the next planning steps and the scope required for your home.'], links: [{ href: '/start-your-project/', label: 'Share your project brief' }, { href: '/journal/', label: 'Read practical interior planning guides' }] },
+  ],
+  '/start-your-project': [
+    { heading: 'Tell us about your property', paragraphs: ['A useful first brief includes your property location, apartment or villa configuration, approximate area, possession or renovation status, preferred timeline and the rooms or services you want help with.'] },
+    { heading: 'What happens next', bullets: ['Review the floor plan, site condition and household requirements','Clarify design scope, priorities and budget direction','Identify the drawings, materials and execution decisions required','Prepare the next-step proposal around the agreed brief'] },
+    { heading: 'Make the first conversation useful', paragraphs: ['If you have a floor plan, share it with your enquiry. For a quick starting conversation, you can also contact NestArcadia on WhatsApp at +91 8448061997.'], links: [{ href: 'https://wa.me/918448061997', label: 'Contact NestArcadia on WhatsApp' }, { href: '/interior-design-services/', label: 'Review services before you enquire' }] },
+  ],
+};
+
 function renderStaticRoute(pathname, metadata) {
   const heading = (metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
   const header = '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">' +
@@ -307,7 +337,7 @@ function renderStaticRoute(pathname, metadata) {
   if (pathname === '/') {
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' +
       '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">Tradition Meets Tomorrow</p>' +
-      '<h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">We Bring Timeless Culture to Modern Living</h1>' +
+      '<h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">Interior Designers in Noida Extension &amp; Greater Noida West</h1>' +
       '<p style="' + staticParagraphStyle + '">NestArcadia creates heritage-inspired, contemporary interiors for apartments, villas and workspaces. Our design approach brings space planning, storage, kitchens, lighting, materials and execution decisions together around the way people actually live.</p></header>' +
       '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">Residential Interior Designers in Noida Extension and Greater Noida West</h2>' +
       '<p style="' + staticParagraphStyle + '">We plan interiors for 2BHK, 3BHK and 4BHK apartments, villas and other homes across Noida, Greater Noida, Greater Noida West and nearby NCR areas. The work begins with the floor plan: circulation, furniture scale, kitchen workflow, wardrobes, usable storage and the service decisions that should be resolved before site execution.</p>' +
@@ -336,6 +366,17 @@ function renderStaticRoute(pathname, metadata) {
       (faqHtml ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">Frequently asked questions</h2>' + faqHtml + '</section>' : '') +
       (relatedHtml ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">Related resources</h2><ul style="padding-left:22px">' + relatedHtml + '</ul></section>' : '') +
       '<p style="' + staticParagraphStyle + '">Ready to discuss your property? ' + inlineLink('/start-your-project/', 'Share your project brief with NestArcadia') + '.</p></main>';
+  }
+
+  const mainSections = mainPageContent[pathname];
+  if (mainSections) {
+    const sections = mainSections.map((section) => {
+      const paragraphs = (section.paragraphs || []).map((paragraph) => '<p style="' + staticParagraphStyle + '">' + escapeText(paragraph) + '</p>').join('');
+      const bullets = staticList(section.bullets || []);
+      const links = (section.links || []).map((link) => inlineLink(link.href, link.label)).join(' · ');
+      return '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.5rem,3vw,2rem)">' + escapeText(section.heading) + '</h2>' + paragraphs + bullets + (links ? '<p style="' + staticParagraphStyle + '">' + links + '</p>' : '') + '</section>';
+    }).join('');
+    return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header + sections + '</main>';
   }
 
   const articleSlug = pathname.startsWith('/journal/') ? pathname.slice('/journal/'.length) : '';
