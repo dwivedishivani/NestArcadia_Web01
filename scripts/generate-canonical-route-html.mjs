@@ -345,6 +345,8 @@ function renderStaticRoute(pathname, metadata) {
       '<p style="' + staticParagraphStyle + '">A well-planned apartment starts with the builder’s floor plan: furniture scale, everyday circulation, usable storage, kitchen workflow and the service decisions that should be resolved before finishes are finalised. The exact scope depends on the property, what is already complete and the household’s requirements.</p>' +
       '<p>' + inlineLink('/interior-design-noida-extension/', 'Interior design for homes in Noida Extension') + ' · ' +
       inlineLink('/interior-design-greater-noida-west/', 'Interior design in Greater Noida West') + ' · ' +
+      inlineLink('/interior-design-noida/', 'Interior design in Noida') + ' · ' +
+      inlineLink('/interior-design-greater-noida/', 'Interior design in Greater Noida') + ' · ' +
       inlineLink('/interior-design-services/', 'All interior design services') + '</p></section>' +
       '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">Residential and Commercial Interior Services</h2>' +
       staticList(['2BHK, 3BHK and 4BHK apartment planning','Modular kitchens, wardrobes and custom storage','Lighting, material and finish selection','Vastu-led layout discussions when requested','Commercial office space planning, reception, workstations and acoustic considerations','Turnkey design and execution coordination']) +
