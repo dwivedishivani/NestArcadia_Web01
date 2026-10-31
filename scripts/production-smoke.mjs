@@ -234,6 +234,13 @@ try {
     if (route === '/faqs/') {
       assert.ok(html.includes('"@type":"FAQPage"'), 'FAQ route must contain FAQPage JSON-LD');
     }
+    if (route === '/interior-design-services/') {
+      assert.ok(html.includes('"@type":"Service"'), 'services route must contain route-specific Service JSON-LD');
+      assert.ok(html.includes('Noida Extension and Greater Noida West'), 'services schema must reinforce the primary service areas');
+    }
+    if (route === '/our-projects/') {
+      assert.ok(html.includes('Selected home concepts and interior design studies'), 'portfolio route must clearly label design concepts');
+    }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
       assert.ok(!html.includes('data:image/'), 'static article HTML must not embed a base64 image');
