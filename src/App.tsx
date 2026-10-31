@@ -312,7 +312,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     ] };
     const pageBreadcrumb = !activeArticle && !localService && page !== 'home' ? { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-      { '@type': 'ListItem', position: 2, name: meta.title.replace(/\\s*\\|\\s*NestArcadia(?: Journal)?\\s*$/i, ''), item: canonical },
+      { '@type': 'ListItem', position: 2, name: meta.title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
     ] } : null;
       const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
