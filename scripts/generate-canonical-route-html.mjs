@@ -502,7 +502,7 @@ for (const rawUrl of urls) {
       '@id': canonical + '#breadcrumb',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl + '/' },
-        { '@type': 'ListItem', position: 2, name: metadata.area || (metadata.articleTitle ? 'Journal' : title.replace(/\\s*\\|\\s*NestArcadia(?: Journal)?\\s*$/i, '')), item: canonical },
+        { '@type': 'ListItem', position: 2, name: metadata.area || (metadata.articleTitle ? 'Journal' : title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '')), item: canonical },
       ],
     });
   }
