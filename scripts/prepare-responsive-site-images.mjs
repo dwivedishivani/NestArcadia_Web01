@@ -38,7 +38,7 @@ async function collectResponsiveImageKeys(dirPath) {
     // This deliberately excludes ordinary Unsplash/Edge Function images elsewhere.
     if (!content.includes('resolveSiteImageSrcSet(')) continue;
 
-    for (const match of content.matchAll(/photo-\d+-[a-z0-9]+/gi)) {
+    for (const match of content.matchAll(/photo-\d{10,}-[a-z0-9]{8,}/gi)) {
       const key = match[0].toLowerCase();
       // The first homepage hero has its own separately generated responsive asset pair.
       if (key !== primaryHeroKey) referenced.add(key);
@@ -50,7 +50,7 @@ async function collectResponsiveImageKeys(dirPath) {
 
 const manifestKeys = new Set();
 for (const item of manifest) {
-  if (!item || !/^photo-\d+-[a-z0-9]+$/i.test(item.key || '')
+  if (!item || !/^photo-\d{10,}-[a-z0-9]{8,}$/i.test(item.key || '')
     || typeof item.url !== 'string'
     || !Array.isArray(item.widths)
     || item.widths.length === 0
