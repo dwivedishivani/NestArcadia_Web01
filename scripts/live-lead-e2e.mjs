@@ -92,10 +92,10 @@ try {
   });
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.getByPlaceholder('Full Name *').fill('NestArcadia Automated E2E QA');
-  await page.getByPlaceholder('Email Address *').fill(qaEmail);
-  await page.getByPlaceholder('Phone Number *').fill('9876543210');
-  await page.getByRole('combobox').selectOption('Noida');
+  await page.getByLabel('Full name').fill('NestArcadia Automated E2E QA');
+  await page.getByLabel('Email address').fill(qaEmail);
+  await page.getByLabel('Phone number').fill('9876543210');
+  await page.getByLabel('City or location').selectOption('Noida');
   await page.getByRole('button', { name: 'Apartment / Flat', exact: true }).click();
   await page.getByRole('button', { name: '2 BHK', exact: true }).click();
   await page.getByRole('button', { name: 'Not sure yet', exact: true }).click();
