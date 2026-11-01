@@ -217,7 +217,7 @@ export default function StartProject({ setPage }: Props) {
 
   if (submitted) {
     return (
-      <div className="pt-20 lg:pt-[90px] min-h-screen flex items-center justify-center px-6">
+      <div role="status" aria-live="polite" className="pt-20 lg:pt-[90px] min-h-screen flex items-center justify-center px-6">
         <div className="text-center max-w-md">
           <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#17665B] text-xl">✓</div>
           <h2 className="font-display text-3xl text-[#1A1714] mb-4">We will be in touch.</h2>
@@ -276,65 +276,81 @@ export default function StartProject({ setPage }: Props) {
               <div>
                 <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Details</h2>
                 <div className="flex flex-col gap-4">
-                  <div><input className={inputClass(errors.name)} placeholder="Full Name *" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} required />{errors.name && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.name}</p>}</div>
-                  <div><input className={inputClass(errors.email)} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} required />{errors.email && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.email}</p>}</div>
-                  <div><input className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} required />{errors.phone && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.phone}</p>}</div>
+                  <div>
+                    <label htmlFor="lead-name" className="mb-2 block text-[12px] font-medium text-[#6B5E4E]">Full name</label>
+                    <input id="lead-name" name="name" autoComplete="name" className={inputClass(errors.name)} placeholder="Enter your full name" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'lead-name-error' : undefined} required />
+                    {errors.name && <p id="lead-name-error" role="alert" aria-live="polite" className="mt-1.5 text-[12px] text-[#B64B42]">{errors.name}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="lead-email" className="mb-2 block text-[12px] font-medium text-[#6B5E4E]">Email address</label>
+                    <input id="lead-email" name="email" autoComplete="email" className={inputClass(errors.email)} placeholder="you@example.com" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'lead-email-error' : undefined} required />
+                    {errors.email && <p id="lead-email-error" role="alert" aria-live="polite" className="mt-1.5 text-[12px] text-[#B64B42]">{errors.email}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="lead-phone" className="mb-2 block text-[12px] font-medium text-[#6B5E4E]">Phone number</label>
+                    <input id="lead-phone" name="phone" autoComplete="tel" className={inputClass(errors.phone)} placeholder="10-digit mobile number" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? 'lead-phone-error' : undefined} required />
+                    {errors.phone && <p id="lead-phone-error" role="alert" aria-live="polite" className="mt-1.5 text-[12px] text-[#B64B42]">{errors.phone}</p>}
+                  </div>
 
                   {/* City dropdown */}
+                  <label htmlFor="lead-city" className="mb-2 block text-[12px] font-medium text-[#6B5E4E]">City or location</label>
                   <select
+                    id="lead-city"
+                    name="city"
                     className={`${inputClass(errors.city)} appearance-none cursor-pointer`}
                     value={form.city}
                     onChange={setField('city')}
                     onBlur={() => markTouched('city')}
                     aria-invalid={Boolean(errors.city)}
+                    aria-describedby={errors.city ? 'lead-city-error' : undefined}
                     required
                   >
                     <option value="" disabled>Select City</option>
                     {cities.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
-                  {errors.city && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.city}</p>}
+                  {errors.city && <p id="lead-city-error" role="alert" aria-live="polite" className="mt-1.5 text-[12px] text-[#B64B42]">{errors.city}</p>}
                 </div>
               </div>
 
               {/* Project Type */}
               <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Project Type</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 id="project-type-label" className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Project Type</h3>
+                <div className="flex flex-wrap gap-2" role="group" aria-labelledby="project-type-label" aria-describedby={errors.projectType ? 'lead-project-type-error' : undefined}>
                   {projectTypes.map(t => (
-                    <button key={t} type="button" className={chipClass(form.projectType === t)} onClick={() => toggle('projectType', t)}>
+                    <button key={t} type="button" className={chipClass(form.projectType === t)} aria-pressed={form.projectType === t} onClick={() => toggle('projectType', t)}>
                       {t}
                     </button>
                   ))}
                 </div>
-                {errors.projectType && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.projectType}</p>}
+                {errors.projectType && <p id="lead-project-type-error" role="alert" aria-live="polite" className="mt-2 text-[12px] text-[#B64B42]">{errors.projectType}</p>}
               </div>
 
               {/* Configuration — only for apartment/penthouse */}
               {showConfig && (
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Home Configuration</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 id="configuration-label" className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Home Configuration</h3>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="configuration-label" aria-describedby={errors.configuration ? 'lead-configuration-error' : undefined}>
                     {configurations.map(c => (
-                      <button key={c} type="button" className={chipClass(form.configuration === c)} onClick={() => toggle('configuration', c)}>
+                      <button key={c} type="button" className={chipClass(form.configuration === c)} aria-pressed={form.configuration === c} onClick={() => toggle('configuration', c)}>
                         {c}
                       </button>
                     ))}
                   </div>
-                  {errors.configuration && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.configuration}</p>}
+                  {errors.configuration && <p id="lead-configuration-error" role="alert" aria-live="polite" className="mt-2 text-[12px] text-[#B64B42]">{errors.configuration}</p>}
                 </div>
               )}
 
               {/* Budget */}
               <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Budget Range</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 id="budget-label" className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Budget Range</h3>
+                <div className="flex flex-wrap gap-2" role="group" aria-labelledby="budget-label" aria-describedby={errors.budget ? 'lead-budget-error' : undefined}>
                   {budgets.map(b => (
-                    <button key={b} type="button" className={chipClass(form.budget === b)} onClick={() => toggle('budget', b)}>
+                    <button key={b} type="button" className={chipClass(form.budget === b)} aria-pressed={form.budget === b} onClick={() => toggle('budget', b)}>
                       {b}
                     </button>
                   ))}
                 </div>
-                {errors.budget && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.budget}</p>}
+                {errors.budget && <p id="lead-budget-error" role="alert" aria-live="polite" className="mt-2 text-[12px] text-[#B64B42]">{errors.budget}</p>}
               </div>
             </div>
 
@@ -345,40 +361,43 @@ export default function StartProject({ setPage }: Props) {
 
                 {/* Timeline */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Timeline</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 id="timeline-label" className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Timeline</h3>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="timeline-label" aria-describedby={errors.timeline ? 'lead-timeline-error' : undefined}>
                     {timelines.map(t => (
-                      <button key={t} type="button" className={chipClass(form.timeline === t)} onClick={() => toggle('timeline', t)}>
+                      <button key={t} type="button" className={chipClass(form.timeline === t)} aria-pressed={form.timeline === t} onClick={() => toggle('timeline', t)}>
                         {t}
                       </button>
                     ))}
                   </div>
-                  {errors.timeline && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.timeline}</p>}
+                  {errors.timeline && <p id="lead-timeline-error" role="alert" aria-live="polite" className="mt-2 text-[12px] text-[#B64B42]">{errors.timeline}</p>}
                 </div>
 
                 {/* Style preference */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Design Style Preference</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 id="style-label" className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Design Style Preference</h3>
+                  <div className="flex flex-wrap gap-2" role="group" aria-labelledby="style-label" aria-describedby={errors.style ? 'lead-style-error' : undefined}>
                     {stylePrefs.map(s => (
-                      <button key={s} type="button" className={chipClass(form.style === s)} onClick={() => toggle('style', s)}>
+                      <button key={s} type="button" className={chipClass(form.style === s)} aria-pressed={form.style === s} onClick={() => toggle('style', s)}>
                         {s}
                       </button>
                     ))}
                   </div>
-                  {errors.style && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.style}</p>}
+                  {errors.style && <p id="lead-style-error" role="alert" aria-live="polite" className="mt-2 text-[12px] text-[#B64B42]">{errors.style}</p>}
                 </div>
 
                 {/* Open message */}
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">Tell Us Anything Else</h3>
-                  <p className="text-[13px] text-[#6B5E4E] mb-3 leading-relaxed">
+                  <label htmlFor="lead-message" className="mb-3 block text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Tell Us Anything Else</label>
+                  <p id="lead-message-help" className="text-[13px] text-[#6B5E4E] mb-3 leading-relaxed">
                     Vastu requirements, specific materials, a reference image, a feeling you want to capture — anything helps.
                   </p>
                   <textarea
+                    id="lead-message"
+                    name="message"
                     className={`${inputClass()} resize-none`}
                     rows={6}
                     placeholder="E.g. We want South Indian traditional influence with modern storage solutions. Work-from-home area needed. Vastu compliance important..."
+                    aria-describedby="lead-message-help"
                     value={form.message}
                     onChange={setField('message')}
                   />
