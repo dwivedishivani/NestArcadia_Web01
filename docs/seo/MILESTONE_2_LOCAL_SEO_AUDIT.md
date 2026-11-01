@@ -130,7 +130,8 @@ No street address, opening hours, ratings, reviews, completed-project counts or 
 
 ## Exit criteria still open
 
-- [ ] Confirm whether G-59, Fusion Ufairia Mall is the current public office and whether customers are received there during staffed hours.
+- [x] Owner confirmed that customers can visit the G-59, Fusion Ufairia Mall office.
+- [ ] Confirm permanent NestArcadia signage and the staffed customer-facing hours before publishing Google Business Profile hours.
 - [ ] Confirm storefront/hybrid versus service-area-only business model.
 - [ ] Provide or verify the actual Google Business Profile URL and audit its live fields.
 - [ ] Confirm which of the 14 secondary markets are genuinely served today.
