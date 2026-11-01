@@ -365,6 +365,8 @@ try {
     if (route.includes('/journal/2bhk-interior-cost-noida-extension/') || route.includes('/journal/3bhk-interior-cost-greater-noida-west/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'new interior cost guide must contain BlogPosting JSON-LD');
       assert.ok(html.includes('"datePublished":"2026-11-02"'), 'new interior cost guide must expose its publication date');
+      assert.ok(html.includes('"author":{"@type":"Organization","name":"NestArcadia","url":"https://nestarcadia.com"}'),
+        'NestArcadia editorial guides must identify the organization as their author');
     }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
