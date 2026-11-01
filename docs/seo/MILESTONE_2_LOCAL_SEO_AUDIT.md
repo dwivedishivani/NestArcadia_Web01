@@ -55,9 +55,15 @@ The website and public LinkedIn company profile expose consistent contact detail
 - **Website brand styling:** NestArcadia
 - **LinkedIn display name:** Nest Arcadia
 
-The public LinkedIn profile currently lists **G-59, Fusion Ufairia Mall, Greater Noida West, Uttar Pradesh 201310**. The website does not currently publish a street address. Do not add this address to the website or LocalBusiness schema until the business confirms that it is current and whether customers can visit during staffed business hours. The correct treatment differs for a staffed customer-facing/hybrid location versus a service-area business.
+The public LinkedIn profile lists **G-59, Fusion Ufairia Mall, Greater Noida West, Uttar Pradesh 201310**. On 1 November 2026, the business owner confirmed that customers can visit this office.
 
-No opening hours have been added because none have been verified.
+The address is now reflected in the website footer and the single stable NestArcadia business entity in the base and client-rendered JSON-LD:
+
+- G-59, Fusion Ufairia Mall, Sector 16B
+- Greater Noida West, Uttar Pradesh 201310
+- India
+
+A Google Maps directions link is provided from the visible website address. No opening hours have been added because exact customer-facing hours have not been verified. Before configuring an address-visible hybrid Google Business Profile, confirm that the office has clear NestArcadia signage and is staffed to receive customers during the published hours. Google requires businesses to make in-person contact with customers during stated hours; special signage/staffing rules apply to coworking-space locations.
 
 Public company profile: https://www.linkedin.com/company/nest-arcadia/
 
