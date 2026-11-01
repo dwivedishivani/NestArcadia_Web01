@@ -362,6 +362,10 @@ try {
     if (route === '/our-projects/') {
       assert.ok(html.includes('Selected home concepts and interior design studies'), 'portfolio route must clearly label design concepts');
     }
+    if (route.includes('/journal/2bhk-interior-cost-noida-extension/') || route.includes('/journal/3bhk-interior-cost-greater-noida-west/')) {
+      assert.ok(html.includes('"@type":"BlogPosting"'), 'new interior cost guide must contain BlogPosting JSON-LD');
+      assert.ok(html.includes('"datePublished":"2026-11-02"'), 'new interior cost guide must expose its publication date');
+    }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
       assert.ok(!html.includes('data:image/'), 'static article HTML must not embed a base64 image');
