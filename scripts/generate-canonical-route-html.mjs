@@ -535,7 +535,9 @@ for (const rawUrl of urls) {
       mainEntityOfPage: { '@id': canonical + '#webpage' },
       headline: metadata.articleTitle || title,
       description,
-      author: { '@type': 'Person', name: metadata.author || 'NestArcadia' },
+      author: metadata.author === 'NestArcadia'
+        ? { '@type': 'Organization', name: metadata.author, url: baseUrl }
+        : { '@type': 'Person', name: metadata.author || 'NestArcadia' },
       publisher: { '@id': baseUrl + '/#business' },
       image: imageUrl,
       articleSection: metadata.category || 'Journal',
