@@ -20,10 +20,17 @@ if (!cssResponse.ok) {
 const remoteCss = await cssResponse.text();
 
 // Only embed the Latin subset used by the site's English-language interface.
-const faceMatches = [...remoteCss.matchAll(/\/\*\s*([^*]+?)\s*\*\/\s*(@font-face\s*\{[^}]+\})/g)];
-const latinBlocks = faceMatches
-  .filter((match) => match[1].trim().toLowerCase() === 'latin')
-  .map((match) => match[2]);
+// Google Fonts can change its subset comment formatting; identify Latin faces by
+// the actual Unicode range instead of relying on a comment immediately before
+// each @font-face block.
+const fontFaceBlocks = [...remoteCss.matchAll(/@font-face\s*\{[^}]+\}/g)]
+  .map((match) => match[0]);
+const latinBlocks = fontFaceBlocks.filter((block) =>
+  /unicode-range\s*:[^;]*U\+0000-00FF/i.test(block)
+);
+if (latinBlocks.length === 0) {
+  throw new Error('Google Fonts CSS contained no Latin Unicode-range font faces. Response preview: ' + remoteCss.slice(0, 1200));
+}
 
 function property(block, name) {
   const match = block.match(new RegExp('(?:^|\\n)\\s*' + name + '\\s*:\\s*([^;]+);', 'i'));
