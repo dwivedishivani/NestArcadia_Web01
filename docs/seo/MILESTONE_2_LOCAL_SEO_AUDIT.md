@@ -3,7 +3,7 @@
 **Audit date:** 1 November 2026  
 **Repository:** `dwivedishivani/NestArcadia_Web01`  
 **Working branch:** `seo/milestones-2026-11`  
-**Status:** In progress — not ready for sign-off or production deployment.
+**Status:** Code changes implemented and automated preview checks passing; final production sign-off remains blocked by owner-only Google Business Profile/service-area confirmation and post-deployment Search Console verification.
 
 ## Scope and evidence
 
@@ -44,6 +44,34 @@ Search Analytics, Web search, 1–29 October 2026 (finalised data through 29 Oct
 The sample is very small, so these numbers are directional rather than a stable ranking benchmark. They show that the site currently has little visibility for the sampled non-branded local-intent queries.
 
 The homepage recorded 24 impressions and 2 clicks during the same period. The two main residential local pages recorded very few impressions in this data extract.
+
+### 2A. Fresh Search Console verification — 2 November 2026
+
+The selected URL-prefix property `https://nestarcadia.com/` was rechecked directly.
+
+**Sitemap report**
+- Submitted sitemap: `https://nestarcadia.com/sitemap.xml`
+- Last submitted/downloaded: 25 October 2026.
+- Reported URLs submitted: 54.
+- The connector reports 0 indexed in the sitemap contents, which conflicts with direct URL Inspection confirming the homepage and Noida Extension page are indexed. Treat this as a sitemap-report/index-coverage discrepancy to recheck in the Search Console UI, not proof that the entire site is deindexed.
+- No sitemap processing warnings or errors were reported.
+
+**URL Inspection**
+- Homepage: Submitted and indexed; last crawl 26 October; Google canonical matches `https://nestarcadia.com/`.
+- Noida Extension residential service page: Submitted and indexed; last crawl 27 October; Google canonical matches the trailing-slash URL.
+- Greater Noida West residential service page: Google reports “Duplicate, Google chose different canonical than user”; Google chose the no-trailing-slash URL while the user canonical is trailing slash. The current source has an Apache 301 rule to canonicalize extensionless routes to the trailing-slash version. Recheck the live redirect and request recrawl after deployment; do not change the canonical convention without first validating the HTTP redirect.
+- The two new budget-guide URLs are currently unknown to Google because they have not yet been deployed. This is expected at this stage.
+
+**Finalized web-search performance, 1–30 October 2026 (Google data finalized through 29 October)**
+
+- Device totals: Desktop 2 clicks / 38 impressions (5.26% CTR); Mobile 0 clicks / 10 impressions. The low total volume makes average-position comparisons unstable.
+- Homepage: 2 clicks / 24 impressions (8.33% CTR), average position 5.13.
+- `/our-projects`: 1 click / 8 impressions, average position 5.88.
+- Noida Extension service page: 3 impressions across slash and no-slash URL variants; average positions 58 and 8 respectively. The URL variants and canonical/redirect behavior should be consolidated in the final live inspection.
+- Greater Noida West service page: 3 impressions, average position 65.67, with the canonical discrepancy above.
+- Primary non-branded local queries remain extremely low volume: “interior designer in noida extension” 1 impression at average position 94; “interior designer in greater noida west” 1 impression at average position 93; “commercial interior greater noida” 2 impressions at average position 71. Query rows are subject to Google's anonymisation and are not a site-total export.
+
+**Interpretation:** The homepage and Noida Extension page are indexed, but the core service pages have very little local-intent search visibility. Prioritize canonical consistency, a clean sitemap report, stronger proof on the two primary local pages and genuine business-profile completeness before expanding secondary locality pages.
 
 ### 3. Business identity and NAP
 
@@ -108,6 +136,8 @@ No street address, opening hours, ratings, reviews, completed-project counts or 
 - [ ] Confirm which of the 14 secondary markets are genuinely served today.
 - [ ] Decide which secondary city pages merit unique evidence, and which should be consolidated/redirected/noindexed.
 - [ ] Review live citations/directories once the official business address and intended NAP format are confirmed.
-- [ ] Validate the code changes with a clean production build and browser/link/schema smoke tests.
+- [x] Validate the code changes with a clean production build and browser/link/schema smoke tests on the combined Milestone 3 candidate.
+- [ ] Recheck the Greater Noida West trailing-slash canonical in live HTTP headers and Search Console after deployment.
+- [ ] Recheck the sitemap report after the final deployment and sitemap re-submission if needed.
 
 **Deployment:** No production deployment was made. This branch remains isolated. Milestone 1 indexing/recrawl items are still tracked separately.
