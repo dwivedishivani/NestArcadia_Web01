@@ -236,6 +236,19 @@ try {
   assert.ok(businessEntity, 'homepage JSON-LD must include the NestArcadia business entity');
   assert.deepEqual(businessEntity.areaServed, ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida'],
     'business entity areaServed must match the four priority local markets');
+  assert.deepEqual(businessEntity.address, {
+    '@type': 'PostalAddress',
+    streetAddress: 'G-59, Fusion Ufairia Mall, Sector 16B',
+    addressLocality: 'Greater Noida West',
+    addressRegion: 'Uttar Pradesh',
+    postalCode: '201310',
+    addressCountry: 'IN',
+  }, 'business entity must expose the owner-confirmed NestArcadia office address');
+  const footerText = await page.locator('footer').innerText();
+  assert.ok(footerText.includes('G-59, Fusion Ufairia Mall, Sector 16B'),
+    'visible footer must display the owner-confirmed office address');
+  assert.equal(await page.locator('footer a[href^="https://www.google.com/maps/search/"]').count(), 1,
+    'footer must provide exactly one office directions link');
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
