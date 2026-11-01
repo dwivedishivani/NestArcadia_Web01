@@ -247,8 +247,18 @@ try {
   const footerText = await page.locator('footer').innerText();
   assert.ok(footerText.includes('G-59, Fusion Ufairia Mall, Sector 16B'),
     'visible footer must display the owner-confirmed office address');
-  assert.equal(await page.locator('footer a[href^="https://www.google.com/maps/search/"]').count(), 1,
+  const whatsappFooterLink = page.locator('footer a[href^="https://wa.me/"]');
+  assert.ok((await whatsappFooterLink.innerText()).includes('WhatsApp Us'),
+    'WhatsApp footer link must retain its visible text as its accessible name');
+  assert.equal(await whatsappFooterLink.getAttribute('aria-label'), null,
+    'WhatsApp footer link must not override its visible text with a mismatched aria-label');
+  const officeDirectionsLink = page.locator('footer a[href^="https://www.google.com/maps/search/"]');
+  assert.equal(await officeDirectionsLink.count(), 1,
     'footer must provide exactly one office directions link');
+  assert.equal(await officeDirectionsLink.getAttribute('aria-label'), null,
+    'office directions link must use its visible address and directions text as its accessible name');
+  assert.ok((await officeDirectionsLink.innerText()).includes('Visit our office'),
+    'office directions link must expose its visible label to assistive technology');
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
