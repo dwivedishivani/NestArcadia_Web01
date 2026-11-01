@@ -132,7 +132,7 @@ Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms,
 - [x] Homepage and Journal internal-link pathways added/verified in source.
 - [x] Static sitemap and BlogPosting metadata updated.
 - [x] Backlink/citation opportunity shortlist researched.
-- [ ] Production build and full Playwright smoke pass on the final commit.
+- [x] Production build and full Playwright smoke pass on the final code candidate (`4f3440d`).
 - [ ] Fresh mobile and desktop Lighthouse/PageSpeed audits recorded.
 - [ ] Current field Core Web Vitals checked in Search Console/CrUX.
 - [ ] GA4/GTM account selection, configuration and real lead-event delivery verified.
