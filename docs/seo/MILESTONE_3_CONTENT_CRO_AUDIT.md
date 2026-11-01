@@ -58,7 +58,7 @@ To publish 5–8 genuine case studies, collect for each project:
 
 Do not turn stock images or conceptual galleries into client case studies.
 
-The two new guides use NestArcadia as the organization author. The existing Our Story page remains the source for the studio's verified founding/background information. Do not add professional registrations, individual qualifications or years of design experience unless verified.
+The two new guides use NestArcadia as the organization author and link to the Our Story page for the studio's verified background. Do not add professional registrations, individual qualifications or years of design experience unless verified.
 
 ## 5. Internal linking
 
@@ -120,7 +120,7 @@ Mobile opportunities from this run:
 
 Do not remove or consolidate analytics tags based only on this audit. Inspect the live GTM container and GA4 property first, preserve consent and lead tracking, and verify real `page_view` / `generate_lead` delivery. HYPD GA4 and GTM accounts are connected but not selected for this session.
 
-This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. The run used commit `869277a`; the later edits to static homepage content and article titles are content-only, but a final candidate run is still required. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
+This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. The run used commit `869277a`; later edits to static homepage content, article titles and the Our Story author link are content-only. A final candidate run is still required. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
 
 Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Distinguish lab Lighthouse results from CrUX/Search Console field data.
 
