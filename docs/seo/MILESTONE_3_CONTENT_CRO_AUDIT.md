@@ -96,9 +96,31 @@ The connected HYPD Google Analytics and Tag Manager accounts are not currently s
 
 ### Performance
 
-The current branch includes responsive image preparation, local fonts, optimized hero assets and a production browser smoke workflow. A clean build and browser test are required before deployment.
+The branch includes responsive image preparation, local fonts, optimized hero assets and a production browser smoke workflow. Automated Lighthouse mobile and desktop audits have been added to CI.
 
-No fresh comparable mobile/desktop PageSpeed Insights run or current CrUX field-data comparison is recorded in this audit. Do not mark Core Web Vitals complete until both device form factors have been measured on the final live canonical URLs and compared with a documented baseline.
+**Preview lab audit (commit `869277a`; local Vite production preview, 2 November 2026):**
+
+| Metric | Mobile | Desktop |
+|---|---:|---:|
+| Lighthouse Performance | 83 | 100 |
+| Accessibility | 100 | 100 |
+| SEO | 100 | 100 |
+| LCP | 2.379 s | 0.583 s |
+| FCP | 2.066 s | 0.484 s |
+| Total Blocking Time | 520 ms | 14 ms |
+| CLS | 0.001 | 0.002 |
+| Time to Interactive (lab) | 8.698 s | 1.403 s |
+
+Mobile opportunities from this run:
+- Approximately 255 KiB estimated unused JavaScript.
+- Approximately 251 KiB estimated image-size savings.
+- 12 long main-thread tasks; main-thread work approximately 2.6 s.
+- Google tag scripts (GTM, GA4 gtag and Ads gtag) transferred approximately 583 KB and accounted for approximately 720 ms of third-party main-thread blocking in this lab run.
+- Total initial network payload approximately 1.3 MiB.
+
+Do not remove or consolidate analytics tags based only on this audit. Inspect the live GTM container and GA4 property first, preserve consent and lead tracking, and verify real `page_view` / `generate_lead` delivery. HYPD GA4 and GTM accounts are connected but not selected for this session.
+
+This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. The run used commit `869277a`; the later edits to static homepage content and article titles are content-only, but a final candidate run is still required. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
 
 Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Distinguish lab Lighthouse results from CrUX/Search Console field data.
 
