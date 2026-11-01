@@ -202,6 +202,8 @@ if (articlesArray && ts.isArrayLiteralExpression(articlesArray)) {
       readTime: propertyString(entry, 'readTime') || '',
       body: arrayStringValues(propertyNode(entry, 'body')),
       related: arrayStringValues(propertyNode(entry, 'related')),
+      datePublished: propertyString(entry, 'publishedAt'),
+      dateModified: propertyString(entry, 'updatedAt') || propertyString(entry, 'publishedAt'),
     });
   }
 }
