@@ -112,6 +112,7 @@ export default function Footer() {
               <a href="mailto:info@nestarcadia.com" className="inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#17665B] transition-colors">
                 info@nestarcadia.com
               </a>
+            </div>
           </div>
         </div>
 
