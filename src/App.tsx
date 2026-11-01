@@ -272,6 +272,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       url: SITE_URL,
       telephone: '+918448061997',
       email: 'info@nestarcadia.com',
+      address: {"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"},
       contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', email: 'info@nestarcadia.com', contactType: 'customer service', areaServed: 'IN' },
       image: SOCIAL_IMAGE,
       description: 'Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.',
