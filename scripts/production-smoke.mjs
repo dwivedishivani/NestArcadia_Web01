@@ -372,6 +372,7 @@ try {
       assert.ok(html.includes('"datePublished":"2026-11-02"'), 'new interior cost guide must expose its publication date');
       assert.ok(html.includes('"author":{"@type":"Organization","name":"NestArcadia","url":"https://nestarcadia.com"}'),
         'NestArcadia editorial guides must identify the organization as their author');
+      assert.ok(html.includes('/our-story/'), 'Journal article must link to the verified studio background');
     }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');
