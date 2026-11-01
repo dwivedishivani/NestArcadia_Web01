@@ -2,7 +2,7 @@
 
 **Audit date:** 1 November 2026  
 **Repository:** `dwivedishivani/NestArcadia_Web01`  
-**Working branch:** `seo/milestones-2026-11`  
+**Working branch:** `seo/milestone-3-content-cro-performance`  
 **Status:** Code changes implemented and automated preview checks passing; final production sign-off remains blocked by owner-only Google Business Profile/service-area confirmation and post-deployment Search Console verification.
 
 ## Scope and evidence
