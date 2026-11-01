@@ -59,7 +59,8 @@ The selected URL-prefix property `https://nestarcadia.com/` was rechecked direct
 **URL Inspection**
 - Homepage: Submitted and indexed; last crawl 26 October; Google canonical matches `https://nestarcadia.com/`.
 - Noida Extension residential service page: Submitted and indexed; last crawl 27 October; Google canonical matches the trailing-slash URL.
-- Greater Noida West residential service page: Google reports “Duplicate, Google chose different canonical than user”; Google chose the no-trailing-slash URL while the user canonical is trailing slash. The current source has an Apache 301 rule to canonicalize extensionless routes to the trailing-slash version. Recheck the live redirect and request recrawl after deployment; do not change the canonical convention without first validating the HTTP redirect.
+- Greater Noida West residential service page with trailing slash: Google reports “Duplicate, Google chose different canonical than user”; Google chose the no-trailing-slash URL while the user canonical is trailing slash (crawl 25 October).
+- The no-trailing-slash URL itself is still indexed with a self-canonical, but its last Google crawl was 7 October. This predates the current trailing-slash redirect rule. The current source has an Apache 301 rule to canonicalize extensionless routes to the trailing-slash version. Recheck the live redirect and request recrawl after deployment; do not change the canonical convention without first validating the HTTP redirect.
 - The two new budget-guide URLs are currently unknown to Google because they have not yet been deployed. This is expected at this stage.
 
 **Finalized web-search performance, 1–30 October 2026 (Google data finalized through 29 October)**
