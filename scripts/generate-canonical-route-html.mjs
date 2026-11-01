@@ -440,6 +440,7 @@ function renderStaticRoute(pathname, metadata) {
       inlineLink('/interior-design-services/', 'interior design and turnkey services') + '.</p></section>';
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header +
       '<p style="margin:-4px 0 22px;color:#6B5E4E;font-size:13px">' + escapeText(article.category) + (article.readTime ? ' · ' + escapeText(article.readTime) : '') + ' · By ' + escapeText(article.author) + '</p>' +
+      '<p style="' + staticParagraphStyle + '">Published by NestArcadia Journal. Learn about the studio’s background in real estate and construction on our ' + inlineLink('/our-story/', 'Our Story') + ' page. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.</p>' +
       paragraphs + localServiceLinks + (related ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Related articles</h2><ul style="padding-left:22px">' + related + '</ul></section>' : '') +
       '<p style="' + staticParagraphStyle + '">For project-specific advice, ' + inlineLink('/start-your-project/', 'share your interior design brief') + ' with NestArcadia.</p></main>';
   }
