@@ -384,11 +384,70 @@ export const articles = [
     body: luxuryArticleSnapshot.blocks.map((block) => block.text),
     related: [],
   },
+
+  {
+    id: '2bhk-interior-cost-noida-extension',
+    category: 'Planning & Budget',
+    title: '2BHK Interior Cost in Noida Extension (2026): A Practical Budget Guide',
+    excerpt: 'A clear starting-budget guide for planning a 2BHK interior in Noida Extension and Greater Noida West, including the decisions that move the final estimate.',
+    author: 'NestArcadia Editorial Team',
+    date: 'Nov 2026',
+    publishedAt: '2026-11-02',
+    updatedAt: '2026-11-02',
+    readTime: '8 min read',
+    img: u('photo-1771327811795-6197403af846', 1200, 700),
+    thumb: u('photo-1771327811795-6197403af846', 800, 560),
+    pullQuote: 'A useful interior budget is a scope document first and a number second.',
+    conclusion: 'A well-planned 2BHK begins with a clear room-by-room brief, a prioritised scope and a written estimate. NestArcadia can review your floor plan and help identify what should be included now, what can be phased and where the budget needs flexibility.',
+    body: [
+      'If you are planning a 2BHK interior in Noida Extension or Greater Noida West, the first useful question is not which finish is trending. It is what your home needs on the day you move in, what can wait and what level of customisation is realistic for your budget.',
+      'For a raw or newly handed-over 2BHK apartment, NestArcadia currently uses a starting planning range of approximately ₹6.5–7 lakh for a complete interior brief. This is an initial guide, not a fixed package price or a binding quotation. The final amount depends on the actual floor plan, site condition, material specifications, furniture quantities, hardware, finish choices and the work already completed by the builder.',
+      'If flooring, electrical work or some civil work is already complete, the remaining scope may be lower. On the other hand, extensive civil changes, premium materials, additional custom furniture, specialised lighting or more elaborate decorative work can increase the investment. A quote should therefore be based on a measured site and an agreed item-by-item scope rather than a generic per-square-foot promise.',
+      'Start by listing the rooms and decisions that matter most to your household. A typical 2BHK brief may consider the kitchen, wardrobes, beds and storage, living and dining furniture, lighting, electrical points, wall finishes and window treatments. Not every home needs every item at the same time. The right scope depends on what is already available, how the family lives and what the property layout allows.',
+      'The kitchen and wardrobes deserve early attention because their dimensions, internal layouts, board specifications, hardware and finish selections influence both usability and cost. Confirm appliance sizes, storage needs, shutter finishes, drawer requirements and the expected daily use before approving drawings. Changing these decisions after production begins can create avoidable rework.',
+      'Separate the estimate into clearly described work packages. Ask the designer to identify quantities, material or finish specifications, hardware assumptions, what is included, what is excluded, and which items are provisional until site measurements are confirmed. Ask how design revisions, site coordination, delivery, installation, taxes and any third-party work are treated in the proposal. Do not assume these are included unless the written quote says so.',
+      'A practical way to protect the budget is to prioritise durable, high-use elements first: kitchen functionality, wardrobe storage, electrical safety, good hardware and a sensible furniture layout. Decorative upgrades can be selected after the essentials are resolved. Phasing should be deliberate, however; avoid postponing work that would be expensive or disruptive to reopen later.',
+      'Before appointing an interior studio, compare proposals on the same scope. A lower headline price may cover fewer wardrobes, simpler hardware, different board grades or fewer site services. Request comparable specifications and a written change-order process so that additions are discussed and approved before the work proceeds.',
+      'The figures in this guide are NestArcadia planning guidance as of November 2026, not a market-wide price survey or a guaranteed final cost. The estimate for your home can only be confirmed after reviewing the floor plan, site condition, requirements and selected specifications. Taxes and exclusions should be stated clearly in the final written proposal.',
+      'To get a realistic 2BHK estimate, share your floor plan, possession status, preferred scope and the three things you most want your home to do well. NestArcadia can then help turn the brief into a practical sequence of design and execution decisions.'
+    ],
+    related: ['interior-budget-conversation', 'modular-kitchen-noida', 'space-saving-interiors-noida'],
+  },
+  {
+    id: '3bhk-interior-cost-greater-noida-west',
+    category: 'Planning & Budget',
+    title: '3BHK Interior Cost in Greater Noida West (2026): Scope, Priorities & Budget',
+    excerpt: 'Understand the current starting planning range for a 3BHK interior in Greater Noida West and how layout, storage, materials and execution scope affect the estimate.',
+    author: 'NestArcadia Editorial Team',
+    date: 'Nov 2026',
+    publishedAt: '2026-11-02',
+    updatedAt: '2026-11-02',
+    readTime: '9 min read',
+    img: u('photo-1745429523635-ad375f836bf2', 1200, 700),
+    thumb: u('photo-1745429523635-ad375f836bf2', 800, 560),
+    pullQuote: 'A 3BHK budget works best when each room has a clear job and a clear priority.',
+    conclusion: 'The strongest 3BHK plan is not the one with the longest shopping list. It is the one that allocates the budget to the family’s real routines, resolves high-use elements early and keeps every inclusion visible in the written scope.',
+    body: [
+      'A 3BHK apartment gives a family more flexibility than a smaller home, but it also creates more decisions. The third bedroom may be a child’s room, a guest room, a home office or a flexible space. The interior budget should reflect how the family will actually use each room rather than treating every room as an identical package.',
+      'For a raw or newly handed-over 3BHK apartment, NestArcadia currently uses a starting planning range of approximately ₹9–10 lakh for a complete interior brief. This is an initial planning reference, not a fixed package or a binding quotation. The final estimate depends on the measured layout, site condition, room-by-room requirements, material specifications, furniture quantities, hardware and the amount of builder-finished work that can be retained.',
+      'If flooring, electrical work or some civil work has already been completed, the remaining scope may be lower. More customised furniture, premium materials, extensive ceiling or lighting work, additional storage and decorative upgrades can increase the budget. A reliable estimate must be built from the actual scope and specifications rather than a single per-square-foot figure.',
+      'Begin with a room schedule. Record the purpose of each bedroom, the number and type of wardrobes, bed and side-table requirements, study or work-from-home needs, storage for seasonal items, and any accessibility or family-specific requirements. Then list shared spaces: kitchen, living room, dining area, foyer, utility and balconies where relevant. This makes priorities visible before design development starts.',
+      'The kitchen is often one of the most specification-sensitive areas. Layout, appliance dimensions, worktop choice, shutter material, internal accessories, drawer systems and hardware all affect the proposal. Confirm the cooking routine and storage inventory before finalising the design. A visually impressive kitchen is only successful if its clearances, counter space and storage work for everyday use.',
+      'For bedrooms, decide which storage needs to be built in and which can be handled with freestanding furniture. Full-height wardrobes, loft storage, study units, dresser areas and specialised internal fittings all change the quantity and complexity of joinery. Avoid filling every wall by default; circulation, natural light and room proportions matter as much as storage volume.',
+      'A 3BHK also benefits from a deliberate lighting and electrical plan. Confirm task lighting, ambient lighting, bedside controls, work-from-home points, appliance loads and data or charging locations before execution. Late changes after ceilings, wall finishes or cabinetry are complete can add cost and disrupt the programme.',
+      'Ask for a written estimate that separates design, civil or electrical work, modular and custom furniture, materials, hardware, lighting, loose furniture and décor wherever those items are part of the agreed scope. Each line should state what is included and what is excluded. Confirm how site measurements, revisions, delivery, installation, taxes and variations are handled before approving the proposal.',
+      'When comparing studios, compare like with like. Check board grades, finish specifications, hardware brands or performance levels, quantities, internal fittings, installation scope and after-sales terms. A headline price without these details does not tell you whether two proposals are genuinely comparable.',
+      'The ₹9–10 lakh starting range in this guide is NestArcadia planning guidance for a raw or newly handed-over 3BHK as of November 2026. It is not a guaranteed project price or an independently verified market average. Your final budget may be lower or higher depending on what is already complete, what your family needs and the specifications you approve. Taxes and exclusions must be clearly identified in the written quotation.',
+      'For a useful first estimate, share the builder floor plan, possession status, approximate area, room priorities and any existing work that can be retained. NestArcadia can help translate that information into a prioritised 3BHK brief and a clearer path from design to execution.'
+    ],
+    related: ['interior-budget-conversation', 'modular-kitchen-design-noida', '3d-visualisation-interiors'],
+  },
+
 ];
 
 export const getJournalArticle = (slug?: string) => articles.find((article) => article.id === slug);
 
-const categories = ['All', 'Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture'];
+const categories = ['All', 'Materials', 'Craft', 'Surfaces', 'Design Cultures', 'Wellness', 'Architecture', 'Planning & Budget'];
 
 const categoryDeepDives: Record<string, string[]> = {
   Materials: [
@@ -515,7 +574,10 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
     return () => { cancelled = true; };
   }, []);
 
-  const sourceArticles = liveArticles && liveArticles.length > 0 ? liveArticles : articles;
+  const supplementalArticleIds = new Set(['2bhk-interior-cost-noida-extension', '3bhk-interior-cost-greater-noida-west']);
+  const sourceArticles = liveArticles && liveArticles.length > 0
+    ? [...liveArticles, ...articles.filter((article) => supplementalArticleIds.has(article.id) && !liveArticles.some((liveArticle) => liveArticle.id === article.id))]
+    : articles;
 
   const handleNewsletterSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
