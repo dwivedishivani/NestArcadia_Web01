@@ -112,6 +112,9 @@ export default function Footer() {
               <a href="mailto:info@nestarcadia.com" className="inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#17665B] transition-colors">
                 info@nestarcadia.com
               </a>
+              <a href="https://www.google.com/maps/search/?api=1&query=G-59%2C%20Fusion%20Ufairia%20Mall%2C%20Sector%2016B%2C%20Greater%20Noida%20West%2C%20Uttar%20Pradesh%20201310" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex max-w-[280px] text-[13px] leading-relaxed text-[#6B5E4E] hover:text-[#17665B] transition-colors" aria-label="Get directions to the NestArcadia office at Fusion Ufairia Mall">
+                <span><strong className="font-semibold text-[#1A1714]">Visit our office</strong><br />G-59, Fusion Ufairia Mall, Sector 16B<br />Greater Noida West, Uttar Pradesh 201310<br /><span className="underline underline-offset-2">Get directions</span></span>
+              </a>
             </div>
           </div>
         </div>
