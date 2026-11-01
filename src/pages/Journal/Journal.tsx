@@ -388,7 +388,7 @@ export const articles = [
   {
     id: '2bhk-interior-cost-noida-extension',
     category: 'Planning & Budget',
-    title: '2BHK Interior Cost in Noida Extension (2026): A Practical Budget Guide',
+    title: '2BHK Interior Cost in Noida Extension: 2026 Budget Guide',
     excerpt: 'A clear starting-budget guide for planning a 2BHK interior in Noida Extension and Greater Noida West, including the decisions that move the final estimate.',
     author: 'NestArcadia',
     date: 'Nov 2026',
@@ -417,7 +417,7 @@ export const articles = [
   {
     id: '3bhk-interior-cost-greater-noida-west',
     category: 'Planning & Budget',
-    title: '3BHK Interior Cost in Greater Noida West (2026): Scope, Priorities & Budget',
+    title: '3BHK Interior Cost in Greater Noida West: 2026 Budget Guide',
     excerpt: 'Understand the current starting planning range for a 3BHK interior in Greater Noida West and how layout, storage, materials and execution scope affect the estimate.',
     author: 'NestArcadia',
     date: 'Nov 2026',
