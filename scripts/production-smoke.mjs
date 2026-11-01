@@ -285,6 +285,12 @@ try {
   for (const requiredLink of requiredHomepageServiceLinks) {
     assert.ok(homepageHrefValues.includes(requiredLink), 'homepage is missing contextual service link: ' + requiredLink);
   }
+  for (const budgetGuideLink of [
+    '/journal/2bhk-interior-cost-noida-extension/',
+    '/journal/3bhk-interior-cost-greater-noida-west/',
+  ]) {
+    assert.ok(homepageHrefValues.includes(budgetGuideLink), 'homepage is missing a high-intent budget guide link: ' + budgetGuideLink);
+  }
   const footerServiceAreaLinks = await page.locator('nav[aria-label="NestArcadia service areas"] a').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href'))
   );
@@ -328,8 +334,8 @@ try {
     ['/interior-design-services/', 'Residential interior design'],
     ['/our-story/', 'A design approach rooted in how people live'],
     ['/our-projects/', 'Selected home concepts and interior design studies'],
-    ['/journal/2bhk-interior-cost-noida-extension/', '2BHK interior cost in Noida Extension'],
-    ['/journal/3bhk-interior-cost-greater-noida-west/', '3BHK interior cost in Greater Noida West'],
+    ['/journal/2bhk-interior-cost-noida-extension/', '2BHK Interior Cost in Noida Extension'],
+    ['/journal/3bhk-interior-cost-greater-noida-west/', '3BHK Interior Cost in Greater Noida West'],
     ['/start-your-project/', 'Tell us about your property'],
     ['/faqs/', 'Which areas does NestArcadia serve?'],
     ['/interior-design-greater-noida/', 'Good interiors begin with the way a space is actually used.'],
