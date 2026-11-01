@@ -271,7 +271,8 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida'],
       url: SITE_URL,
       telephone: '+918448061997',
-      contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', contactType: 'customer service', areaServed: 'IN' },
+      email: 'info@nestarcadia.com',
+      contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', email: 'info@nestarcadia.com', contactType: 'customer service', areaServed: 'IN' },
       image: SOCIAL_IMAGE,
       description: 'Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.',
       hasOfferCatalog: {
@@ -292,7 +293,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       ? { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL }
       : { '@type': 'Person', name: activeArticle.author });
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
-    const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
+    const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@id': `${SITE_URL}/#business` } };
     const websiteSchema = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } };
     const webPageSchema = { '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: meta.title, description: meta.description, isPartOf: { '@id': `${SITE_URL}/#website` }, about: { '@id': `${SITE_URL}/#business` } };
     const faqSchema = page === 'faq' && !localService ? {
