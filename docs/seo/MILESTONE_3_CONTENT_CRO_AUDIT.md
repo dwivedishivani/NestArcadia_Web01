@@ -111,7 +111,16 @@ The branch includes responsive image preparation, local fonts, optimized hero as
 | CLS | 0.001 | 0.002 |
 | Time to Interactive (lab) | 8.901 s | 1.470 s |
 
-Mobile opportunities from the final candidate run:
+Mobile image delivery improvement added after the first final-candidate audit:
+- Added 640px responsive WebP variants for the two heaviest homepage carousel images. This gives high-density mobile screens a closer source width than jumping from 480px directly to 800px.
+- The next Lighthouse run must confirm whether the estimated 251 KiB image savings have reduced.
+
+Accessibility follow-up:
+- Lighthouse's accessibility category scored 100, but its axe audit still flagged two footer links for visible-text / accessible-name mismatch.
+- Removed the overriding aria-labels from the WhatsApp and office-directions links so their visible text supplies their accessible names.
+- Added Playwright assertions to prevent those mismatches from returning.
+
+Mobile opportunities from the previous final-candidate run:
 - Approximately 384 KiB estimated unused JavaScript.
 - Approximately 251 KiB estimated image-size savings.
 - 13 long main-thread tasks; main-thread work approximately 2.4 s.
@@ -121,7 +130,7 @@ Mobile opportunities from the final candidate run:
 
 Do not remove or consolidate analytics tags based only on this audit. Inspect the live GTM container and GA4 property first, preserve consent and lead tracking, and verify real `page_view` / `generate_lead` delivery. HYPD GA4 and GTM accounts are connected but not selected for this session.
 
-This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. This final preview run includes the static homepage budget links, shortened article titles and the verified Our Story author link. The full Playwright lead-flow smoke is still running for the final commit. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
+This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. This final preview run includes the static homepage budget links, shortened article titles and the verified Our Story author link. The final Playwright lead-flow smoke must pass again after the responsive-image and footer-accessibility fixes. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
 
 Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Distinguish lab Lighthouse results from CrUX/Search Console field data.
 
