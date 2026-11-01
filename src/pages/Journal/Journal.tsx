@@ -554,7 +554,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           readTime: row.read_time || '5 min read',
           img: resolveSiteImageReference(row.image_url || ''),
           thumb: resolveSiteImageReference(row.image_url || ''),
-          body: String(row.content || '').split(/\\n\\s*\\n/).filter(Boolean),
+          body: String(row.content || '').split(/\n\s*\n/).filter(Boolean),
           related: [],
           ...(row.slug === 'lime-plaster' ? { updated: row.updated_at ? new Date(row.updated_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Oct 2026', researchSources: LIME_PLASTER_SOURCES } : {}),
         }));
