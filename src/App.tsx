@@ -92,7 +92,7 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design Services in Noida, Greater Noida & NCR', description: 'Residential and commercial interior design, turnkey execution, custom furniture, Vastu-led planning and decor for Noida, Greater Noida West, Noida Extension, Ghaziabad, Faridabad, Delhi and Gurugram.' },
   story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India’s material heritage into homes made for modern living.' },
-  journal: { title: 'Interior Design Journal for Noida & Greater Noida Homes', description: 'Practical design ideas for 2BHK, 3BHK and 4BHK homes in Noida, Greater Noida and Greater Noida West — from materials and space planning to site execution.' },
+  journal: { title: 'Interior Design Cost Guides & Planning Journal | NestArcadia', description: 'Practical 2BHK and 3BHK interior cost guides, material advice and execution planning for Noida Extension and Greater Noida West homeowners.' },
   homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia’s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: { title: 'Interior Design Cost, Services & FAQs | Noida & NCR', description: 'Answers about 2BHK and 3BHK interior design, costs, modular kitchens, turnkey execution, Vastu planning and commercial interiors across Noida, Greater Noida and NCR.' },
@@ -271,7 +271,9 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida'],
       url: SITE_URL,
       telephone: '+918448061997',
-      contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', contactType: 'customer service', areaServed: 'IN' },
+      email: 'info@nestarcadia.com',
+      address: {"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"},
+      contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', email: 'info@nestarcadia.com', contactType: 'customer service', areaServed: 'IN' },
       image: SOCIAL_IMAGE,
       description: 'Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.',
       hasOfferCatalog: {
@@ -292,7 +294,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       ? { '@type': 'Organization', name: 'NestArcadia', url: SITE_URL }
       : { '@type': 'Person', name: activeArticle.author });
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
-    const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@type': 'ProfessionalService', name: 'NestArcadia', url: SITE_URL } };
+    const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@id': `${SITE_URL}/#business` } };
     const websiteSchema = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } };
     const webPageSchema = { '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: meta.title, description: meta.description, isPartOf: { '@id': `${SITE_URL}/#website` }, about: { '@id': `${SITE_URL}/#business` } };
     const faqSchema = page === 'faq' && !localService ? {

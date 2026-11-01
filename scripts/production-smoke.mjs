@@ -174,6 +174,10 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  assert.ok(homepageSource.includes('class="boot-primary" href="/start-your-project/"'),
+    'first-paint hero must use the project-enquiry CTA');
+  assert.ok(homepageSource.includes('class="boot-secondary" href="/our-projects/"'),
+    'first-paint hero secondary CTA must open design concepts');
   const serviceSourceResponse = await page.request.get(baseUrl + '/interior-design-services/');
   assert.equal(serviceSourceResponse.status(), 200, 'interior design services page must return HTTP 200');
   const serviceSource = await serviceSourceResponse.text();
@@ -236,6 +240,29 @@ try {
   assert.ok(businessEntity, 'homepage JSON-LD must include the NestArcadia business entity');
   assert.deepEqual(businessEntity.areaServed, ['Greater Noida West', 'Noida Extension', 'Greater Noida', 'Noida'],
     'business entity areaServed must match the four priority local markets');
+  assert.deepEqual(businessEntity.address, {
+    '@type': 'PostalAddress',
+    streetAddress: 'G-59, Fusion Ufairia Mall, Sector 16B',
+    addressLocality: 'Greater Noida West',
+    addressRegion: 'Uttar Pradesh',
+    postalCode: '201310',
+    addressCountry: 'IN',
+  }, 'business entity must expose the owner-confirmed NestArcadia office address');
+  const footerText = await page.locator('footer').innerText();
+  assert.ok(footerText.includes('G-59, Fusion Ufairia Mall, Sector 16B'),
+    'visible footer must display the owner-confirmed office address');
+  const whatsappFooterLink = page.locator('footer a[href^="https://wa.me/"]');
+  assert.ok((await whatsappFooterLink.innerText()).includes('WhatsApp Us'),
+    'WhatsApp footer link must retain its visible text as its accessible name');
+  assert.equal(await whatsappFooterLink.getAttribute('aria-label'), null,
+    'WhatsApp footer link must not override its visible text with a mismatched aria-label');
+  const officeDirectionsLink = page.locator('footer a[href^="https://www.google.com/maps/search/"]');
+  assert.equal(await officeDirectionsLink.count(), 1,
+    'footer must provide exactly one office directions link');
+  assert.equal(await officeDirectionsLink.getAttribute('aria-label'), null,
+    'office directions link must use its visible address and directions text as its accessible name');
+  assert.ok((await officeDirectionsLink.innerText()).includes('Visit our office'),
+    'office directions link must expose its visible label to assistive technology');
   const homepageStatic = homepageSource.match(/<main id="na-seo-static-content"[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   const homepageStaticWords = homepageStatic.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').split(/\s+/).filter(Boolean).length;
   assert.ok(homepageStaticWords >= 180, `homepage raw HTML SEO content is too thin (${homepageStaticWords} words)`);
@@ -271,6 +298,12 @@ try {
   );
   for (const requiredLink of requiredHomepageServiceLinks) {
     assert.ok(homepageHrefValues.includes(requiredLink), 'homepage is missing contextual service link: ' + requiredLink);
+  }
+  for (const budgetGuideLink of [
+    '/journal/2bhk-interior-cost-noida-extension/',
+    '/journal/3bhk-interior-cost-greater-noida-west/',
+  ]) {
+    assert.ok(homepageHrefValues.includes(budgetGuideLink), 'homepage is missing a high-intent budget guide link: ' + budgetGuideLink);
   }
   const footerServiceAreaLinks = await page.locator('nav[aria-label="NestArcadia service areas"] a').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href'))
@@ -311,10 +344,13 @@ try {
 
 
   const staticRouteChecks = [
+    ['/', 'Interior Budget Guides for 2BHK and 3BHK Homes'],
     ['/design-cultures/', 'Regional inspiration, interpreted for modern homes'],
     ['/interior-design-services/', 'Residential interior design'],
     ['/our-story/', 'A design approach rooted in how people live'],
     ['/our-projects/', 'Selected home concepts and interior design studies'],
+    ['/journal/2bhk-interior-cost-noida-extension/', '2BHK Interior Cost in Noida Extension'],
+    ['/journal/3bhk-interior-cost-greater-noida-west/', '3BHK Interior Cost in Greater Noida West'],
     ['/start-your-project/', 'Tell us about your property'],
     ['/faqs/', 'Which areas does NestArcadia serve?'],
     ['/interior-design-greater-noida/', 'Good interiors begin with the way a space is actually used.'],
@@ -338,8 +374,19 @@ try {
       assert.ok(html.includes('"@type":"Service"'), 'services route must contain route-specific Service JSON-LD');
       assert.ok(html.includes('Noida Extension and Greater Noida West'), 'services schema must reinforce the primary service areas');
     }
+    if (route === '/') {
+      assert.ok(html.includes('/journal/2bhk-interior-cost-noida-extension/'), 'static homepage must link to the 2BHK cost guide');
+      assert.ok(html.includes('/journal/3bhk-interior-cost-greater-noida-west/'), 'static homepage must link to the 3BHK cost guide');
+    }
     if (route === '/our-projects/') {
       assert.ok(html.includes('Selected home concepts and interior design studies'), 'portfolio route must clearly label design concepts');
+    }
+    if (route.includes('/journal/2bhk-interior-cost-noida-extension/') || route.includes('/journal/3bhk-interior-cost-greater-noida-west/')) {
+      assert.ok(html.includes('"@type":"BlogPosting"'), 'new interior cost guide must contain BlogPosting JSON-LD');
+      assert.ok(html.includes('"datePublished":"2026-11-02"'), 'new interior cost guide must expose its publication date');
+      assert.ok(html.includes('"author":{"@type":"Organization","name":"NestArcadia","url":"https://nestarcadia.com"}'),
+        'NestArcadia editorial guides must identify the organization as their author');
+      assert.ok(html.includes('/our-story/'), 'Journal article must link to the verified studio background');
     }
     if (route.includes('/journal/luxury-interior-design-noida-extension/')) {
       assert.ok(html.includes('"@type":"BlogPosting"'), 'published journal article must contain BlogPosting JSON-LD');

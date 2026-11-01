@@ -202,6 +202,8 @@ if (articlesArray && ts.isArrayLiteralExpression(articlesArray)) {
       readTime: propertyString(entry, 'readTime') || '',
       body: arrayStringValues(propertyNode(entry, 'body')),
       related: arrayStringValues(propertyNode(entry, 'related')),
+      datePublished: propertyString(entry, 'publishedAt'),
+      dateModified: propertyString(entry, 'updatedAt') || propertyString(entry, 'publishedAt'),
     });
   }
 }
@@ -384,7 +386,11 @@ function renderStaticRoute(pathname, metadata) {
       staticList(['2BHK, 3BHK and 4BHK apartment planning','Modular kitchens, wardrobes and custom storage','Lighting, material and finish selection','Vastu-led layout discussions when requested','Commercial office space planning, reception, workstations and acoustic considerations','Turnkey design and execution coordination']) +
       '<h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">How a Project Moves Forward</h2>' +
       staticList(['Review the property, floor plan, possession status and brief.','Resolve space planning, furniture, kitchen, storage and major services.','Develop the design direction, material palette and execution drawings.','Coordinate site work, materials and quality checks against the agreed scope.'], true) +
-      '<p style="' + staticParagraphStyle + '">To discuss a home or office brief, ' + inlineLink('/start-your-project/', 'share your project requirements') + ' or visit the ' + inlineLink('/journal/', 'NestArcadia interior design journal') + ' for practical planning guidance.</p></section></main>';
+      '<p style="' + staticParagraphStyle + '">To discuss a home or office brief, ' + inlineLink('/start-your-project/', 'share your project requirements') + ' or visit the ' + inlineLink('/journal/', 'NestArcadia interior design journal') + ' for practical planning guidance.</p></section>' +
+      '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:clamp(1.6rem,4vw,2.35rem)">Interior Budget Guides for 2BHK and 3BHK Homes</h2>' +
+      '<p style="' + staticParagraphStyle + '">Start with a clear planning range, understand which scope and specifications affect the estimate, and compare written proposals on the same basis. These are planning guides, not fixed package quotations.</p>' +
+      '<p>' + inlineLink('/journal/2bhk-interior-cost-noida-extension/', '2BHK interior cost in Noida Extension') + ' · ' +
+      inlineLink('/journal/3bhk-interior-cost-greater-noida-west/', '3BHK interior cost in Greater Noida West') + '</p></section></main>';
   }
 
   const service = serviceMeta.get(pathname);
@@ -434,6 +440,7 @@ function renderStaticRoute(pathname, metadata) {
       inlineLink('/interior-design-services/', 'interior design and turnkey services') + '.</p></section>';
     return '<main id="na-seo-static-content" style="' + staticRootStyle + '">' + header +
       '<p style="margin:-4px 0 22px;color:#6B5E4E;font-size:13px">' + escapeText(article.category) + (article.readTime ? ' · ' + escapeText(article.readTime) : '') + ' · By ' + escapeText(article.author) + '</p>' +
+      '<p style="' + staticParagraphStyle + '">Published by NestArcadia Journal. Learn about the studio’s background in real estate and construction on our ' + inlineLink('/our-story/', 'Our Story') + ' page. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.</p>' +
       paragraphs + localServiceLinks + (related ? '<section style="' + staticSectionStyle + '"><h2 style="' + staticHeadingStyle + ';font-size:1.7rem">Related articles</h2><ul style="padding-left:22px">' + related + '</ul></section>' : '') +
       '<p style="' + staticParagraphStyle + '">For project-specific advice, ' + inlineLink('/start-your-project/', 'share your interior design brief') + ' with NestArcadia.</p></main>';
   }
@@ -533,7 +540,9 @@ for (const rawUrl of urls) {
       mainEntityOfPage: { '@id': canonical + '#webpage' },
       headline: metadata.articleTitle || title,
       description,
-      author: { '@type': 'Person', name: metadata.author || 'NestArcadia' },
+      author: metadata.author === 'NestArcadia'
+        ? { '@type': 'Organization', name: metadata.author, url: baseUrl }
+        : { '@type': 'Person', name: metadata.author || 'NestArcadia' },
       publisher: { '@id': baseUrl + '/#business' },
       image: imageUrl,
       articleSection: metadata.category || 'Journal',

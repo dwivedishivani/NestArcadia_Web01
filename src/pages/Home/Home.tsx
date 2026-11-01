@@ -307,19 +307,18 @@ export default function Home({ setPage }: Props) {
           <p className="text-white/65 text-[15px] leading-relaxed mb-9 max-w-[300px]">
             {currentHero.description}
           </p>
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4">
             <button
-              onClick={() => setPage('homes')}
-              className="text-[14px] text-white border border-white/50 px-7 py-3 transition-all hover:bg-white hover:text-[#1A1714]"
+              onClick={() => setPage('project')}
+              className="min-h-12 text-[14px] font-semibold text-[#1A1714] bg-white px-7 py-3 transition-colors hover:bg-[#EAE4DA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              Explore Our Homes →
+              Plan Your Interior →
             </button>
             <button
-              onClick={() => setPage('story')}
-              className="flex items-center gap-2.5 text-white/75 text-[14px] hover:text-white transition-colors"
+              onClick={() => setPage('homes')}
+              className="min-h-12 text-[14px] text-white border border-white/60 px-7 py-3 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              <span className="min-w-11 min-h-11 rounded-full border border-white/60 flex items-center justify-center text-[12px]">▶</span>
-              Watch Our Story
+              Explore Design Concepts
             </button>
           </div>
         </div>
@@ -620,6 +619,33 @@ export default function Home({ setPage }: Props) {
 
       {/* ── FAQs ────────────────────────────────────── */}
       <FeaturedResidences />
+
+
+      {/* ── Interior Cost Guides ───────────────────── */}
+      <section className="px-6 lg:px-20 py-16 lg:py-20 max-w-[1440px] mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.28em] text-[#17665B] mb-3">Plan with clarity</p>
+            <h2 className="font-display text-[clamp(1.8rem,3.5vw,2.7rem)] leading-tight text-[#1A1714]">Start with a realistic interior budget.</h2>
+            <p className="text-sm text-[#6B5E4E] mt-3 max-w-2xl leading-relaxed">Understand the starting planning ranges, scope decisions and questions to ask before you compare quotations.</p>
+          </div>
+          <a href="/start-your-project/" className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#17665B] underline underline-offset-4 hover:text-[#1C3A5A]">Discuss your floor plan →</a>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <a href="/journal/2bhk-interior-cost-noida-extension/" className="group border border-[#D4CBBB] p-6 lg:p-8 hover:border-[#17665B] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#17665B]">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">2BHK · Noida Extension</p>
+            <h3 className="font-display text-xl text-[#1C3A5A] group-hover:text-[#17665B]">What does a 2BHK interior cost?</h3>
+            <p className="text-sm text-[#6B5E4E] leading-relaxed mt-3">A practical starting-budget guide, with the scope and specifications that can change the final estimate.</p>
+            <span className="inline-block mt-5 text-[13px] font-semibold text-[#17665B]">Read the 2BHK budget guide →</span>
+          </a>
+          <a href="/journal/3bhk-interior-cost-greater-noida-west/" className="group border border-[#D4CBBB] p-6 lg:p-8 hover:border-[#17665B] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#17665B]">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">3BHK · Greater Noida West</p>
+            <h3 className="font-display text-xl text-[#1C3A5A] group-hover:text-[#17665B]">How should you budget for a 3BHK?</h3>
+            <p className="text-sm text-[#6B5E4E] leading-relaxed mt-3">Room-by-room priorities, kitchen and wardrobe decisions, and a clearer way to compare proposals.</p>
+            <span className="inline-block mt-5 text-[13px] font-semibold text-[#17665B]">Read the 3BHK budget guide →</span>
+          </a>
+        </div>
+      </section>
 
       {/* ── FAQs ────────────────────────────────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">

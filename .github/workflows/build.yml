@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -104,6 +104,42 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/playwright-smoke" --no-audit --no-fund playwright@1.56.1
           "$RUNNER_TEMP/playwright-smoke/node_modules/.bin/playwright" install --with-deps chromium
 
+      - name: Run Lighthouse mobile and desktop audits
+        run: |
+          npm install --prefix "$RUNNER_TEMP/lighthouse-audit" --no-audit --no-fund lighthouse@12.8.2
+          CHROME_BIN="$(find "$HOME/.cache/ms-playwright" -type f -name chrome -perm -111 -print -quit)"
+          test -n "$CHROME_BIN"
+          LIGHTHOUSE="$RUNNER_TEMP/lighthouse-audit/node_modules/.bin/lighthouse"
+          "$LIGHTHOUSE" http://127.0.0.1:4173/ --chrome-path="$CHROME_BIN" --preset=desktop --only-categories=performance,accessibility,seo --output=json --output-path="$RUNNER_TEMP/lighthouse-desktop.json" --chrome-flags="--headless --no-sandbox"
+          "$LIGHTHOUSE" http://127.0.0.1:4173/ --chrome-path="$CHROME_BIN" --form-factor=mobile --throttling-method=simulate --only-categories=performance,accessibility,seo --output=json --output-path="$RUNNER_TEMP/lighthouse-mobile.json" --chrome-flags="--headless --no-sandbox"
+          node - "$RUNNER_TEMP/lighthouse-mobile.json" "$RUNNER_TEMP/lighthouse-desktop.json" <<'NODE'
+          const fs = require('node:fs');
+          for (const file of process.argv.slice(2)) {
+            const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const score = (key) => Math.round((report.categories[key]?.score ?? 0) * 100);
+            const metric = (key) => Math.round(report.audits[key]?.numericValue ?? 0);
+            console.log('LIGHTHOUSE_SUMMARY', JSON.stringify({
+              formFactor: report.configSettings.formFactor,
+              performance: score('performance'),
+              accessibility: score('accessibility'),
+              seo: score('seo'),
+              lcpMs: metric('largest-contentful-paint'),
+              tbtMs: metric('total-blocking-time'),
+              cls: report.audits['cumulative-layout-shift']?.numericValue ?? null,
+              fcpMs: metric('first-contentful-paint'),
+            }));
+          }
+          NODE
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nestarcadia-lighthouse-reports
+          path: |
+            ${{ runner.temp }}/lighthouse-mobile.json
+            ${{ runner.temp }}/lighthouse-desktop.json
+          if-no-files-found: warn
+          retention-days: 7
       - name: Test mobile hero and lead conversion event flow
         env:
           PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/playwright-smoke/node_modules/playwright/index.mjs
