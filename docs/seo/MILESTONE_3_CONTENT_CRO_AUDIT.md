@@ -98,29 +98,30 @@ The connected HYPD Google Analytics and Tag Manager accounts are not currently s
 
 The branch includes responsive image preparation, local fonts, optimized hero assets and a production browser smoke workflow. Automated Lighthouse mobile and desktop audits have been added to CI.
 
-**Preview lab audit (commit `869277a`; local Vite production preview, 2 November 2026):**
+**Final candidate preview lab audit (commit `4f3440d`; local Vite production preview, 2 November 2026):**
 
 | Metric | Mobile | Desktop |
 |---|---:|---:|
-| Lighthouse Performance | 83 | 100 |
+| Lighthouse Performance | 86 | 100 |
 | Accessibility | 100 | 100 |
 | SEO | 100 | 100 |
-| LCP | 2.379 s | 0.583 s |
-| FCP | 2.066 s | 0.484 s |
-| Total Blocking Time | 520 ms | 14 ms |
+| LCP | 2.362 s | 0.631 s |
+| FCP | 2.048 s | 0.530 s |
+| Total Blocking Time | 425 ms | 12 ms |
 | CLS | 0.001 | 0.002 |
-| Time to Interactive (lab) | 8.698 s | 1.403 s |
+| Time to Interactive (lab) | 8.901 s | 1.470 s |
 
-Mobile opportunities from this run:
-- Approximately 255 KiB estimated unused JavaScript.
+Mobile opportunities from the final candidate run:
+- Approximately 384 KiB estimated unused JavaScript.
 - Approximately 251 KiB estimated image-size savings.
-- 12 long main-thread tasks; main-thread work approximately 2.6 s.
-- Google tag scripts (GTM, GA4 gtag and Ads gtag) transferred approximately 583 KB and accounted for approximately 720 ms of third-party main-thread blocking in this lab run.
-- Total initial network payload approximately 1.3 MiB.
+- 13 long main-thread tasks; main-thread work approximately 2.4 s.
+- Google tag scripts transferred approximately 786 KB and accounted for approximately 640 ms of third-party main-thread blocking.
+- Lighthouse lists two separate GA4 `gtag.js` requests for `G-LDM2YL1MP5` (one standalone and one with GTM query parameters), alongside the Google Ads tag and GTM container. This is a potential duplicate GA4 loading path that must be checked in the actual GTM container before changing anything.
+- Total initial network payload approximately 1.5 MiB.
 
 Do not remove or consolidate analytics tags based only on this audit. Inspect the live GTM container and GA4 property first, preserve consent and lead tracking, and verify real `page_view` / `generate_lead` delivery. HYPD GA4 and GTM accounts are connected but not selected for this session.
 
-This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. The run used commit `869277a`; later edits to static homepage content, article titles and the Our Story author link are content-only. A final candidate run is still required. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
+This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. This final preview run includes the static homepage budget links, shortened article titles and the verified Our Story author link. The full Playwright lead-flow smoke is still running for the final commit. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
 
 Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Distinguish lab Lighthouse results from CrUX/Search Console field data.
 
