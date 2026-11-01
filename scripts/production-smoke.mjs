@@ -541,10 +541,10 @@ try {
   }));
 
   await page.goto(baseUrl + '/start-your-project', { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.getByPlaceholder('Full Name *').fill('NestArcadia QA Smoke Test');
-  await page.getByPlaceholder('Email Address *').fill('qa-smoke@example.invalid');
-  await page.getByPlaceholder('Phone Number *').fill('9876543210');
-  await page.getByRole('combobox').selectOption('Noida');
+  await page.getByLabel('Full name').fill('NestArcadia QA Smoke Test');
+  await page.getByLabel('Email address').fill('qa-smoke@example.invalid');
+  await page.getByLabel('Phone number').fill('9876543210');
+  await page.getByLabel('City or location').selectOption('Noida');
   await page.getByRole('button', { name: 'Apartment / Flat', exact: true }).click();
   await page.getByRole('button', { name: '2 BHK', exact: true }).click();
   await page.getByRole('button', { name: 'Not sure yet', exact: true }).click();
