@@ -65,9 +65,11 @@ Public company profile: https://www.linkedin.com/company/nest-arcadia/
 
 A branded local-business search did not return a matching NestArcadia business result in the structured local results available for this audit. This does **not** prove that no Google Business Profile exists; a direct profile URL or access to the profile manager is still needed for a conclusive audit.
 
-A matching set of independent directory listings with consistent NAP details was not established from the public results reviewed. Treat directory coverage as **unverified**, not as proof that the business is absent from every directory.
+A local directory at [greaternoidawest.in/listings](https://www.greaternoidawest.in/listings/) has an **Interior Decorators (1)** category, so it is a promising citation lead. However, opening that category triggered bot verification and the business name, destination URL, phone and address could not be confirmed. It is therefore not yet safe to count this as a verified NestArcadia citation or as evidence of a consistent NAP listing.
 
-**Required next step:** audit the actual Google Business Profile for business name, primary category, additional categories, address visibility, service areas, website, phone, hours, services, photos and review history. Do not create extra profiles for individual target areas.
+The public LinkedIn profile is visible and lists the same phone, email and website as the website. Its About copy also contains strong property-return language (including a guarantee of value/appreciation). This is a brand-trust and compliance risk unless each claim is substantiated and carefully qualified. Avoid guaranteed ROI/appreciation wording; describe the service as advisory or design input, not as a guaranteed financial outcome.
+
+**Required next step:** audit the actual Google Business Profile for business name, primary category, additional categories, address visibility, service areas, website, phone, hours, services, photos and review history. Do not create extra profiles for individual target areas. Check the local directory category listing manually and confirm it is NestArcadia before treating it as a citation.
 
 ### 5. Structured data and internal identity
 
