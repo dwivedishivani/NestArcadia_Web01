@@ -131,7 +131,7 @@ Remaining mobile opportunities from this updated run:
 
 Do not remove or consolidate analytics tags based only on this audit. Inspect the live GTM container and GA4 property first, preserve consent and lead tracking, and verify real `page_view` / `generate_lead` delivery. HYPD GA4 and GTM accounts are connected but not selected for this session.
 
-This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. This final preview run includes the static homepage budget links, shortened article titles and the verified Our Story author link. The final Playwright lead-flow smoke must pass on the latest branch head after the responsive-image, footer-accessibility and first-paint CTA fixes. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
+This is a **lab measurement of the local preview**, not a production PageSpeed Insights report or CrUX field-data result. This final preview run includes the static homepage budget links, shortened article titles and the verified Our Story author link. The latest branch-head CI run must complete the Playwright mobile hero, footer accessible-name, budget-link and lead-flow smoke after the responsive-image, footer-accessibility and first-paint CTA fixes. Do not mark Core Web Vitals complete until mobile and desktop are measured on the final live canonical URLs and compared with a documented production baseline.
 
 Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Distinguish lab Lighthouse results from CrUX/Search Console field data.
 
@@ -142,8 +142,10 @@ Target good Core Web Vitals at the 75th percentile: LCP ≤ 2.5s, INP ≤ 200ms,
 - [x] Homepage and Journal internal-link pathways added/verified in source.
 - [x] Static sitemap and BlogPosting metadata updated.
 - [x] Backlink/citation opportunity shortlist researched.
-- [x] Production build and full Playwright smoke pass on the final code candidate (`4f3440d`).
-- [ ] Fresh mobile and desktop Lighthouse/PageSpeed audits recorded.
+- [x] Production build, Apache redirect/static-route checks and Lighthouse mobile/desktop audits pass on candidate `8364d32`.
+- [x] Mobile and desktop preview Lighthouse results recorded (mobile 91 / desktop 100; accessibility and SEO 100 on both).
+- [ ] Final branch-head Playwright mobile hero, footer accessible-name, budget-link and lead-flow smoke pass.
+- [ ] Final live PageSpeed Insights and field Core Web Vitals comparison after deployment.
 - [ ] Current field Core Web Vitals checked in Search Console/CrUX.
 - [ ] GA4/GTM account selection, configuration and real lead-event delivery verified.
 - [ ] Owner supplies evidence for any genuine case studies to replace/augment concepts.
