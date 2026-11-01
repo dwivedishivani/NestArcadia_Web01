@@ -174,6 +174,10 @@ try {
   const homepageSourceResponse = await page.request.get(baseUrl + '/');
   assert.equal(homepageSourceResponse.status(), 200, 'homepage source must return HTTP 200');
   const homepageSource = await homepageSourceResponse.text();
+  assert.ok(homepageSource.includes('class="boot-primary" href="/start-your-project/"'),
+    'first-paint hero must use the project-enquiry CTA');
+  assert.ok(homepageSource.includes('class="boot-secondary" href="/our-projects/"'),
+    'first-paint hero secondary CTA must open design concepts');
   const serviceSourceResponse = await page.request.get(baseUrl + '/interior-design-services/');
   assert.equal(serviceSourceResponse.status(), 200, 'interior design services page must return HTTP 200');
   const serviceSource = await serviceSourceResponse.text();
