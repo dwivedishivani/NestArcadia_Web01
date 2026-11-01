@@ -330,6 +330,7 @@ try {
 
 
   const staticRouteChecks = [
+    ['/', 'Interior Budget Guides for 2BHK and 3BHK Homes'],
     ['/design-cultures/', 'Regional inspiration, interpreted for modern homes'],
     ['/interior-design-services/', 'Residential interior design'],
     ['/our-story/', 'A design approach rooted in how people live'],
@@ -358,6 +359,10 @@ try {
     if (route === '/interior-design-services/') {
       assert.ok(html.includes('"@type":"Service"'), 'services route must contain route-specific Service JSON-LD');
       assert.ok(html.includes('Noida Extension and Greater Noida West'), 'services schema must reinforce the primary service areas');
+    }
+    if (route === '/') {
+      assert.ok(html.includes('/journal/2bhk-interior-cost-noida-extension/'), 'static homepage must link to the 2BHK cost guide');
+      assert.ok(html.includes('/journal/3bhk-interior-cost-greater-noida-west/'), 'static homepage must link to the 3BHK cost guide');
     }
     if (route === '/our-projects/') {
       assert.ok(html.includes('Selected home concepts and interior design studies'), 'portfolio route must clearly label design concepts');
