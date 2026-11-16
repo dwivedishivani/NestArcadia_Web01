@@ -247,3 +247,40 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
     height: 680.78px;
   }
 }
+
+
+/* Journal listing cards: consistent image, text and metadata alignment. */
+.journal-card {
+  min-height: 100%;
+}
+
+.journal-card-media {
+  aspect-ratio: 16 / 10;
+  flex: 0 0 auto;
+}
+
+.journal-card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  min-height: 4.2em;
+  line-height: 1.4;
+}
+
+.journal-card-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  min-height: 4.95em;
+  line-height: 1.65;
+}
+
+.journal-card-taxonomy {
+  min-height: 1.25rem;
+}
+
+.journal-card-meta {
+  margin-top: auto;
+}
