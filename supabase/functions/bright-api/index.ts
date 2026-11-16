@@ -210,6 +210,15 @@ app.get("/make-server-078be9eb/admin/blogs", verifyAdmin, async (c) => {
 app.post("/make-server-078be9eb/admin/blogs", verifyAdmin, async (c) => {
   try {
     const body = await c.req.json();
+    const titleLength = Array.from(String(body.title ?? "")).length;
+    const excerptLength = Array.from(String(body.excerpt ?? "")).length;
+    if (titleLength > 80 || excerptLength > 160) {
+      return c.json({
+        error: titleLength > 80
+          ? `Article title must be 80 characters or fewer (received ${titleLength}).`
+          : `Article excerpt must be 160 characters or fewer (received ${excerptLength}).`,
+      }, 400);
+    }
     const db = supabase();
     
     const { data, error } = await db.from("blogs_078be9eb").insert({
@@ -239,6 +248,15 @@ app.put("/make-server-078be9eb/admin/blogs/:id", verifyAdmin, async (c) => {
   try {
     const id = c.req.param("id");
     const body = await c.req.json();
+    const titleLength = Array.from(String(body.title ?? "")).length;
+    const excerptLength = Array.from(String(body.excerpt ?? "")).length;
+    if (titleLength > 80 || excerptLength > 160) {
+      return c.json({
+        error: titleLength > 80
+          ? `Article title must be 80 characters or fewer (received ${titleLength}).`
+          : `Article excerpt must be 160 characters or fewer (received ${excerptLength}).`,
+      }, 400);
+    }
     const db = supabase();
     
     const updateData: any = {

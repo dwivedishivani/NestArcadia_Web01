@@ -64,6 +64,10 @@ interface Home {
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
+const BLOG_TITLE_MAX_CHARACTERS = 80;
+const BLOG_EXCERPT_MAX_CHARACTERS = 160;
+const countCharacters = (value: string) => Array.from(value).length;
+
 export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [view, setView] = useState<AdminView>('dashboard');
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -913,6 +917,10 @@ function BlogForm({
 
   const selectedTags = form.tags;
   const availableTags = Array.from(new Set([...existingTags, ...standardTags]));
+  const titleCharacterCount = countCharacters(form.title);
+  const excerptCharacterCount = countCharacters(form.excerpt);
+  const titleOverLimit = titleCharacterCount > BLOG_TITLE_MAX_CHARACTERS;
+  const excerptOverLimit = excerptCharacterCount > BLOG_EXCERPT_MAX_CHARACTERS;
 
   const suggestTags = () => {
     const haystack = `${form.title} ${form.excerpt} ${form.content} ${form.category}`.toLowerCase();
@@ -967,8 +975,18 @@ function BlogForm({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSaving(true);
     setError('');
+
+    if (titleOverLimit) {
+      setError(`Article title is ${titleCharacterCount} characters. Shorten it to ${BLOG_TITLE_MAX_CHARACTERS} characters or fewer before saving.`);
+      return;
+    }
+    if (excerptOverLimit) {
+      setError(`Article excerpt is ${excerptCharacterCount} characters. Shorten it to ${BLOG_EXCERPT_MAX_CHARACTERS} characters or fewer before saving.`);
+      return;
+    }
+
+    setSaving(true);
 
     try {
       const payload = { ...form, tags: form.tags.map((tag) => tag.trim()).filter(Boolean) };
@@ -981,7 +999,10 @@ function BlogForm({
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Failed to save article');
+      if (!res.ok) {
+        const responseData = await res.json().catch(() => null);
+        throw new Error(responseData?.error || 'Failed to save article');
+      }
       onSave();
     } catch (err: any) {
       setError(err.message || 'Failed to save article');
@@ -1045,14 +1066,36 @@ function BlogForm({
           <div className="border border-[#D4CBBB] p-6 lg:p-8" style={{ background: '#EAE4DA' }}>
             <div className="grid gap-6">
               <div>
-                <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Title *</label>
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <label htmlFor="blog-title" className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] block">Title *</label>
+                  <span
+                    id="blog-title-counter"
+                    className={`text-[11px] tabular-nums ${titleOverLimit ? 'text-red-600 font-semibold' : 'text-[#6B5E4E]'}`}
+                  >
+                    {titleCharacterCount}/{BLOG_TITLE_MAX_CHARACTERS} characters
+                  </span>
+                </div>
                 <input
-                  className={inputClass}
+                  id="blog-title"
+                  className={`${inputClass} ${titleOverLimit ? 'border-red-600 focus:border-red-600' : ''}`}
                   value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) })}
+                  onChange={(e) => {
+                    setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) });
+                    if (error) setError('');
+                  }}
                   placeholder="Article title"
+                  aria-invalid={titleOverLimit}
+                  aria-describedby={titleOverLimit ? "blog-title-counter blog-title-help blog-title-error" : "blog-title-counter blog-title-help"}
                   required
                 />
+                <p id="blog-title-help" className="mt-2 text-[11px] text-[#6B5E4E]">
+                  Maximum 80 characters, including spaces. Existing text is never truncated automatically.
+                </p>
+                {titleOverLimit && (
+                  <p id="blog-title-error" className="mt-1 text-[11px] text-red-600">
+                    Shorten by {titleCharacterCount - BLOG_TITLE_MAX_CHARACTERS} {titleCharacterCount - BLOG_TITLE_MAX_CHARACTERS === 1 ? 'character' : 'characters'} to save.
+                  </p>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -1097,8 +1140,37 @@ function BlogForm({
               />
 
               <div>
-                <label className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 block">Excerpt *</label>
-                <textarea className={`${inputClass} resize-none`} rows={2} value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="Brief description of the article" required />
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <label htmlFor="blog-excerpt" className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E] block">Excerpt *</label>
+                  <span
+                    id="blog-excerpt-counter"
+                    className={`text-[11px] tabular-nums ${excerptOverLimit ? 'text-red-600 font-semibold' : 'text-[#6B5E4E]'}`}
+                  >
+                    {excerptCharacterCount}/{BLOG_EXCERPT_MAX_CHARACTERS} characters
+                  </span>
+                </div>
+                <textarea
+                  id="blog-excerpt"
+                  className={`${inputClass} resize-none ${excerptOverLimit ? 'border-red-600 focus:border-red-600' : ''}`}
+                  rows={2}
+                  value={form.excerpt}
+                  onChange={(e) => {
+                    setForm({ ...form, excerpt: e.target.value });
+                    if (error) setError('');
+                  }}
+                  placeholder="Brief description of the article"
+                  aria-invalid={excerptOverLimit}
+                  aria-describedby={excerptOverLimit ? "blog-excerpt-counter blog-excerpt-help blog-excerpt-error" : "blog-excerpt-counter blog-excerpt-help"}
+                  required
+                />
+                <p id="blog-excerpt-help" className="mt-2 text-[11px] text-[#6B5E4E]">
+                  Maximum 160 characters, including spaces. Existing text is never truncated automatically.
+                </p>
+                {excerptOverLimit && (
+                  <p id="blog-excerpt-error" className="mt-1 text-[11px] text-red-600">
+                    Shorten by {excerptCharacterCount - BLOG_EXCERPT_MAX_CHARACTERS} {excerptCharacterCount - BLOG_EXCERPT_MAX_CHARACTERS === 1 ? 'character' : 'characters'} to save.
+                  </p>
+                )}
               </div>
 
               <div>

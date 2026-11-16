@@ -877,41 +877,43 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
         {/* Article grid */}
         {rest.length > 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {rest.map(a => (
+          <div className="grid items-stretch gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((a) => (
               <a
                 key={a.id}
                 href={`/journal/${a.id}/`}
-                onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
-                className="text-left group"
+                onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({ top: 0 }); }}
+                className="journal-card group flex h-full min-w-0 flex-col text-left"
               >
-                <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
+                <div className="journal-card-media mb-5 overflow-hidden bg-[#D4CBBB]">
                   <img
                     src={a.thumb}
                     alt={a.title}
                     loading="lazy"
                     decoding="async"
                     width="800"
-                    height="560"
+                    height="500"
                     onError={(event) => {
-                      const fallback = articles.find(item => item.id === a.id)?.thumb;
+                      const fallback = articles.find((item) => item.id === a.id)?.thumb;
                       if (fallback && event.currentTarget.src !== fallback) event.currentTarget.src = fallback;
                     }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <div className="flex items-center gap-3 mb-3">
+                <div className="journal-card-taxonomy mb-3 flex flex-wrap items-center gap-3">
                   <span className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E]">{a.category}</span>
                   <span className="text-[#D4CBBB] text-xs">·</span>
                   <span className="text-[13px] text-[#6B5E4E]">{a.date}</span>
                 </div>
-                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors">
+                <h3 className="journal-card-title mb-3 font-display text-xl text-[#1A1714] leading-snug transition-colors group-hover:text-[#2D8C7E]">
                   {a.title}
                 </h3>
-                <p className="text-[13px] text-[#6B5E4E] leading-relaxed mb-4">{a.excerpt}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-[#D4CBBB]">
-                  <p className="text-[12px] text-[#6B5E4E]">{a.author} · {a.readTime}</p>
-                  <span className="text-[#2D8C7E] text-sm">→</span>
+                <p className="journal-card-excerpt mb-4 text-[13px] text-[#6B5E4E] leading-relaxed">
+                  {a.excerpt}
+                </p>
+                <div className="journal-card-meta mt-auto flex items-center justify-between gap-3 border-t border-[#D4CBBB] pt-4">
+                  <p className="min-w-0 text-[12px] text-[#6B5E4E]">{a.author} · {a.readTime}</p>
+                  <span aria-hidden="true" className="shrink-0 text-[#2D8C7E] text-sm">→</span>
                 </div>
               </a>
             ))}
