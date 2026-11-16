@@ -23,16 +23,11 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-  overflow-x: hidden;
 }
 
 body {
@@ -82,9 +77,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: rgba(45, 140, 126, 0.6);
 }
 
-/* Teal focus ring for inputs */
-input:focus, textarea:focus, select:focus {
+/* Teal focus ring for inputs — only suppress on pointer/mouse interactions */
+input:focus:not(:focus-visible), textarea:focus:not(:focus-visible), select:focus:not(:focus-visible) {
   outline: none;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid #6DC0AE;
+  outline-offset: 2px;
 }
 
 .rich-article-content {
@@ -213,6 +212,13 @@ input:focus, textarea:focus, select:focus {
   margin: 1.55rem 0 .7rem;
   color: #1C3A5A;
 }
+.rich-editor h4 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.15rem;
+  line-height: 1.35;
+  margin: 1.35rem 0 .6rem;
+  color: #1C3A5A;
+}
 .rich-editor blockquote {
   margin: 1.6rem 0;
   padding: 1rem 1.1rem;
@@ -233,15 +239,6 @@ input:focus, textarea:focus, select:focus {
   color: #1C3A5A;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-
-.rich-editor h4 {
-  font-family: var(--font-display, Georgia, serif);
-  font-size: 1.15rem;
-  line-height: 1.35;
-  margin: 1.35rem 0 .6rem;
-  color: #1C3A5A;
 }
 
 /* Figma reference frame: 639.99 × 680.78px at the 1280px content width. */
