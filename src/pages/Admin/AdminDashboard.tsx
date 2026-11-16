@@ -1079,17 +1079,20 @@ function BlogForm({
                   id="blog-title"
                   className={`${inputClass} ${titleOverLimit ? 'border-red-600 focus:border-red-600' : ''}`}
                   value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) })}
+                  onChange={(e) => {
+                    setForm({ ...form, title: e.target.value, slug: generateSlug(e.target.value) });
+                    if (error) setError('');
+                  }}
                   placeholder="Article title"
                   aria-invalid={titleOverLimit}
-                  aria-describedby="blog-title-counter blog-title-help"
+                  aria-describedby={titleOverLimit ? "blog-title-counter blog-title-help blog-title-error" : "blog-title-counter blog-title-help"}
                   required
                 />
                 <p id="blog-title-help" className="mt-2 text-[11px] text-[#6B5E4E]">
                   Maximum 80 characters, including spaces. Existing text is never truncated automatically.
                 </p>
                 {titleOverLimit && (
-                  <p className="mt-1 text-[11px] text-red-600" role="alert">
+                  <p id="blog-title-error" className="mt-1 text-[11px] text-red-600">
                     Shorten by {titleCharacterCount - BLOG_TITLE_MAX_CHARACTERS} {titleCharacterCount - BLOG_TITLE_MAX_CHARACTERS === 1 ? 'character' : 'characters'} to save.
                   </p>
                 )}
@@ -1151,17 +1154,20 @@ function BlogForm({
                   className={`${inputClass} resize-none ${excerptOverLimit ? 'border-red-600 focus:border-red-600' : ''}`}
                   rows={2}
                   value={form.excerpt}
-                  onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+                  onChange={(e) => {
+                    setForm({ ...form, excerpt: e.target.value });
+                    if (error) setError('');
+                  }}
                   placeholder="Brief description of the article"
                   aria-invalid={excerptOverLimit}
-                  aria-describedby="blog-excerpt-counter blog-excerpt-help"
+                  aria-describedby={excerptOverLimit ? "blog-excerpt-counter blog-excerpt-help blog-excerpt-error" : "blog-excerpt-counter blog-excerpt-help"}
                   required
                 />
                 <p id="blog-excerpt-help" className="mt-2 text-[11px] text-[#6B5E4E]">
                   Maximum 160 characters, including spaces. Existing text is never truncated automatically.
                 </p>
                 {excerptOverLimit && (
-                  <p className="mt-1 text-[11px] text-red-600" role="alert">
+                  <p id="blog-excerpt-error" className="mt-1 text-[11px] text-red-600">
                     Shorten by {excerptCharacterCount - BLOG_EXCERPT_MAX_CHARACTERS} {excerptCharacterCount - BLOG_EXCERPT_MAX_CHARACTERS === 1 ? 'character' : 'characters'} to save.
                   </p>
                 )}
