@@ -1,7 +1,12 @@
 # NestArcadia — SEO Keyword Map
 **Date:** November 2026  
 **Scope:** Interior design searches — Noida / Greater Noida NCR (India)  
-**Objective:** Map every target keyword to exactly one canonical page
+**Objective:** Map every target keyword to exactly one canonical page  
+**Revision:** R1 — corrections applied per PR #109 review (17 Nov 2026)
+
+---
+
+> **Data provenance note:** All search volume estimates referenced in this document are **unverified third-party estimates** — the source tool, date, country filter, and device type are unknown. They are included only to indicate relative order of magnitude and keyword grouping priority. Actual demand must be verified through Google Search Console impression data once owner access is available.
 
 ---
 
@@ -23,10 +28,10 @@
 | interior design Greater Noida West | Commercial | `/interior-design-greater-noida-west` | ✅ exists |
 | interior designer Greater Noida West | Commercial | `/interior-design-greater-noida-west` | ✅ |
 | best interior designer Greater Noida West | Commercial | `/interior-design-greater-noida-west` | ✅ |
-| interior designer in Noida | Commercial | `/interior-design-noida` | ⚠️ thin page |
+| interior designer in Noida | Commercial | `/interior-design-noida` | ⚠️ thin page — evaluate: upgrade to primary or consolidate |
 | interior designers Noida | Commercial | `/interior-design-noida` | ⚠️ thin page |
 | home interior designer Noida | Commercial | `/interior-design-noida` | ⚠️ thin page |
-| interior design Greater Noida | Commercial | `/interior-design-greater-noida` | ⚠️ thin page |
+| interior design Greater Noida | Commercial | `/interior-design-greater-noida` | ⚠️ thin page — evaluate: upgrade or consolidate |
 | interior designer Greater Noida | Commercial | `/interior-design-greater-noida` | ⚠️ thin page |
 | commercial interior designer Greater Noida West | Commercial | `/commercial-interior-design-greater-noida-west` | ✅ exists (primary) |
 | office interior design Greater Noida | Commercial | `/commercial-interior-design-greater-noida-west` | ✅ |
@@ -39,10 +44,10 @@
 |---|---|---|---|
 | 2BHK interior design Noida Extension | Commercial | `/2bhk-interior-design-noida-extension` | 🆕 new page needed |
 | 2BHK interior designer Noida Extension | Commercial | `/2bhk-interior-design-noida-extension` | 🆕 |
-| 2BHK flat interior design cost Noida | I+Commercial | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ unpublished draft |
+| 2BHK flat interior design cost Noida | I+Commercial | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ publication status unverified — PR #106 documented drafts pending release cutover. Requires Supabase admin access or live HTTP check to confirm. |
 | 3BHK interior design Greater Noida West | Commercial | `/3bhk-interior-design-greater-noida-west` | 🆕 new page needed |
 | 3BHK interior designer Greater Noida | Commercial | `/3bhk-interior-design-greater-noida-west` | 🆕 |
-| 3BHK interior cost Greater Noida | I+Commercial | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ unpublished draft |
+| 3BHK interior cost Greater Noida | I+Commercial | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ publication status unverified — same as above |
 | 4BHK interior design Noida Extension | Commercial | `/interior-design-noida-extension` (mention 4BHK) | ⚠️ cover on primary page |
 | villa interior design Greater Noida | Commercial | `/interior-design-greater-noida-west` (mention villa) | ⚠️ cover on primary page |
 
@@ -71,8 +76,8 @@
 
 | Keyword | Intent | Assigned Page | Status |
 |---|---|---|---|
-| 2BHK interior design cost India | Informational | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ unpublished |
-| 3BHK interior cost per sq ft | Informational | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ unpublished |
+| 2BHK interior design cost India | Informational | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ publication status unverified — see Tier 2 note |
+| 3BHK interior cost per sq ft | Informational | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ publication status unverified — see Tier 2 note |
 | modular kitchen cost per sq ft | Informational | 🆕 journal article | needs creation |
 | false ceiling design bedroom | Informational | Existing journal article | ✅ exists — optimise |
 | vastu tips new home | Informational | Existing journal article | ✅ exists — optimise |
@@ -90,40 +95,50 @@
 
 ## Tier 5 — Extended Location Keywords (Secondary Pages)
 
+> **⚠️ Doorway page risk:** These 12 thin secondary pages each need individual evaluation before optimisation. For each location: (a) if NestArcadia genuinely serves that area with differentiated offerings, improve the page with unique content reflecting real service coverage; (b) if the area is a stretch or the page would duplicate another page's content, consolidate into the nearest primary page or redirect. Do not expand all 12 with generic filler content. See audit §8 Phase 3.1.
+
 | Keyword | Assigned Page | Status |
 |---|---|---|
-| interior designer Ghaziabad | `/interior-design-ghaziabad` | ⚠️ thin |
-| interior designer Indirapuram | `/interior-design-indirapuram` | ⚠️ thin |
-| interior designer Crossing Republik | `/interior-design-crossing-republik` | ⚠️ thin |
-| interior designer Faridabad | `/interior-design-faridabad` | ⚠️ thin |
-| interior designer Delhi NCR | `/interior-design-delhi-ncr` | ⚠️ thin |
-| interior designer Delhi | `/interior-design-delhi` | ⚠️ thin |
-| interior designer East Delhi | `/interior-design-east-delhi` | ⚠️ thin |
-| interior designer South Delhi | `/interior-design-south-delhi` | ⚠️ thin |
-| interior designer Gurugram | `/interior-design-gurugram` | ⚠️ thin |
-| interior designer Dadri | `/interior-design-dadri` | ⚠️ thin |
-| interior designer Jewar | `/interior-design-jewar` | ⚠️ thin |
-| interior designer Yamuna Expressway | `/interior-design-yamuna-expressway` | ⚠️ thin |
+| interior designer Ghaziabad | `/interior-design-ghaziabad` | ⚠️ thin — evaluate |
+| interior designer Indirapuram | `/interior-design-indirapuram` | ⚠️ thin — evaluate |
+| interior designer Crossing Republik | `/interior-design-crossing-republik` | ⚠️ thin — evaluate |
+| interior designer Faridabad | `/interior-design-faridabad` | ⚠️ thin — evaluate |
+| interior designer Delhi NCR | `/interior-design-delhi-ncr` | ⚠️ thin — evaluate |
+| interior designer Delhi | `/interior-design-delhi` | ⚠️ thin — evaluate |
+| interior designer East Delhi | `/interior-design-east-delhi` | ⚠️ thin — evaluate |
+| interior designer South Delhi | `/interior-design-south-delhi` | ⚠️ thin — evaluate |
+| interior designer Gurugram | `/interior-design-gurugram` | ⚠️ thin — evaluate |
+| interior designer Dadri | `/interior-design-dadri` | ⚠️ thin — evaluate |
+| interior designer Jewar | `/interior-design-jewar` | ⚠️ thin — evaluate |
+| interior designer Yamuna Expressway | `/interior-design-yamuna-expressway` | ⚠️ thin — evaluate |
 
 ---
 
 ## Keyword Prioritisation Matrix
 
-### Must Target First (P0 — Commercial + High Volume)
-1. `interior designer in Noida Extension` → `/interior-design-noida-extension` ✅
-2. `interior designer Greater Noida West` → `/interior-design-greater-noida-west` ✅
-3. `interior designer in Noida` → `/interior-design-noida` (upgrade thin page)
-4. `2BHK interior design Noida Extension` → 🆕 `/2bhk-interior-design-noida-extension`
-5. `modular kitchen Noida Extension` → 🆕 `/modular-kitchen-design-noida-extension`
+### Verify Immediately (Before Any Content Work)
+1. **Budget guide publication status** — check Supabase admin or `curl` the URLs in production. Publication status unverified — PR #106 documented drafts pending release cutover. Cannot proceed with Tier 2/4 optimisation until confirmed.
+2. **Prerender pipeline output** — verify Hostinger serves prerendered HTML with correct metadata (see audit §8 Phase 1). All on-page SEO work assumes metadata is crawler-visible.
 
-### Publish Immediately (P0 — Drafts Ready)
-6. `2BHK interior cost Noida` → publish `/journal/2bhk-interior-cost-noida-extension/`
-7. `3BHK interior cost Greater Noida` → publish `/journal/3bhk-interior-cost-greater-noida-west/`
+### Must Target First (P0 — Commercial + High Volume)
+3. `interior designer in Noida Extension` → `/interior-design-noida-extension` ✅
+4. `interior designer Greater Noida West` → `/interior-design-greater-noida-west` ✅
+5. `interior designer in Noida` → `/interior-design-noida` (upgrade thin page)
+6. `2BHK interior design Noida Extension` → 🆕 `/2bhk-interior-design-noida-extension`
+7. `modular kitchen Noida Extension` → 🆕 `/modular-kitchen-design-noida-extension`
+
+### Publish or Confirm (P0 — Budget Guides)
+8. `2BHK interior cost Noida` → verify then optimise `/journal/2bhk-interior-cost-noida-extension/`
+9. `3BHK interior cost Greater Noida` → verify then optimise `/journal/3bhk-interior-cost-greater-noida-west/`
 
 ### High Value New Pages (P1)
-8. `3BHK interior design Greater Noida West` → 🆕 `/3bhk-interior-design-greater-noida-west`
-9. `turnkey interior design Noida` → 🆕 `/turnkey-interior-design-noida`
-10. `vastu interior design Noida` → 🆕 `/vastu-interior-design-noida`
+10. `3BHK interior design Greater Noida West` → 🆕 `/3bhk-interior-design-greater-noida-west`
+11. `turnkey interior design Noida` → 🆕 `/turnkey-interior-design-noida`
+12. `vastu interior design Noida` → 🆕 `/vastu-interior-design-noida`
+
+### Evaluate Before Building (Needs Owner Input)
+- 12 secondary local service pages (Tier 5) — which areas does NestArcadia genuinely serve? Consolidate the rest into primary pages.
+- Portfolio / reviews — zero verified completed-project records. Do not add `aggregateRating` or reviews until owner supplies evidence.
 
 ---
 
@@ -135,9 +150,11 @@
 | "2BHK cost" journal article vs "2BHK interior design" landing page | `/journal/2bhk-interior-cost-…` vs `/2bhk-interior-design-noida-extension` | Journal = informational (cost/budget guide). Landing page = commercial (hire us for 2BHK). Different intent — no cannibalisation if content differentiated |
 | "interior design services" vs all local pages | `/interior-design-services` vs `/interior-design-noida-extension` etc. | Services page = broad service overview. Local pages = geo-specific. Cross-link both directions |
 | "luxury interior design" journal article vs landing page | `luxury-interior-design-noida-extension.json` (article) vs proposed `/luxury-interior-design-greater-noida-west` | Move article to `/journal/` slug, keep landing page at `/luxury-interior-design-greater-noida-west` |
+| 14 secondary local service pages vs each other | Multiple thin pages targeting similar "[location] interior designer" queries | Evaluate individually — consolidate thin duplicates into nearest primary page, improve only pages with genuine unique service coverage. See audit §8 Phase 3.1. |
 
 ---
 
 *NestArcadia SEO Keyword Map — Phase 0, November 2026*  
+*Revised: R1 — 17 Nov 2026 (corrections per PR #109 review)*  
 *Total target keywords mapped: 60+*  
 *Pages to create: 6–8 new landing pages + 3–4 new journal articles*
