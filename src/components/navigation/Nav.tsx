@@ -98,7 +98,9 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             <button
               className="lg:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-[6px] p-2"
               onClick={() => setMenuOpen(o => !o)}
-              aria-label="Menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav-drawer"
             >
               <span className="block h-0.5 w-6" style={{ background: transparent ? '#ffffff' : '#1C3A5A' }} />
               <span className="block h-0.5 w-4" style={{ background: transparent ? '#ffffff' : '#1C3A5A' }} />
@@ -109,6 +111,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
 
         {/* Mobile drawer */}
         <div
+          id="mobile-nav-drawer"
           className="lg:hidden overflow-hidden transition-all duration-300"
           style={{
             maxHeight: menuOpen ? '420px' : '0',

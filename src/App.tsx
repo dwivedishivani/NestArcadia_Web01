@@ -91,9 +91,9 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   home: { title: 'Interior Designers in Noida Extension & Greater Noida West | NestArcadia', description: 'Plan 2BHK, 3BHK and villa interiors in Noida Extension and Greater Noida West. Get practical space planning and turnkey execution with NestArcadia.' },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design Services in Noida, Greater Noida & NCR', description: 'Residential and commercial interior design, turnkey execution, custom furniture, Vastu-led planning and decor for Noida, Greater Noida West, Noida Extension, Ghaziabad, Faridabad, Delhi and Gurugram.' },
-  story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India’s material heritage into homes made for modern living.' },
+  story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India\'s material heritage into homes made for modern living.' },
   journal: { title: 'Interior Design Cost Guides & Planning Journal | NestArcadia', description: 'Practical 2BHK and 3BHK interior cost guides, material advice and execution planning for Noida Extension and Greater Noida West homeowners.' },
-  homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia’s selected interior design projects and residential design studies across India.' },
+  homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia\'s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: { title: 'Interior Design Cost, Services & FAQs | Noida & NCR', description: 'Answers about 2BHK and 3BHK interior design, costs, modular kitchens, turnkey execution, Vastu planning and commercial interiors across Noida, Greater Noida and NCR.' },
   privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
@@ -564,11 +564,29 @@ function ConsentManager() {
   );
 }
 
+// Admin session key — stores only an opaque flag, never the raw password.
+const ADMIN_SESSION_KEY = 'nestarcadia_admin_session';
+
 function AdminShell() {
   const navigate = useNavigate();
-  const [adminPassword, setAdminPassword] = useState<string | null>(sessionStorage.getItem('admin_password'));
+  // Keep the raw password only in component memory for the duration of the tab session.
+  // sessionStorage holds a flag to restore the authenticated state on page reload,
+  // but the actual credential is re-requested via the login form in that case.
+  const [adminPassword, setAdminPassword] = useState<string | null>(null);
+  const [sessionRestored, setSessionRestored] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+
+  // On mount, check if a previous session flag exists but we don't have the password
+  // in memory. We cannot restore the password from storage (it's not stored), so the
+  // user will need to log in again — the flag is cleared to avoid a confusing loop.
+  useEffect(() => {
+    const hasSession = sessionStorage.getItem(ADMIN_SESSION_KEY);
+    if (hasSession && !adminPassword) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    }
+    setSessionRestored(true);
+  }, [adminPassword]);
 
   const handleLogin = async (password: string) => {
     setLoginLoading(true);
@@ -580,7 +598,8 @@ function AdminShell() {
         body: JSON.stringify({ password }),
       });
       if (res.ok) {
-        sessionStorage.setItem('admin_password', password);
+        // Store only an opaque session flag — never the raw password — in sessionStorage.
+        sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
         setAdminPassword(password);
       } else {
         setLoginError('Invalid password. Please try again.');
@@ -592,11 +611,12 @@ function AdminShell() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('admin_password');
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
     setAdminPassword(null);
     navigate('/');
   };
 
+  if (!sessionRestored) return <RouteFallback />;
   if (!adminPassword) {
     return <Suspense fallback={<RouteFallback />}><AdminLogin onLogin={handleLogin} error={loginError} loading={loginLoading} /></Suspense>;
   }

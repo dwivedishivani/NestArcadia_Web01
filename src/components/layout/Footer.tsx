@@ -28,8 +28,21 @@ const socials = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nest-arcadia', icon: <path d="M6.05 8.35A2.1 2.1 0 1 0 6.05 4.15a2.1 2.1 0 0 0 0 4.2ZM4.25 9.8h3.6V20H4.25V9.8Zm5.85 0h3.45v1.4h.05c.48-.9 1.65-1.85 3.4-1.85 3.64 0 4.31 2.4 4.31 5.52V20h-3.6v-4.55c0-1.08-.02-2.47-1.5-2.47-1.51 0-1.74 1.18-1.74 2.39V20h-3.6V9.8Z" /> },
 ];
 
+const pagePaths: Record<Page, string> = {
+  home: '/',
+  cultures: '/design-cultures/',
+  services: '/interior-design-services/',
+  story: '/our-story/',
+  journal: '/journal/',
+  homes: '/our-projects/',
+  project: '/start-your-project/',
+  faq: '/faqs/',
+  privacy: '/privacy-policy/',
+  admin: '/admin/',
+};
+
 export default function Footer() {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', privacy: '/privacy-policy/', admin: '/admin' };
+  const currentYear = new Date().getFullYear();
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
@@ -135,7 +148,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <p className="text-[12px] text-[#6B5E4E]">© 2026 NestArcadia. All rights reserved.</p>
+          <p className="text-[12px] text-[#6B5E4E]">© {currentYear} NestArcadia. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
             <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
