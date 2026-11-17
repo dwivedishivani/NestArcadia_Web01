@@ -21,7 +21,7 @@ export default function OurStory() {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '400px' }}>
+      <div className="relative overflow-hidden bg-brand-navy" style={{ minHeight: '400px' }}>
         <img
           src={u('photo-1735568958809-82f7696a276a', 1440, 600)}
           data-site-image-key="photo-1735568958809-82f7696a276a"
@@ -33,7 +33,7 @@ export default function OurStory() {
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C3A5A]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-brand-navy/50" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[400px] pb-14">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Who We Are</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05]">Our Story</h1>
@@ -47,19 +47,19 @@ export default function OurStory() {
       <section className="py-24 lg:py-32 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-16 items-start">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-5">Every Home Has a Story</p>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] leading-[1.08]">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-text-muted mb-5">Every Home Has a Story</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-text-primary leading-[1.08]">
               Rooted in Tradition.<br />Designed for You.
             </h2>
           </div>
           <div className="lg:pt-10">
-            <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-6">
+            <p className="text-text-muted text-[15px] leading-[1.9] mb-6">
               NestArcadia was born from a simple belief: that India's extraordinary design heritage — its crafts, its materials, its spatial wisdom — belongs in the homes of modern Indians.
             </p>
-            <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-6">
+            <p className="text-text-muted text-[15px] leading-[1.9] mb-6">
               NestArcadia was founded in 2024, building on our family’s experience in real estate and construction. That grounding informs the way we work: with a respect for practical detail, honest materials and the lives a home has to hold.
             </p>
-            <p className="text-[#6B5E4E] text-[15px] leading-[1.9]">
+            <p className="text-text-muted text-[15px] leading-[1.9]">
               Today we operate from our head office in Greater Noida West, serving homeowners and businesses across Greater Noida, Noida, Delhi, Gurgaon, Faridabad and Ghaziabad. Our vision is to create meaningful opportunities through design while growing carefully, without making promises before the work is ready.
             </p>
           </div>
@@ -85,30 +85,30 @@ export default function OurStory() {
 
       {/* Values */}
       <section className="py-24 px-6 lg:px-20 max-w-[1440px] mx-auto">
-        <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] mb-2">What We Stand For</h2>
-        <p className="text-[#6B5E4E] text-sm mb-14">The principles that shape every decision we make.</p>
+        <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-text-primary mb-2">What We Stand For</h2>
+        <p className="text-text-muted text-sm mb-14">The principles that shape every decision we make.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {values.map((v, i) => (
             <div key={v.name}>
-              <p className="font-display text-[#17665B] text-sm mb-3">0{i + 1}</p>
-              <h3 className="font-display text-xl text-[#1A1714] mb-3">{v.name}</h3>
-              <p className="text-xs text-[#6B5E4E] leading-[1.8]">{v.desc}</p>
+              <p className="font-display text-brand-forest text-sm mb-3">0{i + 1}</p>
+              <h3 className="font-display text-xl text-text-primary mb-3">{v.name}</h3>
+              <p className="text-xs text-text-muted leading-[1.8]">{v.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Timeline */}
-      <section className="py-20 px-6 lg:px-20" style={{ background: '#EAE4DA' }}>
+      <section className="py-20 px-6 lg:px-20" style={{ background: var(--color-card) }}>
         <div className="max-w-[1440px] mx-auto">
-          <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] mb-2">Our Journey</h2>
-          <p className="text-[#6B5E4E] text-sm mb-14">A foundation built with care, and a vision for what comes next.</p>
+          <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-text-primary mb-2">Our Journey</h2>
+          <p className="text-text-muted text-sm mb-14">A foundation built with care, and a vision for what comes next.</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {timeline.map(t => (
-              <div key={t.year} className="border-t border-[#D4CBBB] pt-6">
-                <p className="font-display text-[#17665B] text-lg mb-1">{t.year}</p>
-                <p className="font-medium text-[#1A1714] text-sm mb-2">{t.event}</p>
-                <p className="text-xs text-[#6B5E4E] leading-relaxed">{t.desc}</p>
+              <div key={t.year} className="border-t border-border-subtle pt-6">
+                <p className="font-display text-brand-forest text-lg mb-1">{t.year}</p>
+                <p className="font-medium text-text-primary text-sm mb-2">{t.event}</p>
+                <p className="text-xs text-text-muted leading-relaxed">{t.desc}</p>
               </div>
             ))}
           </div>
@@ -117,7 +117,7 @@ export default function OurStory() {
 
       {/* Split image + mission */}
       <section className="grid lg:grid-cols-2">
-        <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ minHeight: '420px' }}>
+        <div className="relative overflow-hidden bg-border-subtle" style={{ minHeight: '420px' }}>
           <img
             src={u('photo-1746439326918-845e0486040d', 800, 600)}
             data-site-image-key="photo-1746439326918-845e0486040d"
@@ -131,7 +131,7 @@ export default function OurStory() {
             className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
-        <div className="flex flex-col justify-center px-10 lg:px-16 py-16 bg-[#1C3A5A]">
+        <div className="flex flex-col justify-center px-10 lg:px-16 py-16 bg-brand-navy">
           <p className="text-[10px] uppercase tracking-[0.28em] text-white/40 mb-5">Our Mission</p>
           <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] text-white leading-tight mb-6">
             Homes That Carry<br />Your Story Forward
@@ -141,7 +141,7 @@ export default function OurStory() {
           </p>
           <Link
             to="/start-your-project/"
-            className="inline-flex text-[13px] text-white border border-white/40 px-6 py-2.5 self-start hover:bg-white hover:text-[#1A1714] transition-all"
+            className="inline-flex text-[13px] text-white border border-white/40 px-6 py-2.5 self-start hover:bg-white hover:text-text-primary transition-all"
           >
             Tell Us Your Home Story →
           </Link>
