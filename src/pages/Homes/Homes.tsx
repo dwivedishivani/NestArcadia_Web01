@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-import type { Page } from '../../App';
-import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
+import { Link } from 'react-router';
+import { resolveSiteImage, resolveSiteImageReference, resolveSiteImageSrcSet } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
-
-interface Props { setPage: (p: Page) => void; }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
+const responsiveSrcSet = (value: string) => {
+  const imageKey = imageKeyFromUrl(value);
+  return imageKey ? resolveSiteImageSrcSet(imageKey) : undefined;
+};
 
 const homes = [
   {
@@ -88,7 +91,7 @@ const homes = [
 const styles = ['All Regions', 'North', 'South', 'East', 'West', 'Central'];
 const types = ['All Types', '2BHK Apartment', '3BHK Apartment', '4BHK Apartment', 'Independent Villa', 'Weekend Home', '3BHK Penthouse'];
 
-export default function Homes({ setPage }: Props) {
+export default function Homes() {
   const [style, setStyle] = useState('All Regions');
   const [type, setType] = useState('All Types');
   const [selected, setSelected] = useState<typeof homes[number] | null>(null);
@@ -142,7 +145,17 @@ export default function Homes({ setPage }: Props) {
     return (
       <div className="pt-20 lg:pt-[90px]">
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
-          <img src={selected.gallery[activeImage]} alt={`${selected.name}: ${selected.desc.split(/[.!?]/)[0]} (${selected.type}, ${selected.location}) — selected interior design concept`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+          <img
+            src={selected.gallery[activeImage]}
+            data-site-image-key={imageKeyFromUrl(selected.gallery[activeImage])}
+            srcSet={responsiveSrcSet(selected.gallery[activeImage])}
+            sizes="100vw"
+            alt={`${selected.name}: ${selected.desc.split(/[.!?]/)[0]} (${selected.type}, ${selected.location}) — selected interior design concept`}
+            width="1600"
+            height="1060"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
           <p className="absolute right-6 bottom-5 lg:right-20 text-[11px] tracking-[0.2em] text-white/80">{String(activeImage + 1).padStart(2, '0')} / {String(selected.gallery.length).padStart(2, '0')}</p>
         </div>
@@ -155,7 +168,18 @@ export default function Homes({ setPage }: Props) {
             <div className="flex gap-2 overflow-x-auto pb-1">
               {selected.gallery.map((img, i) => (
                 <button key={img} type="button" onClick={() => setActiveImage(i)} aria-label={`View gallery image ${i + 1} of ${selected.gallery.length}`} aria-pressed={activeImage === i} className={`shrink-0 overflow-hidden bg-[#D4CBBB] h-20 w-24 sm:h-24 sm:w-32 transition-all ${activeImage === i ? 'ring-2 ring-[#2D8C7E] ring-offset-2 ring-offset-[#EAE4DA]' : 'opacity-75 hover:opacity-100'}`}>
-                  <img src={img} alt="" loading="lazy" decoding="async" width="160" height="120" className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    data-site-image-key={imageKeyFromUrl(img)}
+                    srcSet={responsiveSrcSet(img)}
+                    sizes="128px"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    width="160"
+                    height="120"
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
@@ -186,12 +210,12 @@ export default function Homes({ setPage }: Props) {
                   <p className="text-sm text-[#1A1714]">{selected.area}</p>
                 </div>
               </div>
-              <button
-                onClick={() => setPage('project')}
-                className="text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#17665B] hover:border-[#2D8C7E] transition-all"
+              <Link
+                to="/start-your-project/"
+                className="inline-flex text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#17665B] hover:border-[#2D8C7E] transition-all"
               >
                 Use This Concept as a Reference →
-              </button>
+              </Link>
           </div>
         </div>
       </div>
@@ -247,6 +271,9 @@ export default function Homes({ setPage }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
+                    data-site-image-key={imageKeyFromUrl(h.gallery[0])}
+                    srcSet={responsiveSrcSet(h.gallery[0])}
+                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                     alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.type}, ${h.location}) — selected interior design concept`}
                     loading="lazy"
                     decoding="async"
@@ -273,12 +300,12 @@ export default function Homes({ setPage }: Props) {
             <h3 className="font-display text-2xl text-white">Want a home like this?</h3>
             <p className="text-white/55 text-sm mt-1">Let's design yours — from the ground up.</p>
           </div>
-          <button
-            onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+          <Link
+            to="/start-your-project/"
+            className="inline-flex shrink-0 text-[13px] text-white border border-white/45 px-7 py-3 hover:bg-white hover:text-[#1A1714] transition-all"
           >
             Request a Tailored Estimate →
-          </button>
+          </Link>
         </div>
       </div>
     </div>
