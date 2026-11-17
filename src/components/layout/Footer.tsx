@@ -32,7 +32,7 @@ const socials = [
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer style={{ background: var(--color-cream), borderTop: '1px solid #D4CBBB' }}>
+    <footer style={{ background: 'var(--color-cream)', borderTop: '1px solid var(--color-border-subtle)' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-10 lg:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-16 items-start">
 
