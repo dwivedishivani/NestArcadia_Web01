@@ -76,8 +76,8 @@
 
 | Keyword | Intent | Assigned Page | Status |
 |---|---|---|---|
-| 2BHK interior design cost India | Informational | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ publication status unverified — see Tier 2 note |
-| 3BHK interior cost per sq ft | Informational | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ publication status unverified — see Tier 2 note |
+| 2BHK interior design cost India | Informational | `/journal/2bhk-interior-cost-noida-extension/` | ✅ Public article content, self-referencing canonical and index/follow directive verified 17 Nov 2026; exact HTTP status and CMS row state are separate checks. |
+| 3BHK interior cost per sq ft | Informational | `/journal/3bhk-interior-cost-greater-noida-west/` | ✅ Public article content, self-referencing canonical and index/follow directive verified 17 Nov 2026; exact HTTP status and CMS row state are separate checks. |
 | modular kitchen cost per sq ft | Informational | 🆕 journal article | needs creation |
 | false ceiling design bedroom | Informational | Existing journal article | ✅ exists — optimise |
 | vastu tips new home | Informational | Existing journal article | ✅ exists — optimise |
