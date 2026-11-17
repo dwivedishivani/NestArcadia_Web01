@@ -1,7 +1,6 @@
-import type { Page } from '../../App';
+import { Link } from 'react-router';
+import { resolveSiteImageSrcSet } from '../../utils/siteImages';
 import { resolveSiteImage } from '../../utils/siteImages';
-
-interface Props { setPage: (p: Page) => void; }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
@@ -18,14 +17,17 @@ const values = [
   { name: 'Transparency', desc: 'From budgets to timelines, we believe in honest conversations. No surprises at handover.' },
 ];
 
-export default function OurStory({ setPage }: Props) {
+export default function OurStory() {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
       <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '400px' }}>
         <img
           src={u('photo-1735568958809-82f7696a276a', 1440, 600)}
-          alt="Our Story"
+          data-site-image-key="photo-1735568958809-82f7696a276a"
+          srcSet={resolveSiteImageSrcSet('photo-1735568958809-82f7696a276a')}
+          sizes="100vw"
+          alt="NestArcadia interior design studio and heritage-inspired approach"
           width="1440"
           height="600"
           decoding="async"
@@ -68,6 +70,9 @@ export default function OurStory({ setPage }: Props) {
       <div className="overflow-hidden" style={{ maxHeight: '480px' }}>
         <img
           src={u('photo-1766128867730-b10474e59f1b', 1440, 600)}
+          data-site-image-key="photo-1766128867730-b10474e59f1b"
+          srcSet={resolveSiteImageSrcSet('photo-1766128867730-b10474e59f1b')}
+          sizes="100vw"
           alt="NestArcadia studio"
           loading="lazy"
           decoding="async"
@@ -115,6 +120,9 @@ export default function OurStory({ setPage }: Props) {
         <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ minHeight: '420px' }}>
           <img
             src={u('photo-1746439326918-845e0486040d', 800, 600)}
+            data-site-image-key="photo-1746439326918-845e0486040d"
+            srcSet={resolveSiteImageSrcSet('photo-1746439326918-845e0486040d')}
+            sizes="(max-width: 1023px) 100vw, 50vw"
             alt="Craft and making"
             loading="lazy"
             decoding="async"
@@ -131,12 +139,12 @@ export default function OurStory({ setPage }: Props) {
           <p className="text-white/65 text-[13px] leading-[1.9] mb-8">
             We believe that when a home is designed with care — with reference to where you come from, who you are, and how you live — it becomes more than shelter. It becomes a place that sustains you.
           </p>
-          <button
-            onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/40 px-6 py-2.5 self-start hover:bg-white hover:text-[#1A1714] transition-all"
+          <Link
+            to="/start-your-project/"
+            className="inline-flex text-[13px] text-white border border-white/40 px-6 py-2.5 self-start hover:bg-white hover:text-[#1A1714] transition-all"
           >
             Tell Us Your Home Story →
-          </button>
+          </Link>
         </div>
       </section>
     </div>
