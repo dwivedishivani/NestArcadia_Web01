@@ -288,11 +288,11 @@ export default function Home() {
 
         {/* Side label */}
         <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-3">
-          <span className="text-white/50 text-[8px] uppercase tracking-[0.28em] [writing-mode:vertical-rl] rotate-180">
+          <span className="text-white/70 text-[8px] uppercase tracking-[0.28em] [writing-mode:vertical-rl] rotate-180">
             Heritage in Every Detail
           </span>
           <span className="block w-px h-16 bg-white/20" />
-          <span className="text-white/50 text-[8px] uppercase tracking-[0.28em] [writing-mode:vertical-rl] rotate-180">
+          <span className="text-white/70 text-[8px] uppercase tracking-[0.28em] [writing-mode:vertical-rl] rotate-180">
             A Life for Today
           </span>
         </div>
@@ -324,7 +324,7 @@ export default function Home() {
         <div className="absolute bottom-20 sm:bottom-8 left-6 lg:left-20 flex items-center gap-3">
           <span className="text-white text-xs tracking-widest">{String(heroSlide + 1).padStart(2, '0')}</span>
           <span className="block w-12 h-px bg-white/25" />
-          <span className="text-white/40 text-xs tracking-widest">03</span>
+          <span className="text-white/70 text-xs tracking-widest">03</span>
         </div>
       </section>
 
@@ -728,7 +728,7 @@ export default function Home() {
             <h2 className="font-display text-[clamp(1.75rem,4vw,3rem)] text-white leading-tight mb-3">
               Let's Create a Home<br />That Belongs to You
             </h2>
-            <p className="text-white/55 text-[15px] mb-8">Your requirement comes first. Always.</p>
+            <p className="text-white/70 text-[15px] mb-8">Your requirement comes first. Always.</p>
             <Link
               to="/start-your-project/"
               className="inline-flex text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-brand-forest hover:border-brand-forest"
