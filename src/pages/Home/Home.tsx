@@ -213,7 +213,7 @@ export default function Home({ setPage }: Props) {
     <div>
       {/* ── Hero ──────────────────────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
-        <div className="absolute inset-0 bg-[#1C3A5A]">
+        <div className="absolute inset-0 bg-[#27463D]">
           <picture className="absolute inset-0 block">
             {currentHero.imageId === 'photo-1713192706971-03900dcf5706' && import.meta.env.PROD && (
               <>
@@ -272,7 +272,7 @@ export default function Home({ setPage }: Props) {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setPage('project')}
-              className="min-h-12 text-[14px] font-semibold text-white bg-[#17665B] px-7 py-3 border border-[#17665B] transition-colors hover:bg-[#0f4f46] hover:border-[#0f4f46] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              className="min-h-12 text-[14px] font-semibold text-white bg-[#3C6452] px-7 py-3 border border-[#3C6452] transition-colors hover:bg-[#294D40] hover:border-[#294D40] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Plan Your Interior →
             </button>
@@ -294,7 +294,7 @@ export default function Home({ setPage }: Props) {
       </section>
 
       {/* ── Trust strip ───────────────────────────────── */}
-      <section className="bg-[#1C3A5A] border-b border-[#17665B]/30">
+      <section className="bg-[#27463D] border-b border-[#3C6452]/30">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-5 grid grid-cols-3 divide-x divide-white/10">
           {[
             { value: '50+', label: 'Projects Delivered' },
@@ -327,36 +327,36 @@ export default function Home({ setPage }: Props) {
               />
               {/* Floating badge */}
               <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm px-5 py-3 shadow-lg">
-                <p className="font-display text-[#1C3A5A] text-lg leading-tight">50+</p>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6B5E4E]">Homes designed</p>
+                <p className="font-display text-[#27463D] text-lg leading-tight">50+</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6D685D]">Homes designed</p>
               </div>
             </div>
             {/* Text side */}
             <div className="flex flex-col gap-7">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Every Home Has a Story</p>
-                <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] leading-[1.08]">
+                <p className="text-[11px] uppercase tracking-[0.3em] text-[#3C6452] mb-4">Every Home Has a Story</p>
+                <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#272821] leading-[1.08]">
                   Rooted in Tradition.<br />Designed for You.
                 </h2>
               </div>
-              <p className="text-[#6B5E4E] text-[15px] leading-[1.9]">
+              <p className="text-[#6D685D] text-[15px] leading-[1.9]">
                 We take inspiration from India's rich design heritage — its materials, crafts and ways of living — and reimagine them for modern homes. Not as replicas of the past, but as living spaces that carry its spirit forward.
               </p>
-              <div className="grid grid-cols-2 gap-5 py-6 border-t border-b border-[#D4CBBB]">
+              <div className="grid grid-cols-2 gap-5 py-6 border-t border-b border-[#DCD1C2]">
                 {[
                   { h: 'Indian Craft', b: 'Materials, textures and techniques rooted in tradition.' },
                   { h: 'Modern Living', b: 'Layouts and solutions built for how you live today.' },
                 ].map(item => (
                   <div key={item.h}>
-                    <div className="w-6 h-0.5 bg-[#17665B] mb-3" />
-                    <p className="text-[13px] font-semibold text-[#1A1714] mb-1">{item.h}</p>
-                    <p className="text-[12px] text-[#6B5E4E] leading-relaxed">{item.b}</p>
+                    <div className="w-6 h-0.5 bg-[#3C6452] mb-3" />
+                    <p className="text-[13px] font-semibold text-[#272821] mb-1">{item.h}</p>
+                    <p className="text-[12px] text-[#6D685D] leading-relaxed">{item.b}</p>
                   </div>
                 ))}
               </div>
               <button
                 onClick={() => setPage('story')}
-                className="text-[14px] font-semibold text-[#1C3A5A] border-b border-[#1C3A5A] pb-px self-start hover:text-[#17665B] hover:border-[#17665B] transition-colors"
+                className="text-[14px] font-semibold text-[#27463D] border-b border-[#27463D] pb-px self-start hover:text-[#3C6452] hover:border-[#3C6452] transition-colors"
               >
                 Our Story →
               </button>
@@ -369,10 +369,10 @@ export default function Home({ setPage }: Props) {
       <section className="pb-24 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Design Cultures</h2>
-            <p className="text-[#6B5E4E] text-[15px] mt-1.5">Same roots. Endless possibilities.</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#272821]">Design Cultures</h2>
+            <p className="text-[#6D685D] text-[15px] mt-1.5">Same roots. Endless possibilities.</p>
           </div>
-          <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
+          <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#272821] hover:text-[#3C6452] transition-colors">
             Explore All →
           </button>
         </div>
@@ -381,7 +381,7 @@ export default function Home({ setPage }: Props) {
             <button
               key={c.name}
               onClick={() => setPage('cultures')}
-              className="relative overflow-hidden group bg-[#1C3A5A]"
+              className="relative overflow-hidden group bg-[#27463D]"
               style={{ aspectRatio: '3/4' }}
             >
               <img
@@ -398,7 +398,7 @@ export default function Home({ setPage }: Props) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
               {/* Hover shine strip */}
-              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[#17665B] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[#3C6452] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
               <div className="absolute bottom-0 left-0 right-0 min-h-[118px] p-5 text-left flex flex-col justify-between">
                 <p className="font-display text-xl text-white font-medium leading-tight">{c.name}</p>
                 <p className="text-white/60 text-[13px] leading-relaxed min-h-10">{c.desc}</p>
@@ -411,9 +411,9 @@ export default function Home({ setPage }: Props) {
       {/* ── Classics + Trending ───────────────────────── */}
       <section className="grid lg:grid-cols-2">
         {/* Left */}
-        <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '520px' }}>
+        <div className="relative overflow-hidden bg-[#27463D]" style={{ minHeight: '520px' }}>
           <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} srcSet={imageSrcSet(IMG.classics)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Heritage-inspired Indian woodwork, natural materials and craft details in a contemporary interior" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1714]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#272821]/70 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-10 lg:p-16 text-white min-h-[520px]">
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Timeless & Current</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
@@ -424,7 +424,7 @@ export default function Home({ setPage }: Props) {
             </p>
             <button
               onClick={() => setPage('cultures')}
-              className="text-[14px] font-semibold text-white bg-[#17665B] border border-[#17665B] px-6 py-3 self-start transition-all hover:bg-[#0f4f46] hover:border-[#0f4f46]"
+              className="text-[14px] font-semibold text-white bg-[#3C6452] border border-[#3C6452] px-6 py-3 self-start transition-all hover:bg-[#294D40] hover:border-[#294D40]"
             >
               Explore Trends →
             </button>
@@ -432,27 +432,27 @@ export default function Home({ setPage }: Props) {
         </div>
 
         {/* Right — carousel */}
-        <div className="bg-[#F2EDE4] p-10 lg:p-16 flex flex-col">
+        <div className="bg-[#F5F1E8] p-10 lg:p-16 flex flex-col">
           <div className="flex justify-between items-start mb-10">
             <div>
-              <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight">
+              <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#272821] leading-tight">
                 What's<br />Trending Again
               </h2>
-              <p className="text-[#6B5E4E] text-[13px] mt-2">
+              <p className="text-[#6D685D] text-[13px] mt-2">
                 {trendStart + 1}–{Math.min(trendStart + 3, n)} of {n} trends
               </p>
             </div>
             <div className="flex gap-2 mt-1">
               <button
                 onClick={prevTrend}
-                className="min-h-11 min-w-11 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-all"
+                className="min-h-11 min-w-11 border border-[#DCD1C2] flex items-center justify-center text-sm text-[#272821] hover:bg-[#3C6452] hover:border-[#3C6452] hover:text-white transition-all"
                 aria-label="Previous trends"
               >
                 ←
               </button>
               <button
                 onClick={nextTrend}
-                className="min-h-11 min-w-11 border border-[#D4CBBB] flex items-center justify-center text-sm text-[#1A1714] hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-all"
+                className="min-h-11 min-w-11 border border-[#DCD1C2] flex items-center justify-center text-sm text-[#272821] hover:bg-[#3C6452] hover:border-[#3C6452] hover:text-white transition-all"
                 aria-label="Next trends"
               >
                 →
@@ -467,7 +467,7 @@ export default function Home({ setPage }: Props) {
                 onClick={() => setPage('cultures')}
                 className="min-w-[78%] snap-start text-left group sm:min-w-0"
               >
-                <div className="overflow-hidden bg-[#D4CBBB] mb-3" style={{ aspectRatio: '4/3' }}>
+                <div className="overflow-hidden bg-[#DCD1C2] mb-3" style={{ aspectRatio: '4/3' }}>
                   <img
                     src={t.img}
                     data-site-image-key={directImageKey(t.img)}
@@ -481,10 +481,10 @@ export default function Home({ setPage }: Props) {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#17665B] mb-1">{t.tag}</p>
-                <p className="text-[13px] font-medium text-[#1A1714] group-hover:text-[#17665B] transition-colors">{t.name}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#3C6452] mb-1">{t.tag}</p>
+                <p className="text-[13px] font-medium text-[#272821] group-hover:text-[#3C6452] transition-colors">{t.name}</p>
                 {i === 0 && (
-                  <p className="text-[11px] text-[#6B5E4E] mt-1 leading-relaxed line-clamp-3">
+                  <p className="text-[11px] text-[#6D685D] mt-1 leading-relaxed line-clamp-3">
                     {t.desc}
                   </p>
                 )}
@@ -507,7 +507,7 @@ export default function Home({ setPage }: Props) {
                   style={{
                     width: i === trendStart ? '24px' : '6px',
                     height: '4px',
-                    background: i === trendStart ? '#17665B' : '#8A7B69',
+                    background: i === trendStart ? '#3C6452' : '#858073',
                   }}
                 />
               </button>
@@ -520,41 +520,41 @@ export default function Home({ setPage }: Props) {
       <section className="py-24 lg:py-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-5 mb-14">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-3">What we do</p>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Our Services</h2>
-            <p className="text-[#6B5E4E] text-[15px] mt-1.5">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#3C6452] mb-3">What we do</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#272821]">Our Services</h2>
+            <p className="text-[#6D685D] text-[15px] mt-1.5">
               End-to-end interior solutions, inspired by heritage, designed for modern living.
             </p>
           </div>
-          <button onClick={() => setPage('services')} className="hidden sm:block text-[14px] text-[#1A1714] pt-2 hover:text-[#17665B] transition-colors">
+          <button onClick={() => setPage('services')} className="hidden sm:block text-[14px] text-[#272821] pt-2 hover:text-[#3C6452] transition-colors">
             View All Services →
           </button>
         </div>
         {/* 2×3 grid gives each card more room to breathe */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
           {services.map(s => (
-            <button key={s.name} onClick={() => setPage('services')} className="group text-left border border-transparent hover:border-[#D4CBBB] transition-colors p-6 -m-6 rounded-sm">
+            <button key={s.name} onClick={() => setPage('services')} className="group text-left border border-transparent hover:border-[#DCD1C2] transition-colors p-6 -m-6 rounded-sm">
               <div className="flex items-center justify-between mb-5">
-                <div className="w-12 h-12 border border-[#D4CBBB] flex items-center justify-center text-[#17665B] transition-all group-hover:bg-[#17665B] group-hover:border-[#17665B] group-hover:text-white">
+                <div className="w-12 h-12 border border-[#DCD1C2] flex items-center justify-center text-[#3C6452] transition-all group-hover:bg-[#3C6452] group-hover:border-[#3C6452] group-hover:text-white">
                   <span className="text-lg">{s.icon}</span>
                 </div>
-                <span className="font-display text-[#D4CBBB] text-sm group-hover:text-[#17665B] transition-colors">{s.num}</span>
+                <span className="font-display text-[#DCD1C2] text-sm group-hover:text-[#3C6452] transition-colors">{s.num}</span>
               </div>
-              <p className="text-[14px] font-semibold text-[#1A1714] mb-2">{s.name}</p>
-              <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{s.desc}</p>
+              <p className="text-[14px] font-semibold text-[#272821] mb-2">{s.name}</p>
+              <p className="text-[13px] text-[#6D685D] leading-relaxed">{s.desc}</p>
             </button>
           ))}
         </div>
         <div className="mt-10 sm:hidden">
-          <button onClick={() => setPage('services')} className="text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">View All Services →</button>
+          <button onClick={() => setPage('services')} className="text-[14px] text-[#272821] hover:text-[#3C6452] transition-colors">View All Services →</button>
         </div>
       </section>
 
       {/* ── Modern Homes. Deeper Roots. ───────────────── */}
       <section className="grid lg:grid-cols-2">
-        <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '480px' }}>
+        <div className="relative overflow-hidden bg-[#27463D]" style={{ minHeight: '480px' }}>
           <img src={IMG.modern} data-site-image-key={directImageKey(IMG.modern)} srcSet={imageSrcSet(IMG.modern)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/65 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#27463D]/65 to-transparent" />
           <div className="relative flex flex-col justify-end p-10 lg:p-16 text-white min-h-[480px]">
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
               Modern Homes.<br />Deeper Roots.
@@ -564,14 +564,14 @@ export default function Home({ setPage }: Props) {
             </p>
             <button
               onClick={() => setPage('homes')}
-              className="text-[14px] font-semibold text-white bg-[#17665B] border border-[#17665B] px-6 py-3 self-start transition-all hover:bg-[#0f4f46]"
+              className="text-[14px] font-semibold text-white bg-[#3C6452] border border-[#3C6452] px-6 py-3 self-start transition-all hover:bg-[#294D40]"
             >
               Explore a Home →
             </button>
           </div>
         </div>
         {/* Right: warm proof statements replacing cold numbered list */}
-        <div className="bg-[#1C3A5A] flex flex-col justify-center px-10 lg:px-16 py-16 gap-6">
+        <div className="bg-[#27463D] flex flex-col justify-center px-10 lg:px-16 py-16 gap-6">
           {[
             { lead: 'Heritage craft', rest: 'inspired by the material wisdom of the past' },
             { lead: 'Modern thinking', rest: "shaped around today's ways of living" },
@@ -579,7 +579,7 @@ export default function Home({ setPage }: Props) {
             { lead: 'Delivered with care', rest: 'across Noida, Greater Noida & NCR' },
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-5 group">
-              <span className="w-6 h-px bg-[#17665B] mt-[11px] shrink-0 transition-all group-hover:w-10" />
+              <span className="w-6 h-px bg-[#3C6452] mt-[11px] shrink-0 transition-all group-hover:w-10" />
               <p className="text-white/80 text-[15px] leading-relaxed">
                 <span className="text-white font-semibold">{item.lead}</span> {item.rest}
               </p>
@@ -592,24 +592,24 @@ export default function Home({ setPage }: Props) {
       <section className="py-24 lg:py-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Featured Home Concepts</h2>
-            <p className="text-[#6B5E4E] text-[15px] mt-1.5">Selected design studies for apartments, villas and family homes.</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#272821]">Featured Home Concepts</h2>
+            <p className="text-[#6D685D] text-[15px] mt-1.5">Selected design studies for apartments, villas and family homes.</p>
           </div>
-          <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
+          <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#272821] hover:text-[#3C6452] transition-colors">
             Explore All Homes →
           </button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {homes.map(h => (
             <button key={h.name} onClick={() => setPage('homes')} className="text-left group flex h-full flex-col">
-              <div className="overflow-hidden bg-[#D4CBBB] mb-4 shrink-0 relative" style={{ aspectRatio: '4/3' }}>
+              <div className="overflow-hidden bg-[#DCD1C2] mb-4 shrink-0 relative" style={{ aspectRatio: '4/3' }}>
                 <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} srcSet={imageSrcSet(IMG[h.img])} sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 25vw" alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 {/* Hover teal overlay strip at bottom */}
-                <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[#17665B] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[#3C6452] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
               </div>
-              <p className="font-display text-lg text-[#1A1714] group-hover:text-[#17665B] transition-colors">{h.name}</p>
-              <p className="text-[12px] text-[#17665B] mt-1 mb-1.5 font-medium">{h.loc}</p>
-              <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{h.desc}</p>
+              <p className="font-display text-lg text-[#272821] group-hover:text-[#3C6452] transition-colors">{h.name}</p>
+              <p className="text-[12px] text-[#3C6452] mt-1 mb-1.5 font-medium">{h.loc}</p>
+              <p className="text-[13px] text-[#6D685D] leading-relaxed">{h.desc}</p>
             </button>
           ))}
         </div>
@@ -617,16 +617,16 @@ export default function Home({ setPage }: Props) {
 
       {/* ── Local expertise ───────────────────────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
-        <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.9fr_1.4fr] gap-8 lg:gap-20">
+        <div className="border-t border-[#DCD1C2] pt-12 grid lg:grid-cols-[0.9fr_1.4fr] gap-8 lg:gap-20">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Designed for NCR living</p>
-            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Interior design that understands where you live.</h2>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#3C6452] mb-4">Designed for NCR living</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#272821]">Interior design that understands where you live.</h2>
           </div>
           <div className="lg:pt-2">
-            <p className="text-[15px] leading-[1.9] text-[#6B5E4E] mb-5">
+            <p className="text-[15px] leading-[1.9] text-[#6D685D] mb-5">
               NestArcadia designs 2BHK, 3BHK and 4BHK interiors, villas and farmhouses with a primary focus on Noida Extension and Greater Noida West, alongside nearby Noida and Greater Noida. We pair practical apartment planning with India's material heritage — from efficient storage and modular kitchens to calm, characterful living spaces.
             </p>
-            <p className="text-[15px] leading-[1.9] text-[#6B5E4E]">
+            <p className="text-[15px] leading-[1.9] text-[#6D685D]">
               Our primary local service focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets. For a property elsewhere in NCR, share its location and scope so the team can confirm whether the project is a fit.
             </p>
             {/* Area links as pill badges */}
@@ -640,7 +640,7 @@ export default function Home({ setPage }: Props) {
                 <a
                   key={a.label}
                   href={a.href}
-                  className="inline-flex items-center gap-1.5 border border-[#B8D8D1] text-[#17665B] text-[13px] font-medium px-4 py-2 hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-all"
+                  className="inline-flex items-center gap-1.5 border border-[#BAC7B6] text-[#3C6452] text-[13px] font-medium px-4 py-2 hover:bg-[#3C6452] hover:border-[#3C6452] hover:text-white transition-all"
                 >
                   {a.label} →
                 </a>
@@ -657,59 +657,59 @@ export default function Home({ setPage }: Props) {
       <section className="px-6 lg:px-20 py-16 lg:py-20 max-w-[1440px] mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[#17665B] mb-3">Plan with clarity</p>
-            <h2 className="font-display text-[clamp(1.8rem,3.5vw,2.7rem)] leading-tight text-[#1A1714]">Start with a realistic interior budget.</h2>
-            <p className="text-sm text-[#6B5E4E] mt-3 max-w-2xl leading-relaxed">Understand the starting planning ranges, scope decisions and questions to ask before you compare quotations.</p>
+            <p className="text-[10px] uppercase tracking-[0.28em] text-[#3C6452] mb-3">Plan with clarity</p>
+            <h2 className="font-display text-[clamp(1.8rem,3.5vw,2.7rem)] leading-tight text-[#272821]">Start with a realistic interior budget.</h2>
+            <p className="text-sm text-[#6D685D] mt-3 max-w-2xl leading-relaxed">Understand the starting planning ranges, scope decisions and questions to ask before you compare quotations.</p>
           </div>
-          <a href="/start-your-project/" className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#17665B] underline underline-offset-4 hover:text-[#1C3A5A]">Discuss your floor plan →</a>
+          <a href="/start-your-project/" className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#3C6452] underline underline-offset-4 hover:text-[#27463D]">Discuss your floor plan →</a>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
-          <a href="/journal/2bhk-interior-cost-noida-extension/" className="group border border-[#D4CBBB] p-6 lg:p-8 hover:border-[#17665B] hover:bg-[#f7f4ef] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#17665B]">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">2BHK · Noida Extension</p>
-            <h3 className="font-display text-xl text-[#1C3A5A] group-hover:text-[#17665B] transition-colors">What does a 2BHK interior cost?</h3>
-            <p className="text-sm text-[#6B5E4E] leading-relaxed mt-3">A practical starting-budget guide, with the scope and specifications that can change the final estimate.</p>
-            <span className="inline-block mt-5 text-[13px] font-semibold text-[#17665B]">Read the 2BHK budget guide →</span>
+          <a href="/journal/2bhk-interior-cost-noida-extension/" className="group border border-[#DCD1C2] p-6 lg:p-8 hover:border-[#3C6452] hover:bg-[#FBF8F1] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#3C6452]">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-3">2BHK · Noida Extension</p>
+            <h3 className="font-display text-xl text-[#27463D] group-hover:text-[#3C6452] transition-colors">What does a 2BHK interior cost?</h3>
+            <p className="text-sm text-[#6D685D] leading-relaxed mt-3">A practical starting-budget guide, with the scope and specifications that can change the final estimate.</p>
+            <span className="inline-block mt-5 text-[13px] font-semibold text-[#3C6452]">Read the 2BHK budget guide →</span>
           </a>
-          <a href="/journal/3bhk-interior-cost-greater-noida-west/" className="group border border-[#D4CBBB] p-6 lg:p-8 hover:border-[#17665B] hover:bg-[#f7f4ef] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#17665B]">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">3BHK · Greater Noida West</p>
-            <h3 className="font-display text-xl text-[#1C3A5A] group-hover:text-[#17665B] transition-colors">How should you budget for a 3BHK?</h3>
-            <p className="text-sm text-[#6B5E4E] leading-relaxed mt-3">Room-by-room priorities, kitchen and wardrobe decisions, and a clearer way to compare proposals.</p>
-            <span className="inline-block mt-5 text-[13px] font-semibold text-[#17665B]">Read the 3BHK budget guide →</span>
+          <a href="/journal/3bhk-interior-cost-greater-noida-west/" className="group border border-[#DCD1C2] p-6 lg:p-8 hover:border-[#3C6452] hover:bg-[#FBF8F1] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#3C6452]">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-3">3BHK · Greater Noida West</p>
+            <h3 className="font-display text-xl text-[#27463D] group-hover:text-[#3C6452] transition-colors">How should you budget for a 3BHK?</h3>
+            <p className="text-sm text-[#6D685D] leading-relaxed mt-3">Room-by-room priorities, kitchen and wardrobe decisions, and a clearer way to compare proposals.</p>
+            <span className="inline-block mt-5 text-[13px] font-semibold text-[#3C6452]">Read the 3BHK budget guide →</span>
           </a>
         </div>
       </section>
 
       {/* ── FAQs ──────────────────────────────────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
-        <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-20">
+        <div className="border-t border-[#DCD1C2] pt-12 grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-20">
           <div className="relative">
             {/* Teal accent stripe */}
-            <div className="absolute left-0 top-0 w-0.5 h-14 bg-[#17665B]" />
+            <div className="absolute left-0 top-0 w-0.5 h-14 bg-[#3C6452]" />
             <div className="pl-5">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Helpful answers</p>
-              <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Questions before you begin.</h2>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#3C6452] mb-4">Helpful answers</p>
+              <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#272821]">Questions before you begin.</h2>
             </div>
           </div>
           <div>
-            <div className="border-t border-[#D4CBBB]">
+            <div className="border-t border-[#DCD1C2]">
               {faqs.map((faq, i) => (
-                <div key={faq.question} className="border-b border-[#D4CBBB]">
+                <div key={faq.question} className="border-b border-[#DCD1C2]">
                   <button
                     type="button"
-                    className="flex w-full items-center justify-between gap-6 py-5 text-left text-[15px] font-medium text-[#1A1714] hover:text-[#17665B] transition-colors"
+                    className="flex w-full items-center justify-between gap-6 py-5 text-left text-[15px] font-medium text-[#272821] hover:text-[#3C6452] transition-colors"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     aria-expanded={openFaq === i}
                   >
                     {faq.question}
                     <span
-                      className="shrink-0 w-7 h-7 border border-[#D4CBBB] flex items-center justify-center text-[#17665B] transition-transform"
+                      className="shrink-0 w-7 h-7 border border-[#DCD1C2] flex items-center justify-center text-[#3C6452] transition-transform"
                       style={{ transform: openFaq === i ? 'rotate(45deg)' : 'rotate(0deg)' }}
                       aria-hidden="true"
                     >
                       +
                     </span>
                   </button>
-                  {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E]">{faq.answer}</p>}
+                  {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6D685D]">{faq.answer}</p>}
                 </div>
               ))}
             </div>
@@ -717,7 +717,7 @@ export default function Home({ setPage }: Props) {
             <div className="flex flex-wrap items-center gap-3 pt-6">
               <Link
                 to="/faqs/"
-                className="border border-[#1C3A5A] px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
+                className="border border-[#27463D] px-5 py-2.5 text-[13px] font-semibold text-[#27463D] transition-colors hover:bg-[#27463D] hover:text-white"
               >
                 See All FAQs →
               </Link>
@@ -725,7 +725,7 @@ export default function Home({ setPage }: Props) {
                 href="https://wa.me/918448061997?text=Hi%20NestArcadia%2C%20I%20have%20a%20question%20about%20interior%20design%20for%20my%20home%20in%20Noida%2FGreater%20Noida."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-[#1C3A5A]/40 px-5 py-2.5 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:bg-[#1C3A5A] hover:text-white"
+                className="border border-[#27463D]/40 px-5 py-2.5 text-[13px] font-semibold text-[#27463D] transition-colors hover:bg-[#27463D] hover:text-white"
               >
                 Ask on WhatsApp →
               </a>
@@ -735,9 +735,9 @@ export default function Home({ setPage }: Props) {
       </section>
 
       {/* ── CTA ───────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '380px' }}>
+      <section className="relative overflow-hidden bg-[#27463D]" style={{ minHeight: '380px' }}>
         <img src={IMG.cta} data-site-image-key={directImageKey(IMG.cta)} srcSet={imageSrcSet(IMG.cta)} sizes="100vw" alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/90 via-[#1C3A5A]/70 to-[#1C3A5A]/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#27463D]/90 via-[#27463D]/70 to-[#27463D]/40" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 py-20 grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Your home awaits</p>
@@ -748,7 +748,7 @@ export default function Home({ setPage }: Props) {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setPage('project')}
-                className="text-[14px] font-semibold text-white bg-[#17665B] border border-[#17665B] px-7 py-3 transition-all hover:bg-[#0f4f46]"
+                className="text-[14px] font-semibold text-white bg-[#3C6452] border border-[#3C6452] px-7 py-3 transition-all hover:bg-[#294D40]"
               >
                 Tell Us About Your Space →
               </button>
