@@ -30,6 +30,17 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
     return () => window.removeEventListener('scroll', handle);
   }, []);
 
+  useEffect(() => {
+    const desktopQuery = window.matchMedia('(min-width: 1024px)');
+    const closeOnDesktop = () => {
+      if (!desktopQuery.matches) return;
+      setMenuOpen(false);
+      triggerRef.current?.focus();
+    };
+    desktopQuery.addEventListener('change', closeOnDesktop);
+    return () => desktopQuery.removeEventListener('change', closeOnDesktop);
+  }, []);
+
   useEffect(() => setMenuOpen(false), [page]);
 
   useEffect(() => {
@@ -178,7 +189,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           aria-label="Mobile navigation"
           aria-hidden={!menuOpen}
           inert={!menuOpen}
-          className="lg:hidden overflow-hidden transition-all duration-300"
+          className="lg:hidden overflow-hidden transition-all duration-300 motion-reduce:transition-none"
           style={{
             maxHeight: menuOpen ? '420px' : '0',
             background: 'var(--color-cream)',
