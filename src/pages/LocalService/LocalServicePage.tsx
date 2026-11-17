@@ -21,7 +21,7 @@ export interface LocalServiceConfig {
 }
 
 const image = (id: string) => resolveSiteImage(id);
-const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\d+-[a-z0-9]+)/i)?.[1];
 
 export const localServicePages: LocalServiceConfig[] = [
   {
