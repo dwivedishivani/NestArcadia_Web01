@@ -140,21 +140,21 @@ export default function Homes({ setPage }: Props) {
 
   if (selected) {
     return (
-      <div className="pt-20 lg:pt-[90px]">
-        <div className="relative overflow-hidden bg-[#D4CBBB]" style={{ height: '60vh', minHeight: '400px' }}>
+      <div className="na-page na-page-homes pt-20 lg:pt-[90px]">
+        <div className="na-page-hero relative overflow-hidden bg-[#DCD1C2]" style={{ height: '60vh', minHeight: '400px' }}>
           <img src={selected.gallery[activeImage]} alt={`${selected.name}: ${selected.desc.split(/[.!?]/)[0]} (${selected.type}, ${selected.location}) — selected interior design concept`} width="1600" height="1060" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#272821]/50 to-transparent" />
           <p className="absolute right-6 bottom-5 lg:right-20 text-[11px] tracking-[0.2em] text-white/80">{String(activeImage + 1).padStart(2, '0')} / {String(selected.gallery.length).padStart(2, '0')}</p>
         </div>
-        <section className="border-b border-[#D4CBBB] bg-[#EAE4DA]">
+        <section className="border-b border-[#DCD1C2] bg-[#ECE4D8]">
           <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[#6B5E4E]">Concept Gallery</p>
-              <p className="text-[11px] text-[#17665B]">Select a view</p>
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[#6D685D]">Concept Gallery</p>
+              <p className="text-[11px] text-[#3C6452]">Select a view</p>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
               {selected.gallery.map((img, i) => (
-                <button key={img} type="button" onClick={() => setActiveImage(i)} aria-label={`View gallery image ${i + 1} of ${selected.gallery.length}`} aria-pressed={activeImage === i} className={`shrink-0 overflow-hidden bg-[#D4CBBB] h-20 w-24 sm:h-24 sm:w-32 transition-all ${activeImage === i ? 'ring-2 ring-[#2D8C7E] ring-offset-2 ring-offset-[#EAE4DA]' : 'opacity-75 hover:opacity-100'}`}>
+                <button key={img} type="button" onClick={() => setActiveImage(i)} aria-label={`View gallery image ${i + 1} of ${selected.gallery.length}`} aria-pressed={activeImage === i} className={`shrink-0 overflow-hidden bg-[#DCD1C2] h-20 w-24 sm:h-24 sm:w-32 transition-all ${activeImage === i ? 'ring-2 ring-[#91A18A] ring-offset-2 ring-offset-[#ECE4D8]' : 'opacity-75 hover:opacity-100'}`}>
                   <img src={img} alt="" loading="lazy" decoding="async" width="160" height="120" className="w-full h-full object-cover" />
                 </button>
               ))}
@@ -164,31 +164,31 @@ export default function Homes({ setPage }: Props) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
           <button
             onClick={() => setSelected(null)}
-            className="text-[13px] font-semibold text-[#52677E] hover:text-[#17665B] transition-colors mb-10 flex items-center gap-2"
+            className="text-[13px] font-semibold text-[#656C62] hover:text-[#3C6452] transition-colors mb-10 flex items-center gap-2"
           >
             ← Back to Our Projects
           </button>
           <div className="max-w-[780px]">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-[#17665B] mb-4">{selected.style} India · {selected.style}</p>
-              <h1 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] mb-4">{selected.name}</h1>
-              <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-8">{selected.desc}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-[#D4CBBB] mb-8">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[#3C6452] mb-4">{selected.style} India · {selected.style}</p>
+              <h1 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#272821] mb-4">{selected.name}</h1>
+              <p className="text-[#6D685D] text-[15px] leading-[1.9] mb-8">{selected.desc}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-8 border-t border-b border-[#DCD1C2] mb-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-1">Location</p>
-                  <p className="text-sm text-[#1A1714]">{selected.location}</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-1">Location</p>
+                  <p className="text-sm text-[#272821]">{selected.location}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-1">Type</p>
-                  <p className="text-sm text-[#1A1714]">{selected.type}</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-1">Type</p>
+                  <p className="text-sm text-[#272821]">{selected.type}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-1">Area</p>
-                  <p className="text-sm text-[#1A1714]">{selected.area}</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-1">Area</p>
+                  <p className="text-sm text-[#272821]">{selected.area}</p>
                 </div>
               </div>
               <button
                 onClick={() => setPage('project')}
-                className="text-[14px] font-semibold text-white bg-[#1C3A5A] border border-[#1C3A5A] px-7 py-3 hover:bg-[#17665B] hover:border-[#2D8C7E] transition-all"
+                className="text-[14px] font-semibold text-white bg-[#27463D] border border-[#27463D] px-7 py-3 hover:bg-[#3C6452] hover:border-[#91A18A] transition-all"
               >
                 Use This Concept as a Reference →
               </button>
@@ -201,26 +201,26 @@ export default function Homes({ setPage }: Props) {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Portfolio</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Our Projects</h1>
-        <p className="text-[#6B5E4E] text-sm mt-3">Selected design studies and portfolio concepts.</p>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#DCD1C2]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#6D685D] mb-4">Portfolio</p>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#272821] leading-[1.05]">Our Projects</h1>
+        <p className="text-[#6D685D] text-sm mt-3">Selected design studies and portfolio concepts.</p>
       </div>
 
       {/* Filters */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-6 border-b border-[#D4CBBB]">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-6 border-b border-[#DCD1C2]">
         <div className="flex flex-wrap gap-8">
           <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mr-1">Region</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mr-1">Region</span>
             {styles.map(s => (
               <button
                 key={s}
                 onClick={() => setStyle(s)}
                 className="text-[12px] px-3.5 py-1 border transition-all"
                 style={{
-                  background: style === s ? '#1A1714' : 'transparent',
-                  borderColor: style === s ? '#1A1714' : '#D4CBBB',
-                  color: style === s ? '#F2EDE4' : '#6B5E4E',
+                  background: style === s ? '#272821' : 'transparent',
+                  borderColor: style === s ? '#272821' : '#DCD1C2',
+                  color: style === s ? '#F5F1E8' : '#6D685D',
                 }}
               >
                 {s}
@@ -234,7 +234,7 @@ export default function Homes({ setPage }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         {filtered.length === 0 ? (
           <div className="py-20 text-center">
-            <p className="text-[#6B5E4E] text-sm">No projects match this filter.</p>
+            <p className="text-[#6D685D] text-sm">No projects match this filter.</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -244,7 +244,7 @@ export default function Homes({ setPage }: Props) {
                 onClick={() => { setSelected(h); setActiveImage(0); }}
                 className="text-left group"
               >
-                <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '3/4' }}>
+                <div className="overflow-hidden bg-[#DCD1C2] mb-4" style={{ aspectRatio: '3/4' }}>
                   <img
                     src={h.gallery[0]}
                     alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.type}, ${h.location}) — selected interior design concept`}
@@ -255,9 +255,9 @@ export default function Homes({ setPage }: Props) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#17665B] mb-1.5">{h.style} · {h.location}</p>
-                <p className="font-display text-lg text-[#1C3A5A] group-hover:text-[#17665B] transition-colors">{h.name}</p>
-                <p className="text-xs text-[#6B5E4E] mt-1">{h.type} · {h.area}</p>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#3C6452] mb-1.5">{h.style} · {h.location}</p>
+                <p className="font-display text-lg text-[#27463D] group-hover:text-[#3C6452] transition-colors">{h.name}</p>
+                <p className="text-xs text-[#6D685D] mt-1">{h.type} · {h.area}</p>
               </button>
             ))}
           </div>
@@ -267,7 +267,7 @@ export default function Homes({ setPage }: Props) {
       <FeaturedResidences />
 
       {/* CTA */}
-      <div className="bg-[#1C3A5A] py-16 px-6 lg:px-20">
+      <div className="bg-[#27463D] py-16 px-6 lg:px-20">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl text-white">Want a home like this?</h3>
@@ -275,7 +275,7 @@ export default function Homes({ setPage }: Props) {
           </div>
           <button
             onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#272821] transition-all"
           >
             Request a Tailored Estimate →
           </button>
