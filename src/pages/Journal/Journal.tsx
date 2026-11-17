@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react';
 import RichArticleContent from '../../components/common/RichArticleContent';
 import luxuryArticleSnapshot from '../../data/seo/luxury-interior-design-noida-extension.json';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-import type { Page } from '../../App';
-import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
+import { Link } from 'react-router';
+import { resolveSiteImage, resolveSiteImageReference, resolveSiteImageSrcSet } from '../../utils/siteImages';
 
 interface Props {
-  setPage: (p: Page) => void;
   articleId?: string;
   setArticleId: (id: string | null) => void;
 }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
+const responsiveSrcSet = (value: string) => {
+  const key = imageKeyFromUrl(value);
+  return key ? resolveSiteImageSrcSet(key) : undefined;
+};
 
 const LIME_PLASTER_SOURCES = [
   { label: 'CEPT University / UCL Open Environment — moisture buffering and mould growth in naturally ventilated lime-plastered houses (2024)', href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11443221/' },
@@ -508,7 +512,7 @@ const categoryDeepDives: Record<string, string[]> = {
   ],
 };
 
-export default function Journal({ setPage, articleId, setArticleId }: Props) {
+export default function Journal({ articleId, setArticleId }: Props) {
   const [active, setActive] = useState('All');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -642,7 +646,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       <div className="pt-20 lg:pt-[90px]">
         {/* Hero */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ height: '55vh', minHeight: '360px' }}>
-          <img src={selected.img} alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={selected.img} data-site-image-key={imageKeyFromUrl(selected.img)} srcSet={responsiveSrcSet(selected.img)} sizes="100vw" alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/60 to-transparent" />
           <div className="relative h-full max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end pb-12">
             <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">{selected.category}</p>
@@ -720,13 +724,12 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           <div className="mt-16 p-8 border border-[#D4CBBB] text-center" style={{ background: '#EAE4DA' }}>
             <h3 className="font-display text-2xl text-[#1A1714] mb-2">Want to bring this into your home?</h3>
             <p className="text-[#6B5E4E] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
-            <a
-              href="/start-your-project/"
-              onClick={(event) => { event.preventDefault(); setPage('project'); }}
-              className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
+            <Link
+              to="/start-your-project/"
+              className="inline-flex text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
             >
               Apply This to My Home →
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -851,7 +854,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
             <div className="overflow-hidden bg-[#D4CBBB] aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
-              <img src={featured.thumb} alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img src={featured.thumb} data-site-image-key={imageKeyFromUrl(featured.thumb)} srcSet={responsiveSrcSet(featured.thumb)} sizes="(max-width: 1023px) 100vw, 50vw" alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: '#EAE4DA' }}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5">
