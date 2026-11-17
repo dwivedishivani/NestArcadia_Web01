@@ -692,7 +692,7 @@ function SiteShell() {
   if (isLocalServicePath && !localService) return <NotFoundPage />;
   const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
-page setter  if (page === 'admin') return <AdminShell />;
+  if (page === 'admin') return <AdminShell />;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'var(--color-cream)' }}>
