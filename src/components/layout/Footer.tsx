@@ -1,5 +1,6 @@
 import type { Page } from '../../App';
 import { Link } from 'react-router';
+import { pagePaths } from '../../data/pagePaths';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
 
 interface FooterProps {
@@ -27,19 +28,6 @@ const socials = [
   { label: 'YouTube', href: 'https://www.youtube.com/@NestArcadiaOfficial', icon: <path d="M21.6 7.2a2.9 2.9 0 0 0-2.04-2.05C17.76 4.67 12 4.67 12 4.67s-5.76 0-7.56.48A2.9 2.9 0 0 0 2.4 7.2C1.92 9 1.92 12 1.92 12s0 3 .48 4.8a2.9 2.9 0 0 0 2.04 2.05c1.8.48 7.56.48 7.56.48s5.76 0 7.56-.48a2.9 2.9 0 0 0 2.04-2.05c.48-1.8.48-4.8.48-4.8s0-3-.48-4.8ZM10.15 15.1V8.9L15.6 12l-5.45 3.1Z" /> },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nest-arcadia', icon: <path d="M6.05 8.35A2.1 2.1 0 1 0 6.05 4.15a2.1 2.1 0 0 0 0 4.2ZM4.25 9.8h3.6V20H4.25V9.8Zm5.85 0h3.45v1.4h.05c.48-.9 1.65-1.85 3.4-1.85 3.64 0 4.31 2.4 4.31 5.52V20h-3.6v-4.55c0-1.08-.02-2.47-1.5-2.47-1.51 0-1.74 1.18-1.74 2.39V20h-3.6V9.8Z" /> },
 ];
-
-const pagePaths: Record<Page, string> = {
-  home: '/',
-  cultures: '/design-cultures/',
-  services: '/interior-design-services/',
-  story: '/our-story/',
-  journal: '/journal/',
-  homes: '/our-projects/',
-  project: '/start-your-project/',
-  faq: '/faqs/',
-  privacy: '/privacy-policy/',
-  admin: '/admin/',
-};
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
