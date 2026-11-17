@@ -282,7 +282,7 @@ export default function Home() {
         </div>
         <div
           className={heroSlide === 1
-            ? 'absolute inset-0 bg-gradient-to-r from-[#18100a]/80 via-[#4a3019]/45 to-[#b18a4b]/10'
+            ? 'absolute inset-0 bg-gradient-to-r from-brand-earth/80 via-brand-coffee/45 to-brand-ochre/10'
             : 'absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10'}
         />
 
@@ -511,7 +511,7 @@ export default function Home() {
                   style={{
                     width: i === trendStart ? '24px' : '6px',
                     height: '4px',
-                    background: i === trendStart ? var(--color-brand-forest) : var(--color-text-stone),
+                    background: i === trendStart ? 'var(--color-brand-forest)' : 'var(--color-text-stone)',
                   }}
                 />
               </button>
