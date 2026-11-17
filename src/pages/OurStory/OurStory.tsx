@@ -99,7 +99,7 @@ export default function OurStory() {
       </section>
 
       {/* Timeline */}
-      <section className="py-20 px-6 lg:px-20" style={{ background: var(--color-card) }}>
+      <section className="py-20 px-6 lg:px-20" style={{ background: 'var(--color-card)' }}>
         <div className="max-w-[1440px] mx-auto">
           <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-text-primary mb-2">Our Journey</h2>
           <p className="text-text-muted text-sm mb-14">A foundation built with care, and a vision for what comes next.</p>
