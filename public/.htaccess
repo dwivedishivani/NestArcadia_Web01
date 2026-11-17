@@ -76,32 +76,43 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Force HTTPS
-  RewriteCond %{HTTPS} off
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # Production-only legacy route and duplicate-URL redirects.
+  # These run before scheme/host normalization so each route resolves in one hop.
+  RewriteCond %{HTTP_HOST} ^(www\\.)?nestarcadia\\.com$ [NC]
+  RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
 
-  # Remove www (canonical: non-www)
-  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^(www\\.)?nestarcadia\\.com$ [NC]
+  RewriteRule ^interior-design-noida-extension$ https://nestarcadia.com/interior-design-noida-extension/ [R=301,L]
 
-  # Fix duplicate URL: /interior-design-noida-extension without trailing slash
-  # GSC shows this URL and /interior-design-noida-extension/ as separate entries
-  # splitting crawl signals. Force the canonical trailing-slash form.
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^interior-design-noida-extension$ /interior-design-noida-extension/ [R=301,L]
-
-  # Enforce trailing slash (avoid duplicate content)
+  # Canonicalize www + extensionless paths in one hop.
+  RewriteCond %{HTTP_HOST} ^www\\.nestarcadia\\.com$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_URI} !/$
-  RewriteCond %{REQUEST_URI} !\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
-  RewriteRule ^(.*)$ /$1/ [R=301,L]
+  RewriteCond %{REQUEST_URI} !\\.[^/]+$
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
-  # Serve static files and directories as-is
+  # Canonicalize remaining www requests (including static assets).
+  RewriteCond %{HTTP_HOST} ^www\\.nestarcadia\\.com$ [NC]
+  RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
+
+  # Canonicalize extensionless apex routes. Preview domains are intentionally excluded.
+  RewriteCond %{HTTP_HOST} ^nestarcadia\\.com$ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteCond %{REQUEST_URI} !\\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
+  # Force HTTPS for the apex production domain, preserving already-canonical paths.
+  RewriteCond %{HTTP_HOST} ^nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://nestarcadia.com%{REQUEST_URI} [R=301,L]
+
+  # Serve static files and directories as-is.
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # SPA fallback — serve index.html for all app routes
+  # SPA fallback — serve index.html for app routes on production and preview hosts.
   RewriteRule ^ /index.html [L]
 </IfModule>
 
