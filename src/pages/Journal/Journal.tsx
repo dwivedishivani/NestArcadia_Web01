@@ -11,7 +11,7 @@ interface Props {
 }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
-const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\d+-[a-z0-9]+)/i)?.[1];
 const responsiveSrcSet = (value: string) => {
   const key = imageKeyFromUrl(value);
   return key ? resolveSiteImageSrcSet(key) : undefined;
