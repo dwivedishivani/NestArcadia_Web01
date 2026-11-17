@@ -594,15 +594,15 @@ export const getLocalServicePage = (pathname: string) =>
 export default function LocalServicePage({ config, setPage }: { config: LocalServiceConfig; setPage: (p: Page) => void }) {
   const photos = getGalleryPhotos(config);
   return (
-    <div className="pt-20 lg:pt-[90px]">
-      <header className="relative overflow-hidden bg-[#1C3A5A]">
+    <div className="na-page na-page-local-service pt-20 lg:pt-[90px]">
+      <header className="na-page-hero relative overflow-hidden bg-[#27463D]">
         <img src={config.heroImage} alt="" aria-hidden="true" width="1600" height="800" fetchPriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-35" />
-        <div className="absolute inset-0 bg-[#1C3A5A]/55" />
+        <div className="absolute inset-0 bg-[#27463D]/55" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 py-24 lg:py-32">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/60 mb-5">{config.eyebrow}</p>
           <h1 className="font-display text-[clamp(2.5rem,5vw,4.6rem)] text-white leading-[1.04] max-w-4xl">{config.title}</h1>
           <p className="text-white/70 text-sm leading-[1.8] max-w-2xl mt-5">{config.description}</p>
-          <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-7 bg-white text-[#1C3A5A] px-7 py-3 text-[13px] font-semibold hover:bg-[#2D8C7E] hover:text-white transition-colors">Discuss Your Project →</a>
+          <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-7 bg-white text-[#27463D] px-7 py-3 text-[13px] font-semibold hover:bg-[#91A18A] hover:text-white transition-colors">Discuss Your Project →</a>
         </div>
       </header>
 
@@ -610,10 +610,10 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
         <section className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
           <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-start">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">{config.introLabel}</p>
-              <h2 className="font-display text-[clamp(2rem,3.8vw,3.2rem)] text-[#1A1714] leading-[1.08]">{config.introTitle}</h2>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#91A18A] mb-4">{config.introLabel}</p>
+              <h2 className="font-display text-[clamp(2rem,3.8vw,3.2rem)] text-[#272821] leading-[1.08]">{config.introTitle}</h2>
             </div>
-            <p className="text-[#6B5E4E] text-[15px] leading-[1.9] lg:pt-1">{config.intro}</p>
+            <p className="text-[#6D685D] text-[15px] leading-[1.9] lg:pt-1">{config.intro}</p>
           </div>
         </section>
 
@@ -623,17 +623,17 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
               <img key={src + i} src={src} alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'} width="800" height="900" loading="lazy" decoding="async" className={`w-full h-[220px] lg:h-[300px] object-cover ${i === 1 ? 'mt-8 lg:mt-12' : ''} `} />
             ))}
           </div>
-          <p className="text-[11px] text-[#8A7B69] mt-3">Design references from NestArcadia's visual language — not presented as a local project claim.</p>
+          <p className="text-[11px] text-[#858073] mt-3">Design references from NestArcadia's visual language — not presented as a local project claim.</p>
         </section>
 
-        <section className="bg-[#EAE4DA] px-6 lg:px-20 py-16 lg:py-20">
+        <section className="bg-[#ECE4D8] px-6 lg:px-20 py-16 lg:py-20">
           <div className="max-w-[1100px] mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
               {config.insights.map((item, i) => (
-                <article key={item.title} className="border-t border-[#D4CBBB] pt-5">
-                  <p className="font-display text-[#2D8C7E] text-lg mb-2">0{i + 1}</p>
-                  <h2 className="font-display text-xl text-[#1A1714] leading-tight mb-2">{item.title}</h2>
-                  <p className="text-[13px] text-[#6B5E4E] leading-[1.8]">{item.body}</p>
+                <article key={item.title} className="border-t border-[#DCD1C2] pt-5">
+                  <p className="font-display text-[#91A18A] text-lg mb-2">0{i + 1}</p>
+                  <h2 className="font-display text-xl text-[#272821] leading-tight mb-2">{item.title}</h2>
+                  <p className="text-[13px] text-[#6D685D] leading-[1.8]">{item.body}</p>
                 </article>
               ))}
             </div>
@@ -642,43 +642,43 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
 
         <section className="max-w-[1100px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-8">
-            <div><p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">What we can help with</p><h2 className="font-display text-[clamp(2rem,3.5vw,2.8rem)] text-[#1A1714]">A focused scope, not a package.</h2></div>
-            <p className="text-[13px] leading-7 text-[#6B5E4E] max-w-md">We shape the scope around the property, priorities and level of execution support you actually need.</p>
+            <div><p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-3">What we can help with</p><h2 className="font-display text-[clamp(2rem,3.5vw,2.8rem)] text-[#272821]">A focused scope, not a package.</h2></div>
+            <p className="text-[13px] leading-7 text-[#6D685D] max-w-md">We shape the scope around the property, priorities and level of execution support you actually need.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {config.services.map(item => <div key={item} className="border border-[#D4CBBB] px-5 py-4 text-[13px] leading-6 text-[#1A1714]">{item}</div>)}
+            {config.services.map(item => <div key={item} className="border border-[#DCD1C2] px-5 py-4 text-[13px] leading-6 text-[#272821]">{item}</div>)}
           </div>
         </section>
 
-        <section className="bg-[#1C3A5A] px-6 lg:px-20 py-14 lg:py-16">
+        <section className="bg-[#27463D] px-6 lg:px-20 py-14 lg:py-16">
           <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div><p className="text-[10px] uppercase tracking-[0.25em] text-white/45 mb-3">Ready when you are</p><h2 className="font-display text-2xl lg:text-3xl text-white">Have the property already?</h2><p className="text-white/60 text-sm mt-2">Send us the layout, location and what you want the space to do better.</p></div>
-            <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-[#1C3A5A] transition-colors">Share Your Project Brief →</a>
+            <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-[#27463D] transition-colors">Share Your Project Brief →</a>
           </div>
         </section>
 
         <section className="max-w-[1100px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
           <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">A few useful answers</p>
-              <h2 className="font-display text-[clamp(2rem,3.5vw,2.8rem)] text-[#1A1714] mb-7">Before you reach out</h2>
-              <div className="space-y-1">{config.faqs.map(faq => <details key={faq.question} className="border-t border-[#D4CBBB] py-4"><summary className="cursor-pointer text-[14px] font-medium text-[#1A1714]">{faq.question}</summary><p className="text-[13px] leading-[1.8] text-[#52677E] mt-2 max-w-2xl">{faq.answer}</p></details>)}</div>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-3">A few useful answers</p>
+              <h2 className="font-display text-[clamp(2rem,3.5vw,2.8rem)] text-[#272821] mb-7">Before you reach out</h2>
+              <div className="space-y-1">{config.faqs.map(faq => <details key={faq.question} className="border-t border-[#DCD1C2] py-4"><summary className="cursor-pointer text-[14px] font-medium text-[#272821]">{faq.question}</summary><p className="text-[13px] leading-[1.8] text-[#656C62] mt-2 max-w-2xl">{faq.answer}</p></details>)}</div>
             </div>
-            <div className="bg-[#EAE4DA] p-7 lg:p-9 h-fit">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-4">Your next step</p>
-              <h2 className="font-display text-2xl text-[#1A1714]">Tell us what you are working with.</h2>
-              <p className="text-[13px] leading-[1.8] text-[#6B5E4E] mt-3">Property type, approximate size, location and what you need help with is enough to start the conversation.</p>
-              <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-6 bg-[#2D8C7E] text-white px-6 py-3 text-[13px] font-semibold hover:bg-[#1C3A5A] transition-colors">Start Your Project →</a>
+            <div className="bg-[#ECE4D8] p-7 lg:p-9 h-fit">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-4">Your next step</p>
+              <h2 className="font-display text-2xl text-[#272821]">Tell us what you are working with.</h2>
+              <p className="text-[13px] leading-[1.8] text-[#6D685D] mt-3">Property type, approximate size, location and what you need help with is enough to start the conversation.</p>
+              <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-6 bg-[#91A18A] text-white px-6 py-3 text-[13px] font-semibold hover:bg-[#27463D] transition-colors">Start Your Project →</a>
             </div>
           </div>
         </section>
 
         {config.related.length > 0 && (
           <section className="max-w-[1100px] mx-auto px-6 lg:px-20 pb-16 lg:pb-20">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-5">Related pages</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-5">Related pages</p>
             <div className="flex flex-wrap gap-3">
               {config.related.map(link => (
-                <a key={link.href} href={link.href} className="border border-[#D4CBBB] px-4 py-2 text-[12px] text-[#1C3A5A] hover:bg-[#1C3A5A] hover:text-white transition-colors">
+                <a key={link.href} href={link.href} className="border border-[#DCD1C2] px-4 py-2 text-[12px] text-[#27463D] hover:bg-[#27463D] hover:text-white transition-colors">
                   {link.label}
                 </a>
               ))}
