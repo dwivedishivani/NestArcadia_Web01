@@ -359,7 +359,7 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 
 ### 5.3 Priority Page Opportunities (New Pages and Existing-Page Upgrades)
 
-**High-priority pages that do not exist:**
+**Priority content opportunities (six new commercial pages, one optional tool opportunity, and one existing-page upgrade):**
 1. `/interior-design-noida` — existing thin page; upgrade or consolidate based on search intent and genuine service coverage (not a new URL)
 2. `/modular-kitchen-design-noida-extension` — high commercial intent, no dedicated page
 3. `/2bhk-interior-design-noida-extension` — config-specific landing page
