@@ -88,9 +88,9 @@ export default function Services({ setPage }: Props) {
   };
 
   return (
-    <div className="pt-20 lg:pt-[90px]">
+    <div className="na-page na-page-services pt-20 lg:pt-[90px]">
       {/* Page Header */}
-      <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '360px' }}>
+      <div className="na-page-hero relative overflow-hidden bg-[#27463D]" style={{ minHeight: '360px' }}>
         <img
           src={u('photo-1774940122986-47dc6c7c575b', 1440, 500)}
           alt="Our Services"
@@ -114,7 +114,7 @@ export default function Services({ setPage }: Props) {
           {services.map((s, i) => {
             const imageFirst = i % 2 === 1;
             const imageFrame = (
-              <div className="relative min-w-0 w-full min-h-[280px] lg:min-h-[560px] self-stretch overflow-hidden bg-[#D4CBBB]">
+              <div className="relative min-w-0 w-full min-h-[280px] lg:min-h-[560px] self-stretch overflow-hidden bg-[#DCD1C2]">
                 <img
                   src={s.img}
                   alt={s.name}
@@ -129,16 +129,16 @@ export default function Services({ setPage }: Props) {
 
             const textFrame = (
               <div className={`min-w-0 flex flex-col justify-center px-0 py-12 lg:py-16 ${imageFirst ? 'lg:px-16' : 'lg:pr-16'}`}>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">{s.number}</p>
-                <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#1A1714] mb-2">{s.name}</h2>
-                <p className="text-[#17665B] text-sm mb-5">{s.tagline}</p>
-                <p className="text-[#6B5E4E] text-sm leading-[1.8] mb-7">{s.desc}</p>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6D685D] mb-3">{s.number}</p>
+                <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#272821] mb-2">{s.name}</h2>
+                <p className="text-[#3C6452] text-sm mb-5">{s.tagline}</p>
+                <p className="text-[#6D685D] text-sm leading-[1.8] mb-7">{s.desc}</p>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Includes</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-3">Includes</p>
                   <ul className="flex flex-col gap-2">
                     {s.includes.map(item => (
-                      <li key={item} className="text-xs text-[#1A1714] flex items-center gap-2.5">
-                        <span className="w-1 h-1 rounded-full bg-[#2D8C7E] shrink-0" />
+                      <li key={item} className="text-xs text-[#272821] flex items-center gap-2.5">
+                        <span className="w-1 h-1 rounded-full bg-[#91A18A] shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -147,7 +147,7 @@ export default function Services({ setPage }: Props) {
                 <button
                   type="button"
                   onClick={() => beginServiceBrief(s.name, s.cta)}
-                  className="mt-8 self-start border border-[#1C3A5A] px-6 py-3 text-[13px] font-semibold text-[#1C3A5A] transition-all hover:border-[#2D8C7E] hover:bg-[#17665B] hover:text-white"
+                  className="mt-8 self-start border border-[#27463D] px-6 py-3 text-[13px] font-semibold text-[#27463D] transition-all hover:border-[#91A18A] hover:bg-[#3C6452] hover:text-white"
                 >
                   {s.cta} →
                 </button>
@@ -157,8 +157,8 @@ export default function Services({ setPage }: Props) {
             return (
               <div
                 key={s.number}
-                className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[560px] w-full min-h-0 border-b border-[#D4CBBB]"
-                style={{ background: i % 2 === 1 ? '#EAE4DA' : 'transparent' }}
+                className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[560px] w-full min-h-0 border-b border-[#DCD1C2]"
+                style={{ background: i % 2 === 1 ? '#ECE4D8' : 'transparent' }}
               >
                 {imageFirst ? imageFrame : textFrame}
                 {imageFirst ? textFrame : imageFrame}
@@ -169,16 +169,16 @@ export default function Services({ setPage }: Props) {
       </div>
 
       {/* Process */}
-      <section className="py-20 px-6 lg:px-20" style={{ background: '#EAE4DA' }}>
+      <section className="py-20 px-6 lg:px-20" style={{ background: '#ECE4D8' }}>
         <div className="max-w-[1440px] mx-auto">
-          <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] mb-2">How We Work</h2>
-          <p className="text-[#6B5E4E] text-sm mb-12">A clear, collaborative process — from first call to final key.</p>
+          <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#272821] mb-2">How We Work</h2>
+          <p className="text-[#6D685D] text-sm mb-12">A clear, collaborative process — from first call to final key.</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
             {process.map(p => (
               <div key={p.step}>
-                <p className="font-display text-[#17665B] text-sm mb-3">{p.step}</p>
-                <p className="font-medium text-[#1A1714] text-sm mb-2">{p.title}</p>
-                <p className="text-xs text-[#6B5E4E] leading-relaxed">{p.desc}</p>
+                <p className="font-display text-[#3C6452] text-sm mb-3">{p.step}</p>
+                <p className="font-medium text-[#272821] text-sm mb-2">{p.title}</p>
+                <p className="text-xs text-[#6D685D] leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -189,48 +189,48 @@ export default function Services({ setPage }: Props) {
       <section className="py-20 px-6 lg:px-20">
         <div className="max-w-[1440px] mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Where We Work</p>
-            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior Design in Noida Extension &amp; Greater Noida West</h2>
-            <p className="text-[#6B5E4E] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West. Our primary focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets.</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#6D685D] mb-4">Where We Work</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#272821] leading-tight mb-3">Interior Design in Noida Extension &amp; Greater Noida West</h2>
+            <p className="text-[#6D685D] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West. Our primary focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 pt-1">
             {['Noida Extension','Greater Noida West','Noida','Greater Noida'].map(area => (
-              <span key={area} className="border-b border-[#D4CBBB] pb-2 text-xs text-[#1A1714]">{area}</span>
+              <span key={area} className="border-b border-[#DCD1C2] pb-2 text-xs text-[#272821]">{area}</span>
             ))}
           </div>
         </div>
       </section>
 
       {/* SEO Intent Map */}
-      <section className="bg-[#EAE4DA] px-6 lg:px-20 py-20">
+      <section className="bg-[#ECE4D8] px-6 lg:px-20 py-20">
         <div className="max-w-[1440px] mx-auto">
           <div className="max-w-2xl mb-10">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Choose the right service</p>
-            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Residential, commercial & turnkey interiors</h2>
-            <p className="text-[#6B5E4E] text-sm leading-[1.8]">From compact 2BHK apartments to larger homes, offices and commercial spaces, we shape the scope around the property, location and way you need to use it.</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#3C6452] mb-4">Choose the right service</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#272821] leading-tight mb-3">Residential, commercial & turnkey interiors</h2>
+            <p className="text-[#6D685D] text-sm leading-[1.8]">From compact 2BHK apartments to larger homes, offices and commercial spaces, we shape the scope around the property, location and way you need to use it.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
-            <a href="/interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Residential</p>
-              <h3 className="font-display text-xl text-[#1A1714] mb-2">2BHK, 3BHK & 4BHK homes</h3>
-              <p className="text-xs leading-relaxed text-[#6B5E4E]">Space planning, modular kitchens, wardrobes, custom storage, lighting and complete home interiors.</p>
+            <a href="/interior-design-greater-noida-west/" className="border border-[#DCD1C2] bg-[#F5F1E8] p-6 hover:border-[#91A18A] transition-colors">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#3C6452] mb-3">Residential</p>
+              <h3 className="font-display text-xl text-[#272821] mb-2">2BHK, 3BHK & 4BHK homes</h3>
+              <p className="text-xs leading-relaxed text-[#6D685D]">Space planning, modular kitchens, wardrobes, custom storage, lighting and complete home interiors.</p>
             </a>
-            <a href="/commercial-interior-design-greater-noida-west/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Commercial</p>
-              <h3 className="font-display text-xl text-[#1A1714] mb-2">Office & business interiors</h3>
-              <p className="text-xs leading-relaxed text-[#6B5E4E]">Workflow-led planning for offices, reception areas, meeting rooms, storage, lighting and acoustics.</p>
+            <a href="/commercial-interior-design-greater-noida-west/" className="border border-[#DCD1C2] bg-[#F5F1E8] p-6 hover:border-[#91A18A] transition-colors">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#3C6452] mb-3">Commercial</p>
+              <h3 className="font-display text-xl text-[#272821] mb-2">Office & business interiors</h3>
+              <p className="text-xs leading-relaxed text-[#6D685D]">Workflow-led planning for offices, reception areas, meeting rooms, storage, lighting and acoustics.</p>
             </a>
-            <a href="/interior-design-noida-extension/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Budget & planning</p>
-              <h3 className="font-display text-xl text-[#1A1714] mb-2">Cost, scope & turnkey planning</h3>
-              <p className="text-xs leading-relaxed text-[#6B5E4E]">Plan your interior budget, priorities, materials and execution sequence before committing to the site.</p>
+            <a href="/interior-design-noida-extension/" className="border border-[#DCD1C2] bg-[#F5F1E8] p-6 hover:border-[#91A18A] transition-colors">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#3C6452] mb-3">Budget & planning</p>
+              <h3 className="font-display text-xl text-[#272821] mb-2">Cost, scope & turnkey planning</h3>
+              <p className="text-xs leading-relaxed text-[#6D685D]">Plan your interior budget, priorities, materials and execution sequence before committing to the site.</p>
             </a>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <div className="bg-[#1C3A5A] py-16 px-6 lg:px-20">
+      <div className="bg-[#27463D] py-16 px-6 lg:px-20">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl text-white">Ready to start?</h3>
@@ -238,7 +238,7 @@ export default function Services({ setPage }: Props) {
           </div>
           <button
             onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#272821] transition-all"
           >
             Discuss My Requirements →
           </button>
