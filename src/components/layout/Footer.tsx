@@ -43,7 +43,7 @@ const pagePaths: Record<Page, string> = {
 export default function Footer({}: FooterProps) {
   const currentYear = new Date().getFullYear();
   return (
-    <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
+    <footer className="na-footer" style={{ background: '#F5F1E8', borderTop: '1px solid #DCD1C2' }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
 
@@ -52,13 +52,13 @@ export default function Footer({}: FooterProps) {
             <Link to="/" aria-label="NestArcadia home">
               <img src={logoImg} alt="NestArcadia" width="180" height="96" loading="lazy" decoding="async" className="h-24 w-auto object-contain" />
             </Link>
-            <p className="text-[13px] text-[#6B5E4E] mt-4 leading-relaxed max-w-[220px]">
+            <p className="text-[13px] text-[#6D685D] mt-4 leading-relaxed max-w-[220px]">
               Premium interior design for modern homes and spaces across Noida & NCR.
             </p>
             {/* CTA inline in footer */}
             <Link
               to="/start-your-project/"
-              className="inline-block mt-6 text-[13px] font-semibold text-white bg-[#17665B] px-5 py-2.5 hover:bg-[#0f4f46] transition-colors"
+              className="inline-block mt-6 text-[13px] font-semibold text-white bg-[#3C6452] px-5 py-2.5 hover:bg-[#294D40] transition-colors"
             >
               Start Your Project →
             </Link>
@@ -70,25 +70,25 @@ export default function Footer({}: FooterProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-[14px] text-[#6B5E4E] text-left hover:text-[#17665B] transition-colors py-0.5"
+                className="text-[14px] text-[#6D685D] text-left hover:text-[#3C6452] transition-colors py-0.5"
               >
                 {l.label}
               </Link>
             ))}
-            <div className="mt-5 pt-5 border-t border-[#D4CBBB]">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-3">Service areas</p>
+            <div className="mt-5 pt-5 border-t border-[#DCD1C2]">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-3">Service areas</p>
               <div className="flex flex-col gap-2">
-                <a href="/interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Interior design · Greater Noida West</a>
-                <a href="/interior-design-noida-extension/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Interior design · Noida Extension</a>
-                <a href="/commercial-interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Commercial interiors · Greater Noida West</a>
-                <a href="/interior-design-cost-noida/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Interior design cost · Noida</a>
+                <a href="/interior-design-greater-noida-west/" className="text-[13px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Interior design · Greater Noida West</a>
+                <a href="/interior-design-noida-extension/" className="text-[13px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Interior design · Noida Extension</a>
+                <a href="/commercial-interior-design-greater-noida-west/" className="text-[13px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Commercial interiors · Greater Noida West</a>
+                <a href="/interior-design-cost-noida/" className="text-[13px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Interior design cost · Noida</a>
               </div>
             </div>
           </div>
 
           {/* Social + contact */}
           <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Let's stay connected</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6D685D] mb-4">Let's stay connected</p>
             <div className="flex flex-wrap gap-2.5 mb-7">
               {socials.map(s => (
                 <a
@@ -97,7 +97,7 @@ export default function Footer({}: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`NestArcadia on ${s.label}`}
-                  className="w-9 h-9 border border-[#B8D8D1] text-[#1C3A5A] flex items-center justify-center hover:bg-[#17665B] hover:border-[#17665B] hover:text-white transition-colors"
+                  className="w-9 h-9 border border-[#BAC7B6] text-[#27463D] flex items-center justify-center hover:bg-[#3C6452] hover:border-[#3C6452] hover:text-white transition-colors"
                 >
                   <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">{s.icon}</svg>
                 </a>
@@ -107,44 +107,44 @@ export default function Footer({}: FooterProps) {
               href="https://wa.me/918448061997?text=Hello%20NestArcadia%2C%20I%20am%20interested%20in%20discussing%20my%20interior%20design%20project."
               target="_blank"
               rel="noopener noreferrer"
-              className="border-t border-[#D4CBBB] pt-6 flex items-center gap-3 group mb-5"
+              className="border-t border-[#DCD1C2] pt-6 flex items-center gap-3 group mb-5"
             >
-              <div className="w-10 h-10 bg-[#17665B] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#0f4f46] transition-colors">
+              <div className="w-10 h-10 bg-[#3C6452] rounded-full flex items-center justify-center shrink-0 group-hover:bg-[#294D40] transition-colors">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.93 1.395 5.6L0 24l6.585-1.371A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.373l-.36-.213-3.712.974.991-3.625-.235-.373A9.818 9.818 0 012.182 12c0-5.421 4.397-9.818 9.818-9.818 5.421 0 9.818 4.397 9.818 9.818 0 5.421-4.397 9.818-9.818 9.818z"/>
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-semibold text-[#1A1714] group-hover:text-[#17665B] transition-colors">WhatsApp Us</p>
-                <p className="text-xs text-[#6B5E4E]">Talk to NestArcadia directly</p>
+                <p className="text-sm font-semibold text-[#272821] group-hover:text-[#3C6452] transition-colors">WhatsApp Us</p>
+                <p className="text-xs text-[#6D685D]">Talk to NestArcadia directly</p>
               </div>
             </a>
             <div className="flex flex-col gap-2">
-              <a href="tel:+918448061997" className="inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#17665B] transition-colors">
+              <a href="tel:+918448061997" className="inline-flex text-[14px] font-semibold text-[#27463D] hover:text-[#3C6452] transition-colors">
                 +91 84480 61997
               </a>
-              <a href="mailto:info@nestarcadia.com" className="inline-flex text-[14px] font-semibold text-[#1C3A5A] hover:text-[#17665B] transition-colors">
+              <a href="mailto:info@nestarcadia.com" className="inline-flex text-[14px] font-semibold text-[#27463D] hover:text-[#3C6452] transition-colors">
                 info@nestarcadia.com
               </a>
-              <a href="https://www.google.com/maps/search/?api=1&query=G-59%2C%20Fusion%20Ufairia%20Mall%2C%20Sector%2016B%2C%20Greater%20Noida%20West%2C%20Uttar%20Pradesh%20201310" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex max-w-[280px] text-[13px] leading-relaxed text-[#6B5E4E] hover:text-[#17665B] transition-colors">
-                <span><strong className="font-semibold text-[#1A1714]">Visit our office</strong><br />G-59, Fusion Ufairia Mall, Sector 16B<br />Greater Noida West, UP 201310<br /><span className="underline underline-offset-2">Get directions</span></span>
+              <a href="https://www.google.com/maps/search/?api=1&query=G-59%2C%20Fusion%20Ufairia%20Mall%2C%20Sector%2016B%2C%20Greater%20Noida%20West%2C%20Uttar%20Pradesh%20201310" target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex max-w-[280px] text-[13px] leading-relaxed text-[#6D685D] hover:text-[#3C6452] transition-colors">
+                <span><strong className="font-semibold text-[#272821]">Visit our office</strong><br />G-59, Fusion Ufairia Mall, Sector 16B<br />Greater Noida West, UP 201310<br /><span className="underline underline-offset-2">Get directions</span></span>
               </a>
             </div>
           </div>
         </div>
 
         {/* Service areas strip */}
-        <div className="mt-12 pt-8 border-t border-[#D4CBBB]">
+        <div className="mt-12 pt-8 border-t border-[#DCD1C2]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-5">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Primary service areas</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6D685D]">Primary service areas</p>
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-2 gap-y-2">
             {serviceAreas.map(area => (
               <a
                 key={area.label}
                 href={area.href}
-                className="whitespace-nowrap text-[13px] text-[#6B5E4E] border border-[#D4CBBB] px-3 py-1 hover:text-[#17665B] hover:border-[#17665B] transition-colors"
+                className="whitespace-nowrap text-[13px] text-[#6D685D] border border-[#DCD1C2] px-3 py-1 hover:text-[#3C6452] hover:border-[#3C6452] transition-colors"
               >
                 {area.label}
               </a>
@@ -152,13 +152,13 @@ export default function Footer({}: FooterProps) {
           </nav>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <p className="text-[12px] text-[#6B5E4E]">&copy; {currentYear} NestArcadia. All rights reserved.</p>
+        <div className="mt-8 pt-6 border-t border-[#DCD1C2] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p className="text-[12px] text-[#6D685D]">&copy; {currentYear} NestArcadia. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
-            <Link to="/our-story/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">About Us</Link>
-            <Link to="/start-your-project/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Contact</Link>
-            <span className="text-[12px] text-[#6B5E4E]">Crafted with care.</span>
+            <Link to="/privacy-policy/" className="text-[12px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Privacy Policy</Link>
+            <Link to="/our-story/" className="text-[12px] text-[#6D685D] hover:text-[#3C6452] transition-colors">About Us</Link>
+            <Link to="/start-your-project/" className="text-[12px] text-[#6D685D] hover:text-[#3C6452] transition-colors">Contact</Link>
+            <span className="text-[12px] text-[#6D685D]">Crafted with care.</span>
           </div>
         </div>
       </div>
