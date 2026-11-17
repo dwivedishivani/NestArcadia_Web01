@@ -721,7 +721,7 @@ export default function Journal({ articleId, setArticleId }: Props) {
           )}
 
           {/* CTA */}
-          <div className="mt-16 p-8 border border-border-subtle text-center" style={{ background: var(--color-card) }}>
+          <div className="mt-16 p-8 border border-border-subtle text-center" style={{ background: 'var(--color-card)' }}>
             <h3 className="font-display text-2xl text-text-primary mb-2">Want to bring this into your home?</h3>
             <p className="text-text-muted text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
             <Link
@@ -819,9 +819,9 @@ export default function Journal({ articleId, setArticleId }: Props) {
               onClick={() => setActive(c)}
               className="text-[13px] px-4 py-1.5 border transition-all"
               style={{
-                background: active === c ? var(--color-brand-navy) : 'transparent',
-                borderColor: active === c ? var(--color-brand-navy) : var(--color-border-subtle),
-                color: active === c ? var(--color-cream) : var(--color-text-muted),
+                background: active === c ? 'var(--color-brand-navy)' : 'transparent',
+                borderColor: active === c ? 'var(--color-brand-navy)' : 'var(--color-border-subtle)',
+                color: active === c ? 'var(--color-cream)' : 'var(--color-text-muted)',
               }}
             >
               {c}
@@ -865,7 +865,7 @@ export default function Journal({ articleId, setArticleId }: Props) {
             <div className="overflow-hidden bg-border-subtle aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
               <img src={featured.thumb} data-site-image-key={imageKeyFromUrl(featured.thumb)} srcSet={responsiveSrcSet(featured.thumb)} sizes="(max-width: 1023px) 100vw, 50vw" alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
-            <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: var(--color-card) }}>
+            <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: 'var(--color-card)' }}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5">
                 <span className="text-[10px] uppercase tracking-[0.22em] text-brand-forest">{featured.category}</span>
                 <span className="text-border-subtle">·</span>
