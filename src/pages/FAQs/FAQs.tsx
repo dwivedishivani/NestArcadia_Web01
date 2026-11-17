@@ -110,12 +110,12 @@ export default function FAQs() {
                     </button>
                     <div
                       id={`faq-answer-${question.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${open === question ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                      className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${open === question ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
                       aria-hidden={open !== question}
                       inert={open !== question}
                     >
                       <div className="min-h-0 overflow-hidden">
-                        <p className={`max-w-3xl pb-6 pr-10 text-[15px] leading-[1.9] text-text-muted transition-opacity duration-300 ${open === question ? 'opacity-100' : 'opacity-0'}`}>
+                        <p className={`max-w-3xl pb-6 pr-10 text-[15px] leading-[1.9] text-text-muted transition-opacity duration-300 motion-reduce:transition-none ${open === question ? 'opacity-100' : 'opacity-0'}`}>
                           {answer}
                         </p>
                       </div>
