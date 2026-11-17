@@ -84,6 +84,12 @@
   RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
   RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
 
+  # Fix duplicate URL: /interior-design-noida-extension without trailing slash
+  # GSC shows this URL and /interior-design-noida-extension/ as separate entries
+  # splitting crawl signals. Force the canonical trailing-slash form.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^interior-design-noida-extension$ /interior-design-noida-extension/ [R=301,L]
+
   # Enforce trailing slash (avoid duplicate content)
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_URI} !/$
