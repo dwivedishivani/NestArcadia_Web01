@@ -108,7 +108,7 @@ export default function DesignCultures() {
             {/* Text */}
             <div
               className={`flex flex-col justify-center px-8 lg:px-16 py-14 lg:py-8 overflow-hidden ${i % 2 === 1 ? 'lg:order-1' : ''}`}
-              style={{ background: i % 2 === 0 ? var(--color-cream) : var(--color-card) }}
+              style={{ background: i % 2 === 0 ? 'var(--color-cream)' : 'var(--color-card)' }}
             >
               <p className="text-[10px] uppercase tracking-[0.28em] text-text-muted mb-2 lg:mb-2">0{i + 1}</p>
               <h2 className="font-display text-[clamp(2rem,4vw,3rem)] text-text-primary mb-1 lg:mb-1">{c.name}</h2>
