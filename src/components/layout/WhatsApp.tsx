@@ -7,7 +7,7 @@ export default function WhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with a NestArcadia designer on WhatsApp"
-      className="group fixed bottom-[88px] right-6 z-50 flex items-center gap-2.5 bg-[#25D366] px-3.5 py-3 text-white shadow-[0_10px_26px_rgba(37,211,102,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(37,211,102,0.4)] sm:bottom-6 sm:right-6"
+      className="group fixed bottom-[88px] right-6 z-50 flex items-center gap-2.5 bg-brand-whatsapp-accessible px-3.5 py-3 text-white shadow-[0_10px_26px_rgba(37,211,102,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(37,211,102,0.4)] sm:bottom-6 sm:right-6"
     >
       {/* WhatsApp SVG icon */}
       <svg

@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import type { Page } from '../../App';
+import { Link } from 'react-router';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-
-interface Props { setPage: (p: Page) => void; }
 
 const cities = [
   'New Delhi', 'Noida', 'Greater Noida', 'Gurgaon', 'Faridabad', 'Ghaziabad',
@@ -52,7 +50,7 @@ function validateForm(form: FormState): FormErrors {
   return errors;
 }
 
-export default function StartProject({ setPage }: Props) {
+export default function StartProject() {
   const location = useLocation();
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -207,35 +205,35 @@ export default function StartProject({ setPage }: Props) {
     }
   };
 
-  const inputClass = (error?: string) => `w-full bg-transparent border px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
+  const inputClass = (error?: string) => `w-full bg-transparent border px-4 py-3 text-[15px] text-text-primary placeholder:text-text-muted outline-none transition-colors ${error ? 'border-brand-danger focus:border-brand-danger' : 'border-border-subtle focus:border-brand-teal'}`;
   const chipClass = (active: boolean) =>
     `text-[13px] px-4 py-2 border cursor-pointer transition-all select-none ${
       active
-        ? 'bg-[#1C3A5A] border-[#1C3A5A] text-white'
-        : 'border-[#D4CBBB] text-[#6B5E4E] hover:border-[#2D8C7E] hover:text-[#17665B]'
+        ? 'bg-brand-navy border-brand-navy text-white'
+        : 'border-border-subtle text-text-muted hover:border-brand-teal hover:text-brand-forest'
     }`;
 
   if (submitted) {
     return (
       <div className="pt-20 lg:pt-[90px] min-h-screen flex items-center justify-center px-6">
         <div className="text-center max-w-md">
-          <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#17665B] text-xl">✓</div>
-          <h2 className="font-display text-3xl text-[#1A1714] mb-4">We will be in touch.</h2>
-          <p className="text-[#6B5E4E] text-[15px] leading-relaxed mb-8">
+          <div className="w-12 h-12 border border-brand-teal flex items-center justify-center mx-auto mb-8 text-brand-forest text-xl">✓</div>
+          <h2 className="font-display text-3xl text-text-primary mb-4">We will be in touch.</h2>
+          <p className="text-text-muted text-[15px] leading-relaxed mb-8">
             Thank you{form.name ? `, ${form.name}` : ''}. We have received your brief and will reach out within 24 hours to schedule a discovery call.
           </p>
           <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => setPage('home')}
-              className="text-[14px] text-[#1A1714] border border-[#1A1714] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] hover:text-white transition-all"
+            <Link
+              to="/"
+              className="inline-flex text-[14px] text-text-primary border border-text-primary px-7 py-3 hover:bg-brand-navy hover:border-brand-navy hover:text-white transition-all"
             >
               Back to Home
-            </button>
+            </Link>
             <a
               href={`https://wa.me/918448061997?text=${encodeURIComponent('Hello NestArcadia, I just submitted a project brief. Looking forward to hearing from you.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[14px] text-white bg-[#2D8C7E] border border-[#2D8C7E] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] transition-all"
+              className="text-[14px] text-white bg-brand-forest border border-brand-forest px-7 py-3 hover:bg-brand-navy hover:border-brand-navy transition-all"
             >
               WhatsApp Us Now
             </a>
@@ -248,16 +246,16 @@ export default function StartProject({ setPage }: Props) {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Let's Begin</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-border-subtle">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-brand-forest mb-4">Let's Begin</p>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-text-primary leading-[1.05]">
           Start Your Project
         </h1>
-        <p className="text-[#6B5E4E] text-[15px] mt-3 max-w-md leading-relaxed">
+        <p className="text-text-muted text-[15px] mt-3 max-w-md leading-relaxed">
           Tell us about your space, your life, and what matters most to you. Your requirements come first — always.
         </p>
         {serviceInterest && (
-          <p className="mt-5 inline-flex border border-[#2D8C7E]/35 bg-[#2D8C7E]/10 px-3 py-2 text-[12px] text-[#1C3A5A]">
+          <p className="mt-5 inline-flex border border-brand-teal/35 bg-brand-teal/10 px-3 py-2 text-[12px] text-brand-navy">
             Exploring: {serviceInterest}
           </p>
         )}
@@ -274,11 +272,11 @@ export default function StartProject({ setPage }: Props) {
             {/* Left: Contact + Type */}
             <div className="flex flex-col gap-8">
               <div>
-                <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Details</h2>
+                <h2 className="font-display text-xl text-text-primary mb-6">Your Details</h2>
                 <div className="flex flex-col gap-4">
-                  <div><input className={inputClass(errors.name)} placeholder="Full Name *" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} required />{errors.name && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.name}</p>}</div>
-                  <div><input className={inputClass(errors.email)} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} required />{errors.email && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.email}</p>}</div>
-                  <div><input className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} required />{errors.phone && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.phone}</p>}</div>
+                  <div><input className={inputClass(errors.name)} placeholder="Full Name *" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} required />{errors.name && <p className="mt-1.5 text-[12px] text-brand-danger">{errors.name}</p>}</div>
+                  <div><input className={inputClass(errors.email)} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} required />{errors.email && <p className="mt-1.5 text-[12px] text-brand-danger">{errors.email}</p>}</div>
+                  <div><input className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} required />{errors.phone && <p className="mt-1.5 text-[12px] text-brand-danger">{errors.phone}</p>}</div>
 
                   {/* City dropdown */}
                   <select
@@ -292,13 +290,13 @@ export default function StartProject({ setPage }: Props) {
                     <option value="" disabled>Select City</option>
                     {cities.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
-                  {errors.city && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.city}</p>}
+                  {errors.city && <p className="mt-1.5 text-[12px] text-brand-danger">{errors.city}</p>}
                 </div>
               </div>
 
               {/* Project Type */}
               <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Project Type</h3>
+                <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-4">Project Type</h3>
                 <div className="flex flex-wrap gap-2">
                   {projectTypes.map(t => (
                     <button key={t} type="button" className={chipClass(form.projectType === t)} onClick={() => toggle('projectType', t)}>
@@ -306,13 +304,13 @@ export default function StartProject({ setPage }: Props) {
                     </button>
                   ))}
                 </div>
-                {errors.projectType && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.projectType}</p>}
+                {errors.projectType && <p className="mt-2 text-[12px] text-brand-danger">{errors.projectType}</p>}
               </div>
 
               {/* Configuration — only for apartment/penthouse */}
               {showConfig && (
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Home Configuration</h3>
+                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-4">Home Configuration</h3>
                   <div className="flex flex-wrap gap-2">
                     {configurations.map(c => (
                       <button key={c} type="button" className={chipClass(form.configuration === c)} onClick={() => toggle('configuration', c)}>
@@ -320,13 +318,13 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
-                  {errors.configuration && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.configuration}</p>}
+                  {errors.configuration && <p className="mt-2 text-[12px] text-brand-danger">{errors.configuration}</p>}
                 </div>
               )}
 
               {/* Budget */}
               <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Budget Range</h3>
+                <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-4">Budget Range</h3>
                 <div className="flex flex-wrap gap-2">
                   {budgets.map(b => (
                     <button key={b} type="button" className={chipClass(form.budget === b)} onClick={() => toggle('budget', b)}>
@@ -334,18 +332,18 @@ export default function StartProject({ setPage }: Props) {
                     </button>
                   ))}
                 </div>
-                {errors.budget && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.budget}</p>}
+                {errors.budget && <p className="mt-2 text-[12px] text-brand-danger">{errors.budget}</p>}
               </div>
             </div>
 
             {/* Right: Preferences + Message */}
             <div className="flex flex-col gap-8">
               <div>
-                <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Preferences</h2>
+                <h2 className="font-display text-xl text-text-primary mb-6">Your Preferences</h2>
 
                 {/* Timeline */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Timeline</h3>
+                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-4">Timeline</h3>
                   <div className="flex flex-wrap gap-2">
                     {timelines.map(t => (
                       <button key={t} type="button" className={chipClass(form.timeline === t)} onClick={() => toggle('timeline', t)}>
@@ -353,12 +351,12 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
-                  {errors.timeline && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.timeline}</p>}
+                  {errors.timeline && <p className="mt-2 text-[12px] text-brand-danger">{errors.timeline}</p>}
                 </div>
 
                 {/* Style preference */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Design Style Preference</h3>
+                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-4">Design Style Preference</h3>
                   <div className="flex flex-wrap gap-2">
                     {stylePrefs.map(s => (
                       <button key={s} type="button" className={chipClass(form.style === s)} onClick={() => toggle('style', s)}>
@@ -366,13 +364,13 @@ export default function StartProject({ setPage }: Props) {
                       </button>
                     ))}
                   </div>
-                  {errors.style && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.style}</p>}
+                  {errors.style && <p className="mt-2 text-[12px] text-brand-danger">{errors.style}</p>}
                 </div>
 
                 {/* Open message */}
                 <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">Tell Us Anything Else</h3>
-                  <p className="text-[13px] text-[#6B5E4E] mb-3 leading-relaxed">
+                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-3">Tell Us Anything Else</h3>
+                  <p className="text-[13px] text-text-muted mb-3 leading-relaxed">
                     Vastu requirements, specific materials, a reference image, a feeling you want to capture — anything helps.
                   </p>
                   <textarea
@@ -389,13 +387,13 @@ export default function StartProject({ setPage }: Props) {
                 type="submit"
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
-                className="w-full bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#17665B] transition-colors font-medium"
+                className="w-full bg-brand-navy text-white text-[14px] py-4 hover:bg-brand-forest transition-colors font-medium"
               >
                 {isSubmitting ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
               </button>
               {submissionError && (
                 <div role="alert" className="text-center -mt-4">
-                  <p className="text-[12px] text-[#6B5E4E]">
+                  <p className="text-[12px] text-text-muted">
                     {submissionError}
                   </p>
                   <a
@@ -404,19 +402,19 @@ export default function StartProject({ setPage }: Props) {
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex mt-3 bg-[#2D8C7E] text-white px-4 py-2 text-[12px] hover:bg-[#1C3A5A] transition-colors"
+                    className="inline-flex mt-3 bg-brand-forest text-white px-4 py-2 text-[12px] hover:bg-brand-navy transition-colors"
                   >
                     Send Brief on WhatsApp
                   </a>
                 </div>
               )}
-              <p className="text-[12px] text-[#6B5E4E] text-center -mt-4">
+              <p className="text-[12px] text-text-muted text-center -mt-4">
                 We respond within 24 hours. Or{' '}
                 <a
                   href={`https://wa.me/918448061997`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#17665B] underline"
+                  className="text-brand-forest underline"
                 >
                   WhatsApp us directly
                 </a>{' '}
@@ -427,8 +425,8 @@ export default function StartProject({ setPage }: Props) {
         </form>
 
         {/* Qualitative credibility — no fake numbers */}
-        <div className="mt-20 pt-16 border-t border-[#D4CBBB]">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-10">Why NestArcadia</p>
+        <div className="mt-20 pt-16 border-t border-border-subtle">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-text-muted mb-10">Why NestArcadia</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
@@ -448,9 +446,9 @@ export default function StartProject({ setPage }: Props) {
                 desc: 'Design, execution, furniture, lighting, decor — one team manages all of it, from your first call to the day you move in.',
               },
             ].map(c => (
-              <div key={c.title} className="border-t-2 border-[#2D8C7E] pt-6">
-                <h3 className="font-display text-lg text-[#1A1714] mb-3">{c.title}</h3>
-                <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{c.desc}</p>
+              <div key={c.title} className="border-t-2 border-brand-teal pt-6">
+                <h3 className="font-display text-lg text-text-primary mb-3">{c.title}</h3>
+                <p className="text-[13px] text-text-muted leading-relaxed">{c.desc}</p>
               </div>
             ))}
           </div>
