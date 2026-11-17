@@ -7,7 +7,6 @@ import { resolveSiteImage, resolveSiteImageReference, resolveSiteImageSrcSet } f
 
 interface Props {
   articleId?: string;
-  setArticleId: (id: string | null) => void;
 }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
@@ -512,7 +511,7 @@ const categoryDeepDives: Record<string, string[]> = {
   ],
 };
 
-export default function Journal({ articleId, setArticleId }: Props) {
+export default function Journal({ articleId }: Props) {
   const [active, setActive] = useState('All');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -625,9 +624,9 @@ export default function Journal({ articleId, setArticleId }: Props) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-brand-forest mb-5">NestArcadia Journal</p>
         <h1 className="font-display text-5xl mb-5">Page not found.</h1>
         <p className="text-text-muted mb-8">The journal article you requested does not exist.</p>
-        <a href="/journal/" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-brand-navy text-white px-6 py-3 text-sm font-semibold">
+        <Link to="/journal/" className="inline-flex bg-brand-navy text-white px-6 py-3 text-sm font-semibold">
           Back to Journal
-        </a>
+        </Link>
       </div>
     );
   }
@@ -678,13 +677,12 @@ export default function Journal({ articleId, setArticleId }: Props) {
               <a href="/our-story/" className="underline underline-offset-2 hover:text-brand-forest">Our Story</a> page. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.
             </p>
           </div>
-          <a
-            href="/journal/"
-            onClick={(event) => { event.preventDefault(); setArticleId(null); }}
+          <Link
+            to="/journal/"
             className="text-[13px] text-text-muted hover:text-brand-forest transition-colors mb-10 flex items-center gap-2"
           >
             ← Back to Journal
-          </a>
+          </Link>
           <p className="text-text-primary text-[16px] leading-[1.9] mb-10 font-semibold">
             {selected.excerpt}
           </p>
@@ -759,7 +757,7 @@ export default function Journal({ articleId, setArticleId }: Props) {
             </p>
             <div className="grid sm:grid-cols-2 gap-8">
               {relatedArticles.map(a => (
-                <a key={a.id} href={`/journal/${a.id}/`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
+                <Link key={a.id} to={`/journal/${a.id}/`} className="text-left group">
                   <div className="overflow-hidden bg-border-subtle mb-4" style={{ aspectRatio: '16/9' }}>
                     <img
                     src={a.thumb}
@@ -786,7 +784,7 @@ export default function Journal({ articleId, setArticleId }: Props) {
                   </div>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-brand-forest mb-2">{a.category}</p>
                   <p className="font-display text-xl text-text-primary group-hover:text-brand-forest transition-colors">{a.title}</p>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -857,9 +855,8 @@ export default function Journal({ articleId, setArticleId }: Props) {
         <>
         {/* Featured article */}
         {featured && (
-          <a
-            href={`/journal/${featured.id}/`}
-            onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
+          <Link
+            to={`/journal/${featured.id}/`}
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-border-subtle w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
             <div className="overflow-hidden bg-border-subtle aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
@@ -884,17 +881,16 @@ export default function Journal({ articleId, setArticleId }: Props) {
                 </span>
               </div>
             </div>
-          </a>
+          </Link>
         )}
 
         {/* Article grid */}
         {rest.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map(a => (
-              <a
+              <Link
                 key={a.id}
-                href={`/journal/${a.id}/`}
-                onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
+                to={`/journal/${a.id}/`}
                 className="text-left group"
               >
                 <div className="overflow-hidden bg-border-subtle mb-5" style={{ aspectRatio: '16/10' }}>
@@ -934,7 +930,7 @@ export default function Journal({ articleId, setArticleId }: Props) {
                   <p className="text-[12px] text-text-muted">{a.author} · {a.readTime}</p>
                   <span className="text-brand-forest text-sm">→</span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         )}
