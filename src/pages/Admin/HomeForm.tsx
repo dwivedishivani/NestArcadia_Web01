@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-import ImageUpload from '../../components/ImageUpload';
+import ImageUpload from '../../components/admin/ImageUpload';
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 

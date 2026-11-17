@@ -59,33 +59,20 @@ class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
   render() {
     if (!this.state.hasError) return this.props.children;
     return (
-      <div className="min-h-screen bg-[#F2EDE4] text-[#1A1714] flex items-center justify-center px-6 py-24">
+      <div className="min-h-screen bg-cream text-text-primary flex items-center justify-center px-6 py-24">
         <div className="max-w-xl text-center">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-brand-forest mb-5">NestArcadia</p>
           <h1 className="font-display text-4xl sm:text-5xl leading-tight mb-5">Something interrupted this page.</h1>
-          <p className="text-[#6B5E4E] text-sm leading-7 mb-8">The site is still available. Please try the page again, or return to the homepage.</p>
+          <p className="text-text-muted text-sm leading-7 mb-8">The site is still available. Please try the page again, or return to the homepage.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <button type="button" onClick={this.handleRetry} className="bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold hover:bg-[#2D8C7E] transition-colors">Reload Page</button>
-            <a href="/" className="border border-[#1C3A5A] text-[#1C3A5A] px-6 py-3 text-sm font-semibold hover:bg-[#1C3A5A] hover:text-white transition-colors">Go to Home</a>
+            <button type="button" onClick={this.handleRetry} className="bg-brand-navy text-white px-6 py-3 text-sm font-semibold hover:bg-brand-forest transition-colors">Reload Page</button>
+            <a href="/" className="border border-brand-navy text-brand-navy px-6 py-3 text-sm font-semibold hover:bg-brand-navy hover:text-white transition-colors">Go to Home</a>
           </div>
         </div>
       </div>
     );
   }
 }
-
-const pagePaths: Record<Page, string> = {
-  home: '/',
-  cultures: '/design-cultures/',
-  services: '/interior-design-services/',
-  story: '/our-story/',
-  journal: '/journal/',
-  homes: '/our-projects/',
-  project: '/start-your-project/',
-  faq: '/faqs/',
-  privacy: '/privacy-policy/',
-  admin: '/admin/',
-};
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
   home: {
@@ -262,8 +249,6 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     };
     setMeta('description', meta.description);
     setMeta('author', 'NestArcadia');
-    setMeta('geo.region', 'IN-UP');
-    setMeta('geo.placename', 'Greater Noida West, Noida Extension, Greater Noida, Noida, Ghaziabad, Faridabad, Delhi NCR, Gurugram');
     setMeta('robots', invalidJournalArticle ? 'noindex, nofollow, noarchive' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     setMeta('og:title', meta.title, true);
     setMeta('og:description', meta.description, true);
@@ -486,17 +471,17 @@ function NotFoundPage() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]">
-      <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+    <div className="min-h-[70vh] bg-cream px-6 py-32 text-center text-text-primary">
+      <p className="text-[10px] uppercase tracking-[0.3em] text-brand-forest mb-5">NestArcadia</p>
       <h1 className="font-display text-5xl mb-5">Page not found.</h1>
-      <p className="text-[#6B5E4E] mb-8">The page you requested does not exist.</p>
-      <a href="/" className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">Return Home</a>
+      <p className="text-text-muted mb-8">The page you requested does not exist.</p>
+      <a href="/" className="inline-block bg-brand-navy text-white px-6 py-3 text-sm font-semibold">Return Home</a>
     </div>
   );
 }
 
 function RouteFallback() {
-  return <div className="min-h-[52vh] animate-pulse bg-[#F2EDE4] px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-[#D4CBBB]" /><div className="mx-auto mt-6 h-12 max-w-xl bg-[#EAE4DA]" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-[#EAE4DA]" /></div>;
+  return <div className="min-h-[52vh] animate-pulse bg-cream px-6 pt-36 lg:px-20"><div className="mx-auto h-3 w-28 bg-border-subtle" /><div className="mx-auto mt-6 h-12 max-w-xl bg-card" /><div className="mx-auto mt-10 h-64 max-w-[1440px] bg-card" /></div>;
 }
 
 function RouteErrorElement() {
@@ -520,16 +505,16 @@ function RouteErrorElement() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2EDE4] text-[#1A1714] flex items-center justify-center px-6 py-24">
+    <div className="min-h-screen bg-cream text-text-primary flex items-center justify-center px-6 py-24">
       <div className="max-w-xl text-center">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-brand-forest mb-5">NestArcadia</p>
         <h1 className="font-display text-4xl sm:text-5xl leading-tight mb-5">Something interrupted this page.</h1>
-        <p className="text-[#6B5E4E] text-sm leading-7 mb-8">
+        <p className="text-text-muted text-sm leading-7 mb-8">
           This usually happens while the site is updating. We have tried to refresh the latest version automatically.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <button type="button" onClick={retry} className="bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold hover:bg-[#2D8C7E] transition-colors">Reload Latest Version</button>
-          <a href="/" className="border border-[#1C3A5A] text-[#1C3A5A] px-6 py-3 text-sm font-semibold hover:bg-[#1C3A5A] hover:text-white transition-colors">Go to Home</a>
+          <button type="button" onClick={retry} className="bg-brand-navy text-white px-6 py-3 text-sm font-semibold hover:bg-brand-forest transition-colors">Reload Latest Version</button>
+          <a href="/" className="border border-brand-navy text-brand-navy px-6 py-3 text-sm font-semibold hover:bg-brand-navy hover:text-white transition-colors">Go to Home</a>
         </div>
       </div>
     </div>
@@ -574,7 +559,7 @@ function ConsentManager() {
       <button
         type="button"
         onClick={() => { setVisible(true); setSettingsOpen(true); }}
-        className="fixed bottom-4 left-4 z-[100] rounded-full border border-[#C9BDAA] bg-[#F8F5EF]/95 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#1C3A5A] shadow-sm backdrop-blur-sm hover:bg-white"
+        className="fixed bottom-4 left-4 z-[100] rounded-full border border-border-soft bg-surface-linen/95 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-navy shadow-sm backdrop-blur-sm hover:bg-white"
         aria-label="Open privacy choices"
       >
         Privacy choices
@@ -584,27 +569,27 @@ function ConsentManager() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-[100] px-3 pb-3 sm:px-5 sm:pb-5" role="dialog" aria-label="Privacy and cookie choices">
-      <div className="mx-auto max-w-5xl rounded-2xl border border-[#C9BDAA] bg-[#F8F5EF] p-5 shadow-2xl sm:p-6">
+      <div className="mx-auto max-w-5xl rounded-2xl border border-border-soft bg-surface-linen p-5 shadow-2xl sm:p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#17665B]">Privacy choices</p>
-            <h2 className="font-display text-xl text-[#1C3A5A] sm:text-2xl">A little control stays with you.</h2>
-            <p className="mt-2 text-sm leading-6 text-[#52677E]">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-forest">Privacy choices</p>
+            <h2 className="font-display text-xl text-brand-navy sm:text-2xl">A little control stays with you.</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
               NestArcadia uses Google Analytics and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
             </p>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:min-w-[220px]">
-            <button type="button" onClick={() => saveConsent(true)} className="rounded-full bg-[#1C3A5A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#2D8C7E]">Accept all</button>
-            <button type="button" onClick={() => saveConsent(false)} className="rounded-full border border-[#1C3A5A] px-5 py-3 text-sm font-semibold text-[#1C3A5A] transition-colors hover:bg-white">Reject non-essential</button>
-            <button type="button" onClick={() => setSettingsOpen((value) => !value)} className="text-xs font-medium text-[#52677E] underline underline-offset-4">{settingsOpen ? 'Hide details' : 'What is being used?'}</button>
+            <button type="button" onClick={() => saveConsent(true)} className="rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-forest">Accept all</button>
+            <button type="button" onClick={() => saveConsent(false)} className="rounded-full border border-brand-navy px-5 py-3 text-sm font-semibold text-brand-navy transition-colors hover:bg-white">Reject non-essential</button>
+            <button type="button" onClick={() => setSettingsOpen((value) => !value)} className="text-xs font-medium text-muted underline underline-offset-4">{settingsOpen ? 'Hide details' : 'What is being used?'}</button>
           </div>
         </div>
         {settingsOpen && (
-          <div className="mt-5 grid gap-3 border-t border-[#D4CBBB] pt-5 text-xs leading-5 text-[#52677E] sm:grid-cols-2">
-            <div><strong className="text-[#1C3A5A]">Essential:</strong> required for the website to function and cannot be switched off here.</div>
-            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics helps us understand visits, engagement and page performance.</div>
-            <div><strong className="text-[#1C3A5A]">Advertising:</strong> Google Ads measurement helps us understand campaign performance and enquiries.</div>
-            <div><strong className="text-[#1C3A5A]">Your choice:</strong> you can reopen Privacy choices at any time from the button at the bottom-left.</div>
+          <div className="mt-5 grid gap-3 border-t border-border-subtle pt-5 text-xs leading-5 text-muted sm:grid-cols-2">
+            <div><strong className="text-brand-navy">Essential:</strong> required for the website to function and cannot be switched off here.</div>
+            <div><strong className="text-brand-navy">Analytics:</strong> Google Analytics helps us understand visits, engagement and page performance.</div>
+            <div><strong className="text-brand-navy">Advertising:</strong> Google Ads measurement helps us understand campaign performance and enquiries.</div>
+            <div><strong className="text-brand-navy">Your choice:</strong> you can reopen Privacy choices at any time from the button at the bottom-left.</div>
           </div>
         )}
       </div>
@@ -674,7 +659,6 @@ function AdminShell() {
 
 function SiteShell() {
   const location = useLocation();
-  const navigate = useNavigate();
   const normalizedPath = normalizePathname(location.pathname);
   const page = pageFromPath(normalizedPath);
   const isLocalServicePath = localServicePaths.some((servicePath) => servicePath === normalizedPath);
@@ -698,7 +682,7 @@ function SiteShell() {
   }, [normalizedPath, isLocalServicePath]);
 
   // Always reset the scroll position when the route changes. This also covers
-  // navigation triggered directly by the header/footer links (not only setPage).
+  // navigation is handled by router links and explicit route state updates.
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -708,25 +692,23 @@ function SiteShell() {
   if (isLocalServicePath && !localService) return <NotFoundPage />;
   const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
-  const setPage = (next: Page) => { navigate(pagePaths[next]); };
-
   if (page === 'admin') return <AdminShell />;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F2EDE4' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--color-cream)' }}>
       <SeoManager page={page} localService={localService} />
       <ConsentManager />
       <Nav page={page} forceSolid={Boolean(localService)} />
       <main className="flex-1 pb-24 sm:pb-0">
-        {localService ? <LocalServicePage config={localService} setPage={setPage} /> : page === 'home' && <Home setPage={setPage} />}
+        {localService ? <LocalServicePage config={localService} /> : page === 'home' && <Home />}
         <Suspense fallback={<RouteFallback />}>
-          {page === 'cultures' && <DesignCultures setPage={setPage} />}
-          {page === 'services' && <Services setPage={setPage} />}
-          {page === 'story' && <OurStory setPage={setPage} />}
-          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
-          {page === 'homes' && <Homes setPage={setPage} />}
-          {page === 'project' && <StartProject setPage={setPage} />}
-          {page === 'faq' && <FAQs setPage={setPage} />}
+          {page === 'cultures' && <DesignCultures />}
+          {page === 'services' && <Services />}
+          {page === 'story' && <OurStory />}
+          {page === 'journal' && <Journal articleId={articleId} />}
+          {page === 'homes' && <Homes />}
+          {page === 'project' && <StartProject />}
+          {page === 'faq' && <FAQs />}
           {page === 'privacy' && <PrivacyPolicy />}
         </Suspense>
         {!localService && page !== 'privacy' && (
@@ -736,13 +718,13 @@ function SiteShell() {
         )}
         {!localService && (
           <Suspense fallback={null}>
-            <ConversionBanner page={page} setPage={setPage} />
+            <ConversionBanner page={page} />
           </Suspense>
         )}
       </main>
       <Footer />
       <WhatsApp />
-      <MobileConversionBar setPage={setPage} />
+      <MobileConversionBar />
     </div>
   );
 }

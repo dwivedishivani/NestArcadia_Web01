@@ -76,30 +76,43 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Force HTTPS
-  RewriteCond %{HTTPS} off
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # Production-only legacy route and duplicate-URL redirects.
+  # These run before scheme/host normalization so each route resolves in one hop.
+  RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+  RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
 
-  # Remove www (canonical: non-www)
-  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+  RewriteRule ^interior-design-noida-extension$ https://nestarcadia.com/interior-design-noida-extension/ [R=301,L]
 
-  # Fix duplicate URL: /interior-design-noida-extension without trailing slash
+  # Canonicalize www + extensionless paths in one hop.
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^interior-design-noida-extension$ /interior-design-noida-extension/ [R=301,L]
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteCond %{REQUEST_URI} !\.[^/]+$
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
-  # Enforce trailing slash (avoid duplicate content)
+  # Canonicalize remaining www requests (including static assets).
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+  RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
+
+  # Canonicalize extensionless apex routes. Preview domains are intentionally excluded.
+  RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_URI} !/$
   RewriteCond %{REQUEST_URI} !\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
-  RewriteRule ^(.*)$ /$1/ [R=301,L]
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
-  # Serve static files and directories as-is
+  # Force HTTPS for the apex production domain, preserving already-canonical paths.
+  RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://nestarcadia.com%{REQUEST_URI} [R=301,L]
+
+  # Serve static files and directories as-is.
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # SPA fallback — serve index.html for all app routes
+  # SPA fallback — serve index.html for app routes on production and preview hosts.
   RewriteRule ^ /index.html [L]
 </IfModule>
 
@@ -121,41 +134,77 @@
     RewriteEngine On
 
     # Top-level pages
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^$ - [E=CANONICAL:https://nestarcadia.com/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^design-cultures/?$ - [E=CANONICAL:https://nestarcadia.com/design-cultures/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-services/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-services/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^our-story/?$ - [E=CANONICAL:https://nestarcadia.com/our-story/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^journal/?$ - [E=CANONICAL:https://nestarcadia.com/journal/]
-    RewriteRule ^journal/(.+)/?$ - [E=CANONICAL:https://nestarcadia.com/journal/%1/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
+    RewriteRule ^journal/(.+)/?$ - [E=CANONICAL:https://nestarcadia.com/journal/$1/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^our-projects/?$ - [E=CANONICAL:https://nestarcadia.com/our-projects/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^start-your-project/?$ - [E=CANONICAL:https://nestarcadia.com/start-your-project/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^faqs/?$ - [E=CANONICAL:https://nestarcadia.com/faqs/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^privacy-policy/?$ - [E=CANONICAL:https://nestarcadia.com/privacy-policy/]
 
     # Local service pages
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-noida/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-noida/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-noida-extension/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-noida-extension/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-greater-noida-west/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-greater-noida-west/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-greater-noida/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-greater-noida/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-ghaziabad/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-ghaziabad/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-faridabad/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-faridabad/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-gurugram/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-gurugram/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-delhi/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-delhi/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-delhi-ncr/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-delhi-ncr/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-indirapuram/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-indirapuram/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-crossing-republik/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-crossing-republik/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-dadri/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-dadri/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-jewar/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-jewar/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-yamuna-expressway/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-yamuna-expressway/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-east-delhi/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-east-delhi/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-south-delhi/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-south-delhi/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-sector-150/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-sector-150/]
+    RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
     RewriteRule ^interior-design-cost-noida/?$ - [E=CANONICAL:https://nestarcadia.com/interior-design-cost-noida/]
 
     # Emit the canonical header when the env var was set above
-    Header always set Link "<%{CANONICAL}e>; rel=\"canonical\"" env=CANONICAL
+    Header always add Link "<%{CANONICAL}e>; rel=\"canonical\"" env=CANONICAL
   </IfModule>
 </IfModule>
 
 # ----- Real 404 for truly missing paths -----
+# The SPA fallback above returns HTTP 200 for client-side routes.
+# For genuinely missing static files, Apache's default 404 still fires
+# because the RewriteCond %{REQUEST_FILENAME} -f check exits early
+# only when the file exists. When neither a file nor directory exists,
+# and the path matches no SPA route pattern, the SPA loads and React
+# renders its own 404 component with a canonical noindex tag.
+# For crawlers that land on unknown static paths, ErrorDocument below
+# returns the SPA shell with a 404 status code at the HTTP layer.
 ErrorDocument 404 /index.html

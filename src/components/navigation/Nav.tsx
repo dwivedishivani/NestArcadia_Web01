@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import type { Page } from '../../App';
+import { pagePaths } from '../../data/pagePaths';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
 import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.png';
 
@@ -18,9 +19,10 @@ const links: { label: string; page: Page }[] = [
 ];
 
 export default function Nav({ page, forceSolid = false }: NavProps) {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', admin: '/admin/' };
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 48);
@@ -28,18 +30,87 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
     return () => window.removeEventListener('scroll', handle);
   }, []);
 
+  useEffect(() => {
+    const desktopQuery = window.matchMedia('(min-width: 1024px)');
+    const closeOnDesktop = () => {
+      if (!desktopQuery.matches) return;
+      setMenuOpen(false);
+      triggerRef.current?.focus();
+    };
+    desktopQuery.addEventListener('change', closeOnDesktop);
+    return () => desktopQuery.removeEventListener('change', closeOnDesktop);
+  }, []);
+
   useEffect(() => setMenuOpen(false), [page]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const drawer = drawerRef.current;
+    const getFocusable = () => drawer?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [];
+    getFocusable()[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (drawer && activeElement && !drawer.contains(activeElement)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    triggerRef.current?.focus();
+  };
 
   const isHome = page === 'home';
   const transparent = isHome && !scrolled && !forceSolid;
 
   return (
     <>
+      {menuOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={closeMenu}
+          className="fixed inset-0 z-40 bg-black/35 lg:hidden"
+        />
+      )}
       <nav
+        aria-label="Primary navigation"
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          background: transparent ? 'transparent' : '#F2EDE4',
-          borderBottom: transparent ? '1px solid transparent' : '1px solid #B8D8D1',
+          background: transparent ? 'transparent' : 'var(--color-cream)',
+          borderBottom: transparent ? '1px solid transparent' : '1px solid var(--color-border-mint)',
         }}
       >
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 flex items-center justify-between h-20 lg:h-[90px]">
@@ -67,13 +138,13 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#17665B]"
+                className="text-[15px] tracking-[0.01em] transition-colors hover:text-brand-forest"
                 style={{
                   color: page === l.page
-                    ? (transparent ? '#FFFFFF' : '#17665B')
+                    ? (transparent ? 'white' : 'var(--color-brand-forest)')
                     : transparent
                     ? 'rgba(255,255,255,0.85)'
-                    : '#1C3A5A',
+                    : 'var(--color-brand-navy)',
                   fontWeight: page === l.page ? 700 : 600,
                 }}
               >
@@ -86,25 +157,27 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           <div className="flex items-center gap-4">
             <Link
               to="/start-your-project/"
-              className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white"
+              className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-brand-forest hover:border-brand-teal hover:text-white"
               style={{
-                color: transparent ? '#ffffff' : '#1C3A5A',
-                borderColor: transparent ? 'rgba(255,255,255,0.62)' : '#1C3A5A',
+                color: transparent ? 'white' : 'var(--color-brand-navy)',
+                borderColor: transparent ? 'rgba(255,255,255,0.62)' : 'var(--color-brand-navy)',
               }}
             >
               Start Your Project →
             </Link>
 
             <button
+              ref={triggerRef}
+              type="button"
               className="lg:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-[6px] p-2"
               onClick={() => setMenuOpen(o => !o)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-drawer"
             >
-              <span className="block h-0.5 w-6" style={{ background: transparent ? '#ffffff' : '#1C3A5A' }} />
-              <span className="block h-0.5 w-4" style={{ background: transparent ? '#ffffff' : '#1C3A5A' }} />
-              <span className="block h-0.5 w-6" style={{ background: transparent ? '#ffffff' : '#1C3A5A' }} />
+              <span className="block h-0.5 w-6" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
+              <span className="block h-0.5 w-4" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
+              <span className="block h-0.5 w-6" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
             </button>
           </div>
         </div>
@@ -112,11 +185,15 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
         {/* Mobile drawer */}
         <div
           id="mobile-nav-drawer"
-          className="lg:hidden overflow-hidden transition-all duration-300"
+          ref={drawerRef}
+          aria-label="Mobile navigation"
+          aria-hidden={!menuOpen}
+          inert={!menuOpen}
+          className="lg:hidden overflow-hidden transition-all duration-300 motion-reduce:transition-none"
           style={{
             maxHeight: menuOpen ? '420px' : '0',
-            background: '#F2EDE4',
-            borderTop: menuOpen ? '1px solid #B8D8D1' : 'none',
+            background: 'var(--color-cream)',
+            borderTop: menuOpen ? '1px solid var(--color-border-mint)' : 'none',
           }}
         >
           <div className="px-6 py-7 flex flex-col gap-5">
@@ -124,15 +201,19 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={closeMenu}
                 className="text-left text-[17px] font-semibold transition-colors"
-                style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
+                style={{ color: page === l.page ? 'var(--color-brand-forest)' : 'var(--color-brand-navy)' }}
               >
                 {l.label}
               </Link>
             ))}
             <Link
               to="/start-your-project/"
-              className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white transition-all"
+              tabIndex={menuOpen ? 0 : -1}
+              onClick={closeMenu}
+              className="text-[13px] px-5 py-3 border border-brand-navy text-brand-navy text-left mt-1 hover:bg-brand-forest hover:border-brand-teal hover:text-white transition-all"
             >
               Start Your Project →
             </Link>

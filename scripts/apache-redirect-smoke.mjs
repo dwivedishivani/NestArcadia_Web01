@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
-import { request } from 'node:http';
+import { request as httpRequest } from 'node:http';
+import { request as httpsRequest } from 'node:https';
 
-function get(path, host = 'nestarcadia.com') {
+function get(path, host = 'nestarcadia.com', protocol = 'http:') {
   return new Promise((resolve, reject) => {
+    const isHttps = protocol === 'https:';
+    const request = isHttps ? httpsRequest : httpRequest;
     const req = request({
       hostname: '127.0.0.1',
-      port: 80,
+      port: isHttps ? 443 : 80,
       path,
       method: 'GET',
       headers: { host },
+      ...(isHttps ? { rejectUnauthorized: false } : {}),
     }, (res) => {
       const chunks = [];
       res.setEncoding('utf8');
@@ -56,19 +60,19 @@ assert.ok(previewRoute.status === 301 || previewRoute.status === 200,
 assert.ok(!String(previewRoute.location || '').includes('https://nestarcadia.com'),
   'Hostinger preview route must never redirect to production');
 
-const canonicalRoute = await get('/interior-design-noida-extension/', 'nestarcadia.com');
+const canonicalRoute = await get('/interior-design-noida-extension/', 'nestarcadia.com', 'https:');
 assert.equal(canonicalRoute.status, 200, 'canonical Noida Extension route must serve HTTP 200');
 assert.ok(canonicalRoute.body.includes('<title>Interior Designers in Noida Extension | NestArcadia</title>'),
   'canonical Noida Extension route must return its route-specific HTML title');
 assert.ok(canonicalRoute.body.includes('href="https://nestarcadia.com/interior-design-noida-extension/"'),
   'canonical Noida Extension route must return its self-referencing canonical tag');
 
-const sitemap = await get('/sitemap.xml', 'nestarcadia.com');
+const sitemap = await get('/sitemap.xml', 'nestarcadia.com', 'https:');
 assert.equal(sitemap.status, 200, 'sitemap.xml must return HTTP 200');
 assert.ok(sitemap.body.includes('https://nestarcadia.com/interior-design-noida-extension/'),
   'sitemap must contain the canonical Noida Extension URL');
 
-const hero = await get('/images/home-hero-mobile-v2.webp', 'nestarcadia.com');
+const hero = await get('/images/home-hero-mobile-v2.webp', 'nestarcadia.com', 'https:');
 assert.equal(hero.status, 200, 'optimized mobile hero asset must return HTTP 200');
 assert.ok(hero.contentType.includes('image/webp'), 'optimized mobile hero must retain its WebP content type');
 
