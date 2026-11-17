@@ -1,4 +1,26 @@
 User-agent: *
 Allow: /
 
+# Content signals for AI crawlers and search engines
+Content-Signal: search=yes, ai-train=no
+
+# AI crawler directives
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://nestarcadia.com/sitemap.xml

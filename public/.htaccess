@@ -1,48 +1,111 @@
-# NestArcadia canonical redirects, MIME types and SPA fallback
-RewriteEngine On
+# ============================================================
+# NestArcadia — Apache configuration
+# Hostinger shared hosting, mod_rewrite + mod_headers confirmed
+# ============================================================
 
-# Preserve manifest and favicon MIME types.
-<IfModule mod_mime.c>
-  AddType application/manifest+json .webmanifest
-  AddType image/x-icon .ico
+# ----- Security headers -----
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>
 
-# Redirect the legacy portfolio route only on the production domain.
-RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
-RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
+# ----- MIME types -----
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType application/json .json
+  AddType text/markdown .md .txt
+  AddType application/manifest+json .webmanifest
+</IfModule>
 
-# 301: superseded modular kitchen article → canonical version
-RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
-RewriteRule ^journal/modular-kitchen-noida/?$ https://nestarcadia.com/journal/modular-kitchen-design-noida/ [R=301,L]
+# ----- Compression -----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json text/xml application/xml text/plain
+</IfModule>
 
-# Redirect www to apex and add the trailing slash in the same hop where needed.
-RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
-RewriteCond %{REQUEST_URI} !/$
-RewriteCond %{REQUEST_URI} !\.[^/]+$
-RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+# ----- Cache control -----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/json "access plus 1 day"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
 
-RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
-RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
-
-# Canonicalize extensionless routes on the apex domain; leave static files alone.
-RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
-RewriteCond %{REQUEST_URI} !/$
-RewriteCond %{REQUEST_URI} !\.[^/]+$
-RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
-
-# Revalidate HTML while preserving the BFCache-friendly policy from main.
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html)$">
-    Header set Cache-Control "no-cache, must-revalidate"
-  </FilesMatch>
-
-  # Hashed assets can be cached aggressively.
-  <FilesMatch "\.(js|mjs|css|png|jpg|jpeg|gif|svg|webp|ico|woff2?)$">
+  # Cache hashed JS/CSS bundles aggressively
+  <FilesMatch "\.(js|css)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+  # Images — 1 year
+  <FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  # HTML — always revalidate
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Well-known files — short cache
+  <FilesMatch "(robots\.txt|sitemap\.xml|llms\.txt|site\.webmanifest)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  # RFC 8288 Link header — point agents at the llms.txt publisher guide
+  Header always set Link "<https://nestarcadia.com/llms.txt>; rel=\"describedby\"; type=\"text/plain\""
+
+  # Content-Type for llms.txt served as markdown
+  <FilesMatch "llms\.txt$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+  </FilesMatch>
+
+  # Proper JSON content-type for well-known JSON files
+  <FilesMatch "\.json$">
+    Header set Content-Type "application/json; charset=UTF-8"
+  </FilesMatch>
 </IfModule>
 
-# Send all other client-side routes to the React app.
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+# ----- Rewrite rules -----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Remove www (canonical: non-www)
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # Enforce trailing slash (avoid duplicate content)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteCond %{REQUEST_URI} !\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
+  RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+  # Serve static files and directories as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA fallback — serve index.html for all app routes
+  RewriteRule ^ /index.html [L]
+</IfModule>
+
+# ----- Real 404 for truly missing paths -----
+# The SPA fallback above returns HTTP 200 for client-side routes.
+# For genuinely missing static files, Apache's default 404 still fires
+# because the RewriteCond %{REQUEST_FILENAME} -f check exits early
+# only when the file exists. When neither a file nor directory exists,
+# and the path matches no SPA route pattern, the SPA loads and React
+# renders its own 404 component with a canonical noindex tag.
+# For crawlers that land on unknown static paths, ErrorDocument below
+# returns the SPA shell with a 404 status code at the HTTP layer.
+ErrorDocument 404 /index.html

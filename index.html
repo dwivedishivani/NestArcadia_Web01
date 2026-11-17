@@ -88,8 +88,42 @@
     <meta name="twitter:description" content="Plan 2BHK, 3BHK and villa interiors across Noida Extension and Greater Noida West with practical space planning and turnkey execution." />
     <meta name="twitter:image" content="https://etmrhxapfvyaispuvnft.supabase.co/storage/v1/object/public/site-images/site/shared-interior-design-001.jpg" />
     <meta name="twitter:image:alt" content="NestArcadia heritage-inspired modern interior design" />
-    <script id="nestarcadia-schema" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfessionalService","@id":"https://nestarcadia.com/#business","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida"],"url":"https://nestarcadia.com/","telephone":"+918448061997","contactPoint":{"@type":"ContactPoint","telephone":"+918448061997","contactType":"customer service","areaServed":"IN","email":"info@nestarcadia.com"},"description":"Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Interior Design Services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Interior Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Turnkey Interior Execution"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Furniture Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Commercial Office Interior Design"}}]},"areaServed":["Greater Noida West","Noida Extension","Greater Noida","Noida"],"sameAs":["https://www.instagram.com/nestarcadia/","https://www.facebook.com/people/Nest-Arcadia/61577890484320/","https://www.linkedin.com/company/nest-arcadia","https://www.youtube.com/@NestArcadiaOfficial"],"email":"info@nestarcadia.com","address":{"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"}},{"@type":"WebSite","@id":"https://nestarcadia.com/#website","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida","Nest Arcadia Greater Noida"],"url":"https://nestarcadia.com/","publisher":{"@id":"https://nestarcadia.com/#business"}}]}</script>
+    <script id="nestarcadia-schema" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["LocalBusiness","ProfessionalService"],"@id":"https://nestarcadia.com/#business","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida"],"url":"https://nestarcadia.com/","telephone":"+918448061997","priceRange":"₹₹–₹₹₹","openingHours":["Mo-Sa 10:00-19:00"],"contactPoint":{"@type":"ContactPoint","telephone":"+918448061997","contactType":"customer service","areaServed":"IN","email":"info@nestarcadia.com"},"description":"Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Interior Design Services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Interior Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Turnkey Interior Execution"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Furniture Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Commercial Office Interior Design"}}]},"areaServed":["Greater Noida West","Noida Extension","Greater Noida","Noida"],"sameAs":["https://www.instagram.com/nestarcadia/","https://www.facebook.com/people/Nest-Arcadia/61577890484320/","https://www.linkedin.com/company/nest-arcadia","https://www.youtube.com/@NestArcadiaOfficial"],"email":"info@nestarcadia.com","address":{"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"}},{"@type":"WebSite","@id":"https://nestarcadia.com/#website","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida","Nest Arcadia Greater Noida"],"url":"https://nestarcadia.com/","publisher":{"@id":"https://nestarcadia.com/#business"}}]}</script>
     <!-- figma:head-end -->
+    <!-- WebMCP: register agent-callable tools for AI assistants that support navigator.modelContext -->
+    <script>
+      (function () {
+        if (typeof navigator === 'undefined' || !navigator.modelContext || typeof navigator.modelContext.registerTool !== 'function') return;
+        try {
+          navigator.modelContext.registerTool({
+            name: 'get_interior_cost_noida',
+            description: 'Returns interior design cost ranges for 2BHK, 3BHK and 4BHK flats in Noida and NCR.',
+            parameters: {},
+            handler: function () {
+              return { url: 'https://nestarcadia.com/interior-design-cost-noida/', data: { '2bhk': '₹6.5–7L', '3bhk': '₹9–10L', '4bhk_villa': '₹14–17L+' } };
+            }
+          });
+          navigator.modelContext.registerTool({
+            name: 'get_service_areas',
+            description: 'Returns the list of locations served by NestArcadia for interior design projects.',
+            parameters: {},
+            handler: function () {
+              return { areas: ['Greater Noida West', 'Noida Extension', 'Noida', 'Greater Noida', 'Ghaziabad', 'Delhi NCR'] };
+            }
+          });
+          navigator.modelContext.registerTool({
+            name: 'start_project_enquiry',
+            description: 'Returns the URL for starting an interior design project enquiry with NestArcadia.',
+            parameters: {},
+            handler: function () {
+              return { url: 'https://nestarcadia.com/start-your-project/' };
+            }
+          });
+        } catch (e) {
+          // WebMCP not supported — fail silently
+        }
+      })();
+    </script>
   <style>
     .skip-to-content:focus { transform: translateY(0) !important; outline: 3px solid #6DC0AE; outline-offset: 2px; }
     #app-bootloader[hidden] { display: none !important; }
@@ -141,8 +175,8 @@
         <p class="boot-heading" aria-hidden="true">Interior Designers in Noida Extension &amp; Greater Noida West</p>
         <p class="boot-description">Ancient craftsmanship. Thoughtful design.<br />Contemporary spaces.<br />Homes that carry your story forward.</p>
         <div class="boot-actions">
-          <a class="boot-primary" href="/start-your-project/">Plan Your Interior →</a>
-          <a class="boot-secondary" href="/our-projects/"><span class="boot-play">→</span>Explore Design Concepts</a>
+          <a class="boot-primary" href="/start-your-project/">Plan Your Interior &rarr;</a>
+          <a class="boot-secondary" href="/our-projects/"><span class="boot-play">&rarr;</span>Explore Design Concepts</a>
         </div>
       </div>
       <div class="boot-counter"><span>01</span><span class="boot-rule"></span><span style="color:rgba(255,255,255,.4)">03</span></div>
