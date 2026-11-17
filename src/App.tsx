@@ -88,7 +88,10 @@ const pagePaths: Record<Page, string> = {
 };
 
 const pageMeta: Record<Page, { title: string; description: string }> = {
-  home: { title: 'Interior Designers in Noida Extension & Greater Noida West | NestArcadia', description: 'Plan 2BHK, 3BHK and villa interiors in Noida Extension and Greater Noida West. Get practical space planning and turnkey execution with NestArcadia.' },
+  home: {
+    title: 'Interior Designers in Noida Extension & Greater Noida West | NestArcadia',
+    description: '2BHK from ₹6.5L · 3BHK from ₹9L · Turnkey execution. Plan your Noida Extension or Greater Noida West home interior with NestArcadia — practical space planning, custom furniture and complete handover.',
+  },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design Services in Noida, Greater Noida & NCR', description: 'Residential and commercial interior design, turnkey execution, custom furniture, Vastu-led planning and decor for Noida, Greater Noida West, Noida Extension, Ghaziabad, Faridabad, Delhi and Gurugram.' },
   story: { title: 'Our Story | Ancient Craft, Modern Indian Interiors', description: 'Meet NestArcadia, an interior design studio translating India\'s material heritage into homes made for modern living.' },
@@ -96,8 +99,8 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia\'s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: {
-    title: 'How Much Does Interior Design Cost in Noida? FAQs Answered',
-    description: 'Get honest answers: 2BHK interior cost from ₹6.5L, 3BHK from ₹9L. Covers modular kitchens, turnkey execution, timelines and Vastu planning for Noida and NCR.',
+    title: 'Interior Design Cost in Noida: 2BHK ₹6.5L, 3BHK ₹9L — FAQs | NestArcadia',
+    description: '2BHK interior from ₹6.5L, 3BHK from ₹9L in Noida & Greater Noida West. Plain answers on cost, timeline, turnkey execution, modular kitchens and Vastu — no jargon.',
   },
   privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
   admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
@@ -284,13 +287,15 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     let schema = document.getElementById('nestarcadia-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'nestarcadia-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
     const businessSchema = {
-      '@type': 'ProfessionalService',
+      '@type': ['LocalBusiness', 'ProfessionalService'],
       '@id': `${SITE_URL}/#business`,
       name: 'NestArcadia',
       alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida'],
       url: SITE_URL,
       telephone: '+918448061997',
       email: 'info@nestarcadia.com',
+      priceRange: '₹₹–₹₹₹',
+      openingHours: ['Mo-Sa 10:00-19:00'],
       address: {"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"},
       contactPoint: { '@type': 'ContactPoint', telephone: '+918448061997', email: 'info@nestarcadia.com', contactType: 'customer service', areaServed: 'IN' },
       image: SOCIAL_IMAGE,
@@ -314,10 +319,29 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       : { '@type': 'Person', name: activeArticle.author });
     const articleSchema = activeArticle && { '@type': 'BlogPosting', headline: activeArticle.title, description: activeArticle.excerpt, image: activeArticle.img, author: articleAuthor, publisher, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }, articleSection: activeArticle.category, ...(activeArticle.publishedAt ? { datePublished: activeArticle.publishedAt } : {}), ...(activeArticle.modifiedAt ? { dateModified: activeArticle.modifiedAt } : {}) };
     const localServiceSchema = localService && { '@type': 'Service', name: localService.title, description: localService.description, serviceType: localService.eyebrow, areaServed: { '@type': 'Place', name: localService.area }, provider: { '@id': `${SITE_URL}/#business` } };
-    const websiteSchema = { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'NestArcadia', alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'], url: `${SITE_URL}/`, publisher: { '@id': `${SITE_URL}/#business` } };
+    const websiteSchema = {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: 'NestArcadia',
+      alternateName: ['Nest Arcadia', 'Nest Arcadia Interiors', 'Nest Arcadia Noida', 'Nest Arcadia Greater Noida'],
+      url: `${SITE_URL}/`,
+      publisher: { '@id': `${SITE_URL}/#business` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${SITE_URL}/journal/?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    };
     const webPageSchema = { '@type': 'WebPage', '@id': canonical + '#webpage', url: canonical, name: meta.title, description: meta.description, isPartOf: { '@id': `${SITE_URL}/#website` }, about: { '@id': `${SITE_URL}/#business` } };
     const faqSchema = page === 'faq' && !localService ? {
       '@type': 'FAQPage',
+      speakable: {
+        '@type': 'SpeakableSpecification',
+        cssSelector: ['h1', '.faq-answer'],
+      },
       mainEntity: [
         { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: "NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope." } },
         { '@type': 'Question', name: 'Do you design 2BHK, 3BHK and 4BHK interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the scope adapted to the property and household requirements.' } },
