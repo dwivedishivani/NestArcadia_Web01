@@ -191,7 +191,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 key={l.page}
                 to={pagePaths[l.page]}
                 tabIndex={menuOpen ? 0 : -1}
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
                 className="text-left text-[17px] font-semibold transition-colors"
                 style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
               >
@@ -201,7 +201,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             <Link
               to="/start-your-project/"
               tabIndex={menuOpen ? 0 : -1}
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
               className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white transition-all"
             >
               Start Your Project →
