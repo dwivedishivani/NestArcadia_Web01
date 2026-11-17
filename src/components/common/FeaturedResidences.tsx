@@ -22,7 +22,7 @@ export default function FeaturedResidences() {
           <div className="mt-8 border-l-2 border-brand-whatsapp bg-cream px-6 py-6">
             <p className="font-display text-xl leading-snug text-brand-navy">Have a 2BHK, 3BHK, 4BHK or Villa floor plan?</p>
             <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-text-muted">Share your layout on WhatsApp (+91 8448061997) for a complimentary space-planning consultation.</p>
-            <a href={WHATSAPP_LAYOUT_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex border-b border-brand-navy pb-1 text-[13px] font-semibold text-brand-navy transition-colors hover:border-brand-whatsapp hover:text-[#178f46]">
+            <a href={WHATSAPP_LAYOUT_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex border-b border-brand-navy pb-1 text-[13px] font-semibold text-brand-navy transition-colors hover:border-brand-whatsapp hover:text-brand-whatsapp-accessible">
               Share your floor plan on WhatsApp →
             </a>
           </div>
