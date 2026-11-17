@@ -1,5 +1,5 @@
-import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { Link } from 'react-router';
+import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
 
 export interface LocalServiceConfig {
   path: string;
@@ -497,18 +497,30 @@ localServicePages.push(...additionalLocationPages);
 export const getLocalServicePage = (pathname: string) =>
   localServicePages.find((page) => pathname.replace(/\/+$/, '') === page.path) ?? null;
 
-export default function LocalServicePage({ config, setPage }: { config: LocalServiceConfig; setPage: (p: Page) => void }) {
+export default function LocalServicePage({ config }: { config: LocalServiceConfig }) {
   const photos = getGalleryPhotos(config);
   return (
     <div className="pt-20 lg:pt-[90px]">
       <header className="relative overflow-hidden bg-[#1C3A5A]">
-        <img src={config.heroImage} alt="" aria-hidden="true" width="1600" height="800" fetchPriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-35" />
+        <img
+          src={config.heroImage}
+          data-site-image-key={config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1]}
+          srcSet={config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i) ? resolveSiteImageSrcSet(config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i)![1]) : undefined}
+          sizes="100vw"
+          alt=""
+          aria-hidden="true"
+          width="1600"
+          height="800"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover opacity-35"
+        />
         <div className="absolute inset-0 bg-[#1C3A5A]/55" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 py-24 lg:py-32">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/60 mb-5">{config.eyebrow}</p>
           <h1 className="font-display text-[clamp(2.5rem,5vw,4.6rem)] text-white leading-[1.04] max-w-4xl">{config.title}</h1>
           <p className="text-white/70 text-sm leading-[1.8] max-w-2xl mt-5">{config.description}</p>
-          <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-7 bg-white text-[#1C3A5A] px-7 py-3 text-[13px] font-semibold hover:bg-[#2D8C7E] hover:text-white transition-colors">Discuss Your Project →</a>
+          <Link to="/start-your-project/" className="inline-flex mt-7 bg-white text-[#1C3A5A] px-7 py-3 text-[13px] font-semibold hover:bg-[#2D8C7E] hover:text-white transition-colors">Discuss Your Project →</Link>
         </div>
       </header>
 
@@ -559,7 +571,7 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
         <section className="bg-[#1C3A5A] px-6 lg:px-20 py-14 lg:py-16">
           <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div><p className="text-[10px] uppercase tracking-[0.25em] text-white/45 mb-3">Ready when you are</p><h2 className="font-display text-2xl lg:text-3xl text-white">Have the property already?</h2><p className="text-white/60 text-sm mt-2">Send us the layout, location and what you want the space to do better.</p></div>
-            <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-[#1C3A5A] transition-colors">Share Your Project Brief →</a>
+            <Link to="/start-your-project/" className="inline-flex shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-[#1C3A5A] transition-colors">Share Your Project Brief →</Link>
           </div>
         </section>
 
@@ -574,7 +586,7 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
               <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-4">Your next step</p>
               <h2 className="font-display text-2xl text-[#1A1714]">Tell us what you are working with.</h2>
               <p className="text-[13px] leading-[1.8] text-[#6B5E4E] mt-3">Property type, approximate size, location and what you need help with is enough to start the conversation.</p>
-              <a href="/start-your-project/" onClick={(e) => { e.preventDefault(); setPage('project'); }} className="inline-flex mt-6 bg-[#2D8C7E] text-white px-6 py-3 text-[13px] font-semibold hover:bg-[#1C3A5A] transition-colors">Start Your Project →</a>
+              <Link to="/start-your-project/" className="inline-flex mt-6 bg-[#2D8C7E] text-white px-6 py-3 text-[13px] font-semibold hover:bg-[#1C3A5A] transition-colors">Start Your Project →</Link>
             </div>
           </div>
         </section>
