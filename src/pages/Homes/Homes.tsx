@@ -242,9 +242,9 @@ export default function Homes() {
                 onClick={() => setStyle(s)}
                 className="text-[12px] px-3.5 py-1 border transition-all"
                 style={{
-                  background: style === s ? var(--color-text-primary) : 'transparent',
-                  borderColor: style === s ? var(--color-text-primary) : var(--color-border-subtle),
-                  color: style === s ? var(--color-cream) : var(--color-text-muted),
+                  background: style === s ? 'var(--color-text-primary)' : 'transparent',
+                  borderColor: style === s ? 'var(--color-text-primary)' : 'var(--color-border-subtle)',
+                  color: style === s ? 'var(--color-cream)' : 'var(--color-text-muted)',
                 }}
               >
                 {s}
