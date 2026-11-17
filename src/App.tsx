@@ -74,19 +74,6 @@ class SiteErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
   }
 }
 
-const pagePaths: Record<Page, string> = {
-  home: '/',
-  cultures: '/design-cultures/',
-  services: '/interior-design-services/',
-  story: '/our-story/',
-  journal: '/journal/',
-  homes: '/our-projects/',
-  project: '/start-your-project/',
-  faq: '/faqs/',
-  privacy: '/privacy-policy/',
-  admin: '/admin/',
-};
-
 const pageMeta: Record<Page, { title: string; description: string }> = {
   home: { title: 'Interior Designers in Noida Extension & Greater Noida West | NestArcadia', description: 'Plan 2BHK, 3BHK and villa interiors in Noida Extension and Greater Noida West. Get practical space planning and turnkey execution with NestArcadia.' },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
@@ -240,8 +227,6 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     };
     setMeta('description', meta.description);
     setMeta('author', 'NestArcadia');
-    setMeta('geo.region', 'IN-UP');
-    setMeta('geo.placename', 'Greater Noida West, Noida Extension, Greater Noida, Noida, Ghaziabad, Faridabad, Delhi NCR, Gurugram');
     setMeta('robots', invalidJournalArticle ? 'noindex, nofollow, noarchive' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     setMeta('og:title', meta.title, true);
     setMeta('og:description', meta.description, true);
@@ -650,7 +635,7 @@ function SiteShell() {
   }, [normalizedPath, isLocalServicePath]);
 
   // Always reset the scroll position when the route changes. This also covers
-  // navigation triggered directly by the header/footer links (not only setPage).
+  // navigation is handled by router links and explicit route state updates.
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -660,8 +645,6 @@ function SiteShell() {
   if (isLocalServicePath && !localService) return <NotFoundPage />;
   const articleId = normalizedPath.startsWith('/journal/') ? normalizedPath.split('/')[2] : undefined;
 
-  const setPage = (next: Page) => { navigate(pagePaths[next]); };
-
   if (page === 'admin') return <AdminShell />;
 
   return (
@@ -670,15 +653,15 @@ function SiteShell() {
       <ConsentManager />
       <Nav page={page} forceSolid={Boolean(localService)} />
       <main className="flex-1 pb-24 sm:pb-0">
-        {localService ? <LocalServicePage config={localService} setPage={setPage} /> : page === 'home' && <Home setPage={setPage} />}
+        {localService ? <LocalServicePage config={localService} /> : page === 'home' && <Home />}
         <Suspense fallback={<RouteFallback />}>
-          {page === 'cultures' && <DesignCultures setPage={setPage} />}
-          {page === 'services' && <Services setPage={setPage} />}
-          {page === 'story' && <OurStory setPage={setPage} />}
-          {page === 'journal' && <Journal setPage={setPage} articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
-          {page === 'homes' && <Homes setPage={setPage} />}
-          {page === 'project' && <StartProject setPage={setPage} />}
-          {page === 'faq' && <FAQs setPage={setPage} />}
+          {page === 'cultures' && <DesignCultures />}
+          {page === 'services' && <Services />}
+          {page === 'story' && <OurStory />}
+          {page === 'journal' && <Journal articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
+          {page === 'homes' && <Homes />}
+          {page === 'project' && <StartProject />}
+          {page === 'faq' && <FAQs />}
           {page === 'privacy' && <PrivacyPolicy />}
         </Suspense>
         {!localService && page !== 'privacy' && (
@@ -688,13 +671,13 @@ function SiteShell() {
         )}
         {!localService && (
           <Suspense fallback={null}>
-            <ConversionBanner page={page} setPage={setPage} />
+            <ConversionBanner page={page} />
           </Suspense>
         )}
       </main>
       <Footer />
       <WhatsApp />
-      <MobileConversionBar setPage={setPage} />
+      <MobileConversionBar />
     </div>
   );
 }
