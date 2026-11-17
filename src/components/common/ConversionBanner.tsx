@@ -28,8 +28,8 @@ export default function ConversionBanner({ page, setPage }: Props) {
   if (!item) return null;
   const source = directImageUrls[item.image] || resolveSiteImage(item.image);
   return (
-    <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
-      <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
+    <section className="na-conversion-banner mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
+      <div className="relative min-h-72 overflow-hidden bg-[#27463D]">
         <img
           src={source}
           data-site-image-key={item.image}
@@ -41,14 +41,14 @@ export default function ConversionBanner({ page, setPage }: Props) {
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover opacity-55"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/95 via-[#1C3A5A]/70 to-[#1C3A5A]/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#27463D]/95 via-[#27463D]/70 to-[#27463D]/20" />
         <div className="relative flex min-h-72 max-w-2xl flex-col justify-center px-8 py-12 lg:px-16">
           <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-white/55">{item.eyebrow}</p>
           <h2 className="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-tight text-white">{item.title}</h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/70">{item.text}</p>
           <button
             onClick={() => setPage('project')}
-            className="mt-8 w-fit bg-[#17665B] border border-[#17665B] px-6 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#0f4f46]"
+            className="mt-8 w-fit bg-[#3C6452] border border-[#3C6452] px-6 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-[#294D40]"
           >
             {item.cta} →
           </button>
