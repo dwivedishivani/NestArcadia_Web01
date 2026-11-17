@@ -18,7 +18,18 @@ const links: { label: string; page: Page }[] = [
 ];
 
 export default function Nav({ page, forceSolid = false }: NavProps) {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', admin: '/admin/' };
+  const pagePaths: Record<Page, string> = {
+    home: '/',
+    cultures: '/design-cultures/',
+    services: '/interior-design-services/',
+    story: '/our-story/',
+    journal: '/journal/',
+    homes: '/our-projects/',
+    project: '/start-your-project/',
+    faq: '/faqs/',
+    privacy: '/privacy-policy/',
+    admin: '/admin/',
+  };
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -67,14 +78,14 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
-                className="text-[15px] tracking-[0.01em] transition-colors hover:text-[#17665B]"
+                className="text-[14px] tracking-[0.01em] transition-colors hover:text-[#17665B]"
                 style={{
                   color: page === l.page
-                    ? (transparent ? '#FFFFFF' : '#17665B')
+                    ? (transparent ? '#B8D8D1' : '#17665B')
                     : transparent
-                    ? 'rgba(255,255,255,0.85)'
+                    ? 'rgba(255,255,255,0.80)'
                     : '#1C3A5A',
-                  fontWeight: page === l.page ? 700 : 600,
+                  fontWeight: page === l.page ? 700 : 500,
                 }}
               >
                 {l.label}
@@ -83,13 +94,23 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           </div>
 
           {/* CTA + hamburger */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* On transparent hero: teal fill for visibility; on solid: navy outline */}
             <Link
               to="/start-your-project/"
-              className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white"
+              className="hidden lg:block text-[13px] font-semibold tracking-[0.02em] px-5 py-2.5 transition-all"
               style={{
-                color: transparent ? '#ffffff' : '#1C3A5A',
-                borderColor: transparent ? 'rgba(255,255,255,0.62)' : '#1C3A5A',
+                color: transparent ? '#ffffff' : '#ffffff',
+                background: transparent ? '#17665B' : '#1C3A5A',
+                border: transparent ? '1px solid #17665B' : '1px solid #1C3A5A',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLAnchorElement).style.background = '#0f4f46';
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = '#0f4f46';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLAnchorElement).style.background = transparent ? '#17665B' : '#1C3A5A';
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = transparent ? '#17665B' : '#1C3A5A';
               }}
             >
               Start Your Project →
@@ -114,7 +135,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           id="mobile-nav-drawer"
           className="lg:hidden overflow-hidden transition-all duration-300"
           style={{
-            maxHeight: menuOpen ? '420px' : '0',
+            maxHeight: menuOpen ? '460px' : '0',
             background: '#F2EDE4',
             borderTop: menuOpen ? '1px solid #B8D8D1' : 'none',
           }}
@@ -125,14 +146,14 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 key={l.page}
                 to={pagePaths[l.page]}
                 className="text-left text-[17px] font-semibold transition-colors"
-                style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
+                style={{ color: page === l.page ? '#17665B' : '#1C3A5A' }}
               >
                 {l.label}
               </Link>
             ))}
             <Link
               to="/start-your-project/"
-              className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white transition-all"
+              className="text-[13px] px-5 py-3 bg-[#17665B] text-white text-left mt-1 hover:bg-[#0f4f46] transition-all font-semibold"
             >
               Start Your Project →
             </Link>
