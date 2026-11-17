@@ -16,8 +16,26 @@
   /* NestArcadia brand palette (from logo) */
   --color-brand-navy: #1C3A5A;
   --color-brand-teal: #2D8C7E;
+  --color-brand-forest: #17665B;
   --color-brand-mint: #6DC0AE;
   --color-brand-grey: #A0AABA;
+
+  /* Semantic palette aliases preserve the existing design exactly. */
+  --color-text-primary: #1A1714;
+  --color-text-muted: #6B5E4E;
+  --color-text-stone: #8A7B69;
+  --color-border-subtle: #D4CBBB;
+  --color-border-warm: #C9BFAF;
+  --color-border-soft: #C9BDAA;
+  --color-border-mint: #B8D8D1;
+  --color-surface-nearwhite: #FDFCFA;
+  --color-surface-linen: #F8F5EF;
+  --color-brand-danger: #B64B42;
+  --color-brand-earth: #18100A;
+  --color-brand-coffee: #4A3019;
+  --color-brand-ochre: #B18A4B;
+  --color-brand-whatsapp: #25D366;
+  --color-brand-whatsapp-dark: #178F46;
 }
 
 html {
