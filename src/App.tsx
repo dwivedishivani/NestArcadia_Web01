@@ -648,7 +648,7 @@ function SiteShell() {
   if (page === 'admin') return <AdminShell />;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: var(--color-cream) }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--color-cream)' }}>
       <SeoManager page={page} localService={localService} />
       <ConsentManager />
       <Nav page={page} forceSolid={Boolean(localService)} />
