@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import type { Page } from '../../App';
+import { pagePaths } from '../../data/pagePaths';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
 import logoWhiteImg from '../../assets/images/branding/nestarcadia-logo-white.png';
 
@@ -18,9 +19,10 @@ const links: { label: string; page: Page }[] = [
 ];
 
 export default function Nav({ page, forceSolid = false }: NavProps) {
-  const pagePaths: Record<Page, string> = { home: '/', cultures: '/design-cultures/', services: '/interior-design-services/', story: '/our-story/', journal: '/journal/', homes: '/our-projects/', project: '/start-your-project/', faq: '/faqs/', admin: '/admin/' };
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 48);
@@ -30,12 +32,70 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
 
   useEffect(() => setMenuOpen(false), [page]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const drawer = drawerRef.current;
+    const getFocusable = () => drawer?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [];
+    getFocusable()[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (drawer && activeElement && !drawer.contains(activeElement)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    triggerRef.current?.focus();
+  };
+
   const isHome = page === 'home';
   const transparent = isHome && !scrolled && !forceSolid;
 
   return (
     <>
+      {menuOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={closeMenu}
+          className="fixed inset-0 z-40 bg-black/35 lg:hidden"
+        />
+      )}
       <nav
+        aria-label="Primary navigation"
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
           background: transparent ? 'transparent' : '#F2EDE4',
@@ -96,6 +156,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             </Link>
 
             <button
+              ref={triggerRef}
+              type="button"
               className="lg:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-[6px] p-2"
               onClick={() => setMenuOpen(o => !o)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -112,6 +174,10 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
         {/* Mobile drawer */}
         <div
           id="mobile-nav-drawer"
+          ref={drawerRef}
+          aria-label="Mobile navigation"
+          aria-hidden={!menuOpen}
+          inert={!menuOpen}
           className="lg:hidden overflow-hidden transition-all duration-300"
           style={{
             maxHeight: menuOpen ? '420px' : '0',
@@ -124,6 +190,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               <Link
                 key={l.page}
                 to={pagePaths[l.page]}
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={() => setMenuOpen(false)}
                 className="text-left text-[17px] font-semibold transition-colors"
                 style={{ color: page === l.page ? '#2D8C7E' : '#1C3A5A' }}
               >
@@ -132,6 +200,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
             ))}
             <Link
               to="/start-your-project/"
+              tabIndex={menuOpen ? 0 : -1}
+              onClick={() => setMenuOpen(false)}
               className="text-[13px] px-5 py-3 border border-[#1C3A5A] text-[#1C3A5A] text-left mt-1 hover:bg-[#17665B] hover:border-[#2D8C7E] hover:text-white transition-all"
             >
               Start Your Project →
