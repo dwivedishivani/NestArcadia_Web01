@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, type FormEvent } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import HomeForm from './HomeForm';
-import ImageUpload from '../../components/ImageUpload';
+import ImageUpload from '../../components/admin/ImageUpload';
 import RichArticleEditor from '../../components/admin/RichArticleEditor';
 import ArticlePreview from '../../components/admin/ArticlePreview';
 import MediaLibrary from './MediaLibrary';
