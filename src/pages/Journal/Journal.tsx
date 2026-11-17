@@ -617,11 +617,11 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
   if (articleId && articlesLoaded && !selected) {
     return (
-      <div className="min-h-[70vh] bg-[#F2EDE4] px-6 py-32 text-center text-[#1A1714]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-5">NestArcadia Journal</p>
+      <div className="na-page na-page-journal min-h-[70vh] bg-[#F5F1E8] px-6 py-32 text-center text-[#272821]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#91A18A] mb-5">NestArcadia Journal</p>
         <h1 className="font-display text-5xl mb-5">Page not found.</h1>
-        <p className="text-[#6B5E4E] mb-8">The journal article you requested does not exist.</p>
-        <a href="/journal/" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#1C3A5A] text-white px-6 py-3 text-sm font-semibold">
+        <p className="text-[#6D685D] mb-8">The journal article you requested does not exist.</p>
+        <a href="/journal/" onClick={(event) => { event.preventDefault(); setArticleId(null); window.scrollTo({ top: 0 }); }} className="inline-block bg-[#27463D] text-white px-6 py-3 text-sm font-semibold">
           Back to Journal
         </a>
       </div>
@@ -639,13 +639,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       .filter(Boolean) as typeof articles;
 
     return (
-      <div className="pt-20 lg:pt-[90px]">
+      <div className="na-page na-page-journal pt-20 lg:pt-[90px]">
         {/* Hero */}
-        <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ height: '55vh', minHeight: '360px' }}>
+        <div className="na-page-hero relative overflow-hidden bg-[#27463D]" style={{ height: '55vh', minHeight: '360px' }}>
           <img src={selected.img} alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1714]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#272821]/60 to-transparent" />
           <div className="relative h-full max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end pb-12">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">{selected.category}</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-3">{selected.category}</p>
             <h1 className="font-display text-[clamp(1.75rem,4vw,3.25rem)] text-white leading-tight max-w-2xl">
               {selected.title}
             </h1>
@@ -667,63 +667,63 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
         {/* Article body */}
         <div className="max-w-[780px] mx-auto px-6 py-16">
-          <div className="mb-10 border-l-2 border-[#2D8C7E] pl-4">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D8C7E]">Editorial responsibility</p>
-            <p className="text-[13px] leading-[1.7] text-[#6B5E4E] mt-1">
+          <div className="mb-10 border-l-2 border-[#91A18A] pl-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-[#91A18A]">Editorial responsibility</p>
+            <p className="text-[13px] leading-[1.7] text-[#6D685D] mt-1">
               Published by NestArcadia Journal. Learn about the studio's background in real estate and construction on our{' '}
-              <a href="/our-story/" className="underline underline-offset-2 hover:text-[#17665B]">Our Story</a> page. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.
+              <a href="/our-story/" className="underline underline-offset-2 hover:text-[#3C6452]">Our Story</a> page. First-hand design observations are presented as practice notes; technical or performance claims are limited to the evidence cited on the page.
             </p>
           </div>
           <a
             href="/journal/"
             onClick={(event) => { event.preventDefault(); setArticleId(null); }}
-            className="text-[13px] text-[#6B5E4E] hover:text-[#2D8C7E] transition-colors mb-10 flex items-center gap-2"
+            className="text-[13px] text-[#6D685D] hover:text-[#91A18A] transition-colors mb-10 flex items-center gap-2"
           >
             ← Back to Journal
           </a>
-          <p className="text-[#1A1714] text-[16px] leading-[1.9] mb-10 font-semibold">
+          <p className="text-[#272821] text-[16px] leading-[1.9] mb-10 font-semibold">
             {selected.excerpt}
           </p>
           <RichArticleContent
             content={selected.body.join('\n\n')}
             className="journal-public-content"
           />
-          <section className="mt-14 border-t border-[#D4CBBB] pt-10" aria-labelledby="practical-guide">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">NestArcadia practical guide</p>
-            <h2 id="practical-guide" className="font-display text-3xl text-[#1A1714] mb-7">Planning this well in a real home</h2>
+          <section className="mt-14 border-t border-[#DCD1C2] pt-10" aria-labelledby="practical-guide">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-3">NestArcadia practical guide</p>
+            <h2 id="practical-guide" className="font-display text-3xl text-[#272821] mb-7">Planning this well in a real home</h2>
             <div className="flex flex-col gap-6">
               {(categoryDeepDives[selected.category] ?? []).map((para, i) => (
-                <p key={i} className="text-[#1A1714] text-[15px] leading-[1.9]">{para}</p>
+                <p key={i} className="text-[#272821] text-[15px] leading-[1.9]">{para}</p>
               ))}
             </div>
           </section>
 
-          <section className="mt-14 border-t border-[#D4CBBB] pt-10" aria-labelledby="local-interior-services">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-3">Local interior design support</p>
-            <h2 id="local-interior-services" className="font-display text-3xl text-[#1A1714] mb-4">Planning a home in Noida or Greater Noida West?</h2>
-            <p className="text-[#6B5E4E] text-[15px] leading-[1.9] mb-5">
+          <section className="mt-14 border-t border-[#DCD1C2] pt-10" aria-labelledby="local-interior-services">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#91A18A] mb-3">Local interior design support</p>
+            <h2 id="local-interior-services" className="font-display text-3xl text-[#272821] mb-4">Planning a home in Noida or Greater Noida West?</h2>
+            <p className="text-[#6D685D] text-[15px] leading-[1.9] mb-5">
               Use these material and planning ideas as a starting point. For guidance shaped around your floor plan, budget and execution scope, explore our local residential services and turnkey options.
             </p>
             <div className="flex flex-wrap gap-x-6 gap-y-3 text-[14px] font-semibold">
-              <a href="/interior-design-noida-extension/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Noida Extension</a>
-              <a href="/interior-design-greater-noida-west/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior designers in Greater Noida West</a>
-              <a href="/interior-design-services/" className="text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">Interior design and turnkey services</a>
+              <a href="/interior-design-noida-extension/" className="text-[#27463D] underline underline-offset-4 hover:text-[#91A18A]">Interior designers in Noida Extension</a>
+              <a href="/interior-design-greater-noida-west/" className="text-[#27463D] underline underline-offset-4 hover:text-[#91A18A]">Interior designers in Greater Noida West</a>
+              <a href="/interior-design-services/" className="text-[#27463D] underline underline-offset-4 hover:text-[#91A18A]">Interior design and turnkey services</a>
             </div>
           </section>
           {conclusion && (
-            <p className="mt-10 border-t border-[#D4CBBB] pt-8 text-[15px] leading-[1.9] text-[#1A1714]">
+            <p className="mt-10 border-t border-[#DCD1C2] pt-8 text-[15px] leading-[1.9] text-[#272821]">
               <strong>Conclusion.</strong> {conclusion}
             </p>
           )}
 
           {/* CTA */}
-          <div className="mt-16 p-8 border border-[#D4CBBB] text-center" style={{ background: '#EAE4DA' }}>
-            <h3 className="font-display text-2xl text-[#1A1714] mb-2">Want to bring this into your home?</h3>
-            <p className="text-[#6B5E4E] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
+          <div className="mt-16 p-8 border border-[#DCD1C2] text-center" style={{ background: '#ECE4D8' }}>
+            <h3 className="font-display text-2xl text-[#272821] mb-2">Want to bring this into your home?</h3>
+            <p className="text-[#6D685D] text-[14px] mb-6">Tell us about your project and we will design around what matters to you.</p>
             <a
               href="/start-your-project/"
               onClick={(event) => { event.preventDefault(); setPage('project'); }}
-              className="text-[14px] text-white bg-[#1C3A5A] px-8 py-3 hover:bg-[#2D8C7E] transition-colors"
+              className="text-[14px] text-white bg-[#27463D] px-8 py-3 hover:bg-[#91A18A] transition-colors"
             >
               Apply This to My Home →
             </a>
@@ -731,15 +731,15 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         </div>
 
         {'researchSources' in selected && selected.researchSources?.length > 0 && (
-          <section className="max-w-[780px] mx-auto px-6 mt-14 border-t border-[#D4CBBB] pt-8" aria-labelledby="research-notes">
-            <p id="research-notes" className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E] mb-4">Research notes</p>
-            <p className="text-[13px] leading-[1.8] text-[#6B5E4E] mb-4">
+          <section className="max-w-[780px] mx-auto px-6 mt-14 border-t border-[#DCD1C2] pt-8" aria-labelledby="research-notes">
+            <p id="research-notes" className="text-[10px] uppercase tracking-[0.22em] text-[#91A18A] mb-4">Research notes</p>
+            <p className="text-[13px] leading-[1.8] text-[#6D685D] mb-4">
               Technical and performance claims in this article are limited to the conditions described by the cited research. Material performance can vary with formulation, substrate, installation and building conditions.
             </p>
             <ul className="space-y-2">
               {selected.researchSources.map((source) => (
                 <li key={source.href}>
-                  <a href={source.href} target="_blank" rel="noopener noreferrer" className="text-[13px] text-[#1C3A5A] underline underline-offset-4 hover:text-[#2D8C7E]">
+                  <a href={source.href} target="_blank" rel="noopener noreferrer" className="text-[13px] text-[#27463D] underline underline-offset-4 hover:text-[#91A18A]">
                     {source.label}
                   </a>
                 </li>
@@ -751,13 +751,13 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
         {/* Related articles */}
         {relatedArticles.length > 0 && (
           <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pb-20">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-8 border-t border-[#D4CBBB] pt-12">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6D685D] mb-8 border-t border-[#DCD1C2] pt-12">
               Related Articles
             </p>
             <div className="grid sm:grid-cols-2 gap-8">
               {relatedArticles.map(a => (
                 <a key={a.id} href={`/journal/${a.id}/`} onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }} className="text-left group">
-                  <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
+                  <div className="overflow-hidden bg-[#DCD1C2] mb-4" style={{ aspectRatio: '16/9' }}>
                     <img
                     src={a.thumb}
                     alt={a.title}
@@ -772,8 +772,8 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   </div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-[#2D8C7E] mb-2">{a.category}</p>
-                  <p className="font-display text-xl text-[#1A1714] group-hover:text-[#2D8C7E] transition-colors">{a.title}</p>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-[#91A18A] mb-2">{a.category}</p>
+                  <p className="font-display text-xl text-[#272821] group-hover:text-[#91A18A] transition-colors">{a.title}</p>
                 </a>
               ))}
             </div>
@@ -790,16 +790,16 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#2D8C7E] mb-4">Ideas & Perspectives</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Journal</h1>
-        <p className="text-[#6B5E4E] text-[15px] mt-3">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#DCD1C2]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#91A18A] mb-4">Ideas & Perspectives</p>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#272821] leading-[1.05]">Journal</h1>
+        <p className="text-[#6D685D] text-[15px] mt-3">
           Heritage craft, design thinking, and the stories behind modern Indian homes.
         </p>
       </div>
 
       {/* Category filter */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-6 border-b border-[#D4CBBB]">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-6 border-b border-[#DCD1C2]">
         <div className="flex flex-wrap gap-2">
           {categories.map(c => (
             <button
@@ -807,9 +807,9 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
               onClick={() => setActive(c)}
               className="text-[13px] px-4 py-1.5 border transition-all"
               style={{
-                background: active === c ? '#1C3A5A' : 'transparent',
-                borderColor: active === c ? '#1C3A5A' : '#D4CBBB',
-                color: active === c ? '#F2EDE4' : '#6B5E4E',
+                background: active === c ? '#27463D' : 'transparent',
+                borderColor: active === c ? '#27463D' : '#DCD1C2',
+                color: active === c ? '#F5F1E8' : '#6D685D',
               }}
             >
               {c}
@@ -821,22 +821,22 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
         {!articlesLoaded ? (
           <>
-            <div className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full lg:h-[420px] lg:overflow-hidden animate-pulse">
-              <div className="bg-[#D4CBBB] min-h-[260px] lg:h-full" />
-              <div className="bg-[#EAE4DA] p-10 lg:p-14 flex flex-col justify-center gap-4">
-                <div className="h-3 w-24 bg-[#D4CBBB]" />
-                <div className="h-10 w-4/5 bg-[#D4CBBB]" />
-                <div className="h-4 w-full max-w-xl bg-[#D4CBBB]" />
-                <div className="h-4 w-2/3 bg-[#D4CBBB]" />
+            <div className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#DCD1C2] w-full lg:h-[420px] lg:overflow-hidden animate-pulse">
+              <div className="bg-[#DCD1C2] min-h-[260px] lg:h-full" />
+              <div className="bg-[#ECE4D8] p-10 lg:p-14 flex flex-col justify-center gap-4">
+                <div className="h-3 w-24 bg-[#DCD1C2]" />
+                <div className="h-10 w-4/5 bg-[#DCD1C2]" />
+                <div className="h-4 w-full max-w-xl bg-[#DCD1C2]" />
+                <div className="h-4 w-2/3 bg-[#DCD1C2]" />
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, index) => (
                 <div key={index} className="animate-pulse">
-                  <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }} />
-                  <div className="h-3 w-20 bg-[#D4CBBB] mb-3" />
-                  <div className="h-6 w-4/5 bg-[#EAE4DA] mb-3" />
-                  <div className="h-4 w-full bg-[#EAE4DA]" />
+                  <div className="overflow-hidden bg-[#DCD1C2] mb-5" style={{ aspectRatio: '16/10' }} />
+                  <div className="h-3 w-20 bg-[#DCD1C2] mb-3" />
+                  <div className="h-6 w-4/5 bg-[#ECE4D8] mb-3" />
+                  <div className="h-4 w-full bg-[#ECE4D8]" />
                 </div>
               ))}
             </div>
@@ -848,26 +848,26 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
           <a
             href={`/journal/${featured.id}/`}
             onClick={(event) => { event.preventDefault(); setArticleId(featured.id); window.scrollTo({top:0}); }}
-            className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#D4CBBB] w-full text-left group lg:h-[420px] lg:overflow-hidden"
+            className="grid lg:grid-cols-2 gap-0 mb-16 border border-[#DCD1C2] w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
-            <div className="overflow-hidden bg-[#D4CBBB] aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
+            <div className="overflow-hidden bg-[#DCD1C2] aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
               <img src={featured.thumb} alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
-            <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: '#EAE4DA' }}>
+            <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: '#ECE4D8' }}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5">
-                <span className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E]">{featured.category}</span>
-                <span className="text-[#D4CBBB]">·</span>
-                <span className="text-[13px] text-[#6B5E4E]">{featured.date}</span>
-                <span className="text-[#D4CBBB]">·</span>
-                <span className="text-[13px] text-[#6B5E4E]">{featured.readTime}</span>
+                <span className="text-[10px] uppercase tracking-[0.22em] text-[#91A18A]">{featured.category}</span>
+                <span className="text-[#DCD1C2]">·</span>
+                <span className="text-[13px] text-[#6D685D]">{featured.date}</span>
+                <span className="text-[#DCD1C2]">·</span>
+                <span className="text-[13px] text-[#6D685D]">{featured.readTime}</span>
               </div>
-              <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#1A1714] leading-tight mb-4 group-hover:text-[#2D8C7E] transition-colors">
+              <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] text-[#272821] leading-tight mb-4 group-hover:text-[#91A18A] transition-colors">
                 {featured.title}
               </h2>
-              <p className="text-[#6B5E4E] text-[15px] leading-[1.8] mb-8">{featured.excerpt}</p>
+              <p className="text-[#6D685D] text-[15px] leading-[1.8] mb-8">{featured.excerpt}</p>
               <div className="flex items-center justify-between">
-                <p className="text-[13px] text-[#6B5E4E]">By {featured.author}</p>
-                <span className="text-[14px] text-[#1C3A5A] border-b border-[#1C3A5A] pb-px group-hover:text-[#2D8C7E] group-hover:border-[#2D8C7E] transition-colors">
+                <p className="text-[13px] text-[#6D685D]">By {featured.author}</p>
+                <span className="text-[14px] text-[#27463D] border-b border-[#27463D] pb-px group-hover:text-[#91A18A] group-hover:border-[#91A18A] transition-colors">
                   Read Article →
                 </span>
               </div>
@@ -885,7 +885,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                 onClick={(event) => { event.preventDefault(); setArticleId(a.id); window.scrollTo({top:0}); }}
                 className="text-left group"
               >
-                <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
+                <div className="overflow-hidden bg-[#DCD1C2] mb-5" style={{ aspectRatio: '16/10' }}>
                   <img
                     src={a.thumb}
                     alt={a.title}
@@ -901,17 +901,17 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
                   />
                 </div>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-[#2D8C7E]">{a.category}</span>
-                  <span className="text-[#D4CBBB] text-xs">·</span>
-                  <span className="text-[13px] text-[#6B5E4E]">{a.date}</span>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-[#91A18A]">{a.category}</span>
+                  <span className="text-[#DCD1C2] text-xs">·</span>
+                  <span className="text-[13px] text-[#6D685D]">{a.date}</span>
                 </div>
-                <h3 className="font-display text-xl text-[#1A1714] leading-snug mb-3 group-hover:text-[#2D8C7E] transition-colors">
+                <h3 className="font-display text-xl text-[#272821] leading-snug mb-3 group-hover:text-[#91A18A] transition-colors">
                   {a.title}
                 </h3>
-                <p className="text-[13px] text-[#6B5E4E] leading-relaxed mb-4">{a.excerpt}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-[#D4CBBB]">
-                  <p className="text-[12px] text-[#6B5E4E]">{a.author} · {a.readTime}</p>
-                  <span className="text-[#2D8C7E] text-sm">→</span>
+                <p className="text-[13px] text-[#6D685D] leading-relaxed mb-4">{a.excerpt}</p>
+                <div className="flex items-center justify-between pt-4 border-t border-[#DCD1C2]">
+                  <p className="text-[12px] text-[#6D685D]">{a.author} · {a.readTime}</p>
+                  <span className="text-[#91A18A] text-sm">→</span>
                 </div>
               </a>
             ))}
@@ -920,7 +920,7 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
 
         {filtered.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-[#6B5E4E] text-[15px]">No articles in this category yet.</p>
+            <p className="text-[#6D685D] text-[15px]">No articles in this category yet.</p>
           </div>
         )}
         </>
@@ -928,27 +928,27 @@ export default function Journal({ setPage, articleId, setArticleId }: Props) {
       </div>
 
       {/* Newsletter */}
-      <section className="py-16 px-6 lg:px-20 border-t border-[#D4CBBB]">
+      <section className="py-16 px-6 lg:px-20 border-t border-[#DCD1C2]">
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
           <div>
-            <h3 className="font-display text-2xl text-[#1A1714] mb-1">Stay in the story.</h3>
-            <p className="text-[#6B5E4E] text-[14px]">Design insights, craft discoveries, and new homes — in your inbox.</p>
+            <h3 className="font-display text-2xl text-[#272821] mb-1">Stay in the story.</h3>
+            <p className="text-[#6D685D] text-[14px]">Design insights, craft discoveries, and new homes — in your inbox.</p>
           </div>
-          <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-xl flex-col gap-0 border border-[#D4CBBB] sm:flex-row">
+          <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-xl flex-col gap-0 border border-[#DCD1C2] sm:flex-row">
             <input
               type="email"
               value={newsletterEmail}
               onChange={(event) => { setNewsletterEmail(event.target.value); setNewsletterState('idle'); }}
               placeholder="your@email.com"
               aria-label="Email address"
-              className="w-full min-w-0 flex-1 px-5 py-3 text-[14px] bg-transparent outline-none text-[#1A1714] placeholder:text-[#6B5E4E] sm:w-60"
+              className="w-full min-w-0 flex-1 px-5 py-3 text-[14px] bg-transparent outline-none text-[#272821] placeholder:text-[#6D685D] sm:w-60"
               disabled={newsletterState === 'submitting'}
             />
-            <button type="submit" disabled={newsletterState === 'submitting'} className="w-full px-6 py-3 bg-[#1C3A5A] text-white text-[13px] hover:bg-[#2D8C7E] transition-colors disabled:opacity-60 sm:w-auto">
+            <button type="submit" disabled={newsletterState === 'submitting'} className="w-full px-6 py-3 bg-[#27463D] text-white text-[13px] hover:bg-[#91A18A] transition-colors disabled:opacity-60 sm:w-auto">
               {newsletterState === 'submitting' ? 'Saving…' : 'Subscribe'}
             </button>
           </form>
-          {newsletterState === 'success' && <p className="mt-2 text-xs text-[#2D8C7E]">You’re on the list.</p>}
+          {newsletterState === 'success' && <p className="mt-2 text-xs text-[#91A18A]">You’re on the list.</p>}
           {newsletterState === 'error' && <p className="mt-2 text-xs text-[#B64B42]">Please enter a valid email and try again.</p>}
         </div>
       </section>
