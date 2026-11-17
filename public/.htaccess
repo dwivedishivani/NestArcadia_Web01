@@ -11,6 +11,10 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
 RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
 
+# 301: superseded modular kitchen article → canonical version
+RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+RewriteRule ^journal/modular-kitchen-noida/?$ https://nestarcadia.com/journal/modular-kitchen-design-noida/ [R=301,L]
+
 # Redirect www to apex and add the trailing slash in the same hop where needed.
 RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
 RewriteCond %{REQUEST_URI} !/$
