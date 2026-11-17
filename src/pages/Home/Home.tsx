@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import type { Page } from '../../App';
 import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
-
-interface Props { setPage: (p: Page) => void; }
 
 // Use each homepage image's stored public URL directly so first visits do not
 // pay an Edge Function 302 redirect (or start a second request after registry load).
@@ -149,8 +146,9 @@ const faqs = [
   { question: 'When should I contact an interior designer?', answer: 'Ideally, contact us before possession or before any civil work begins. Early planning gives more flexibility for electrical points, storage, lighting, kitchen layout and material decisions.' },
 ];
 
-export default function Home({ setPage }: Props) {
+export default function Home() {
   const [trendStart, setTrendStart] = useState(0);
+  const trendTouchStart = useRef<number | null>(null);
   const [heroSlide, setHeroSlide] = useState(0);
   const [heroImageFallback, setHeroImageFallback] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -308,18 +306,18 @@ export default function Home({ setPage }: Props) {
             {currentHero.description}
           </p>
           <div className="flex flex-wrap items-center gap-4">
-            <button
-              onClick={() => setPage('project')}
-              className="min-h-12 text-[14px] font-semibold text-[#1A1714] bg-white px-7 py-3 transition-colors hover:bg-[#EAE4DA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            <Link
+              to="/start-your-project/"
+              className="inline-flex min-h-12 items-center text-[14px] font-semibold text-[#1A1714] bg-white px-7 py-3 transition-colors hover:bg-[#EAE4DA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Plan Your Interior →
-            </button>
-            <button
-              onClick={() => setPage('homes')}
-              className="min-h-12 text-[14px] text-white border border-white/60 px-7 py-3 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            </Link>
+            <Link
+              to="/our-projects/"
+              className="inline-flex min-h-12 items-center text-[14px] text-white border border-white/60 px-7 py-3 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Explore Design Concepts
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -343,12 +341,12 @@ export default function Home({ setPage }: Props) {
             <p className="text-[#6B5E4E] text-[15px] leading-[1.9]">
               We take inspiration from India's rich design heritage — its materials, crafts and ways of living — and reimagine them for modern homes. Not as replicas of the past, but as living spaces that carry its spirit forward.
             </p>
-            <button
-              onClick={() => setPage('story')}
+            <Link
+              to="/our-story/"
               className="text-[14px] text-[#1C3A5A] border-b border-[#1C3A5A] pb-px self-start hover:text-[#17665B] hover:border-[#17665B] transition-colors"
             >
               Our Story →
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -360,15 +358,15 @@ export default function Home({ setPage }: Props) {
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Design Cultures</h2>
             <p className="text-[#6B5E4E] text-[15px] mt-1.5">Same roots. Endless possibilities.</p>
           </div>
-          <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
+          <Link to="/design-cultures/" className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All →
-          </button>
+          </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
           {cultures.map(c => (
-            <button
+            <Link
               key={c.name}
-              onClick={() => setPage('cultures')}
+              to="/design-cultures/"
               className="relative overflow-hidden group bg-[#1C3A5A]"
               style={{ aspectRatio: '3/4' }}
             >
@@ -389,7 +387,7 @@ export default function Home({ setPage }: Props) {
                 <p className="font-display text-xl text-white font-medium leading-tight">{c.name}</p>
                 <p className="text-white/65 text-[13px] leading-relaxed min-h-10">{c.desc}</p>
               </div>
-            </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -407,12 +405,12 @@ export default function Home({ setPage }: Props) {
             <p className="text-white/65 text-[15px] leading-relaxed max-w-xs mb-8">
               From rattan mesh to jaali screens, from carved wood to natural stone — we bring back what is meaningful, with a modern sensibility.
             </p>
-            <button
-              onClick={() => setPage('cultures')}
-              className="text-[14px] text-white border border-white/45 px-6 py-2.5 self-start transition-all hover:bg-white hover:text-[#1A1714]"
+            <Link
+              to="/design-cultures/"
+              className="inline-flex text-[14px] text-white border border-white/45 px-6 py-2.5 self-start transition-all hover:bg-white hover:text-[#1A1714]"
             >
               Explore Trends →
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -446,11 +444,26 @@ export default function Home({ setPage }: Props) {
           </div>
 
           {/* 3 visible trend cards */}
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0">
+          <div
+            className="flex gap-4 overflow-hidden pb-2 -mx-1 px-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0 touch-pan-y"
+            role="group"
+            aria-label="Trending interior design ideas"
+            onTouchStart={(event) => { trendTouchStart.current = event.touches[0]?.clientX ?? null; }}
+            onTouchEnd={(event) => {
+              const start = trendTouchStart.current;
+              trendTouchStart.current = null;
+              if (start === null) return;
+              const delta = (event.changedTouches[0]?.clientX ?? start) - start;
+              if (Math.abs(delta) >= 48) {
+                if (delta < 0) nextTrend();
+                else prevTrend();
+              }
+            }}
+          >
             {visible.map((t, i) => (
-              <button
+              <Link
                 key={t.name + trendStart}
-                onClick={() => setPage('cultures')}
+                to="/design-cultures/"
                 className="min-w-[78%] snap-start text-left group sm:min-w-0"
                 style={{
                   opacity: 1,
@@ -478,7 +491,7 @@ export default function Home({ setPage }: Props) {
                     {t.desc}
                   </p>
                 )}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -516,19 +529,19 @@ export default function Home({ setPage }: Props) {
               End-to-end interior solutions, inspired by heritage, designed for modern living.
             </p>
           </div>
-          <button onClick={() => setPage('services')} className="hidden sm:block text-[14px] text-[#1A1714] pt-2 hover:text-[#17665B] transition-colors">
+          <Link to="/interior-design-services/" className="hidden sm:block text-[14px] text-[#1A1714] pt-2 hover:text-[#17665B] transition-colors">
             View All Services →
-          </button>
+          </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 items-start gap-x-8 gap-y-10 lg:gap-6">
           {services.map(s => (
-            <button key={s.name} onClick={() => setPage('services')} className="group flex h-full flex-col text-left">
+            <Link key={s.name} to="/interior-design-services/" className="group flex h-full flex-col text-left">
               <div className="w-10 h-10 border border-[#D4CBBB] flex items-center justify-center text-[#17665B] mb-4 transition-all group-hover:bg-[#17665B] group-hover:border-[#17665B] group-hover:text-white">
                 <span className="text-base">{s.icon}</span>
               </div>
               <p className="min-h-12 text-[14px] font-medium text-[#1A1714] mb-1.5">{s.name}</p>
               <p className="min-h-[4.1rem] text-[13px] text-[#6B5E4E] leading-relaxed">{s.desc}</p>
-            </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -545,12 +558,12 @@ export default function Home({ setPage }: Props) {
             <p className="text-white/60 text-[15px] leading-relaxed mb-7 max-w-xs">
               We do not simply decorate the square footage you have. We rethink how every square foot works.
             </p>
-            <button
-              onClick={() => setPage('homes')}
-              className="text-[14px] text-white border border-white/45 px-6 py-2.5 self-start transition-all hover:bg-white hover:text-[#1A1714]"
+            <Link
+              to="/our-projects/"
+              className="inline-flex text-[14px] text-white border border-white/45 px-6 py-2.5 self-start transition-all hover:bg-white hover:text-[#1A1714]"
             >
               Explore a Home →
-            </button>
+            </Link>
           </div>
         </div>
         <div className="bg-[#1C3A5A] flex flex-col justify-center px-10 lg:px-16 py-16">
@@ -575,20 +588,20 @@ export default function Home({ setPage }: Props) {
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Featured Home Concepts</h2>
             <p className="text-[#6B5E4E] text-[15px] mt-1.5">Selected design studies for apartments, villas and family homes.</p>
           </div>
-          <button onClick={() => setPage('homes')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
+          <Link to="/our-projects/" className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All Homes →
-          </button>
+          </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {homes.map(h => (
-            <button key={h.name} onClick={() => setPage('homes')} className="text-left group flex h-full flex-col">
+            <Link key={h.name} to="/our-projects/" className="text-left group flex h-full flex-col">
               <div className="overflow-hidden bg-[#D4CBBB] mb-4 shrink-0" style={{ aspectRatio: '4/3' }}>
                 <img src={IMG[h.img]} data-site-image-key={directImageKey(IMG[h.img])} srcSet={imageSrcSet(IMG[h.img])} sizes="(max-width: 639px) 90vw, (max-width: 1023px) 45vw, 25vw" alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.loc}) — selected interior design concept`} loading="lazy" fetchPriority="low" decoding="async" width="800" height="600" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
               <p className="font-display text-lg text-[#1A1714] min-h-[3.5rem]">{h.name}</p>
               <p className="text-[13px] text-[#17665B] mt-1 mb-1.5 min-h-[1.25rem]">{h.loc}</p>
               <p className="text-[13px] text-[#6B5E4E] leading-relaxed min-h-[3.75rem]">{h.desc}</p>
-            </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -701,12 +714,12 @@ export default function Home({ setPage }: Props) {
               Let's Create a Home<br />That Belongs to You
             </h2>
             <p className="text-white/55 text-[15px] mb-8">Your requirement comes first. Always.</p>
-            <button
-              onClick={() => setPage('project')}
-              className="text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-[#17665B] hover:border-[#17665B]"
+            <Link
+              to="/start-your-project/"
+              className="inline-flex text-[14px] text-white border border-white/45 px-7 py-3 transition-all hover:bg-[#17665B] hover:border-[#17665B]"
             >
               Tell Us About Your Space →
-            </button>
+            </Link>
           </div>
           <div className="hidden lg:flex flex-col gap-4">
             {[
