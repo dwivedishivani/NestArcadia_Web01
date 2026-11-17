@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import type { Page } from '../../App';
+import { Link } from 'react-router';
 import { resolveSiteImage } from '../../utils/siteImages';
-
-interface Props { setPage: (p: Page) => void; }
 
 export const faqGroups = [
   {
@@ -56,7 +54,7 @@ export const faqGroups = [
   },
 ];
 
-export default function FAQs({ setPage }: Props) {
+export default function FAQs() {
   const [open, setOpen] = useState<string | null>('Which areas does NestArcadia serve?');
   return (
     <div className="pt-20 lg:pt-[90px]">
@@ -88,10 +86,28 @@ export default function FAQs({ setPage }: Props) {
               <div className="border-t border-[#D4CBBB]">
                 {group.items.map(([question, answer]) => (
                   <div key={question} className="border-b border-[#D4CBBB]">
-                    <button type="button" className="flex w-full items-center justify-between gap-6 py-5 text-left text-[16px] font-medium text-[#1A1714]" onClick={() => setOpen(open === question ? null : question)} aria-expanded={open === question}>
-                      {question}<span className="text-xl font-normal text-[#17665B]" aria-hidden="true">{open === question ? '−' : '+'}</span>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-6 py-5 text-left text-[16px] font-medium text-[#1A1714]"
+                      onClick={() => setOpen(open === question ? null : question)}
+                      aria-expanded={open === question}
+                      aria-controls={`faq-answer-${question.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                    >
+                      {question}
+                      <span className="text-xl font-normal text-[#17665B]" aria-hidden="true">{open === question ? '−' : '+'}</span>
                     </button>
-                    {open === question && <p className="max-w-3xl pb-6 pr-10 text-[15px] leading-[1.9] text-[#6B5E4E]">{answer}</p>}
+                    <div
+                      id={`faq-answer-${question.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${open === question ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                      aria-hidden={open !== question}
+                      inert={open !== question}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <p className={`max-w-3xl pb-6 pr-10 text-[15px] leading-[1.9] text-[#6B5E4E] transition-opacity duration-300 ${open === question ? 'opacity-100' : 'opacity-0'}`}>
+                          {answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -103,7 +119,7 @@ export default function FAQs({ setPage }: Props) {
       <section className="bg-[#1C3A5A] px-6 lg:px-20 py-16">
         <div className="max-w-[1120px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div><h2 className="font-display text-3xl text-white">Still have a question about your space?</h2><p className="mt-2 text-[14px] text-white/65">Tell us about your home or workplace and we will guide the next step.</p></div>
-          <button onClick={() => setPage('project')} className="shrink-0 border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#17665B]">Get Answers for Your Home →</button>
+          <Link to="/start-your-project/" className="inline-flex shrink-0 items-center border border-white/45 px-7 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#17665B]">Get Answers for Your Home →</Link>
         </div>
       </section>
     </div>
