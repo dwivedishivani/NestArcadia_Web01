@@ -37,19 +37,20 @@ export const localServicePages: LocalServiceConfig[] = [
       { title: 'New-possession planning', body: 'The best time to resolve kitchen layouts, wardrobes, lighting and electrical points is before execution gathers speed. Early planning reduces avoidable changes later.' },
       { title: 'Storage without crowding', body: 'Apartment interiors need storage, but not at the cost of circulation. We look at full-height opportunities, furniture scale and what needs to stay accessible every day.' },
       { title: 'A home that feels personal', body: 'A local interior should still feel like your home, not a model apartment. Materials, colour, furniture and details are developed around your routines and preferences.' },
-      { title: 'Set a realistic scope before execution', body: 'For a raw or newly handed-over apartment, NestArcadia’s published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. The final quote depends on what is already complete, the storage and furniture scope, materials and customisation.' },
+      { title: 'Set a realistic scope before execution', body: 'For a raw or newly handed-over apartment, NestArcadia's published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. The final quote depends on what is already complete, the storage and furniture scope, materials and customisation.' },
     ],
     services: ['2BHK, 3BHK and 4BHK apartment interior planning','Turnkey interior design and site coordination','Modular kitchens, wardrobes and custom storage','Lighting, material and finish planning','Vastu-led layout discussions when requested','Commercial office interiors for local businesses'],
     fit: ['New-possession apartments where electrical, lighting and storage decisions need to be made before execution','Families that need flexible rooms, concealed storage and practical everyday circulation','Homeowners who want a single design direction carried through drawings, materials and site work','Small commercial teams planning a client-facing office in Greater Noida West'],
     process: ['Property and brief review — understand the layout, possession status, household and scope.','Space planning — resolve circulation, storage, kitchen, furniture and major services before styling.','Design development — material palette, 3D visualisation, drawings and execution decisions.','Execution coordination — align vendors, craftsmen, site work and quality checks.','Handover — review the completed work against the agreed scope and practical use.'],
     faqs: [
       { question: 'Do you design 2BHK and 3BHK interiors in Greater Noida West?', answer: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, with the scope shaped around the actual layout, household routines, storage needs and material choices.' },
-      { question: 'What is the typical 2BHK or 3BHK interior design budget in Greater Noida West?', answer: 'For a raw or newly handed-over apartment, NestArcadia’s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already complete, the cost may be lower; premium materials, custom furniture and extensive decor can increase it. The property and exact scope need to be reviewed for a quote.' },
+      { question: 'What is the typical 2BHK or 3BHK interior design budget in Greater Noida West?', answer: 'For a raw or newly handed-over apartment, NestArcadia\'s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already complete, the cost may be lower; premium materials, custom furniture and extensive decor can increase it. The property and exact scope need to be reviewed for a quote.' },
       { question: 'Can you handle turnkey execution in Greater Noida West?', answer: 'Depending on the project scope, turnkey work can include design development, material coordination, custom and modular furniture, site coordination, lighting and final handover.' },
       { question: 'When should I contact an interior designer for a new-possession flat?', answer: 'Ideally before civil work and major service decisions begin. Early planning gives the design team more control over electrical points, kitchen planning, storage, lighting and sequencing.' },
     ],
     related: [
       { href: '/interior-design-services/', label: 'Explore interior design and turnkey services' },
+      { href: '/interior-design-cost-noida/', label: 'See 2BHK and 3BHK interior design cost in Noida' },
       { href: '/journal/buying-new-flat-interior-checklist/', label: 'Read the new-flat interior checklist' },
       { href: '/journal/space-saving-interiors-noida/', label: 'Read the space-saving guide for NCR apartments' },
     ],
@@ -68,20 +69,21 @@ export const localServicePages: LocalServiceConfig[] = [
       { title: 'Make every square foot work', body: 'Compact rooms benefit from deliberate furniture sizes, vertical storage and clear circulation. The goal is not to fill the apartment; it is to make it easier to live in.' },
       { title: 'Design around real routines', body: 'Work-from-home, guests, children, appliances and everyday storage all compete for space. We plan the home around how your household actually moves through it.' },
       { title: 'Plan before the site gets busy', body: 'Drawings, materials, lighting and service decisions are easier to coordinate before execution starts. That creates a clearer brief for the people building the work.' },
-      { title: 'Match the finish to the budget', body: 'The starting budget depends on the condition of the apartment and what is included. For newly handed-over homes, NestArcadia’s published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK, before adjustments for customisation and scope.' },
+      { title: 'Match the finish to the budget', body: 'The starting budget depends on the condition of the apartment and what is included. For newly handed-over homes, NestArcadia\'s published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK, before adjustments for customisation and scope.' },
     ],
     services: ['2BHK, 3BHK and 4BHK apartment interiors','Space planning and furniture layouts','Modular kitchen and wardrobe planning','Custom storage for compact apartments','Lighting and material selection','Turnkey design-to-handover coordination'],
     fit: ['New homeowners preparing a flat for possession','Compact apartments where every storage decision affects circulation','Families combining work-from-home, guest and everyday living needs','Homeowners who want a clear scope before committing to execution'],
     process: ['Understand the property — review drawings, site conditions, household requirements and budget direction.','Plan the space — define room roles, circulation, storage and fixed-service requirements.','Develop the design — visualise the palette and document the details needed for execution.','Coordinate execution — manage the sequence of civil, electrical, ceiling, joinery and finish work.','Review handover — check the finished space for function, fit and agreed scope.'],
     faqs: [
       { question: 'Can you design a compact 2BHK in Noida Extension?', answer: 'Yes. Compact homes benefit from early space planning, especially around entry storage, kitchen workflow, wardrobes, flexible rooms and furniture scale.' },
-      { question: 'How much does a 2BHK or 3BHK interior cost in Noida Extension?', answer: 'For a raw or newly handed-over apartment, NestArcadia’s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. Completed flooring, electrical or civil work can change the cost; premium materials, custom furniture and extensive decor can increase it. A detailed estimate needs the floor plan and agreed scope.' },
+      { question: 'How much does a 2BHK or 3BHK interior cost in Noida Extension?', answer: 'For a raw or newly handed-over apartment, NestArcadia\'s published starting guidance is around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. Completed flooring, electrical or civil work can change the cost; premium materials, custom furniture and extensive decor can increase it. A detailed estimate needs the floor plan and agreed scope.' },
       { question: 'Do you work with new-possession apartments?', answer: 'Yes. Early involvement can help coordinate layout, electrical, lighting, storage and material decisions before execution begins.' },
       { question: 'Do you provide only design, or execution too?', answer: 'The scope can be tailored. You can discuss focused design support or a broader turnkey process depending on the project requirements.' },
     ],
     related: [
       { href: '/interior-design-services/', label: 'See the full service scope' },
-      { href: '/journal/modular-kitchen-noida/', label: 'Read the modular kitchen guide' },
+      { href: '/interior-design-cost-noida/', label: 'See 2BHK and 3BHK interior design cost in Noida' },
+      { href: '/journal/modular-kitchen-design-noida/', label: 'Read the modular kitchen guide' },
       { href: '/journal/apartment-renovation-noida/', label: 'Read the apartment renovation sequence' },
     ],
   },
@@ -162,14 +164,14 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Do you design homes in Greater Noida?', answer: 'Yes. NestArcadia works on apartments, villas and other residential interiors in Greater Noida, with scope shaped around the property and household.' },
       { question: 'Can you manage turnkey execution?', answer: 'Turnkey execution can be included where the project scope calls for it, from design decisions through site coordination and handover.' },
     ],
-    related: [{ href: '/interior-design-services/', label: 'See all interior design services' }, { href: '/start-your-project/', label: 'Share your project brief' }],
+    related: [{ href: '/interior-design-services/', label: 'See all interior design services' }, { href: '/interior-design-cost-noida/', label: 'See 2BHK and 3BHK interior cost guide' }, { href: '/start-your-project/', label: 'Share your project brief' }],
     gallery,
   },
   {
     path: '/interior-design-noida',
     eyebrow: 'Noida · Interior Design',
     title: 'Interior Design in Noida',
-    description: 'Residential and commercial interior design in Noida for apartments, villas and workspaces—planned for everyday use, not just the final photograph.',
+    description: 'Residential and commercial interior design in Noida for 2BHK, 3BHK and 4BHK apartments, villas and workspaces — planned for everyday use, with turnkey execution. Starting ₹6.5 lakh.',
     area: 'Noida',
     heroImage: gallery[1],
     introLabel: 'A practical design approach',
@@ -179,6 +181,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { title: 'Space planning', body: 'Furniture scale, circulation and storage are resolved early so the finished room does not feel over-designed or under-used.' },
       { title: 'Material intelligence', body: 'We choose finishes for how they age, clean and perform—not only for how they look on a mood board.' },
       { title: 'A clear execution brief', body: 'The design is translated into decisions that vendors and craftsmen can actually build.' },
+      { title: 'Cost starting point for Noida', body: 'A complete 2BHK interior in Noida typically starts around ₹6.5–7 lakh for a raw flat. A 3BHK starts around ₹9–10 lakh. 4BHK and villa projects are quoted on scope. The final number depends on possession status, materials, storage and customisation.' },
     ],
     services: ['Apartment and villa interiors','2BHK, 3BHK and 4BHK planning','Office and commercial interiors','Custom furniture and storage','Lighting and material planning','Turnkey execution coordination'],
     fit: ['Apartment owners renovating or starting from bare possession','Families balancing aesthetics with storage and daily routines','Professionals creating a home office or flexible room','Businesses needing a polished but practical workspace'],
@@ -186,8 +189,17 @@ const additionalLocationPages: LocalServiceConfig[] = [
     faqs: [
       { question: 'What type of projects do you take in Noida?', answer: 'Residential apartments, villas and selected commercial or office interiors, depending on project scope and requirements.' },
       { question: 'Can you help with both design and execution?', answer: 'Yes. The engagement can cover design only or extend through execution coordination and handover.' },
+      { question: 'How much does a 2BHK interior design cost in Noida?', answer: 'For a raw or newly handed-over 2BHK, NestArcadia\'s published starting guidance is around ₹6.5–7 lakh. This covers space planning, modular kitchen, wardrobes, false ceiling, electrical finishing, lighting, furniture and final handover. Costs change with possession status, material choices and scope.' },
+      { question: 'How much does a 3BHK interior design cost in Noida?', answer: 'A 3BHK typically starts around ₹9–10 lakh for a raw flat. Larger scope, premium materials, full custom furniture or extensive décor can increase the total. The best way to get an accurate figure is to share your floor plan.' },
+      { question: 'Do you work on 4BHK and villa interiors in Noida?', answer: 'Yes. 4BHK apartments and villas are quoted based on the floor plan, number of rooms, finish level and turnkey scope. Share your property details to start the conversation.' },
     ],
-    related: [{ href: '/interior-design-services/', label: 'Explore our services' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
+    related: [
+      { href: '/interior-design-services/', label: 'Explore our services' },
+      { href: '/interior-design-cost-noida/', label: 'Full 2BHK and 3BHK interior cost guide for Noida' },
+      { href: '/journal/2bhk-interior-cost-noida-extension/', label: 'Read the 2BHK cost breakdown' },
+      { href: '/journal/3bhk-interior-cost-greater-noida-west/', label: 'Read the 3BHK cost breakdown' },
+      { href: '/start-your-project/', label: 'Start a project conversation' },
+    ],
     gallery,
   },
   {
@@ -299,7 +311,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
     heroImage: gallery[0],
     introLabel: 'Design with a point of view',
     introTitle: 'Modern Indian interiors, without losing the human part.',
-    intro: 'Delhi homes can range from compact apartments to larger independent properties, each carrying different spatial and material realities. NestArcadia creates a clear design direction around the client’s lifestyle, the architecture and what needs to work every day.',
+    intro: 'Delhi homes can range from compact apartments to larger independent properties, each carrying different spatial and material realities. NestArcadia creates a clear design direction around the client\'s lifestyle, the architecture and what needs to work every day.',
     insights: [
       { title: 'Respect the architecture', body: 'Existing proportions, light, circulation and structural realities shape the design rather than being ignored.' },
       { title: 'Make storage deliberate', body: 'Custom storage is used where it solves a real problem, not simply because an empty wall is available.' },
@@ -310,7 +322,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
     process: ['Understand the property and brief.','Plan space, storage and services.','Develop the design and materials.','Coordinate execution.','Review and handover.'],
     faqs: [
       { question: 'Do you take interior projects in Delhi?', answer: 'Yes, project scope and location are reviewed before confirming the engagement.' },
-      { question: 'What makes NestArcadia different from a package interior?', answer: 'The design starts from the property and the client’s routines, rather than a fixed package of finishes and furniture.' },
+      { question: 'What makes NestArcadia different from a package interior?', answer: 'The design starts from the property and the client\'s routines, rather than a fixed package of finishes and furniture.' },
     ],
     related: [{ href: '/interior-design-services/', label: 'Explore interior design services' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
     gallery,
@@ -334,7 +346,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
     fit: ['Apartment renovations','New interiors for family homes','Homes with limited storage','Clients wanting design-to-execution clarity'],
     process: ['Property review.','Space and storage planning.','Design and materials.','Execution coordination.','Handover.'],
     faqs: [
-      { question: 'Can you optimise storage in a smaller East Delhi home?', answer: 'Yes. Storage is planned around circulation, furniture scale and the household’s actual needs.' },
+      { question: 'Can you optimise storage in a smaller East Delhi home?', answer: 'Yes. Storage is planned around circulation, furniture scale and the household\'s actual needs.' },
       { question: 'Do you handle complete interiors?', answer: 'The scope can cover design through execution coordination depending on the project.' },
     ],
     related: [{ href: '/interior-design-services/', label: 'See interior design services' }, { href: '/start-your-project/', label: 'Share your brief' }],
@@ -349,7 +361,7 @@ const additionalLocationPages: LocalServiceConfig[] = [
     heroImage: gallery[3],
     introLabel: 'Quietly distinctive interiors',
     introTitle: 'The goal is not more design. It is better decisions.',
-    intro: 'South Delhi projects can have very different architectural contexts, from apartments to independent homes. NestArcadia keeps the brief grounded in proportion, material quality, storage, light and the client’s everyday life.',
+    intro: 'South Delhi projects can have very different architectural contexts, from apartments to independent homes. NestArcadia keeps the brief grounded in proportion, material quality, storage, light and the client\'s everyday life.',
     insights: [
       { title: 'Proportion over decoration', body: 'Furniture, joinery and room scale are resolved so the space feels composed without being crowded.' },
       { title: 'Material restraint', body: 'A smaller, considered material palette often creates more character than a room full of competing finishes.' },
@@ -487,8 +499,90 @@ const additionalLocationPages: LocalServiceConfig[] = [
       { question: 'Where in NCR does NestArcadia work?', answer: 'The studio is rooted in Greater Noida West and can discuss projects across Noida, Greater Noida, Ghaziabad, Delhi, Faridabad, Gurugram and nearby NCR markets.' },
       { question: 'Can the project be design-only?', answer: 'Yes. The engagement can be tailored to design, documentation or a broader turnkey scope depending on what the project needs.' },
     ],
-    related: [{ href: '/interior-design-services/', label: 'Explore the full service scope' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
+    related: [{ href: '/interior-design-services/', label: 'Explore the full service scope' }, { href: '/interior-design-cost-noida/', label: 'See 2BHK and 3BHK interior cost guide' }, { href: '/start-your-project/', label: 'Start a project conversation' }],
     gallery,
+  },
+  // ─── Cost Hub Page ──────────────────────────────────────────────────────────
+  {
+    path: '/interior-design-cost-noida',
+    eyebrow: 'Noida & NCR · Interior Design Cost Guide',
+    title: 'Interior Design Cost in Noida: 2BHK, 3BHK & 4BHK',
+    description: 'How much does interior design cost in Noida? NestArcadia\'s honest guide to 2BHK, 3BHK and 4BHK interior budgets in Noida, Greater Noida West and NCR — with real INR starting figures.',
+    area: 'Noida',
+    heroImage: gallery[1],
+    introLabel: 'An honest cost guide',
+    introTitle: 'What does interior design actually cost in Noida and NCR?',
+    intro: 'The most common question before a project begins is: how much will this cost? The answer depends on the property, the scope and the finish level — but there are reliable starting points. This page sets out what NestArcadia\'s clients have paid for 2BHK, 3BHK and 4BHK interiors in Noida, Greater Noida West and Noida Extension, and explains the factors that push budgets up or down.',
+    insights: [
+      {
+        title: '2BHK interior design cost in Noida',
+        body: 'A complete 2BHK interior for a raw or newly handed-over flat typically starts at ₹6.5–7 lakh. This covers modular kitchen, wardrobes for two bedrooms, false ceiling with lighting, electrical finishing, flooring, furniture selection and final handover. Premium materials, full custom furniture or extensive decor can push this higher.',
+      },
+      {
+        title: '3BHK interior design cost in Noida',
+        body: 'A 3BHK complete interior starts around ₹9–10 lakh for a raw flat. Three bedrooms of storage, a full kitchen, false ceiling across common areas, lighting, flooring and coordination are included in a typical scope. The number moves based on the number of custom pieces, material choices and site condition.',
+      },
+      {
+        title: '4BHK and villa interior design cost',
+        body: 'A 4BHK apartment typically starts at ₹14–17 lakh depending on floor area, finish level and the number of custom pieces. Villa and farmhouse projects are quoted on the floor plan and agreed scope — the per-square-foot figure is less useful here because room character, ceiling heights and outdoor areas vary significantly.',
+      },
+      {
+        title: 'What changes the final cost?',
+        body: 'The possession status (raw vs partly finished), material tier (standard laminates vs veneer vs lacquer), ratio of modular to custom furniture, extent of false ceiling, lighting fixtures and amount of decor are the main cost variables. Sharing the floor plan and a rough scope is the fastest way to get a realistic number.',
+      },
+    ],
+    services: [
+      '2BHK full interior from ₹6.5 lakh',
+      '3BHK full interior from ₹9 lakh',
+      '4BHK full interior from ₹14 lakh',
+      'Modular kitchen planning and execution',
+      'Wardrobe and storage design',
+      'False ceiling, lighting and electrical finishing',
+      'Turnkey interior coordination and handover',
+    ],
+    fit: [
+      'New-possession flat owners planning a complete interior',
+      'Families with a rough budget who want an honest starting point',
+      'Homeowners comparing costs across studios and package firms',
+      'People deciding between full execution and a design-only scope',
+    ],
+    process: [
+      'Share your floor plan, location and rough budget direction.',
+      'NestArcadia reviews the property, possession status and your scope priorities.',
+      'A realistic cost range is shared — not a vague estimate, but a figure tied to your flat.',
+      'If the range works, design begins: space planning, kitchen, storage, materials and drawings.',
+      'Execution is coordinated and the home is reviewed before final handover.',
+    ],
+    faqs: [
+      {
+        question: 'How much does 2BHK interior design cost in Noida?',
+        answer: 'A complete 2BHK interior in Noida, covering modular kitchen, wardrobes, false ceiling, lighting, electrical finishing and furniture, starts around ₹6.5–7 lakh for a raw flat. If civil or electrical work is partly done, the cost can be lower. Premium materials and custom furniture can increase it.',
+      },
+      {
+        question: 'How much does 3BHK interior design cost in Noida?',
+        answer: 'A full 3BHK interior starts around ₹9–10 lakh in Noida and Greater Noida West. This includes three bedrooms of storage, a complete kitchen, false ceiling across common areas, lighting and flooring. The final number depends on material tier and how much is custom-made.',
+      },
+      {
+        question: 'What is included in a turnkey interior package?',
+        answer: 'A turnkey interior typically includes the design scope (space planning, 3D visualisation, working drawings), material selection and procurement, modular furniture (kitchen, wardrobes, storage units), civil finishing, false ceiling, electrical and lighting work, and final handover with a site review.',
+      },
+      {
+        question: 'Can I get a 2BHK done under ₹5 lakh?',
+        answer: 'A complete 2BHK interior including kitchen, wardrobes, false ceiling, lighting, flooring and furniture is difficult to do well under ₹5 lakh in Noida today. ₹6.5–7 lakh is a realistic floor for a standard scope with mid-range materials. A design-only engagement or a partial scope (kitchen and wardrobes only) can be discussed if the full budget is not available yet.',
+      },
+      {
+        question: 'Does NestArcadia charge for the design separately?',
+        answer: 'The design is typically part of the overall project scope rather than a standalone charge. For clients who want design documentation only — drawings, material specs and BOQ without execution — a focused design engagement can be discussed.',
+      },
+    ],
+    related: [
+      { href: '/interior-design-noida/', label: 'Interior design services in Noida' },
+      { href: '/interior-design-greater-noida-west/', label: 'Interior designers in Greater Noida West' },
+      { href: '/interior-design-noida-extension/', label: 'Interior designers in Noida Extension' },
+      { href: '/journal/2bhk-interior-cost-noida-extension/', label: 'Read the detailed 2BHK cost breakdown' },
+      { href: '/journal/3bhk-interior-cost-greater-noida-west/', label: 'Read the detailed 3BHK cost breakdown' },
+      { href: '/start-your-project/', label: 'Share your floor plan for a real estimate' },
+    ],
   },
 ];
 
@@ -529,7 +623,7 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
               <img key={src + i} src={src} alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'} width="800" height="900" loading="lazy" decoding="async" className={`w-full h-[220px] lg:h-[300px] object-cover ${i === 1 ? 'mt-8 lg:mt-12' : ''} `} />
             ))}
           </div>
-          <p className="text-[11px] text-[#8A7B69] mt-3">Design references from NestArcadia’s visual language — not presented as a local project claim.</p>
+          <p className="text-[11px] text-[#8A7B69] mt-3">Design references from NestArcadia's visual language — not presented as a local project claim.</p>
         </section>
 
         <section className="bg-[#EAE4DA] px-6 lg:px-20 py-16 lg:py-20">
@@ -578,6 +672,19 @@ export default function LocalServicePage({ config, setPage }: { config: LocalSer
             </div>
           </div>
         </section>
+
+        {config.related.length > 0 && (
+          <section className="max-w-[1100px] mx-auto px-6 lg:px-20 pb-16 lg:pb-20">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-5">Related pages</p>
+            <div className="flex flex-wrap gap-3">
+              {config.related.map(link => (
+                <a key={link.href} href={link.href} className="border border-[#D4CBBB] px-4 py-2 text-[12px] text-[#1C3A5A] hover:bg-[#1C3A5A] hover:text-white transition-colors">
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

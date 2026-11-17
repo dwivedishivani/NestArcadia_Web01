@@ -95,7 +95,10 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   journal: { title: 'Interior Design Cost Guides & Planning Journal | NestArcadia', description: 'Practical 2BHK and 3BHK interior cost guides, material advice and execution planning for Noida Extension and Greater Noida West homeowners.' },
   homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia\'s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
-  faq: { title: 'Interior Design Cost, Services & FAQs | Noida & NCR', description: 'Answers about 2BHK and 3BHK interior design, costs, modular kitchens, turnkey execution, Vastu planning and commercial interiors across Noida, Greater Noida and NCR.' },
+  faq: {
+    title: 'How Much Does Interior Design Cost in Noida? FAQs Answered',
+    description: 'Get honest answers: 2BHK interior cost from ₹6.5L, 3BHK from ₹9L. Covers modular kitchens, turnkey execution, timelines and Vastu planning for Noida and NCR.',
+  },
   privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
   admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
 };
@@ -210,6 +213,22 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       title: 'Luxury Interior Design in Noida Extension: Planning Guide | NestArcadia Journal',
       description: 'A practical guide to high-end 3BHK and 4BHK apartment interiors in Noida Extension, covering spatial planning, finish selection and smart-home considerations.',
     },
+    '2bhk-interior-cost-noida-extension': {
+      title: '2BHK Interior Design Cost in Noida Extension: What to Budget | NestArcadia',
+      description: 'Honest 2BHK interior cost guide for Noida Extension: starting figures, what\'s included, what changes the price, and how to get a realistic quote for your flat.',
+    },
+    '3bhk-interior-cost-greater-noida-west': {
+      title: '3BHK Interior Design Cost in Greater Noida West: Budget Guide | NestArcadia',
+      description: 'What does a 3BHK interior actually cost in Greater Noida West? Starting figures, scope breakdown, material choices and how to plan a realistic budget.',
+    },
+    'interior-budget-conversation': {
+      title: 'How to Have the Interior Design Budget Conversation | NestArcadia Journal',
+      description: 'A guide to setting, communicating and protecting your interior design budget in Noida and NCR — before execution begins.',
+    },
+    'buying-new-flat-interior-checklist': {
+      title: 'New Flat Interior Checklist for Noida & NCR | NestArcadia Journal',
+      description: 'What to plan before your interior designer starts: possession checklist, decisions to make early, and what to expect from the first site visit.',
+    },
   };
 
   useEffect(() => {
@@ -319,7 +338,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     ] };
     const pageBreadcrumb = !activeArticle && !localService && page !== 'home' ? { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-      { '@type': 'ListItem', position: 2, name: meta.title.replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
+      { '@type': 'ListItem', position: 2, name: meta.title.replace(/\s*|\s*NestArcadia(?: Journal)?\s*$/i, ''), item: canonical },
     ] } : null;
       const localBreadcrumb = localService && { '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
