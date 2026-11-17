@@ -56,9 +56,9 @@ const trending = [
 
 export default function DesignCultures({ setPage }: Props) {
   return (
-    <div className="pt-20 lg:pt-[90px]">
+    <div className="na-page na-page-cultures pt-20 lg:pt-[90px]">
       {/* Page Header */}
-      <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '380px' }}>
+      <div className="na-page-hero relative overflow-hidden bg-[#27463D]" style={{ minHeight: '380px' }}>
         <img
           src={u('photo-1788612994420-36d5696585ca', 1440, 500)}
           data-site-image-key="photo-1788612994420-36d5696585ca"
@@ -69,7 +69,7 @@ export default function DesignCultures({ setPage }: Props) {
           height="500"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C3A5A]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#27463D]/60" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[380px] pb-14">
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">India's Design Heritage</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05]">
@@ -86,11 +86,11 @@ export default function DesignCultures({ setPage }: Props) {
         {cultures.map((c, i) => (
           <div
             key={c.name}
-            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#D4CBBB] design-culture-row lg:overflow-hidden ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
+            className={`grid lg:grid-cols-2 gap-0 py-0 border-b border-[#DCD1C2] design-culture-row lg:overflow-hidden ${i === 0 ? 'mt-20' : ''} ${i === cultures.length - 1 ? 'mb-20' : ''}`}
           >
             {/* Image — alternates sides */}
             <div
-              className={`relative overflow-hidden bg-[#D4CBBB] h-[385px] lg:h-full min-h-0 ${i % 2 === 1 ? 'lg:order-2' : ''}`}
+              className={`relative overflow-hidden bg-[#DCD1C2] h-[385px] lg:h-full min-h-0 ${i % 2 === 1 ? 'lg:order-2' : ''}`}
             >
               <img
                 src={c.img}
@@ -110,18 +110,18 @@ export default function DesignCultures({ setPage }: Props) {
             {/* Text */}
             <div
               className={`flex flex-col justify-center px-8 lg:px-16 py-14 lg:py-8 overflow-hidden ${i % 2 === 1 ? 'lg:order-1' : ''}`}
-              style={{ background: i % 2 === 0 ? '#F2EDE4' : '#EAE4DA' }}
+              style={{ background: i % 2 === 0 ? '#F5F1E8' : '#ECE4D8' }}
             >
-              <p className="text-[10px] uppercase tracking-[0.28em] text-[#6B5E4E] mb-2 lg:mb-2">0{i + 1}</p>
-              <h2 className="font-display text-[clamp(2rem,4vw,3rem)] text-[#1A1714] mb-1 lg:mb-1">{c.name}</h2>
-              <p className="text-[#2D8C7E] text-sm lg:text-[13px] mb-3 lg:mb-3">{c.tagline}</p>
-              <p className="text-[#6B5E4E] text-sm leading-[1.8] lg:text-[13px] lg:leading-[1.55] mb-4 lg:mb-4">{c.desc}</p>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-[#6D685D] mb-2 lg:mb-2">0{i + 1}</p>
+              <h2 className="font-display text-[clamp(2rem,4vw,3rem)] text-[#272821] mb-1 lg:mb-1">{c.name}</h2>
+              <p className="text-[#91A18A] text-sm lg:text-[13px] mb-3 lg:mb-3">{c.tagline}</p>
+              <p className="text-[#6D685D] text-sm leading-[1.8] lg:text-[13px] lg:leading-[1.55] mb-4 lg:mb-4">{c.desc}</p>
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E] mb-2 lg:mb-2">Signature Materials</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#6D685D] mb-2 lg:mb-2">Signature Materials</p>
                 <ul className="flex flex-col gap-1 lg:gap-1">
                   {c.materials.map(m => (
-                    <li key={m} className="text-xs lg:text-[11px] text-[#1A1714] flex items-center gap-2">
-                    <span className="w-1 h-1 bg-[#2D8C7E] rounded-full shrink-0" />
+                    <li key={m} className="text-xs lg:text-[11px] text-[#272821] flex items-center gap-2">
+                    <span className="w-1 h-1 bg-[#91A18A] rounded-full shrink-0" />
                       {m}
                     </li>
                   ))}
@@ -129,7 +129,7 @@ export default function DesignCultures({ setPage }: Props) {
               </div>
               <button
                 onClick={() => setPage('project')}
-                className="mt-4 lg:mt-4 text-[14px] lg:text-[13px] font-semibold text-[#1C3A5A] border border-[#1C3A5A] px-6 lg:px-5 py-2.5 lg:py-2 self-start hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+                className="mt-4 lg:mt-4 text-[14px] lg:text-[13px] font-semibold text-[#27463D] border border-[#27463D] px-6 lg:px-5 py-2.5 lg:py-2 self-start hover:bg-[#91A18A] hover:border-[#91A18A] hover:text-white transition-all"
               >
                 Design My Home in This Style →
               </button>
@@ -140,12 +140,12 @@ export default function DesignCultures({ setPage }: Props) {
 
       {/* Trending section */}
       <section className="py-24 px-6 lg:px-20 max-w-[1440px] mx-auto">
-        <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] mb-2">What's Trending Again</h2>
-        <p className="text-[#6B5E4E] text-sm mb-10">Heritage details making a bold comeback in modern homes.</p>
+        <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#272821] mb-2">What's Trending Again</h2>
+        <p className="text-[#6D685D] text-sm mb-10">Heritage details making a bold comeback in modern homes.</p>
         <div className="grid sm:grid-cols-3 gap-6">
           {trending.map(t => (
             <div key={t.name} className="group cursor-default">
-              <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
+              <div className="overflow-hidden bg-[#DCD1C2] mb-4" style={{ aspectRatio: '16/9' }}>
                 <img
                   src={t.img}
                   data-site-image-key={t.imageKey}
@@ -159,15 +159,15 @@ export default function DesignCultures({ setPage }: Props) {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <p className="font-display text-lg text-[#1A1714]">{t.name}</p>
-              <p className="text-xs text-[#6B5E4E] mt-1">{t.desc}</p>
+              <p className="font-display text-lg text-[#272821]">{t.name}</p>
+              <p className="text-xs text-[#6D685D] mt-1">{t.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA strip */}
-      <div className="bg-[#1C3A5A] py-16 px-6 lg:px-20">
+      <div className="bg-[#27463D] py-16 px-6 lg:px-20">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl text-white">Ready to bring a culture home?</h3>
@@ -175,7 +175,7 @@ export default function DesignCultures({ setPage }: Props) {
           </div>
           <button
             onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#272821] transition-all"
           >
             Find Your Design Direction →
           </button>
