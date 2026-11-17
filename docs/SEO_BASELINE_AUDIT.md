@@ -3,7 +3,7 @@
 **Branch:** seo/phase-0-audit  
 **Auditor:** Claude Sonnet 4.6 (Phase 0 — Discovery)  
 **Goal:** First-page rankings for high-intent interior design searches in Noida / Greater Noida NCR  
-**Revision:** R1 — corrections applied per PR #109 review (17 Nov 2026)
+**Revision:** R2 — production verification, crawler policy and keyword-methodology corrections (17 Nov 2026)
 
 ---
 
@@ -136,9 +136,11 @@ scripts/
 ### Journal Articles (29+ static + Supabase dynamic)
 Stored as a mix of static objects in `Journal.tsx` and rows in `public.blogs_078be9eb`. Covers: cost guides, material guides, design inspiration, vastu, modular kitchens, 2BHK/3BHK planning.
 
-**Budget guide slugs (publication status unverified — see §5.4):**
-- `/journal/2bhk-interior-cost-noida-extension/`
-- `/journal/3bhk-interior-cost-greater-noida-west/`
+**Budget guide URLs (public production content verified 17 Nov 2026):**
+- `/journal/2bhk-interior-cost-noida-extension/` — production fetch returned the full article content, route-specific title/description, self-referencing canonical and `index, follow` robots directive
+- `/journal/3bhk-interior-cost-greater-noida-west/` — production fetch returned the full article content, route-specific title/description, self-referencing canonical and `index, follow` robots directive
+
+**Important distinction:** Public page availability is verified. The current Supabase CMS row status was not inspected and may differ from the public static/prerendered output. The exact HTTP response status code was not captured by the browser fetch, so a direct `curl -sI` check remains part of Phase 1 verification.
 
 ### Admin Routes (not in sitemap, correct)
 - `/admin` — login/dashboard
@@ -204,7 +206,7 @@ Stored as a mix of static objects in `Journal.tsx` and rows in `public.blogs_078
 
 **Issues:**
 - ❌ No `<lastmod>` dates on any URL — recommend adding only when accurate modification dates are available from build timestamps or CMS record `updated_at` fields
-- ⚠️ Budget guide draft articles (`/journal/2bhk-interior-cost-noida-extension/`, `/journal/3bhk-interior-cost-greater-noida-west/`) — publication status unverified (see §5.4). If these return HTTP 404 in production, they should not be in the sitemap
+- ✅ Both budget-guide URLs were fetched successfully from production on 17 Nov 2026 with full route-specific article content, self-referencing canonicals and `index, follow` directives. Verify exact HTTP status codes and sitemap membership during Phase 1; CMS row status is a separate editorial-state question.
 - ⚠️ Portfolio pages (`/our-projects/[slug]`) not in sitemap — these are rendered client-side from Supabase, so they may not be crawlable anyway
 - ✅ All 17 local service pages included
 - ✅ 29 journal article slugs appear to be included
@@ -213,36 +215,36 @@ Stored as a mix of static objects in `Journal.tsx` and rows in `public.blogs_078
 
 ### 4.4 Robots.txt
 
-**Current content:**
+**Current production content (fetched 17 Nov 2026):**
 ```
 User-agent: *
 Allow: /
 Sitemap: https://nestarcadia.com/sitemap.xml
 ```
 
-**Recommended changes:**
-- Add `Disallow: /admin` — not a security measure (determined crawlers ignore robots.txt), but reduces crawl budget waste on non-public pages
-- Add specific AI crawler policies rather than blanket allow/block:
-  ```
-  User-agent: GPTBot
-  Disallow: /
+The current wildcard rule permits crawling of public content by compliant crawlers unless a more-specific rule or infrastructure control overrides it. The production file has not been changed as part of this audit.
 
-  User-agent: ClaudeBot
-  Disallow: /
+**Recommended policy for search and AI discovery:**
+- Keep Googlebot and other conventional search crawlers able to fetch public, indexable content.
+- Explicitly permit `OAI-SearchBot` for ChatGPT Search discovery.
+- Explicitly permit `Claude-SearchBot` for Claude web-search discovery and `Claude-User` for user-directed retrieval.
+- Permit `PerplexityBot` for Perplexity search discovery.
+- Do not add blanket disallow rules for AI crawlers.
+- Treat training crawlers as a separate owner decision: `GPTBot` is distinct from `OAI-SearchBot`; `ClaudeBot` is distinct from `Claude-SearchBot` and `Claude-User`. Decide whether to allow training access based on NestArcadia's content policy rather than blocking them by default.
+- Do not add a policy for `Amazonbot` or other crawlers without confirming the current crawler purpose and the business consequence.
+- A named user-agent group can override the wildcard group for that crawler, so validate the final robots.txt group semantics after editing.
+- Confirm CDN/WAF/bot-protection rules do not return 403/429 to permitted crawlers. robots.txt permission alone does not guarantee network access or search inclusion.
 
-  User-agent: Anthropic-AI
-  Disallow: /
+**Admin route handling:**
+- Do not treat robots.txt as authentication or access control.
+- Keep `/admin` protected by authentication. Use an appropriate `noindex` directive for the admin interface if it must not appear in search; do not rely on robots.txt disallow alone to remove an already-known URL from results.
+- Do not expose private admin endpoints or resources through crawlable links.
 
-  User-agent: PerplexityBot
-  Disallow: /
+**Other checks:**
+- Confirm the canonical host and redirect behavior for `www.nestarcadia.com`; declare the sitemap on the canonical host only.
+- Retain the sitemap declaration: `https://nestarcadia.com/sitemap.xml`.
 
-  User-agent: Amazonbot
-  Disallow: /
-  ```
-  (Evaluate each AI crawler individually based on business needs — the above blocks training crawlers while allowing standard search engine bots)
-- Verify whether `www.nestarcadia.com` is served (if so, declare the sitemap at both domains or redirect www → non-www)
-
-**Note on `Crawl-delay`:** Google ignores the `Crawl-delay` directive for Googlebot. It is not an effective SEO lever and is not recommended. Crawl rate for Googlebot is managed through Search Console.
+**Note on `Crawl-delay`:** Googlebot does not use this directive. Do not add it as a Google crawl-control measure. Other crawlers may interpret it differently, so only use it when a crawler's current documentation explicitly supports it and there is a measured need.
 
 ### 4.5 Canonical Tags
 
@@ -332,7 +334,7 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 
 ### 5.1 Primary Target Keywords (High Commercial Intent)
 
-> **Data provenance note:** Search volume estimates below are **unverified third-party estimates** — source tool, date, country filter, and device type are unknown. They are included only to indicate relative order of magnitude. Actual demand should be verified through Google Search Console impression data once access is available.
+> **Data provenance note:** Search volume figures below are **unverified third-party estimates** — the source tool, retrieval date, country setting and device settings are not documented. Google Search Console does not report total market-wide monthly search volume. It reports NestArcadia's own search performance for queries where its result appeared: impressions, clicks, CTR and average position, with property/date/country/device filters. Use Search Console for first-party site performance; use a named, date-stamped keyword research source (for example, Google Keyword Planner or a reputable third-party tool) for estimated market demand. Do not substitute one dataset for the other.
 
 | Keyword | Est. Monthly Searches (IN) | Current Rank | Priority |
 |---|---|---|---|
@@ -348,24 +350,24 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 
 | Keyword | Current Coverage | Gap |
 |---|---|---|
-| interior design cost 2BHK Noida | Budget guide article exists — publication status unverified (see §5.4) | Verify publication status, then optimise |
-| interior design cost 3BHK Greater Noida | Budget guide article exists — publication status unverified (see §5.4) | Verify publication status, then optimise |
+| interior design cost 2BHK Noida | Public production guide verified 17 Nov 2026; exact HTTP status and CMS row status are separate checks | Optimise the live guide using Search Console query/page performance |
+| interior design cost 3BHK Greater Noida | Public production guide verified 17 Nov 2026; exact HTTP status and CMS row status are separate checks | Optimise the live guide using Search Console query/page performance |
 | vastu tips home Noida | Journal article exists | Needs refresh + optimisation |
 | modular kitchen design Noida | Journal article exists | Needs internal linking to service page |
 | false ceiling design bedroom | Journal article exists | Needs location targeting |
 | Indian design heritage | Design Cultures page | Thin on SEO signals |
 
-### 5.3 Missing Content (Keyword Gaps)
+### 5.3 Priority Page Opportunities (New Pages and Existing-Page Upgrades)
 
 **High-priority pages that do not exist:**
-1. `/interior-design-noida` — only a thin secondary page, needs a primary-quality page
+1. `/interior-design-noida` — existing thin page; upgrade or consolidate based on search intent and genuine service coverage (not a new URL)
 2. `/modular-kitchen-design-noida-extension` — high commercial intent, no dedicated page
 3. `/2bhk-interior-design-noida-extension` — config-specific landing page
 4. `/3bhk-interior-design-greater-noida-west` — config-specific landing page
 5. `/turnkey-interior-design-noida` — service-specific page
 6. `/vastu-interior-design-noida` — service-specific page
 7. `/luxury-interior-design-greater-noida-west` — premium tier page (1 SEO article exists but no dedicated page)
-8. `/interior-design-cost-calculator` — interactive tool (high engagement potential)
+8. `/interior-design-cost-calculator` — optional interactive tool opportunity; validate usefulness, accurate pricing inputs and lead-quality impact before committing to build
 
 **Content depth issues:**
 - 14 of 17 local service pages use a thinner template — see §8 Phase 3 for recommended approach (not blanket word-count expansion)
@@ -373,7 +375,7 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 - Design Cultures has no location tie-in ("These styles are popular in Noida NCR homes" etc.)
 - Portfolio/Homes page shows design concepts attributed to Bengaluru, Pune, Ahmedabad, Dehradun — outside NCR service area. The prerender script explicitly frames these as "design studies, showing possible design directions rather than claiming every concept is a completed installation" — this framing should be preserved and reinforced.
 
-### 5.4 Content Quality & Publication Status
+### 5.4 Content Quality, Public Availability & Editorial State
 
 | Issue | Evidence | Severity |
 |---|---|---|
@@ -381,7 +383,7 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 | OurStory keyword density = ~0 | H1: "Our Story", no "interior design", "Noida", "Greater Noida" in page copy | 🟡 Medium |
 | Design Cultures no location signal | Talks about Indian regions, not NestArcadia service area | 🟡 Medium |
 | Services H1 generic | H1: "Our Services" — no keyword | 🟡 Medium |
-| Budget guide publication status unverified | PR #106 documented these as "drafts pending release cutover." The slugs appear in `sitemap.xml`, and the prerender script will generate HTML for them if they are in the sitemap. However, whether these URLs return HTTP 200 with real content (vs. 404 or empty shell) depends on Supabase CMS record status. **Requires Supabase admin access or live HTTP check to confirm.** | 🔴 High — cannot determine actual status without live-site or Supabase access |
+| Budget guide public availability | Both production URLs fetched successfully on 17 Nov 2026 and returned full route-specific article content, unique metadata, self-referencing canonical and `index, follow` directives. Exact HTTP status code was not captured. PR #106 documented the CMS records as drafts before release cutover; current Supabase row status was not inspected and is distinct from public static/prerendered availability. | 🟡 Medium — confirm exact HTTP status and sitemap membership in Phase 1; inspect CMS row only if editorial state must be reconciled |
 | Zero verified completed-project records | Repository has previously documented zero verified completed-project records. Design concepts must be presented as design concepts until actual project evidence is supplied by the owner. | 🟡 Medium |
 
 ---
@@ -438,18 +440,22 @@ Schema is generated dynamically in `App.tsx` and also embedded in prerendered HT
 
 **Overlap with SEO brief:** Twitter Card meta, lang attribute, skip link, admin security, accessibility — all resolved. No further action needed on these items. No regressions detected.
 
-### PR #106 (`seo/milestone-3-content-cro-performance`) — Status & Content
+### PR #106 (`seo/milestone-3-content-cro-performance`) — Merged and Reconciled
+
+**GitHub status:** PR #106 is confirmed **merged** on 1 November 2026. Merge commit: `61082640f576a90bfe112c168019f10bd8e210a7`.
 
 **What PR #106 documented:**
-- Content changes including budget guide draft content
-- Drafts were described as "pending release cutover"
+- The two 2BHK/3BHK budget guides were saved in Supabase as drafts before the planned release cutover.
+- The static article bundle and sitemap already included both guides at that time.
+- The PR release notes instructed that the guides would be published at release cutover after deployment/code validation.
+- The PR was subsequently merged. The current public URLs were independently fetched on 17 November 2026 and returned full article content, route-specific metadata, canonical URLs and `index, follow` directives.
 
-**What remains unverified:**
-- Whether PR #106 was merged to main (requires GitHub PR status check or `git log` on main)
-- Whether the budget guide articles are in "published" or "draft" status in Supabase CMS
-- Whether the budget guide URLs (`/journal/2bhk-interior-cost-noida-extension/`, `/journal/3bhk-interior-cost-greater-noida-west/`) return HTTP 200 with content or HTTP 404 in production
+**What remains distinct / unverified:**
+- The current Supabase row status for each guide was not inspected. A CMS record's status and the live static/prerendered page response are separate facts.
+- The exact production HTTP response status codes were not captured by the browser fetch. Phase 1 should verify these with direct HTTP requests.
+- Current Google indexing and Search Console performance require owner-authorized Search Console access.
 
-**Impact on this audit:** The budget guide publication status is a key unknown. If published, they represent live content assets for high-intent informational queries. If still in draft, publishing them is a high-priority action. This cannot be determined from the codebase alone — it requires Supabase admin access or live HTTP checks.
+**Impact on this audit:** Both budget guides are usable public content assets based on the production fetch. Do not block SEO optimisation or Phase 1 on Supabase access merely to establish public availability. Supabase access is needed only if the editorial workflow or live CMS record status itself must be reconciled.
 
 ---
 
@@ -475,10 +481,10 @@ The prerender script is already integrated into the build pipeline. Phase 1 is a
 
 | Task | Description | Priority |
 |---|---|---|
-| 2.1 | `robots.txt`: add `Disallow: /admin`, individual AI crawler policies (GPTBot, ClaudeBot, Anthropic-AI, PerplexityBot, Amazonbot) | P0 |
+| 2.1 | `robots.txt`: preserve Googlebot access; explicitly permit AI search/retrieval crawlers (OAI-SearchBot, Claude-SearchBot, Claude-User, PerplexityBot); make GPTBot/ClaudeBot training access a separate owner decision. Protect `/admin` with authentication and appropriate `noindex`, not robots.txt as security. | P0 |
 | 2.2 | `sitemap.xml`: add `<lastmod>` dates where accurate modification dates are available (build timestamps or CMS `updated_at`). Remove any URLs that return non-200 in production. | P0 |
 | 2.3 | Services H1: change from "Our Services" to "Interior Design Services in Noida & NCR" | P1 |
-| 2.4 | Verify budget guide publication status (Supabase admin or live HTTP check). If draft: publish. If 404 in sitemap: remove from sitemap until published. | P0 |
+| 2.4 | Verify exact HTTP status codes, sitemap membership and canonical consistency for the two budget-guide URLs. Production fetches on 17 Nov 2026 already returned full article content and index/follow metadata. Inspect Supabase CMS row state only if required for editorial workflow; do not equate CMS draft status with public page availability. | P1 |
 | 2.5 | Verify font-display:swap in fonts-v1.css | P1 |
 
 ### Phase 3 — On-Page Content Strategy (2 weeks) 🟡
@@ -512,7 +518,7 @@ The prerender script is already integrated into the build pipeline. Phase 1 is a
 | Task | Description | Priority |
 |---|---|---|
 | 5.1 | **Google Business Profile:** Verify and audit NAP consistency (G-59, Fusion Ufairia Mall, Sector 16B, Greater Noida West). GBP verification is the highest-priority local SEO action. | P0 |
-| 5.2 | Enhance LocalBusiness schema: add `openingHours`, `priceRange`, `hasMap`, ensure `@id` anchor for entity disambiguation | P0 |
+| 5.2 | Enhance LocalBusiness schema with a stable `@id`; add `openingHours`, `priceRange` or `hasMap` only after the owner verifies the actual hours, truthful pricing range and correct public map/place URL. Do not infer or fabricate business facts. | P1 |
 | 5.3 | Add Google Maps embed to contact/start-project page | P1 |
 | 5.4 | Local citation building: JustDial, Sulekha, UrbanClap, Housing.com — ensure consistent NAP across all directories | P1 |
 | 5.5 | Verify genuine service-area coverage matches the locations targeted by local pages (informs Phase 3.1 consolidation decisions) | P0 |
@@ -544,13 +550,13 @@ The prerender script is already integrated into the build pipeline. Phase 1 is a
 |---|---|---|
 | Search Console verification | Cannot verify indexation status or ranking data | Google Search Console owner access |
 | CWV real data | No field data visible | Search Console / CrUX access |
-| Budget guide publication status | Cannot determine if published or draft | Supabase admin dashboard (at `/admin`) or direct table access to `public.blogs_078be9eb` |
+| Budget guide public availability | Both production pages returned full route-specific content and index/follow metadata on 17 Nov 2026; exact HTTP status code not captured | Direct production HTTP check for status/canonical/sitemap. Supabase admin is only needed to inspect the current CMS row status, not to establish public availability. |
 | Prerender validation | Cannot verify what Hostinger serves to crawlers | Live site access + terminal: `curl -sI -A "Googlebot" https://nestarcadia.com/interior-design-services/` |
 | Google Business Profile audit | External to codebase | GBP account access for `nestarcadia.com` |
 | Local citation check | External directories | Manual check required |
 | Sitemap indexation status | Contradictory signals in Milestone 2 | Search Console sitemap report |
-| PR #106 merge status | Need to confirm what shipped to main | `git log main --oneline` or GitHub PR list |
-| Search volume verification | Estimates are unattributed third-party data | Google Search Console impression data (IN, all devices) or a specified keyword research tool |
+| PR #106 merge status | Verified merged 1 Nov 2026; merge commit `61082640f576a90bfe112c168019f10bd8e210a7` | Resolved — no access dependency remains |
+| Search demand estimation | Search Console provides site impressions/clicks/CTR/position, not total market search volume | Use GSC for first-party site performance; use a named, date-stamped Keyword Planner or third-party dataset for estimated market demand. |
 
 ---
 
@@ -579,7 +585,7 @@ The prerender script is already integrated into the build pipeline. Phase 1 is a
 | Prerender pipeline exists but production serving is unverified — if Hostinger doesn't serve prerendered HTML, metadata is still JS-dependent | 🔴 HIGH | Phase 1 live-site validation is the first gate |
 | Thin content on 14 secondary local pages may trigger quality assessment by Google | 🟠 High | Evaluate individually — consolidate or improve based on genuine service coverage (Phase 3.1) |
 | Portfolio showing non-NCR locations may confuse geographic relevance signals | 🟡 Medium | Reinforce design study framing; do not alter locations or invent reviews |
-| Budget guide publication status unknown — highest-intent informational queries may be unanswered | 🟠 High | Verify via Supabase admin or live HTTP check (Phase 2.4) |
+| Budget-guide public URLs verified with content and index/follow metadata; exact HTTP status and CMS row status remain separate checks | 🟡 Medium | Phase 1 direct HTTP/sitemap verification; Supabase only for editorial-state reconciliation |
 | Search Console showing 0 indexed URLs in sitemap (Milestone 2 data) — possible indexing issue | 🔴 HIGH | Requires Search Console access to investigate |
 | Search volume estimates used in this audit are unverified third-party data | 🟡 Medium | Replace with Search Console impression data once access is granted |
 
@@ -589,7 +595,7 @@ The prerender script is already integrated into the build pipeline. Phase 1 is a
 Week 1:  Validate prerender pipeline output against all 56 routes (Phase 1.1–1.2)
          → Live-site curl checks: does Hostinger serve prerendered HTML? (Phase 1.3)
          → robots.txt hardening + sitemap lastmod where dates available (Phase 2.1–2.2)
-         → Verify budget guide status (Phase 2.4)
+         → Verify budget-guide HTTP status, canonical and sitemap inclusion (Phase 2.4; public content already fetched successfully)
 
 Week 2:  Rich Results Test on representative pages (Phase 1.4)
          → Services H1 optimisation (Phase 2.3)
@@ -611,7 +617,7 @@ Ongoing: CWV monitoring, content calendar, link building
 | Finding | Severity | Phase |
 |---|---|---|
 | Prerender pipeline exists but production serving unverified | 🔴 HIGH | 1 |
-| Budget guide publication status unknown | 🔴 HIGH | 2 |
+| Budget guide URLs serve public article content; confirm HTTP status/sitemap membership | 🟡 MEDIUM | 2 |
 | Search Console showing 0 indexed sitemap URLs (Milestone 2 data) | 🔴 HIGH | 1 |
 | robots.txt: /admin not disallowed, no AI crawler policy | 🟠 HIGH | 2 |
 | Sitemap: no lastmod dates | 🟠 MEDIUM | 2 |
@@ -625,11 +631,11 @@ Ongoing: CWV monitoring, content calendar, link building
 | OurStory / DesignCultures no location keywords | 🟡 MEDIUM | 3 |
 | No AVIF / image optimisation pipeline gap | 🟢 LOW | 7 |
 | Search volume data unverified — no first-party source | 🟡 MEDIUM | Requires GSC access |
-| PR #106 merge status and content delivery unconfirmed | 🟡 MEDIUM | Requires GitHub/git check |
+| PR #106 merge status | ✅ RESOLVED — merged 1 Nov 2026 |
 
 ---
 
 *Prepared by Claude Sonnet 4.6 — NestArcadia SEO Baseline Audit, Phase 0*  
-*Revised: R1 — 17 Nov 2026 (corrections per PR #109 review)*  
+*Revised: R2 — 17 Nov 2026 (production checks and final Phase 0 corrections)*  
 *Branch: seo/phase-0-audit | November 2026*  
 *Next step: Review this revised audit. Phase 1 is prerender validation — not activation.*
