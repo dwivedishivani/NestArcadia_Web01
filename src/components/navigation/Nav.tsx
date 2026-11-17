@@ -98,8 +98,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
         aria-label="Primary navigation"
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          background: transparent ? 'transparent' : var(--color-cream),
-          borderBottom: transparent ? '1px solid transparent' : '1px solid #B8D8D1',
+          background: transparent ? 'transparent' : 'var(--color-cream)',
+          borderBottom: transparent ? '1px solid transparent' : '1px solid var(--color-border-mint)',
         }}
       >
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 flex items-center justify-between h-20 lg:h-[90px]">
@@ -130,10 +130,10 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 className="text-[15px] tracking-[0.01em] transition-colors hover:text-brand-forest"
                 style={{
                   color: page === l.page
-                    ? (transparent ? var(--color-white) : var(--color-brand-forest))
+                    ? (transparent ? 'var(--color-white)' : 'var(--color-brand-forest)')
                     : transparent
                     ? 'rgba(255,255,255,0.85)'
-                    : var(--color-brand-navy),
+                    : 'var(--color-brand-navy)',
                   fontWeight: page === l.page ? 700 : 600,
                 }}
               >
@@ -148,8 +148,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               to="/start-your-project/"
               className="hidden lg:block text-[14px] font-semibold tracking-[0.01em] px-5 py-2.5 border transition-all hover:bg-brand-forest hover:border-brand-teal hover:text-white"
               style={{
-                color: transparent ? '#ffffff' : var(--color-brand-navy),
-                borderColor: transparent ? 'rgba(255,255,255,0.62)' : var(--color-brand-navy),
+                color: transparent ? 'white' : 'var(--color-brand-navy)',
+                borderColor: transparent ? 'rgba(255,255,255,0.62)' : 'var(--color-brand-navy)',
               }}
             >
               Start Your Project →
@@ -164,9 +164,9 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
               aria-expanded={menuOpen}
               aria-controls="mobile-nav-drawer"
             >
-              <span className="block h-0.5 w-6" style={{ background: transparent ? '#ffffff' : var(--color-brand-navy) }} />
-              <span className="block h-0.5 w-4" style={{ background: transparent ? '#ffffff' : var(--color-brand-navy) }} />
-              <span className="block h-0.5 w-6" style={{ background: transparent ? '#ffffff' : var(--color-brand-navy) }} />
+              <span className="block h-0.5 w-6" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
+              <span className="block h-0.5 w-4" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
+              <span className="block h-0.5 w-6" style={{ background: transparent ? 'white' : 'var(--color-brand-navy)' }} />
             </button>
           </div>
         </div>
@@ -181,8 +181,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
           className="lg:hidden overflow-hidden transition-all duration-300"
           style={{
             maxHeight: menuOpen ? '420px' : '0',
-            background: var(--color-cream),
-            borderTop: menuOpen ? '1px solid #B8D8D1' : 'none',
+            background: 'var(--color-cream)',
+            borderTop: menuOpen ? '1px solid var(--color-border-mint)' : 'none',
           }}
         >
           <div className="px-6 py-7 flex flex-col gap-5">
@@ -193,7 +193,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 tabIndex={menuOpen ? 0 : -1}
                 onClick={closeMenu}
                 className="text-left text-[17px] font-semibold transition-colors"
-                style={{ color: page === l.page ? var(--color-brand-teal) : var(--color-brand-navy) }}
+                style={{ color: page === l.page ? 'var(--color-brand-teal)' : 'var(--color-brand-navy)' }}
               >
                 {l.label}
               </Link>
