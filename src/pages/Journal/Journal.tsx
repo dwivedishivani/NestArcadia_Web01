@@ -763,6 +763,9 @@ export default function Journal({ articleId, setArticleId }: Props) {
                   <div className="overflow-hidden bg-[#D4CBBB] mb-4" style={{ aspectRatio: '16/9' }}>
                     <img
                     src={a.thumb}
+                      data-site-image-key={imageKeyFromUrl(a.thumb)}
+                      srcSet={responsiveSrcSet(a.thumb)}
+                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     alt={a.title}
                     loading="lazy"
                     decoding="async"
@@ -770,7 +773,13 @@ export default function Journal({ articleId, setArticleId }: Props) {
                     height="560"
                     onError={(event) => {
                       const fallback = articles.find(item => item.id === a.id)?.thumb;
-                      if (fallback && event.currentTarget.src !== fallback) event.currentTarget.src = fallback;
+                      if (fallback && event.currentTarget.src !== fallback) {
+                        event.currentTarget.removeAttribute('srcset');
+                        const fallbackKey = imageKeyFromUrl(fallback);
+                        if (fallbackKey) event.currentTarget.dataset.siteImageKey = fallbackKey;
+                        else event.currentTarget.removeAttribute('data-site-image-key');
+                        event.currentTarget.src = fallback;
+                      }
                     }}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
@@ -891,6 +900,9 @@ export default function Journal({ articleId, setArticleId }: Props) {
                 <div className="overflow-hidden bg-[#D4CBBB] mb-5" style={{ aspectRatio: '16/10' }}>
                   <img
                     src={a.thumb}
+                      data-site-image-key={imageKeyFromUrl(a.thumb)}
+                      srcSet={responsiveSrcSet(a.thumb)}
+                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     alt={a.title}
                     loading="lazy"
                     decoding="async"
@@ -898,7 +910,13 @@ export default function Journal({ articleId, setArticleId }: Props) {
                     height="560"
                     onError={(event) => {
                       const fallback = articles.find(item => item.id === a.id)?.thumb;
-                      if (fallback && event.currentTarget.src !== fallback) event.currentTarget.src = fallback;
+                      if (fallback && event.currentTarget.src !== fallback) {
+                        event.currentTarget.removeAttribute('srcset');
+                        const fallbackKey = imageKeyFromUrl(fallback);
+                        if (fallbackKey) event.currentTarget.dataset.siteImageKey = fallbackKey;
+                        else event.currentTarget.removeAttribute('data-site-image-key');
+                        event.currentTarget.src = fallback;
+                      }
                     }}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
