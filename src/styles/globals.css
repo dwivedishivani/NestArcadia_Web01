@@ -51,8 +51,8 @@ html {
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background-color: #F2EDE4;
-  color: #1C3A5A;
+  background-color: var(--color-cream);
+  color: var(--color-brand-navy);
   overflow-x: hidden;
   min-width: 320px;
   -webkit-font-smoothing: antialiased;
@@ -74,11 +74,11 @@ p, li, label, input, textarea, select {
   font-size: 16px;
 }
 
-::selection { background: #6DC0AE; color: #1C3A5A; }
+::selection { background: var(--color-brand-mint); color: var(--color-brand-navy); }
 
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 3px solid #6DC0AE;
+  outline: 3px solid var(--color-brand-mint);
   outline-offset: 3px;
 }
 
@@ -101,12 +101,12 @@ input:focus:not(:focus-visible), textarea:focus:not(:focus-visible), select:focu
   outline: none;
 }
 input:focus-visible, textarea:focus-visible, select:focus-visible {
-  outline: 3px solid #6DC0AE;
+  outline: 3px solid var(--color-brand-mint);
   outline-offset: 2px;
 }
 
 .rich-article-content {
-  color: #1A1714;
+  color: var(--color-text-primary);
   font-size: 15px;
   line-height: 1.9;
 }
@@ -116,22 +116,22 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   font-size: clamp(1.55rem, 3vw, 2.15rem);
   line-height: 1.2;
   margin: 2.75rem 0 1rem;
-  color: #1A1714;
+  color: var(--color-text-primary);
 }
 .rich-article-content h3 {
   font-family: var(--font-display, Georgia, serif);
   font-size: clamp(1.2rem, 2vw, 1.55rem);
   line-height: 1.3;
   margin: 2rem 0 .75rem;
-  color: #1A1714;
+  color: var(--color-text-primary);
 }
 .rich-article-content strong, .rich-article-content b { font-weight: 650; }
 .rich-article-content em, .rich-article-content i { font-style: italic; }
 .rich-article-content blockquote {
   margin: 2rem 0;
   padding: 1rem 0 1rem 1.25rem;
-  border-left: 2px solid #2D8C7E;
-  color: #1C3A5A;
+  border-left: 2px solid var(--color-brand-teal);
+  color: var(--color-brand-navy);
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.2rem;
   line-height: 1.6;
@@ -142,14 +142,14 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 }
 .rich-article-content li { margin: .45rem 0; }
 .rich-article-content a {
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .rich-article-content hr {
   margin: 2.5rem 0;
   border: 0;
-  border-top: 1px solid #D4CBBB;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 /* Admin rich editor */
@@ -161,17 +161,17 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
-  color: #1A1714;
-  background: #F8F5EF;
+  color: var(--color-text-primary);
+  background: var(--color-surface-linen);
   font-size: 13px;
   line-height: 1;
   border-radius: 2px;
   transition: border-color .15s ease, background-color .15s ease, color .15s ease;
 }
 .admin-rich-editor .admin-editor-tool:hover {
-  border-color: #2D8C7E;
-  background: #FFFFFF;
-  color: #1C3A5A;
+  border-color: var(--color-brand-teal);
+  background: white;
+  color: var(--color-brand-navy);
 }
 .admin-rich-editor .admin-editor-control {
   height: 34px;
@@ -179,20 +179,20 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   align-items: center;
   gap: 7px;
   padding: 0 8px;
-  border: 1px solid #C9BDAA;
-  background: #F8F5EF;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface-linen);
 }
 .admin-rich-editor .admin-editor-control-label {
   font-size: 10px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #6B5E4E;
+  color: var(--color-text-muted);
 }
 .admin-rich-editor .admin-editor-select {
   min-width: 145px;
   border: 0;
   background: transparent;
-  color: #1A1714;
+  color: var(--color-text-primary);
   font-size: 13px;
   outline: none;
 }
@@ -205,7 +205,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   cursor: pointer;
 }
 .rich-editor {
-  background: #F8F5EF;
+  background: var(--color-surface-linen);
   font-size: 17px;
   line-height: 1.85;
 }
@@ -215,35 +215,35 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   pointer-events: none;
 }
 .rich-editor p { margin: 0 0 1.25rem; }
-.rich-editor .editor-lead { font-size: 1.2rem; line-height: 1.75; color: #52677E; margin-bottom: 1.5rem; }
-.rich-editor .editor-small { font-size: .875rem; line-height: 1.65; color: #6B5E4E; }
+.rich-editor .editor-lead { font-size: 1.2rem; line-height: 1.75; color: var(--color-muted); margin-bottom: 1.5rem; }
+.rich-editor .editor-small { font-size: .875rem; line-height: 1.65; color: var(--color-text-muted); }
 .rich-editor h2 {
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.8rem;
   line-height: 1.25;
   margin: 1.9rem 0 .8rem;
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
 }
 .rich-editor h3 {
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.45rem;
   line-height: 1.3;
   margin: 1.55rem 0 .7rem;
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
 }
 .rich-editor h4 {
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.15rem;
   line-height: 1.35;
   margin: 1.35rem 0 .6rem;
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
 }
 .rich-editor blockquote {
   margin: 1.6rem 0;
   padding: 1rem 1.1rem;
-  border-left: 3px solid #2D8C7E;
+  border-left: 3px solid var(--color-brand-teal);
   background: rgba(45, 140, 126, .06);
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.2rem;
 }
@@ -255,7 +255,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 .rich-editor ol { list-style: decimal; }
 .rich-editor li { margin: .45rem 0; }
 .rich-editor a {
-  color: #1C3A5A;
+  color: var(--color-brand-navy);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
