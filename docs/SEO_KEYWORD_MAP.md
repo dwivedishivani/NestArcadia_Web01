@@ -2,11 +2,11 @@
 **Date:** November 2026  
 **Scope:** Interior design searches — Noida / Greater Noida NCR (India)  
 **Objective:** Map every target keyword to exactly one canonical page  
-**Revision:** R1 — corrections applied per PR #109 review (17 Nov 2026)
+**Revision:** R2 — production verification and keyword-methodology corrections (17 Nov 2026)
 
 ---
 
-> **Data provenance note:** All search volume estimates referenced in this document are **unverified third-party estimates** — the source tool, date, country filter, and device type are unknown. They are included only to indicate relative order of magnitude and keyword grouping priority. Actual demand must be verified through Google Search Console impression data once owner access is available.
+> **Data provenance note:** All search-volume figures in this map are **unverified third-party estimates** because the source tool, retrieval date, country and device settings were not recorded. Google Search Console does not provide total market-wide monthly search volume. It reports NestArcadia's own organic performance for queries where its result appeared: impressions, clicks, CTR and average position, subject to date, country, device and search-type filters. Use GSC for first-party site performance; use a named, date-stamped Google Keyword Planner or third-party source for estimated market demand.
 
 ---
 
@@ -44,10 +44,10 @@
 |---|---|---|---|
 | 2BHK interior design Noida Extension | Commercial | `/2bhk-interior-design-noida-extension` | 🆕 new page needed |
 | 2BHK interior designer Noida Extension | Commercial | `/2bhk-interior-design-noida-extension` | 🆕 |
-| 2BHK flat interior design cost Noida | I+Commercial | `/journal/2bhk-interior-cost-noida-extension/` | ⚠️ publication status unverified — PR #106 documented drafts pending release cutover. Requires Supabase admin access or live HTTP check to confirm. |
+| 2BHK flat interior design cost Noida | I+Commercial | `/journal/2bhk-interior-cost-noida-extension/` | ✅ Public production content, canonical and index/follow directive verified 17 Nov 2026; exact HTTP status and CMS row state are separate checks. |
 | 3BHK interior design Greater Noida West | Commercial | `/3bhk-interior-design-greater-noida-west` | 🆕 new page needed |
 | 3BHK interior designer Greater Noida | Commercial | `/3bhk-interior-design-greater-noida-west` | 🆕 |
-| 3BHK interior cost Greater Noida | I+Commercial | `/journal/3bhk-interior-cost-greater-noida-west/` | ⚠️ publication status unverified — same as above |
+| 3BHK interior cost Greater Noida | I+Commercial | `/journal/3bhk-interior-cost-greater-noida-west/` | ✅ Public production content, canonical and index/follow directive verified 17 Nov 2026; exact HTTP status and CMS row state are separate checks. |
 | 4BHK interior design Noida Extension | Commercial | `/interior-design-noida-extension` (mention 4BHK) | ⚠️ cover on primary page |
 | villa interior design Greater Noida | Commercial | `/interior-design-greater-noida-west` (mention villa) | ⚠️ cover on primary page |
 
@@ -62,7 +62,7 @@
 | modular kitchen cost Noida | I+Commercial | `/modular-kitchen-design-noida-extension` | 🆕 (cover on page) |
 | turnkey interior design Noida | Commercial | `/turnkey-interior-design-noida` | 🆕 new page needed |
 | turnkey interior design Greater Noida | Commercial | `/turnkey-interior-design-noida` | 🆕 |
-| full home interior design Noida | Commercial | `/interior-design-noida-extension` or turnkey page | 🆕 or ⚠️ |
+| full home interior design Noida | Commercial | `/interior-design-services` | ✅ existing broad service overview; link to relevant local and turnkey information as supporting pages |
 | vastu interior design Noida | Commercial | `/vastu-interior-design-noida` | 🆕 new page needed |
 | vastu-compliant home design NCR | Commercial | `/vastu-interior-design-noida` | 🆕 |
 | luxury interior design Greater Noida West | Commercial | `/luxury-interior-design-greater-noida-west` | 🆕 new page needed |
@@ -82,14 +82,14 @@
 | false ceiling design bedroom | Informational | Existing journal article | ✅ exists — optimise |
 | vastu tips new home | Informational | Existing journal article | ✅ exists — optimise |
 | wall panelling ideas bedroom | Informational | Existing journal article | ✅ exists — optimise |
-| how to plan 2BHK interiors | Informational | Existing or new journal article | check/create |
+| how to plan 2BHK interiors | Informational | `/journal/how-to-plan-2bhk-interiors-noida/` | 🆕 create one informational journal article; link to the 2BHK commercial landing page as a supporting destination |
 | Indian interior design styles | Informational | `/design-cultures` | ✅ exists — add NCR signal |
 | North Indian home decor ideas | Informational | `/design-cultures` | ✅ |
 | contemporary Indian home design | Informational | `/design-cultures` | ✅ |
 | luxury interior design guide India | Informational | `/journal/luxury-interior-design-noida-extension` | ✅ JSON exists — verify published |
 | interior designer vs contractor difference | Informational | 🆕 journal article | needs creation |
 | how to choose interior designer | Informational | 🆕 journal article | needs creation |
-| what is turnkey interior design | Informational | 🆕 journal article OR `/turnkey-interior-design-noida` | needs creation |
+| what is turnkey interior design | Informational | `/journal/what-is-turnkey-interior-design-noida/` | 🆕 create one informational journal article; link to `/turnkey-interior-design-noida` as the separate commercial service destination |
 
 ---
 
@@ -117,19 +117,19 @@
 ## Keyword Prioritisation Matrix
 
 ### Verify Immediately (Before Any Content Work)
-1. **Budget guide publication status** — check Supabase admin or `curl` the URLs in production. Publication status unverified — PR #106 documented drafts pending release cutover. Cannot proceed with Tier 2/4 optimisation until confirmed.
+1. **Budget guide technical validation** — both public URLs returned full article content, route-specific metadata, canonical and index/follow directives on 17 Nov 2026. Verify exact HTTP status, sitemap inclusion and Search Console indexation; do not block optimisation on unverified CMS row state.
 2. **Prerender pipeline output** — verify Hostinger serves prerendered HTML with correct metadata (see audit §8 Phase 1). All on-page SEO work assumes metadata is crawler-visible.
 
-### Must Target First (P0 — Commercial + High Volume)
+### Must Target First (P0 — Commercial Priority; Search Volume Unverified)
 3. `interior designer in Noida Extension` → `/interior-design-noida-extension` ✅
 4. `interior designer Greater Noida West` → `/interior-design-greater-noida-west` ✅
 5. `interior designer in Noida` → `/interior-design-noida` (upgrade thin page)
 6. `2BHK interior design Noida Extension` → 🆕 `/2bhk-interior-design-noida-extension`
 7. `modular kitchen Noida Extension` → 🆕 `/modular-kitchen-design-noida-extension`
 
-### Publish or Confirm (P0 — Budget Guides)
-8. `2BHK interior cost Noida` → verify then optimise `/journal/2bhk-interior-cost-noida-extension/`
-9. `3BHK interior cost Greater Noida` → verify then optimise `/journal/3bhk-interior-cost-greater-noida-west/`
+### Optimise Existing Public Budget Guides (P0 — High Purchase-Intent Information)
+8. `2BHK interior cost Noida` → optimise the live `/journal/2bhk-interior-cost-noida-extension/` guide using verified query/page performance.
+9. `3BHK interior cost Greater Noida` → optimise the live `/journal/3bhk-interior-cost-greater-noida-west/` guide using verified query/page performance.
 
 ### High Value New Pages (P1)
 10. `3BHK interior design Greater Noida West` → 🆕 `/3bhk-interior-design-greater-noida-west`
@@ -155,6 +155,6 @@
 ---
 
 *NestArcadia SEO Keyword Map — Phase 0, November 2026*  
-*Revised: R1 — 17 Nov 2026 (corrections per PR #109 review)*  
+*Revised: R2 — 17 Nov 2026 (production verification and final Phase 0 corrections)*  
 *Total target keywords mapped: 60+*  
 *Pages to create: 6–8 new landing pages + 3–4 new journal articles*
