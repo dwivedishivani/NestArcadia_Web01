@@ -4,25 +4,25 @@ const residences = ['ATS Greens', 'Cleo County', 'Mahagun Moderne', 'Gaur City',
 
 export default function FeaturedResidences() {
   return (
-    <section className="bg-[#EAE4DA] px-6 py-20 lg:px-20" aria-labelledby="featured-residences-title">
+    <section className="bg-card px-6 py-20 lg:px-20" aria-labelledby="featured-residences-title">
       <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
         <div>
-          <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#17665B]">Noida Extension & Greater Noida West</p>
-          <h2 id="featured-residences-title" className="font-display text-[clamp(2rem,3.6vw,3.25rem)] leading-[1.06] text-[#1A1714]">Local Societies<br />&amp; Home Layouts</h2>
-          <p className="mt-5 max-w-md text-[15px] leading-[1.85] text-[#6B5E4E]">We plan around each home’s actual layout—not just the society name. Room proportions, balcony access, daylight, builder-fixed services and storage needs all matter in Noida Extension and Greater Noida West.</p>
+          <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-brand-forest">Noida Extension & Greater Noida West</p>
+          <h2 id="featured-residences-title" className="font-display text-[clamp(2rem,3.6vw,3.25rem)] leading-[1.06] text-text-primary">Local Societies<br />&amp; Home Layouts</h2>
+          <p className="mt-5 max-w-md text-[15px] leading-[1.85] text-text-muted">We plan around each home’s actual layout—not just the society name. Room proportions, balcony access, daylight, builder-fixed services and storage needs all matter in Noida Extension and Greater Noida West.</p>
         </div>
-        <div className="border-t border-[#D4CBBB] pt-5 lg:pt-0 lg:border-t-0 lg:border-l lg:pl-12">
+        <div className="border-t border-border-subtle pt-5 lg:pt-0 lg:border-t-0 lg:border-l lg:pl-12">
           <div className="flex flex-wrap gap-2.5">
             {residences.map((residence) => (
-              <span key={residence} className="border border-[#C9BFAF] px-4 py-2.5 text-[13px] text-[#1C3A5A]">
+              <span key={residence} className="border border-border-warm px-4 py-2.5 text-[13px] text-brand-navy">
                 {residence}
               </span>
             ))}
           </div>
-          <div className="mt-8 border-l-2 border-[#25D366] bg-[#F2EDE4] px-6 py-6">
-            <p className="font-display text-xl leading-snug text-[#1C3A5A]">Have a 2BHK, 3BHK, 4BHK or Villa floor plan?</p>
-            <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[#6B5E4E]">Share your layout on WhatsApp (+91 8448061997) for a complimentary space-planning consultation.</p>
-            <a href={WHATSAPP_LAYOUT_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex border-b border-[#1C3A5A] pb-1 text-[13px] font-semibold text-[#1C3A5A] transition-colors hover:border-[#25D366] hover:text-[#178f46]">
+          <div className="mt-8 border-l-2 border-brand-whatsapp bg-cream px-6 py-6">
+            <p className="font-display text-xl leading-snug text-brand-navy">Have a 2BHK, 3BHK, 4BHK or Villa floor plan?</p>
+            <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-text-muted">Share your layout on WhatsApp (+91 8448061997) for a complimentary space-planning consultation.</p>
+            <a href={WHATSAPP_LAYOUT_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex border-b border-brand-navy pb-1 text-[13px] font-semibold text-brand-navy transition-colors hover:border-brand-whatsapp hover:text-[#178f46]">
               Share your floor plan on WhatsApp →
             </a>
           </div>
