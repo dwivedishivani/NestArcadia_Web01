@@ -30,14 +30,14 @@ export default function ConversionBanner({ page }: Props) {
   const source = directImageUrls[item.image] || resolveSiteImage(item.image);
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
-      <div className="relative min-h-72 overflow-hidden bg-[#1C3A5A]">
+      <div className="relative min-h-72 overflow-hidden bg-brand-navy">
         <img src={source} data-site-image-key={item.image} srcSet={resolveSiteImageSrcSet(item.image)} sizes="100vw" alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" fetchPriority="low" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/90 via-[#1C3A5A]/65 to-[#1C3A5A]/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/65 to-brand-navy/20" />
         <div className="relative flex min-h-72 max-w-2xl flex-col justify-center px-7 py-10 lg:px-14">
           <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/60">{item.eyebrow}</p>
           <h2 className="font-display text-[clamp(1.8rem,3.5vw,3rem)] leading-tight text-white">{item.title}</h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/75">{item.text}</p>
-          <Link to="/start-your-project/" className="mt-7 inline-flex w-fit border border-white/50 px-6 py-3 text-[14px] text-white transition-colors hover:border-[#2D8C7E] hover:bg-[#17665B]">{item.cta} →</Link>
+          <Link to="/start-your-project/" className="mt-7 inline-flex w-fit border border-white/50 px-6 py-3 text-[14px] text-white transition-colors hover:border-brand-teal hover:bg-brand-forest">{item.cta} →</Link>
         </div>
       </div>
     </section>
