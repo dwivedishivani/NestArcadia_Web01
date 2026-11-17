@@ -298,7 +298,7 @@ export default function Homes() {
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-2xl text-white">Want a home like this?</h3>
-            <p className="text-white/55 text-sm mt-1">Let's design yours — from the ground up.</p>
+            <p className="text-white/70 text-sm mt-1">Let's design yours — from the ground up.</p>
           </div>
           <Link
             to="/start-your-project/"
