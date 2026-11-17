@@ -688,10 +688,10 @@ export default function Home() {
                     aria-labelledby={`home-faq-question-${i}`}
                     aria-hidden={openFaq !== i}
                     inert={openFaq !== i}
-                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${openFaq === i ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                    className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${openFaq === i ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
                   >
                     <div className="min-h-0 overflow-hidden">
-                      <p className={`max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-text-muted transition-opacity duration-300 ${openFaq === i ? 'opacity-100' : 'opacity-0'}`}>
+                      <p className={`max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-text-muted transition-opacity duration-300 motion-reduce:transition-none ${openFaq === i ? 'opacity-100' : 'opacity-0'}`}>
                         {faq.answer}
                       </p>
                     </div>
