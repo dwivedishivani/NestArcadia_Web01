@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 export interface LocalServiceConfig {
   path: string;
@@ -600,8 +600,6 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
         <img
           src={config.heroImage}
           data-site-image-key={imageKeyFromUrl(config.heroImage)}
-          srcSet={imageKeyFromUrl(config.heroImage) ? resolveSiteImageSrcSet(imageKeyFromUrl(config.heroImage)!) : undefined}
-          sizes="100vw"
           alt=""
           aria-hidden="true"
           width="1600"
@@ -637,8 +635,6 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
                 key={src + i}
                 src={src}
                 data-site-image-key={imageKeyFromUrl(src)}
-                srcSet={imageKeyFromUrl(src) ? resolveSiteImageSrcSet(imageKeyFromUrl(src)!) : undefined}
-                sizes="(max-width: 1023px) 50vw, 25vw"
                 alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'}
                 width="800"
                 height="900"

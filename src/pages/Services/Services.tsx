@@ -1,4 +1,4 @@
-import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage } from '../../utils/siteImages';
 import { Link, useNavigate } from 'react-router';
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
@@ -97,8 +97,6 @@ export default function Services() {
         <img
           src={u('photo-1774940122986-47dc6c7c575b', 1440, 500)}
           data-site-image-key="photo-1774940122986-47dc6c7c575b"
-          srcSet={resolveSiteImageSrcSet('photo-1774940122986-47dc6c7c575b')}
-          sizes="100vw"
           alt="Our Services"
           width="1440"
           height="500"
@@ -124,8 +122,6 @@ export default function Services() {
                 <img
                   src={s.img}
                   data-site-image-key={s.imageKey}
-                  srcSet={resolveSiteImageSrcSet(s.imageKey)}
-                  sizes="(max-width: 1023px) 100vw, 50vw"
                   alt={s.name}
                   loading="lazy"
                   decoding="async"

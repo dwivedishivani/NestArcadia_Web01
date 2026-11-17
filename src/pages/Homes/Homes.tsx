@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import { Link } from 'react-router';
-import { resolveSiteImage, resolveSiteImageReference, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
 import FeaturedResidences from '../../components/common/FeaturedResidences';
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
 const imageKeyFromUrl = (value: string) => value.match(/(photo-\d+-[a-z0-9]+)/i)?.[1];
-const responsiveSrcSet = (value: string) => {
-  const imageKey = imageKeyFromUrl(value);
-  return imageKey ? resolveSiteImageSrcSet(imageKey) : undefined;
-};
 
 const homes = [
   {
@@ -148,8 +144,6 @@ export default function Homes() {
           <img
             src={selected.gallery[activeImage]}
             data-site-image-key={imageKeyFromUrl(selected.gallery[activeImage])}
-            srcSet={responsiveSrcSet(selected.gallery[activeImage])}
-            sizes="100vw"
             alt={`${selected.name}: ${selected.desc.split(/[.!?]/)[0]} (${selected.type}, ${selected.location}) — selected interior design concept`}
             width="1600"
             height="1060"
@@ -171,8 +165,6 @@ export default function Homes() {
                   <img
                     src={img}
                     data-site-image-key={imageKeyFromUrl(img)}
-                    srcSet={responsiveSrcSet(img)}
-                    sizes="128px"
                     alt=""
                     loading="lazy"
                     decoding="async"
@@ -272,8 +264,6 @@ export default function Homes() {
                   <img
                     src={h.gallery[0]}
                     data-site-image-key={imageKeyFromUrl(h.gallery[0])}
-                    srcSet={responsiveSrcSet(h.gallery[0])}
-                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                     alt={`${h.name}: ${h.desc.split(/[.!?]/)[0]} (${h.type}, ${h.location}) — selected interior design concept`}
                     loading="lazy"
                     decoding="async"

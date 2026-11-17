@@ -3,7 +3,7 @@ import RichArticleContent from '../../components/common/RichArticleContent';
 import luxuryArticleSnapshot from '../../data/seo/luxury-interior-design-noida-extension.json';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import { Link } from 'react-router';
-import { resolveSiteImage, resolveSiteImageReference, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageReference } from '../../utils/siteImages';
 
 interface Props {
   articleId?: string;
@@ -11,10 +11,6 @@ interface Props {
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 const imageKeyFromUrl = (value: string) => value.match(/(photo-\d+-[a-z0-9]+)/i)?.[1];
-const responsiveSrcSet = (value: string) => {
-  const key = imageKeyFromUrl(value);
-  return key ? resolveSiteImageSrcSet(key) : undefined;
-};
 
 const LIME_PLASTER_SOURCES = [
   { label: 'CEPT University / UCL Open Environment — moisture buffering and mould growth in naturally ventilated lime-plastered houses (2024)', href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11443221/' },
@@ -645,7 +641,7 @@ export default function Journal({ articleId }: Props) {
       <div className="pt-20 lg:pt-[90px]">
         {/* Hero */}
         <div className="relative overflow-hidden bg-brand-navy" style={{ height: '55vh', minHeight: '360px' }}>
-          <img src={selected.img} data-site-image-key={imageKeyFromUrl(selected.img)} srcSet={responsiveSrcSet(selected.img)} sizes="100vw" alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={selected.img} data-site-image-key={imageKeyFromUrl(selected.img)} alt={selected.title} width="1200" height="700" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70" />
           <div className="absolute inset-0 bg-gradient-to-t from-text-primary/60 to-transparent" />
           <div className="relative h-full max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end pb-12">
             <p className="text-[10px] uppercase tracking-[0.25em] text-brand-forest mb-3">{selected.category}</p>
@@ -762,8 +758,6 @@ export default function Journal({ articleId }: Props) {
                     <img
                     src={a.thumb}
                       data-site-image-key={imageKeyFromUrl(a.thumb)}
-                      srcSet={responsiveSrcSet(a.thumb)}
-                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     alt={a.title}
                     loading="lazy"
                     decoding="async"
@@ -860,7 +854,7 @@ export default function Journal({ articleId }: Props) {
             className="grid lg:grid-cols-2 gap-0 mb-16 border border-border-subtle w-full text-left group lg:h-[420px] lg:overflow-hidden"
           >
             <div className="overflow-hidden bg-border-subtle aspect-[16/10] lg:aspect-auto lg:h-full min-h-0">
-              <img src={featured.thumb} data-site-image-key={imageKeyFromUrl(featured.thumb)} srcSet={responsiveSrcSet(featured.thumb)} sizes="(max-width: 1023px) 100vw, 50vw" alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img src={featured.thumb} data-site-image-key={imageKeyFromUrl(featured.thumb)} alt={featured.title} loading="eager" fetchPriority="high" decoding="async" width="800" height="500" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex min-h-0 flex-col justify-center p-10 lg:p-14 overflow-hidden" style={{ background: 'var(--color-card)' }}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-5">
@@ -897,8 +891,6 @@ export default function Journal({ articleId }: Props) {
                   <img
                     src={a.thumb}
                       data-site-image-key={imageKeyFromUrl(a.thumb)}
-                      srcSet={responsiveSrcSet(a.thumb)}
-                      sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     alt={a.title}
                     loading="lazy"
                     decoding="async"

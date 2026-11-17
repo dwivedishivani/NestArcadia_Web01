@@ -1,6 +1,6 @@
 import type { Page } from '../../App';
 import { Link } from 'react-router';
-import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 interface Props { page: Page; }
 
@@ -31,7 +31,7 @@ export default function ConversionBanner({ page }: Props) {
   return (
     <section className="mx-auto w-full max-w-[1440px] px-6 pb-16 lg:px-20 lg:pb-20">
       <div className="relative min-h-72 overflow-hidden bg-brand-navy">
-        <img src={source} data-site-image-key={item.image} srcSet={resolveSiteImageSrcSet(item.image)} sizes="100vw" alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" fetchPriority="low" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+        <img src={source} data-site-image-key={item.image} alt="NestArcadia interior design consultation" width="1440" height="460" loading="lazy" fetchPriority="low" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/65 to-brand-navy/20" />
         <div className="relative flex min-h-72 max-w-2xl flex-col justify-center px-7 py-10 lg:px-14">
           <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/60">{item.eyebrow}</p>

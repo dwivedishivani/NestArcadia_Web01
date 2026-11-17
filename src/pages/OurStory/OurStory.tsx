@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { resolveSiteImageSrcSet } from '../../utils/siteImages';
 import { resolveSiteImage } from '../../utils/siteImages';
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
@@ -25,8 +24,6 @@ export default function OurStory() {
         <img
           src={u('photo-1735568958809-82f7696a276a', 1440, 600)}
           data-site-image-key="photo-1735568958809-82f7696a276a"
-          srcSet={resolveSiteImageSrcSet('photo-1735568958809-82f7696a276a')}
-          sizes="100vw"
           alt="NestArcadia interior design studio and heritage-inspired approach"
           width="1440"
           height="600"
@@ -71,8 +68,6 @@ export default function OurStory() {
         <img
           src={u('photo-1766128867730-b10474e59f1b', 1440, 600)}
           data-site-image-key="photo-1766128867730-b10474e59f1b"
-          srcSet={resolveSiteImageSrcSet('photo-1766128867730-b10474e59f1b')}
-          sizes="100vw"
           alt="NestArcadia studio"
           loading="lazy"
           decoding="async"
@@ -121,8 +116,6 @@ export default function OurStory() {
           <img
             src={u('photo-1746439326918-845e0486040d', 800, 600)}
             data-site-image-key="photo-1746439326918-845e0486040d"
-            srcSet={resolveSiteImageSrcSet('photo-1746439326918-845e0486040d')}
-            sizes="(max-width: 1023px) 100vw, 50vw"
             alt="Craft and making"
             loading="lazy"
             decoding="async"

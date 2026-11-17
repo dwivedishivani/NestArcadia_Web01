@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { resolveSiteImage } from '../../utils/siteImages';
 
 export const faqGroups = [
   {
@@ -71,8 +71,6 @@ export default function FAQs() {
           <img
             src={resolveSiteImage("photo-1682418460518-848f7aa242bb")}
             data-site-image-key="photo-1682418460518-848f7aa242bb"
-            srcSet={resolveSiteImageSrcSet("photo-1682418460518-848f7aa242bb")}
-            sizes="100vw"
             alt="Modern apartment dining area for a new-home interior planning consultation"
             width="1440"
             height="420"
