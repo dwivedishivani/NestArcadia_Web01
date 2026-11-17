@@ -5,8 +5,8 @@ const outDir = path.resolve('public/fonts');
 await mkdir(outDir, { recursive: true });
 
 const cssUrl = new URL('https://fonts.googleapis.com/css2');
-cssUrl.searchParams.append('family', 'DM Sans:opsz,wght@9..40,300..600');
-cssUrl.searchParams.append('family', 'Playfair Display:ital,wght@0,400..700;1,400..700');
+cssUrl.searchParams.append('family', 'Manrope:opsz,wght@9..40,300..600');
+cssUrl.searchParams.append('family', 'Cormorant Garamond:ital,wght@0,400..700;1,400..700');
 cssUrl.searchParams.set('display', 'swap');
 
 const userAgent =
@@ -48,7 +48,7 @@ for (const block of latinBlocks) {
   const source = block.match(/url\((https:\/\/fonts\.gstatic\.com\/[^)]+\.woff2)\)/i)?.[1];
 
   if (!source || !weight || !unicodeRange) continue;
-  if (family !== 'DM Sans' && family !== 'Playfair Display') continue;
+  if (family !== 'Manrope' && family !== 'Cormorant Garamond') continue;
 
   const parsed = new URL(source);
   if (parsed.hostname !== 'fonts.gstatic.com') {
@@ -56,12 +56,12 @@ for (const block of latinBlocks) {
   }
 
   let filename;
-  if (family === 'DM Sans' && style === 'normal') {
-    filename = 'dm-sans-latin-v1.woff2';
-  } else if (family === 'Playfair Display' && style === 'normal') {
-    filename = 'playfair-display-latin-v1.woff2';
-  } else if (family === 'Playfair Display' && style === 'italic') {
-    filename = 'playfair-display-italic-latin-v1.woff2';
+  if (family === 'Manrope' && style === 'normal') {
+    filename = 'manrope-latin-v1.woff2';
+  } else if (family === 'Cormorant Garamond' && style === 'normal') {
+    filename = 'cormorant-garamond-latin-v1.woff2';
+  } else if (family === 'Cormorant Garamond' && style === 'italic') {
+    filename = 'cormorant-garamond-italic-latin-v1.woff2';
   } else {
     continue;
   }
@@ -88,9 +88,9 @@ for (const block of latinBlocks) {
 }
 
 const expected = [
-  'dm-sans-latin-v1.woff2',
-  'playfair-display-latin-v1.woff2',
-  'playfair-display-italic-latin-v1.woff2',
+  'manrope-latin-v1.woff2',
+  'cormorant-garamond-latin-v1.woff2',
+  'cormorant-garamond-italic-latin-v1.woff2',
 ];
 for (const filename of expected) {
   if (!downloaded.has(filename)) {
@@ -111,8 +111,8 @@ await writeFile(path.join(outDir, 'fonts-v1.css'), fontCss, 'utf8');
 
 // Include the Open Font License notices with the local font files.
 for (const [family, slug] of [
-  ['DM Sans', 'dmsans'],
-  ['Playfair Display', 'playfairdisplay'],
+  ['Manrope', 'manrope'],
+  ['Cormorant Garamond', 'cormorantgaramond'],
 ]) {
   try {
     const license = await fetch('https://raw.githubusercontent.com/google/fonts/main/ofl/' + slug + '/OFL.txt');
