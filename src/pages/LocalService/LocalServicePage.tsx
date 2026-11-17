@@ -21,6 +21,7 @@ export interface LocalServiceConfig {
 }
 
 const image = (id: string) => resolveSiteImage(id);
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
 
 export const localServicePages: LocalServiceConfig[] = [
   {
@@ -538,7 +539,19 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
         <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pb-16 lg:pb-20">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {photos.slice(0, 4).map((src, i) => (
-              <img key={src + i} src={src} alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'} width="800" height="900" loading="lazy" decoding="async" className={`w-full h-[220px] lg:h-[300px] object-cover ${i === 1 ? 'mt-8 lg:mt-12' : ''} `} />
+              <img
+                key={src + i}
+                src={src}
+                data-site-image-key={imageKeyFromUrl(src)}
+                srcSet={imageKeyFromUrl(src) ? resolveSiteImageSrcSet(imageKeyFromUrl(src)!) : undefined}
+                sizes="(max-width: 1023px) 50vw, 25vw"
+                alt={i === 0 ? `${config.area} interior design reference by NestArcadia` : 'NestArcadia interior design reference'}
+                width="800"
+                height="900"
+                loading="lazy"
+                decoding="async"
+                className={`w-full h-[220px] lg:h-[300px] object-cover ${i === 1 ? 'mt-8 lg:mt-12' : ''} `}
+              />
             ))}
           </div>
           <p className="text-[11px] text-text-stone mt-3">Design references from NestArcadia’s visual language — not presented as a local project claim.</p>
