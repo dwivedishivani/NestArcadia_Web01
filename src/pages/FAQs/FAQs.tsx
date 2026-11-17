@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { resolveSiteImage } from '../../utils/siteImages';
+import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
 
 export const faqGroups = [
   {
@@ -68,7 +68,19 @@ export default function FAQs() {
 
       <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-10 lg:pt-14">
         <div className="relative overflow-hidden bg-brand-navy min-h-52">
-          <img src={resolveSiteImage("photo-1682418460518-848f7aa242bb")} alt="Modern apartment dining area for a new-home interior planning consultation" width="1440" height="420" loading="eager" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-60" />
+          <img
+            src={resolveSiteImage("photo-1682418460518-848f7aa242bb")}
+            data-site-image-key="photo-1682418460518-848f7aa242bb"
+            srcSet={resolveSiteImageSrcSet("photo-1682418460518-848f7aa242bb")}
+            sizes="100vw"
+            alt="Modern apartment dining area for a new-home interior planning consultation"
+            width="1440"
+            height="420"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover opacity-60"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/85 via-brand-navy/50 to-transparent" />
           <div className="relative flex min-h-52 max-w-2xl flex-col justify-center px-7 py-8 lg:px-12">
             <p className="text-[10px] uppercase tracking-[0.28em] text-white/60 mb-3">Before possession</p>
