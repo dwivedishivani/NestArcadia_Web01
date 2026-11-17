@@ -130,7 +130,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 className="text-[15px] tracking-[0.01em] transition-colors hover:text-brand-forest"
                 style={{
                   color: page === l.page
-                    ? (transparent ? 'var(--color-white)' : 'var(--color-brand-forest)')
+                    ? (transparent ? 'white' : 'var(--color-brand-forest)')
                     : transparent
                     ? 'rgba(255,255,255,0.85)'
                     : 'var(--color-brand-navy)',
@@ -193,7 +193,7 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
                 tabIndex={menuOpen ? 0 : -1}
                 onClick={closeMenu}
                 className="text-left text-[17px] font-semibold transition-colors"
-                style={{ color: page === l.page ? 'var(--color-brand-teal)' : 'var(--color-brand-navy)' }}
+                style={{ color: page === l.page ? 'var(--color-brand-forest)' : 'var(--color-brand-navy)' }}
               >
                 {l.label}
               </Link>
