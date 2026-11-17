@@ -7,7 +7,7 @@ import FeaturedResidences from '../../components/common/FeaturedResidences';
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
 const gallery = (ids: string[]) => ids.map((id) => u(id, 1600, 1060));
-const imageKeyFromUrl = (value: string) => value.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1];
+const imageKeyFromUrl = (value: string) => value.match(/(photo-\d+-[a-z0-9]+)/i)?.[1];
 const responsiveSrcSet = (value: string) => {
   const imageKey = imageKeyFromUrl(value);
   return imageKey ? resolveSiteImageSrcSet(imageKey) : undefined;
