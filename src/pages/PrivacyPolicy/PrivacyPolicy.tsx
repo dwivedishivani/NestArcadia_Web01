@@ -72,21 +72,21 @@ const sections = [
 
 export default function PrivacyPolicy() {
   return (
-    <div className="pt-20 lg:pt-[90px]">
-      <header className="max-w-[1100px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Privacy</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">
+    <div className="na-page na-page-privacy pt-20 lg:pt-[90px]">
+      <header className="max-w-[1100px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#DCD1C2]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-[#3C6452] mb-4">Privacy</p>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#272821] leading-[1.05]">
           Privacy Policy
         </h1>
-        <p className="text-[#6B5E4E] text-[15px] mt-4 max-w-2xl leading-relaxed">
+        <p className="text-[#6D685D] text-[15px] mt-4 max-w-2xl leading-relaxed">
           How NestArcadia collects, uses and protects information when you use this website.
         </p>
-        <p className="text-[12px] text-[#8A7B69] mt-5">Effective date: 7 October 2026</p>
+        <p className="text-[12px] text-[#858073] mt-5">Effective date: 7 October 2026</p>
       </header>
 
       <main className="max-w-[1100px] mx-auto px-6 lg:px-20 py-14 lg:py-20">
         <div className="max-w-3xl">
-          <p className="text-[15px] leading-7 text-[#52677E] mb-10">
+          <p className="text-[15px] leading-7 text-[#656C62] mb-10">
             NestArcadia respects your privacy. This notice explains what information may be collected through
             nestarcadia.com, why it is used, the external services involved, and the choices available to you.
           </p>
@@ -94,27 +94,27 @@ export default function PrivacyPolicy() {
           <div className="space-y-12">
             {sections.map(section => (
               <section key={section.title}>
-                <h2 className="font-display text-2xl text-[#1A1714] mb-4">{section.title}</h2>
+                <h2 className="font-display text-2xl text-[#272821] mb-4">{section.title}</h2>
                 <div className="space-y-4">
                   {section.body.map((paragraph, index) => (
-                    <p key={index} className="text-[14px] leading-7 text-[#52677E]">{paragraph}</p>
+                    <p key={index} className="text-[14px] leading-7 text-[#656C62]">{paragraph}</p>
                   ))}
                 </div>
               </section>
             ))}
 
             <section>
-              <h2 className="font-display text-2xl text-[#1A1714] mb-4">10. Contact us</h2>
-              <p className="text-[14px] leading-7 text-[#52677E]">
+              <h2 className="font-display text-2xl text-[#272821] mb-4">10. Contact us</h2>
+              <p className="text-[14px] leading-7 text-[#656C62]">
                 For privacy questions, correction or deletion requests, contact NestArcadia at{' '}
-                <a href="mailto:info@nestarcadia.com" className="text-[#17665B] underline">info@nestarcadia.com</a>{' '}
-                or call <a href="tel:+918448061997" className="text-[#17665B] underline">+91 84480 61997</a>.
+                <a href="mailto:info@nestarcadia.com" className="text-[#3C6452] underline">info@nestarcadia.com</a>{' '}
+                or call <a href="tel:+918448061997" className="text-[#3C6452] underline">+91 84480 61997</a>.
               </p>
             </section>
           </div>
 
-          <div className="mt-14 pt-8 border-t border-[#D4CBBB]">
-            <Link to="/" className="text-[14px] font-medium text-[#1C3A5A] hover:text-[#17665B]">
+          <div className="mt-14 pt-8 border-t border-[#DCD1C2]">
+            <Link to="/" className="text-[14px] font-medium text-[#27463D] hover:text-[#3C6452]">
               ← Back to NestArcadia
             </Link>
           </div>
