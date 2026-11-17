@@ -676,11 +676,26 @@ export default function Home() {
                     className="flex w-full items-center justify-between gap-6 py-5 text-left text-[15px] font-medium text-[#1A1714]"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     aria-expanded={openFaq === i}
+                    aria-controls={`home-faq-answer-${i}`}
+                    id={`home-faq-question-${i}`}
                   >
                     {faq.question}
                     <span className="text-xl font-normal text-[#17665B]" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
                   </button>
-                  {openFaq === i && <p className="max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E]">{faq.answer}</p>}
+                  <div
+                    id={`home-faq-answer-${i}`}
+                    role="region"
+                    aria-labelledby={`home-faq-question-${i}`}
+                    aria-hidden={openFaq !== i}
+                    inert={openFaq !== i}
+                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${openFaq === i ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                  >
+                    <div className="min-h-0 overflow-hidden">
+                      <p className={`max-w-2xl pb-5 pr-10 text-[14px] leading-[1.8] text-[#6B5E4E] transition-opacity duration-300 ${openFaq === i ? 'opacity-100' : 'opacity-0'}`}>
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
