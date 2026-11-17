@@ -652,7 +652,7 @@ export default function Journal({ articleId }: Props) {
             <h1 className="font-display text-[clamp(1.75rem,4vw,3.25rem)] text-white leading-tight max-w-2xl">
               {selected.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4 text-white/50 text-[13px]">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4 text-white/70 text-[13px]">
               <span>By {selected.author}</span>
               <span>·</span>
               <span>{selected.date}</span>
