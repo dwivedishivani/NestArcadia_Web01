@@ -21,4 +21,5 @@ export const localServicePaths = [
   '/interior-design-jewar',
   '/interior-design-yamuna-expressway',
   '/interior-design-delhi-ncr',
+  '/interior-design-cost-noida',
 ] as const;
