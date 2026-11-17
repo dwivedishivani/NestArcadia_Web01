@@ -658,7 +658,7 @@ function SiteShell() {
           {page === 'cultures' && <DesignCultures />}
           {page === 'services' && <Services />}
           {page === 'story' && <OurStory />}
-          {page === 'journal' && <Journal articleId={articleId} setArticleId={(id) => navigate(id ? `/journal/${id}/` : '/journal/')} />}
+          {page === 'journal' && <Journal articleId={articleId} />}
           {page === 'homes' && <Homes />}
           {page === 'project' && <StartProject />}
           {page === 'faq' && <FAQs />}
