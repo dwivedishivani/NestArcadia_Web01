@@ -1,8 +1,5 @@
-import type { Page } from '../../App';
-import { resolveSiteImage } from '../../utils/siteImages';
-import { useNavigate } from 'react-router';
-
-interface Props { setPage: (p: Page) => void; }
+import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
+import { Link, useNavigate } from 'react-router';
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
@@ -14,6 +11,7 @@ const services = [
     desc: 'We craft complete interior design solutions — from concept boards to execution drawings. Every space is designed around you: your lifestyle, your story, your way of living. We blend heritage aesthetics with contemporary comfort.',
     includes: ['Mood boards & design concept', 'Space planning & 3D visualization', 'Material & finish selection', 'Furniture layout design', 'Lighting design coordination'],
     cta: 'Shape My Design Direction',
+    imageKey: 'photo-1785402231092-859d0a6c4397',
     img: u('photo-1785402231092-859d0a6c4397', 800, 600),
   },
   {
@@ -23,6 +21,7 @@ const services = [
     desc: "We manage the entire journey — from approved designs to move-in ready homes. Our project management team oversees every contractor, craftsman, and vendor, so you don't have to. One point of contact. Zero stress.",
     includes: ['Project timeline management', 'Contractor coordination', 'Quality control inspections', 'Progress reporting', 'Handover & after-care'],
     cta: 'Map My Turnkey Journey',
+    imageKey: 'photo-1746439318854-4a8bc02a03ba',
     img: u('photo-1746439318854-4a8bc02a03ba', 800, 600),
   },
   {
@@ -32,6 +31,7 @@ const services = [
     desc: 'We design and build bespoke furniture — from kitchen modules to statement wardrobes, from dining tables to platform beds. Every piece is made in India, with locally sourced materials and traditional craftsmanship techniques.',
     includes: ['Custom kitchen modules', 'Wardrobes & storage solutions', 'Bed frames & bedroom furniture', 'Dining & seating', 'Statement pieces & joinery'],
     cta: 'Plan My Custom Furniture',
+    imageKey: 'photo-1682662046610-fbdb3db4bd74',
     img: u('photo-1682662046610-fbdb3db4bd74', 800, 600),
   },
   {
@@ -41,6 +41,7 @@ const services = [
     desc: 'We integrate Vastu Shastra principles naturally into modern home design — without compromise on aesthetics. Energy flow, directional orientation, material choices, and spatial harmony are built into every layout from the start.',
     includes: ['Vastu-compliant space planning', 'Directional analysis', 'Material & colour Vastu alignment', 'Entry & threshold design', 'Remediation for existing spaces'],
     cta: 'Review My Layout with Vastu',
+    imageKey: 'photo-1750420556288-d0e32a6f517b',
     img: u('photo-1750420556288-d0e32a6f517b', 800, 600),
   },
   {
@@ -50,6 +51,7 @@ const services = [
     desc: 'Lighting is the final layer that transforms a space from designed to lived-in. We curate ambient, task, and accent lighting schemes — combined with decor styling using textiles, art, plants, and handcrafted accessories.',
     includes: ['Ambient & accent lighting plans', 'Fixture sourcing & specification', 'Textile & rug curation', 'Art & wall styling', 'Plant styling & decor layering'],
     cta: 'Curate My Lighting & Decor',
+    imageKey: 'photo-1785232273548-4beae5334903',
     img: u('photo-1785232273548-4beae5334903', 800, 600),
   },
   {
@@ -59,6 +61,7 @@ const services = [
     desc: 'Before design comes strategy. We analyse your space for flow, function, and future needs — then create layouts that make every square foot count. Particularly powerful for compact urban homes where space is at a premium.',
     includes: ['Floor plan analysis', 'Traffic flow & zoning', 'Multi-functional layout design', 'Storage optimisation', 'Scale & proportion balancing'],
     cta: 'Unlock My Floor Plan',
+    imageKey: 'photo-1667375185276-13b00bf723bc',
     img: u('photo-1667375185276-13b00bf723bc', 800, 600),
   },
 ];
@@ -71,7 +74,7 @@ const process = [
   { step: '05', title: 'Handover', desc: 'Your home, ready to live in. Perfectly finished.' },
 ];
 
-export default function Services({ setPage }: Props) {
+export default function Services() {
   const navigate = useNavigate();
 
   const beginServiceBrief = (service: string, cta: string) => {
@@ -93,6 +96,9 @@ export default function Services({ setPage }: Props) {
       <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '360px' }}>
         <img
           src={u('photo-1774940122986-47dc6c7c575b', 1440, 500)}
+          data-site-image-key="photo-1774940122986-47dc6c7c575b"
+          srcSet={resolveSiteImageSrcSet('photo-1774940122986-47dc6c7c575b')}
+          sizes="100vw"
           alt="Our Services"
           width="1440"
           height="500"
@@ -117,6 +123,9 @@ export default function Services({ setPage }: Props) {
               <div className="relative min-w-0 w-full min-h-[280px] lg:min-h-[560px] self-stretch overflow-hidden bg-[#D4CBBB]">
                 <img
                   src={s.img}
+                  data-site-image-key={s.imageKey}
+                  srcSet={resolveSiteImageSrcSet(s.imageKey)}
+                  sizes="(max-width: 1023px) 100vw, 50vw"
                   alt={s.name}
                   loading="lazy"
                   decoding="async"
@@ -236,12 +245,12 @@ export default function Services({ setPage }: Props) {
             <h3 className="font-display text-2xl text-white">Ready to start?</h3>
             <p className="text-white/55 text-sm mt-1">Let's talk about your space.</p>
           </div>
-          <button
-            onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+          <Link
+            to="/start-your-project/"
+            className="inline-flex shrink-0 text-[13px] text-white border border-white/45 px-7 py-3 hover:bg-white hover:text-[#1A1714] transition-all"
           >
             Discuss My Requirements →
-          </button>
+          </Link>
         </div>
       </div>
     </div>
