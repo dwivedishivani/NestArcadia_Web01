@@ -1,7 +1,5 @@
-import type { Page } from '../../App';
+import { Link } from 'react-router';
 import { resolveSiteImage, resolveSiteImageSrcSet } from '../../utils/siteImages';
-
-interface Props { setPage: (p: Page) => void; }
 
 const u = (id: string, _w: number, _h: number) => resolveSiteImage(id, _w);
 
@@ -54,7 +52,7 @@ const trending = [
   { name: 'Antique Doors', imageKey: 'photo-1746812659296-69ab75a02db9', img: u('photo-1746812659296-69ab75a02db9', 600, 400), desc: 'A new life in modern homes.' },
 ];
 
-export default function DesignCultures({ setPage }: Props) {
+export default function DesignCultures() {
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Page Header */}
@@ -127,12 +125,12 @@ export default function DesignCultures({ setPage }: Props) {
                   ))}
                 </ul>
               </div>
-              <button
-                onClick={() => setPage('project')}
-                className="mt-4 lg:mt-4 text-[14px] lg:text-[13px] font-semibold text-[#1C3A5A] border border-[#1C3A5A] px-6 lg:px-5 py-2.5 lg:py-2 self-start hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
+              <Link
+                to="/start-your-project/"
+                className="inline-flex mt-4 lg:mt-4 text-[14px] lg:text-[13px] font-semibold text-[#1C3A5A] border border-[#1C3A5A] px-6 lg:px-5 py-2.5 lg:py-2 self-start hover:bg-[#2D8C7E] hover:border-[#2D8C7E] hover:text-white transition-all"
               >
                 Design My Home in This Style →
-              </button>
+              </Link>
             </div>
           </div>
         ))}
@@ -173,12 +171,12 @@ export default function DesignCultures({ setPage }: Props) {
             <h3 className="font-display text-2xl text-white">Ready to bring a culture home?</h3>
             <p className="text-white/55 text-sm mt-1">Tell us your story. We'll design around it.</p>
           </div>
-          <button
-            onClick={() => setPage('project')}
-            className="text-[13px] text-white border border-white/45 px-7 py-3 shrink-0 hover:bg-white hover:text-[#1A1714] transition-all"
+          <Link
+            to="/start-your-project/"
+            className="inline-flex shrink-0 text-[13px] text-white border border-white/45 px-7 py-3 hover:bg-white hover:text-[#1A1714] transition-all"
           >
             Find Your Design Direction →
-          </button>
+          </Link>
         </div>
       </div>
     </div>
