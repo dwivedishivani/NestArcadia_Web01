@@ -79,16 +79,16 @@ export default function EditorialContext({ page }: { page: Page }) {
   const item = content[page];
   return (
     <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pb-20" aria-labelledby={`editorial-${page}`}>
-      <details className="group border-t border-[#B8D8D1] pt-6">
-        <summary className="list-none cursor-pointer flex items-center justify-between gap-6 text-[#1C3A5A]">
+      <details className="group border-t border-border-border-mint pt-6">
+        <summary className="list-none cursor-pointer flex items-center justify-between gap-6 text-brand-navy">
           <span>
-            <span className="block text-[11px] uppercase tracking-[0.22em] text-[#17665B] mb-2">{item.label}</span>
+            <span className="block text-[11px] uppercase tracking-[0.22em] text-brand-forest mb-2">{item.label}</span>
             <span id={`editorial-${page}`} className="font-display text-2xl leading-tight">{item.title}</span>
           </span>
-          <span aria-hidden="true" className="text-2xl text-[#17665B] transition-transform group-open:rotate-45">+</span>
+          <span aria-hidden="true" className="text-2xl text-brand-forest transition-transform group-open:rotate-45">+</span>
         </summary>
         <div className="grid lg:grid-cols-3 gap-6 pt-7 max-w-6xl">
-          {item.paragraphs.map((paragraph) => <p key={paragraph} className="text-[15px] leading-[1.85] text-[#52677E]">{paragraph}</p>)}
+          {item.paragraphs.map((paragraph) => <p key={paragraph} className="text-[15px] leading-[1.85] text-text-muted">{paragraph}</p>)}
         </div>
       </details>
     </section>
