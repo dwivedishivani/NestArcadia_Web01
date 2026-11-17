@@ -38,7 +38,7 @@ export const localServicePages: LocalServiceConfig[] = [
       { title: 'New-possession planning', body: 'The best time to resolve kitchen layouts, wardrobes, lighting and electrical points is before execution gathers speed. Early planning reduces avoidable changes later.' },
       { title: 'Storage without crowding', body: 'Apartment interiors need storage, but not at the cost of circulation. We look at full-height opportunities, furniture scale and what needs to stay accessible every day.' },
       { title: 'A home that feels personal', body: 'A local interior should still feel like your home, not a model apartment. Materials, colour, furniture and details are developed around your routines and preferences.' },
-      { title: 'Set a realistic scope before execution', body: 'For a raw or newly handed-over apartment, NestArcadia's published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. The final quote depends on what is already complete, the storage and furniture scope, materials and customisation.' },
+      { title: 'Set a realistic scope before execution', body: "For a raw or newly handed-over apartment, NestArcadia's published guidance starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. The final quote depends on what is already complete, the storage and furniture scope, materials and customisation." },
     ],
     services: ['2BHK, 3BHK and 4BHK apartment interior planning','Turnkey interior design and site coordination','Modular kitchens, wardrobes and custom storage','Lighting, material and finish planning','Vastu-led layout discussions when requested','Commercial office interiors for local businesses'],
     fit: ['New-possession apartments where electrical, lighting and storage decisions need to be made before execution','Families that need flexible rooms, concealed storage and practical everyday circulation','Homeowners who want a single design direction carried through drawings, materials and site work','Small commercial teams planning a client-facing office in Greater Noida West'],
@@ -599,8 +599,8 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
       <header className="relative overflow-hidden bg-brand-navy">
         <img
           src={config.heroImage}
-          data-site-image-key={config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i)?.[1]}
-          srcSet={config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i) ? resolveSiteImageSrcSet(config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i)![1]) : undefined}
+          data-site-image-key={imageKeyFromUrl(config.heroImage)}
+          srcSet={imageKeyFromUrl(config.heroImage) ? resolveSiteImageSrcSet(imageKeyFromUrl(config.heroImage)!) : undefined}
           sizes="100vw"
           alt=""
           aria-hidden="true"
@@ -678,7 +678,7 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
         <section className="bg-brand-navy px-6 lg:px-20 py-14 lg:py-16">
           <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div><p className="text-[10px] uppercase tracking-[0.25em] text-white/70 mb-3">Ready when you are</p><h2 className="font-display text-2xl lg:text-3xl text-white">Have the property already?</h2><p className="text-white/60 text-sm mt-2">Send us the layout, location and what you want the space to do better.</p></div>
-            <Link to="/start-your-project/" className="inline-flex shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-brand-navy transition-colors">Share Your Project Brief →</Link>
+            <Link to="/start-your-project/" className="shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-brand-navy transition-colors">Share Your Project Brief →</Link>
           </div>
         </section>
 
@@ -700,10 +700,10 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
 
         {config.related.length > 0 && (
           <section className="max-w-[1100px] mx-auto px-6 lg:px-20 pb-16 lg:pb-20">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#2D8C7E] mb-5">Related pages</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-brand-forest mb-5">Related pages</p>
             <div className="flex flex-wrap gap-3">
               {config.related.map(link => (
-                <a key={link.href} href={link.href} className="border border-[#D4CBBB] px-4 py-2 text-[12px] text-[#1C3A5A] hover:bg-[#1C3A5A] hover:text-white transition-colors">
+                <a key={link.href} href={link.href} className="border border-border-subtle px-4 py-2 text-[12px] text-brand-navy hover:bg-brand-navy hover:text-white transition-colors">
                   {link.label}
                 </a>
               ))}
