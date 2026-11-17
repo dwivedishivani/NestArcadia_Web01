@@ -78,32 +78,32 @@
 
   # Production-only legacy route and duplicate-URL redirects.
   # These run before scheme/host normalization so each route resolves in one hop.
-  RewriteCond %{HTTP_HOST} ^(www\\.)?nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
   RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
 
-  RewriteCond %{HTTP_HOST} ^(www\\.)?nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
   RewriteRule ^interior-design-noida-extension$ https://nestarcadia.com/interior-design-noida-extension/ [R=301,L]
 
   # Canonicalize www + extensionless paths in one hop.
-  RewriteCond %{HTTP_HOST} ^www\\.nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_URI} !/$
-  RewriteCond %{REQUEST_URI} !\\.[^/]+$
+  RewriteCond %{REQUEST_URI} !\.[^/]+$
   RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
   # Canonicalize remaining www requests (including static assets).
-  RewriteCond %{HTTP_HOST} ^www\\.nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
   RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
   # Canonicalize extensionless apex routes. Preview domains are intentionally excluded.
-  RewriteCond %{HTTP_HOST} ^nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_URI} !/$
-  RewriteCond %{REQUEST_URI} !\\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
+  RewriteCond %{REQUEST_URI} !\.(html|js|css|webp|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|json|txt|xml|webmanifest|map)$
   RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
   # Force HTTPS for the apex production domain, preserving already-canonical paths.
-  RewriteCond %{HTTP_HOST} ^nestarcadia\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
   RewriteCond %{HTTPS} off
   RewriteRule ^ https://nestarcadia.com%{REQUEST_URI} [R=301,L]
 
