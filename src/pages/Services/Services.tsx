@@ -167,7 +167,7 @@ export default function Services() {
               <div
                 key={s.number}
                 className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[560px] w-full min-h-0 border-b border-border-subtle"
-                style={{ background: i % 2 === 1 ? var(--color-card) : 'transparent' }}
+                style={{ background: i % 2 === 1 ? 'var(--color-card)' : 'transparent' }}
               >
                 {imageFirst ? imageFrame : textFrame}
                 {imageFirst ? textFrame : imageFrame}
@@ -178,7 +178,7 @@ export default function Services() {
       </div>
 
       {/* Process */}
-      <section className="py-20 px-6 lg:px-20" style={{ background: var(--color-card) }}>
+      <section className="py-20 px-6 lg:px-20" style={{ background: 'var(--color-card)' }}>
         <div className="max-w-[1440px] mx-auto">
           <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-text-primary mb-2">How We Work</h2>
           <p className="text-text-muted text-sm mb-12">A clear, collaborative process — from first call to final key.</p>
