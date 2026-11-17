@@ -504,8 +504,8 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
       <header className="relative overflow-hidden bg-[#1C3A5A]">
         <img
           src={config.heroImage}
-          data-site-image-key={config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i)?.[1]}
-          srcSet={config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i) ? resolveSiteImageSrcSet(config.heroImage.match(/(photo-\\d+-[a-z0-9]+)/i)![1]) : undefined}
+          data-site-image-key={config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i)?.[1]}
+          srcSet={config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i) ? resolveSiteImageSrcSet(config.heroImage.match(/(photo-\d+-[a-z0-9]+)/i)![1]) : undefined}
           sizes="100vw"
           alt=""
           aria-hidden="true"
