@@ -73,13 +73,14 @@ export default function Footer() {
                 <a href="/interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Greater Noida West</a>
                 <a href="/interior-design-noida-extension/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design in Noida Extension</a>
                 <a href="/commercial-interior-design-greater-noida-west/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Commercial interiors in Greater Noida West</a>
+                <a href="/interior-design-cost-noida/" className="text-[13px] text-[#6B5E4E] hover:text-[#17665B]">Interior design cost in Noida</a>
               </div>
             </div>
             <Link
               to="/start-your-project/"
               className="text-[14px] text-[#17665B] text-left mt-6 hover:text-[#1C3A5A] transition-colors font-medium"
             >
-              Share Your Project Brief →
+              Share Your Project Brief &rarr;
             </Link>
           </div>
 
@@ -148,9 +149,11 @@ export default function Footer() {
         </div>
 
         <div className="mt-7 pt-5 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <p className="text-[12px] text-[#6B5E4E]">© {currentYear} NestArcadia. All rights reserved.</p>
+          <p className="text-[12px] text-[#6B5E4E]">&copy; {currentYear} NestArcadia. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
+            <Link to="/our-story/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">About Us</Link>
+            <Link to="/start-your-project/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Contact</Link>
             <p className="text-[12px] text-[#6B5E4E]">Crafted with care, across India.</p>
           </div>
         </div>
