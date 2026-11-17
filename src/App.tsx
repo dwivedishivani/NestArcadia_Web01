@@ -249,7 +249,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     };
     setMeta('description', meta.description);
     setMeta('author', 'NestArcadia');
-geo metadata    setMeta('robots', invalidJournalArticle ? 'noindex, nofollow, noarchive' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMeta('robots', invalidJournalArticle ? 'noindex, nofollow, noarchive' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     setMeta('og:title', meta.title, true);
     setMeta('og:description', meta.description, true);
     setMeta('og:type', meta.type, true);
