@@ -583,7 +583,7 @@ export default function LocalServicePage({ config }: { config: LocalServiceConfi
 
         <section className="bg-brand-navy px-6 lg:px-20 py-14 lg:py-16">
           <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div><p className="text-[10px] uppercase tracking-[0.25em] text-white/45 mb-3">Ready when you are</p><h2 className="font-display text-2xl lg:text-3xl text-white">Have the property already?</h2><p className="text-white/60 text-sm mt-2">Send us the layout, location and what you want the space to do better.</p></div>
+            <div><p className="text-[10px] uppercase tracking-[0.25em] text-white/70 mb-3">Ready when you are</p><h2 className="font-display text-2xl lg:text-3xl text-white">Have the property already?</h2><p className="text-white/60 text-sm mt-2">Send us the layout, location and what you want the space to do better.</p></div>
             <Link to="/start-your-project/" className="inline-flex shrink-0 border border-white/40 text-white px-7 py-3 text-[13px] font-semibold hover:bg-white hover:text-brand-navy transition-colors">Share Your Project Brief →</Link>
           </div>
         </section>
