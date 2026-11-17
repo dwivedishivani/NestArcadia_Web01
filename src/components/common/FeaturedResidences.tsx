@@ -13,8 +13,8 @@ export default function FeaturedResidences() {
         </div>
         <div className="border-t border-[#D4CBBB] pt-5 lg:pt-0 lg:border-t-0 lg:border-l lg:pl-12">
           <div className="flex flex-wrap gap-2.5">
-            {residences.map((residence, index) => (
-              <span key={residence} className={`border px-4 py-2.5 text-[13px] ${index === 0 ? 'border-[#1C3A5A] bg-[#1C3A5A] text-white' : 'border-[#C9BFAF] text-[#1C3A5A]'}`}>
+            {residences.map((residence) => (
+              <span key={residence} className="border border-[#C9BFAF] px-4 py-2.5 text-[13px] text-[#1C3A5A]">
                 {residence}
               </span>
             ))}
