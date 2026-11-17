@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import type { Page } from '../../App';
+import { Link } from 'react-router';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
-
-interface Props { setPage: (p: Page) => void; }
 
 const cities = [
   'New Delhi', 'Noida', 'Greater Noida', 'Gurgaon', 'Faridabad', 'Ghaziabad',
@@ -52,7 +50,7 @@ function validateForm(form: FormState): FormErrors {
   return errors;
 }
 
-export default function StartProject({ setPage }: Props) {
+export default function StartProject() {
   const location = useLocation();
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -225,12 +223,12 @@ export default function StartProject({ setPage }: Props) {
             Thank you{form.name ? `, ${form.name}` : ''}. We have received your brief and will reach out within 24 hours to schedule a discovery call.
           </p>
           <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => setPage('home')}
-              className="text-[14px] text-[#1A1714] border border-[#1A1714] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] hover:text-white transition-all"
+            <Link
+              to="/"
+              className="inline-flex text-[14px] text-[#1A1714] border border-[#1A1714] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] hover:text-white transition-all"
             >
               Back to Home
-            </button>
+            </Link>
             <a
               href={`https://wa.me/918448061997?text=${encodeURIComponent('Hello NestArcadia, I just submitted a project brief. Looking forward to hearing from you.')}`}
               target="_blank"
