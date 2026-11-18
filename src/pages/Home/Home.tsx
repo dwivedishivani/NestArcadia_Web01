@@ -211,7 +211,7 @@ export default function Home({ setPage }: Props) {
 
   return (
     <div>
-      {/* ── Hero ──────────────────────────────────────── */}
+      {/* ── Hero ──────────────────────── */}
       <section className="relative h-screen min-h-[640px] flex items-end">
         <div className="absolute inset-0 bg-[#1C3A5A]">
           <picture className="absolute inset-0 block">
@@ -293,23 +293,24 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Trust strip ───────────────────────────────── */}
+      {/* ── Trust strip ────────────────── */}
       <section className="bg-[#1C3A5A] border-b border-[#17665B]/30">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-5 grid grid-cols-3 divide-x divide-white/10">
           {[
-            { value: '50+', label: 'Projects Delivered' },
-            { value: 'NCR', label: 'Noida, Greater Noida & Beyond' },
-            { value: '5★', label: 'Client-Rated Design' },
+            { value: '50+', label: 'Projects Delivered', accent: '#17665B' },
+            { value: 'NCR', label: 'Noida, Greater Noida & Beyond', accent: '#B2552E' },
+            { value: '5★', label: 'Client-Rated Design', accent: '#17665B' },
           ].map(stat => (
             <div key={stat.label} className="flex flex-col items-center px-4 text-center">
               <span className="font-display text-[clamp(1.1rem,2.5vw,1.5rem)] text-white leading-none">{stat.value}</span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 mt-1 leading-tight">{stat.label}</span>
+              <span className="w-5 h-px my-1.5" style={{ background: stat.accent }} />
+              <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 leading-tight">{stat.label}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Rooted in Tradition ───────────────────────── */}
+      {/* ── Rooted in Tradition ───────────── */}
       <section className="py-24 lg:py-32">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -325,16 +326,19 @@ export default function Home({ setPage }: Props) {
                 width="600" height="760"
                 className="w-full h-full object-cover"
               />
-              {/* Floating badge */}
-              <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm px-5 py-3 shadow-lg">
-                <p className="font-display text-[#1C3A5A] text-lg leading-tight">50+</p>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6B5E4E]">Homes designed</p>
+              {/* Floating mark — a service-area tag, not another repeated stat */}
+              <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm px-5 py-3 shadow-lg flex items-center gap-3">
+                <span className="rule-gold" style={{ width: '1.4rem' }} />
+                <div>
+                  <p className="font-display italic text-[#1C3A5A] text-base leading-tight">Noida &amp; NCR</p>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-[#6B5E4E]">Design-led interiors</p>
+                </div>
               </div>
             </div>
             {/* Text side */}
             <div className="flex flex-col gap-7">
               <div>
-                <p className="text-[11px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Every Home Has a Story</p>
+                <p className="label-editorial text-[#B2552E] mb-4">Every home has a story</p>
                 <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714] leading-[1.08]">
                   Rooted in Tradition.<br />Designed for You.
                 </h2>
@@ -365,57 +369,63 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Design Cultures ───────────────────────────── */}
+      {/* ── Design Cultures ─────────────── */}
       <section className="pb-24 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex justify-between items-end mb-8">
           <div>
+            <p className="label-track text-[#6B5E4E] mb-3">Five regions, one design language</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Design Cultures</h2>
-            <p className="text-[#6B5E4E] text-[15px] mt-1.5">Same roots. Endless possibilities.</p>
           </div>
           <button onClick={() => setPage('cultures')} className="hidden sm:block text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">
             Explore All →
           </button>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-          {cultures.map(c => (
-            <button
-              key={c.name}
-              onClick={() => setPage('cultures')}
-              className="relative overflow-hidden group bg-[#1C3A5A]"
-              style={{ aspectRatio: '3/4' }}
-            >
-              <img
-                src={IMG[c.img]}
-                data-site-image-key={directImageKey(IMG[c.img])}
-                srcSet={imageSrcSet(IMG[c.img])}
-                sizes="(max-width: 639px) 48vw, (max-width: 1023px) 32vw, 19vw"
-                alt={`${c.name} Indian interior design inspiration — ${c.desc}`}
-                loading="lazy" fetchPriority="low"
-                decoding="async"
-                width="600"
-                height="760"
-                className="absolute inset-0 w-full h-full object-cover opacity-70 transition-all duration-700 group-hover:opacity-90 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
-              {/* Hover shine strip */}
-              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[#17665B] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <div className="absolute bottom-0 left-0 right-0 min-h-[118px] p-5 text-left flex flex-col justify-between">
-                <p className="font-display text-xl text-white font-medium leading-tight">{c.name}</p>
-                <p className="text-white/60 text-[13px] leading-relaxed min-h-10">{c.desc}</p>
-              </div>
-            </button>
-          ))}
+          {cultures.map((c, i) => {
+            const accent = i % 2 === 0 ? '#17665B' : '#B2552E';
+            return (
+              <button
+                key={c.name}
+                onClick={() => setPage('cultures')}
+                className="relative overflow-hidden group bg-[#1C3A5A]"
+                style={{ aspectRatio: '3/4' }}
+              >
+                <img
+                  src={IMG[c.img]}
+                  data-site-image-key={directImageKey(IMG[c.img])}
+                  srcSet={imageSrcSet(IMG[c.img])}
+                  sizes="(max-width: 639px) 48vw, (max-width: 1023px) 32vw, 19vw"
+                  alt={`${c.name} Indian interior design inspiration — ${c.desc}`}
+                  loading="lazy" fetchPriority="low"
+                  decoding="async"
+                  width="600"
+                  height="760"
+                  className="absolute inset-0 w-full h-full object-cover opacity-70 transition-all duration-700 group-hover:opacity-90 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+                {/* Hover shine strip — alternates teal / terracotta instead of one flat colour across all five */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
+                  style={{ background: accent }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 min-h-[118px] p-5 text-left flex flex-col justify-between">
+                  <p className="font-display text-xl text-white font-medium leading-tight">{c.name}</p>
+                  <p className="text-white/60 text-[13px] leading-relaxed min-h-10">{c.desc}</p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </section>
 
-      {/* ── Classics + Trending ───────────────────────── */}
+      {/* ── Classics + Trending ───────────── */}
       <section className="grid lg:grid-cols-2">
         {/* Left */}
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '520px' }}>
           <img src={IMG.classics} data-site-image-key={directImageKey(IMG.classics)} srcSet={imageSrcSet(IMG.classics)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Heritage-inspired Indian woodwork, natural materials and craft details in a contemporary interior" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A1714]/70 to-transparent" />
           <div className="relative h-full flex flex-col justify-end p-10 lg:p-16 text-white min-h-[520px]">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Timeless & Current</p>
+            <p className="label-editorial text-[#d9a978] mb-4">Timeless, and current</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight mb-4">
               The Classics<br />Reimagined
             </h2>
@@ -516,11 +526,11 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Our Services ──────────────────────────────── */}
+      {/* ── Our Services ────────────────── */}
       <section className="py-24 lg:py-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-5 mb-14">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-3">What we do</p>
+            <p className="label-track text-[#17665B] mb-3">What we do</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3.25rem)] text-[#1A1714]">Our Services</h2>
             <p className="text-[#6B5E4E] text-[15px] mt-1.5">
               End-to-end interior solutions, inspired by heritage, designed for modern living.
@@ -530,27 +540,41 @@ export default function Home({ setPage }: Props) {
             View All Services →
           </button>
         </div>
-        {/* 2×3 grid gives each card more room to breathe */}
+        {/* 2×3 grid gives each card more room to breathe. Icon tiles alternate
+            teal / terracotta on hover instead of one flat colour for all six. */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
-          {services.map(s => (
-            <button key={s.name} onClick={() => setPage('services')} className="group text-left border border-transparent hover:border-[#D4CBBB] transition-colors p-6 -m-6 rounded-sm">
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-12 h-12 border border-[#D4CBBB] flex items-center justify-center text-[#17665B] transition-all group-hover:bg-[#17665B] group-hover:border-[#17665B] group-hover:text-white">
-                  <span className="text-lg">{s.icon}</span>
+          {services.map((s, i) => {
+            const variant = i % 2 === 0 ? 'service-tile--teal' : 'service-tile--clay';
+            const accent = i % 2 === 0 ? '#17665B' : '#B2552E';
+            return (
+              <button
+                key={s.name}
+                onClick={() => setPage('services')}
+                className={`group relative text-left border border-transparent hover:border-[#D4CBBB] transition-colors p-6 -m-6 rounded-sm ${variant}`}
+              >
+                <div className="flex items-center justify-between mb-5">
+                  <div className="service-tile-icon w-12 h-12 border border-[#D4CBBB] flex items-center justify-center transition-all">
+                    <span className="text-lg">{s.icon}</span>
+                  </div>
+                  <span className="service-tile-num font-display text-[#D4CBBB] text-sm transition-colors">{s.num}</span>
                 </div>
-                <span className="font-display text-[#D4CBBB] text-sm group-hover:text-[#17665B] transition-colors">{s.num}</span>
-              </div>
-              <p className="text-[14px] font-semibold text-[#1A1714] mb-2">{s.name}</p>
-              <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{s.desc}</p>
-            </button>
-          ))}
+                <p className="text-[14px] font-semibold text-[#1A1714] mb-2">{s.name}</p>
+                <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{s.desc}</p>
+                {/* Accent underline reveals on hover, matching the alternating accent colour */}
+                <span
+                  className="absolute left-6 right-6 bottom-6 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  style={{ background: accent }}
+                />
+              </button>
+            );
+          })}
         </div>
         <div className="mt-10 sm:hidden">
           <button onClick={() => setPage('services')} className="text-[14px] text-[#1A1714] hover:text-[#17665B] transition-colors">View All Services →</button>
         </div>
       </section>
 
-      {/* ── Modern Homes. Deeper Roots. ───────────────── */}
+      {/* ── Modern Homes. Deeper Roots. ─────────── */}
       <section className="grid lg:grid-cols-2">
         <div className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '480px' }}>
           <img src={IMG.modern} data-site-image-key={directImageKey(IMG.modern)} srcSet={imageSrcSet(IMG.modern)} sizes="(max-width: 1023px) 100vw, 50vw" alt="Modern Indian home interior design for Noida and Greater Noida families" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-70" />
@@ -588,7 +612,7 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Featured Home Concepts ────────────────────── */}
+      {/* ── Featured Home Concepts ───────────── */}
       <section className="py-24 lg:py-28 px-6 lg:px-20 max-w-[1440px] mx-auto">
         <div className="flex justify-between items-end mb-10">
           <div>
@@ -615,11 +639,11 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── Local expertise ───────────────────────────── */}
+      {/* ── Local expertise ───────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
         <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.9fr_1.4fr] gap-8 lg:gap-20">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Designed for NCR living</p>
+            <p className="label-editorial text-[#B2552E] mb-4">Designed for NCR living</p>
             <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Interior design that understands where you live.</h2>
           </div>
           <div className="lg:pt-2">
@@ -653,11 +677,11 @@ export default function Home({ setPage }: Props) {
       {/* ── Featured Residences (FeaturedResidences component) */}
       <FeaturedResidences />
 
-      {/* ── Interior Cost Guides ──────────────────────── */}
+      {/* ── Interior Cost Guides ────────────── */}
       <section className="px-6 lg:px-20 py-16 lg:py-20 max-w-[1440px] mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.28em] text-[#17665B] mb-3">Plan with clarity</p>
+            <p className="label-track text-[#17665B] mb-3">Plan with clarity</p>
             <h2 className="font-display text-[clamp(1.8rem,3.5vw,2.7rem)] leading-tight text-[#1A1714]">Start with a realistic interior budget.</h2>
             <p className="text-sm text-[#6B5E4E] mt-3 max-w-2xl leading-relaxed">Understand the starting planning ranges, scope decisions and questions to ask before you compare quotations.</p>
           </div>
@@ -679,14 +703,15 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── FAQs ──────────────────────────────────────── */}
+      {/* ── FAQs ───────────────────── */}
       <section className="px-6 lg:px-20 pb-24 lg:pb-28 max-w-[1440px] mx-auto">
         <div className="border-t border-[#D4CBBB] pt-12 grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-20">
           <div className="relative">
-            {/* Teal accent stripe */}
-            <div className="absolute left-0 top-0 w-0.5 h-14 bg-[#17665B]" />
+            {/* Terracotta accent stripe — the FAQ section closes the page on the
+                second accent colour instead of returning to teal one more time */}
+            <div className="absolute left-0 top-0 w-0.5 h-14 bg-[#B2552E]" />
             <div className="pl-5">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">Helpful answers</p>
+              <p className="label-editorial text-[#B2552E] mb-4">Helpful answers</p>
               <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-tight text-[#1A1714]">Questions before you begin.</h2>
             </div>
           </div>
@@ -734,7 +759,7 @@ export default function Home({ setPage }: Props) {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────── */}
+      {/* ── CTA ──────────────────────── */}
       <section className="relative overflow-hidden bg-[#1C3A5A]" style={{ minHeight: '380px' }}>
         <img src={IMG.cta} data-site-image-key={directImageKey(IMG.cta)} srcSet={imageSrcSet(IMG.cta)} sizes="100vw" alt="NestArcadia interior design consultation for Noida, Greater Noida and Greater Noida West homes" loading="lazy" fetchPriority="low" decoding="async" width="1200" height="800" className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1C3A5A]/90 via-[#1C3A5A]/70 to-[#1C3A5A]/40" />
@@ -762,15 +787,16 @@ export default function Home({ setPage }: Props) {
               </a>
             </div>
           </div>
-          {/* Right: 3 stat callouts */}
+          {/* Right: 3 stat callouts — distinct from the trust strip and the
+              Rooted-in-Tradition badge, not a repeat of the same number */}
           <div className="hidden lg:grid grid-cols-3 gap-4">
             {[
-              { value: '50+', label: 'Homes & offices designed across NCR' },
-              { value: '4', label: 'Indian design cultures, one vision' },
-              { value: '100%', label: 'Turnkey projects fully managed' },
+              { value: '5', label: 'Indian design cultures, one vision', accent: '#B2552E' },
+              { value: '100%', label: 'Turnkey projects fully managed', accent: '#17665B' },
+              { value: 'NCR', label: 'Noida, Greater Noida & beyond', accent: '#17665B' },
             ].map(stat => (
               <div key={stat.label} className="border border-white/15 p-5 text-center">
-                <p className="font-display text-[2rem] text-white leading-none mb-2">{stat.value}</p>
+                <p className="font-display text-[2rem] leading-none mb-2" style={{ color: stat.accent === '#B2552E' ? '#d98257' : '#ffffff' }}>{stat.value}</p>
                 <p className="text-[11px] text-white/50 leading-tight">{stat.label}</p>
               </div>
             ))}
