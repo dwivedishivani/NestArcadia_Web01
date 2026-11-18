@@ -33,7 +33,7 @@ export default function OurStory({ setPage }: Props) {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1C3A5A]/50" />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[400px] pb-14">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">Who We Are</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#e8b9a0] mb-4">Who We Are</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05]">Our Story</h1>
           <p className="text-white/60 text-sm mt-3 max-w-md">
             Premium interior design for modern homes and spaces across Noida & NCR.

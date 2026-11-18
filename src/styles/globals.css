@@ -1,23 +1,33 @@
 @import 'tailwindcss';
 
+/* ── Type ────────────────────────────────────────────────────
+   Fraunces (display) and DM Sans (body), loaded from Google Fonts'
+   CDN with preconnect hints in index.html (not self-hosted — the
+   previous self-hosted stylesheet 404'd in production and silently
+   dropped both faces back to the system fallback). Fraunces is a
+   soft, slightly characterful serif — warmer and less generic in
+   this category than the Playfair Display every second interior-
+   design template reaches for. */
+
 @theme inline {
-  --font-display: 'Playfair Display', serif;
+  --font-display: 'Fraunces', Georgia, serif;
   --font-sans: 'DM Sans', sans-serif;
 
-  /* NestArcadia's single, consistent colour hierarchy */
-  --color-cream: #F2EDE4;
-  --color-olive: #1C3A5A;
-  --color-amber: #C4915A; /* reserved for small craft details only */
-  --color-charcoal: #1C3A5A;
-  --color-muted: #52677E;
-  --color-tan: #B8D8D1;
-  --color-card: #EAE4DA;
+  /* Structural palette — unchanged roles, one name per colour */
+  --color-cream: #F2EDE4;   /* page background */
+  --color-card: #EAE4DA;    /* raised panels */
+  --color-ink: #1A1714;     /* primary text / headings on light */
+  --color-navy: #1C3A5A;    /* dark sections, secondary headings */
+  --color-muted: #6B5E4E;   /* body copy on light backgrounds */
+  --color-sand: #D4CBBB;    /* borders, dividers on light */
+  --color-mint: #B8D8D1;    /* borders/badges on light, teal-adjacent */
 
-  /* NestArcadia brand palette (from logo) */
-  --color-brand-navy: #1C3A5A;
-  --color-brand-teal: #2D8C7E;
-  --color-brand-mint: #6DC0AE;
-  --color-brand-grey: #A0AABA;
+  /* Accent trio — used deliberately, never all at once in one section */
+  --color-teal: #17665B;        /* primary CTA / action colour, site-wide */
+  --color-teal-deep: #0F4F46;   /* teal hover/active */
+  --color-terracotta: #B2552E;  /* NEW — second accent: clay, jaali, terracotta */
+  --color-terracotta-deep: #8F4324;
+  --color-gold: #C4915A;        /* fine dividers, small craft marks only */
 }
 
 html {
@@ -47,19 +57,59 @@ canvas {
 }
 
 .font-display {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
 }
+
+/* Editorial label — an italic serif alternative to the uppercase-tracked
+   sans eyebrow, used to break up the rhythm so not every section reads
+   with the same formula. */
+.label-editorial {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+/* Uppercase tracked-caps eyebrow — the "structured" counterpart to
+   .label-editorial. Each section picks one or the other, not both. */
+.label-track {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* A single fine rule used sparingly as a craft detail — the one place
+   the gold accent appears. */
+.rule-gold {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+}
+
+/* Service-tile icon accent — alternates teal/terracotta across a grid of
+   cards without inline hover-state JS. Pair with .service-tile--teal or
+   .service-tile--clay on the group element. */
+.service-tile--teal .service-tile-icon { color: var(--color-teal); }
+.service-tile--teal:hover .service-tile-icon { background: var(--color-teal); border-color: var(--color-teal); color: #fff; }
+.service-tile--teal:hover .service-tile-num { color: var(--color-teal); }
+.service-tile--clay .service-tile-icon { color: var(--color-terracotta); }
+.service-tile--clay:hover .service-tile-icon { background: var(--color-terracotta); border-color: var(--color-terracotta); color: #fff; }
+.service-tile--clay:hover .service-tile-num { color: var(--color-terracotta); }
 
 /* Slightly increased body text readability */
 p, li, label, input, textarea, select {
   font-size: 16px;
 }
 
-::selection { background: #6DC0AE; color: #1C3A5A; }
+::selection { background: var(--color-mint); color: var(--color-navy); }
 
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 3px solid #6DC0AE;
+  outline: 3px solid var(--color-teal);
   outline-offset: 3px;
 }
 
@@ -70,11 +120,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(45, 140, 126, 0.3);
+  background: rgba(23, 102, 91, 0.3);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(45, 140, 126, 0.6);
+  background: rgba(23, 102, 91, 0.6);
 }
 
 /* Teal focus ring for inputs — only suppress on pointer/mouse interactions */
@@ -82,7 +132,7 @@ input:focus:not(:focus-visible), textarea:focus:not(:focus-visible), select:focu
   outline: none;
 }
 input:focus-visible, textarea:focus-visible, select:focus-visible {
-  outline: 3px solid #6DC0AE;
+  outline: 3px solid var(--color-teal);
   outline-offset: 2px;
 }
 
@@ -111,7 +161,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 .rich-article-content blockquote {
   margin: 2rem 0;
   padding: 1rem 0 1rem 1.25rem;
-  border-left: 2px solid #2D8C7E;
+  border-left: 2px solid var(--color-teal);
   color: #1C3A5A;
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.2rem;
@@ -150,7 +200,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   transition: border-color .15s ease, background-color .15s ease, color .15s ease;
 }
 .admin-rich-editor .admin-editor-tool:hover {
-  border-color: #2D8C7E;
+  border-color: var(--color-teal);
   background: #FFFFFF;
   color: #1C3A5A;
 }
@@ -222,8 +272,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 .rich-editor blockquote {
   margin: 1.6rem 0;
   padding: 1rem 1.1rem;
-  border-left: 3px solid #2D8C7E;
-  background: rgba(45, 140, 126, .06);
+  border-left: 3px solid var(--color-teal);
+  background: rgba(23, 102, 91, .06);
   color: #1C3A5A;
   font-family: var(--font-display, Georgia, serif);
   font-size: 1.2rem;

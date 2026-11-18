@@ -55,11 +55,12 @@
     <link rel="preload" as="image" href="/images/home-hero-mobile-v2.webp" media="(max-width: 767px)" fetchpriority="high" />
     <link rel="preload" as="image" href="/images/home-hero-optimized-v2.webp" media="(min-width: 768px)" fetchpriority="high" />
     <link rel="dns-prefetch" href="//etmrhxapfvyaispuvnft.supabase.co" />
-    <!-- Self-hosted fonts avoid an external stylesheet and font-file connection in the critical path. -->
-    <!-- Let the self-hosted font stylesheet request only the font faces actually used.
-         Avoid preloading both families before CSS confirms they are needed. -->
-    <link rel="preload" as="style" href="/fonts/fonts-v1.css" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="/fonts/fonts-v1.css" /></noscript>
+    <!-- Fraunces (display) + DM Sans (body/UI), loaded from Google Fonts with
+         preconnect so the font CSS and the first woff2 requests overlap with
+         the rest of the critical path instead of queuing behind it. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" />
     <link rel="canonical" href="https://nestarcadia.com/" />
     <title>Interior Designers in Noida Extension &amp; Greater Noida West | NestArcadia</title>
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
