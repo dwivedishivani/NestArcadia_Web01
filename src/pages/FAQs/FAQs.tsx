@@ -62,7 +62,7 @@ export default function FAQs({ setPage }: Props) {
     <div className="pt-20 lg:pt-[90px]">
       <header className="border-b border-[#D4CBBB] bg-[#F2EDE4]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16 lg:py-20">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-[#17665B] mb-4">NestArcadia FAQs</p>
+          <p className="label-editorial text-[#B2552E] mb-4">NestArcadia FAQs</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] text-[#1A1714]">Interior design questions, answered clearly.</h1>
           <p className="mt-5 max-w-2xl text-[15px] leading-[1.9] text-[#6B5E4E]">Helpful answers for homeowners and businesses in Noida Extension and Greater Noida West, with nearby Noida and Greater Noida also in focus — from apartment interiors and modular kitchens to turnkey execution and commercial spaces.</p>
         </div>

@@ -100,7 +100,7 @@ export default function Services({ setPage }: Props) {
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
         <div className="relative max-w-[1440px] mx-auto px-6 lg:px-20 flex flex-col justify-end min-h-[360px] pb-14">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/50 mb-4">What We Do</p>
+          <p className="label-editorial text-white/70 mb-4">What we do</p>
           <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-white leading-[1.05]">Our Services</h1>
           <p className="text-white/60 text-sm mt-3 max-w-md">
             End-to-end interior solutions, inspired by heritage, designed for modern living.

@@ -202,7 +202,7 @@ export default function Homes({ setPage }: Props) {
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Portfolio</p>
+        <p className="label-editorial text-[#6B5E4E] mb-4">Portfolio</p>
         <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Our Projects</h1>
         <p className="text-[#6B5E4E] text-sm mt-3">Selected design studies and portfolio concepts.</p>
       </div>
