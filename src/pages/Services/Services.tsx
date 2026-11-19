@@ -71,6 +71,48 @@ const process = [
   { step: '05', title: 'Handover', desc: 'Your home, ready to live in. Perfectly finished.' },
 ];
 
+// Every group maps to a real, published location page (src/pages/LocalService) —
+// this is the only place on the Services page that makes all of them reachable,
+// so the area directory below links every one rather than repeating the same
+// four primary markets.
+const areaGroups = [
+  {
+    title: 'Noida & Greater Noida',
+    areas: [
+      { label: 'Noida Extension', href: '/interior-design-noida-extension/' },
+      { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
+      { label: 'Noida', href: '/interior-design-noida/' },
+      { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
+    ],
+  },
+  {
+    title: 'Ghaziabad & East NCR',
+    areas: [
+      { label: 'Ghaziabad', href: '/interior-design-ghaziabad/' },
+      { label: 'Indirapuram', href: '/interior-design-indirapuram/' },
+      { label: 'Crossing Republik', href: '/interior-design-crossing-republik/' },
+      { label: 'East Delhi', href: '/interior-design-east-delhi/' },
+    ],
+  },
+  {
+    title: 'Delhi & Gurugram',
+    areas: [
+      { label: 'Delhi', href: '/interior-design-delhi/' },
+      { label: 'South Delhi', href: '/interior-design-south-delhi/' },
+      { label: 'Gurugram', href: '/interior-design-gurugram/' },
+      { label: 'Faridabad', href: '/interior-design-faridabad/' },
+    ],
+  },
+  {
+    title: 'Expanding NCR corridor',
+    areas: [
+      { label: 'Dadri', href: '/interior-design-dadri/' },
+      { label: 'Jewar', href: '/interior-design-jewar/' },
+      { label: 'Yamuna Expressway', href: '/interior-design-yamuna-expressway/' },
+    ],
+  },
+];
+
 export default function Services({ setPage }: Props) {
   const navigate = useNavigate();
 
@@ -187,16 +229,42 @@ export default function Services({ setPage }: Props) {
 
       {/* Service Areas */}
       <section className="py-20 px-6 lg:px-20">
-        <div className="max-w-[1440px] mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#6B5E4E] mb-4">Where We Work</p>
-            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior Design in Noida Extension &amp; Greater Noida West</h2>
-            <p className="text-[#6B5E4E] text-sm leading-[1.8] max-w-md">Our studio is based in Greater Noida West. Our primary focus is Noida Extension and Greater Noida West, with Noida and Greater Noida as nearby secondary markets.</p>
+        <div className="max-w-[1440px] mx-auto">
+          <div className="max-w-2xl mb-12">
+            <p className="label-editorial text-[#17665B] mb-4">Where we work</p>
+            <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] text-[#1A1714] leading-tight mb-3">Interior design across Noida &amp; NCR</h2>
+            <p className="text-[#6B5E4E] text-sm leading-[1.8]">Our studio is based in Greater Noida West. Noida Extension and Greater Noida West are our primary focus, with Noida and Greater Noida as nearby markets — and we take on residential and commercial projects more widely across Delhi NCR, including Ghaziabad, Delhi, Gurugram and Faridabad.</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 pt-1">
-            {['Noida Extension','Greater Noida West','Noida','Greater Noida'].map(area => (
-              <span key={area} className="border-b border-[#D4CBBB] pb-2 text-xs text-[#1A1714]">{area}</span>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-10">
+            {areaGroups.map((group, i) => {
+              const accent = i % 2 === 0 ? '#17665B' : '#B2552E';
+              return (
+                <div key={group.title}>
+                  <p className="text-[10px] uppercase tracking-[0.2em] mb-4" style={{ color: accent }}>{group.title}</p>
+                  <ul className="flex flex-col gap-3">
+                    {group.areas.map(area => (
+                      <li key={area.href}>
+                        <a
+                          href={area.href}
+                          className="group flex items-center justify-between gap-2 border-b border-[#D4CBBB] pb-2 text-[13px] text-[#1A1714] transition-colors hover:text-[#17665B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#17665B]"
+                        >
+                          {area.label}
+                          <span aria-hidden="true" className="text-[#D4CBBB] transition-colors group-hover:text-[#17665B]">→</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-10">
+            <a
+              href="/interior-design-delhi-ncr/"
+              className="inline-flex min-h-11 items-center gap-2 border border-[#1C3A5A] px-6 py-3 text-[13px] font-semibold text-[#1C3A5A] transition-all hover:bg-[#1C3A5A] hover:text-white"
+            >
+              See all of NCR we serve →
+            </a>
           </div>
         </div>
       </section>
@@ -220,7 +288,7 @@ export default function Services({ setPage }: Props) {
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Office & business interiors</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Workflow-led planning for offices, reception areas, meeting rooms, storage, lighting and acoustics.</p>
             </a>
-            <a href="/interior-design-noida-extension/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
+            <a href="/interior-design-cost-noida/" className="border border-[#D4CBBB] bg-[#F2EDE4] p-6 hover:border-[#2D8C7E] transition-colors">
               <p className="text-[10px] uppercase tracking-[0.2em] text-[#17665B] mb-3">Budget & planning</p>
               <h3 className="font-display text-xl text-[#1A1714] mb-2">Cost, scope & turnkey planning</h3>
               <p className="text-xs leading-relaxed text-[#6B5E4E]">Plan your interior budget, priorities, materials and execution sequence before committing to the site.</p>
