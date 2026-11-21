@@ -1,6 +1,8 @@
 import type { Page } from '../../App';
 import { Link } from 'react-router';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
+import MotionLayer from '../common/MotionLayer';
+import { areaGroups } from '../../pages/LocalService/localServicePaths';
 
 interface FooterProps {}
 
@@ -13,12 +15,12 @@ const navLinks: { label: string; page: Page }[] = [
   { label: 'FAQs', page: 'faq' },
 ];
 
-const serviceAreas = [
-  { label: 'Noida Extension', href: '/interior-design-noida-extension/' },
-  { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
-  { label: 'Noida', href: '/interior-design-noida/' },
-  { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
-];
+// Every published NCR location page, grouped — same directory as the Services
+// page's "Where we work" section (src/pages/LocalService/localServicePaths.ts).
+// This strip used to hard-code just the original 4 areas, so newer location
+// pages (Ghaziabad, Delhi, Gurugram, etc.) were never linked from the footer
+// that appears on every page.
+const serviceAreas = areaGroups.flatMap(group => group.areas);
 
 const socials = [
   { label: 'Instagram', href: 'https://www.instagram.com/nestarcadia/', icon: <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm5 5.5A4.5 4.5 0 1 0 12 16.5 4.5 4.5 0 0 0 12 7.5Zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8ZM17.65 6.6a1.05 1.05 0 1 0 0-2.1 1.05 1.05 0 0 0 0 2.1Z" /> },
@@ -44,6 +46,7 @@ export default function Footer({}: FooterProps) {
   const currentYear = new Date().getFullYear();
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
+      <MotionLayer />
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
 
@@ -137,12 +140,18 @@ export default function Footer({}: FooterProps) {
         {/* Service areas strip */}
         <div className="mt-12 pt-8 border-t border-[#D4CBBB]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-5">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Primary service areas</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E]">Interior design across Noida &amp; NCR</p>
+            <a
+              href="/interior-design-delhi-ncr/"
+              className="text-[12px] font-semibold text-[#17665B] hover:text-[#0f4f46] transition-colors whitespace-nowrap"
+            >
+              See all of NCR we serve →
+            </a>
           </div>
           <nav aria-label="NestArcadia service areas" className="flex flex-wrap gap-x-2 gap-y-2">
             {serviceAreas.map(area => (
               <a
-                key={area.label}
+                key={area.href}
                 href={area.href}
                 className="whitespace-nowrap text-[13px] text-[#6B5E4E] border border-[#D4CBBB] px-3 py-1 hover:text-[#17665B] hover:border-[#17665B] transition-colors"
               >
