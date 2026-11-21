@@ -298,6 +298,24 @@ const staticRootStyle = 'max-width:1100px;margin:0 auto;padding:104px 24px 80px;
 const staticHeadingStyle = 'font-family:Georgia,serif;font-weight:500;line-height:1.12;color:#1A1714;margin:0 0 18px';
 const staticSectionStyle = 'margin:38px 0 0';
 const staticParagraphStyle = 'margin:0 0 16px;font-size:16px;line-height:1.8;color:#52677E';
+// Every published NCR location page, grouped. Mirrors `areaGroups` in
+// src/pages/LocalService/localServicePaths.ts (the browser footer and Services
+// page use that file). Crawlers and non-JS agents only ever see this snapshot,
+// so every route must link the full set here, not just the original 4 markets.
+const siteAreaGroups = [
+  { title: 'Noida & Greater Noida', areas: [
+    ['Noida Extension', '/interior-design-noida-extension/'], ['Greater Noida West', '/interior-design-greater-noida-west/'],
+    ['Noida', '/interior-design-noida/'], ['Greater Noida', '/interior-design-greater-noida/'] ] },
+  { title: 'Ghaziabad & East NCR', areas: [
+    ['Ghaziabad', '/interior-design-ghaziabad/'], ['Indirapuram', '/interior-design-indirapuram/'],
+    ['Crossing Republik', '/interior-design-crossing-republik/'], ['East Delhi', '/interior-design-east-delhi/'] ] },
+  { title: 'Delhi & Gurugram', areas: [
+    ['Delhi', '/interior-design-delhi/'], ['South Delhi', '/interior-design-south-delhi/'],
+    ['Gurugram', '/interior-design-gurugram/'], ['Faridabad', '/interior-design-faridabad/'] ] },
+  { title: 'Expanding NCR corridor', areas: [
+    ['Dadri', '/interior-design-dadri/'], ['Jewar', '/interior-design-jewar/'], ['Yamuna Expressway', '/interior-design-yamuna-expressway/'] ] },
+];
+
 const staticLinkStyle = 'color:#1C3A5A;text-decoration:underline;text-underline-offset:3px;font-weight:600';
 const inlineLink = (href, label) => '<a style="' + staticLinkStyle + '" href="' + escapeAttribute(href) + '">' + escapeText(label) + '</a>';
 const staticList = (items, ordered = false) => {
@@ -318,7 +336,7 @@ const mainPageContent = {
     { heading: 'Residential interior design', paragraphs: ['Plan 2BHK, 3BHK and 4BHK apartments, villas and family homes around the floor plan, household routines, storage requirements and budget. The design scope can include furniture layouts, kitchens, wardrobes, lighting, materials and decor.'] },
     { heading: 'Commercial interiors', paragraphs: ['Create functional offices and commercial spaces with considered layouts for reception areas, workstations, meeting rooms, storage, lighting and acoustics. The scope is tailored to the business, site conditions and project brief.'] },
     { heading: 'Design and execution services', bullets: ['Space planning and furniture layouts','Modular kitchens and custom furniture','Wardrobes and integrated storage','Vastu-led layout discussions when requested','Lighting, materials and decor','Turnkey execution coordination from design through handover'] },
-    { heading: 'Serving Noida and across NCR', paragraphs: ['Noida Extension and Greater Noida West are our primary focus, with Noida and Greater Noida as nearby markets. We also take on residential and commercial projects more widely across Delhi NCR, including Ghaziabad, Delhi, Gurugram and Faridabad.'], links: [{ href: '/interior-design-ghaziabad/', label: 'Interior design in Ghaziabad' }, { href: '/interior-design-delhi/', label: 'Interior design in Delhi' }, { href: '/interior-design-gurugram/', label: 'Interior design in Gurugram' }, { href: '/interior-design-faridabad/', label: 'Interior design in Faridabad' }, { href: '/interior-design-delhi-ncr/', label: 'See all of NCR we serve' }] },
+    { heading: 'Serving Noida and across NCR', paragraphs: ['Noida Extension and Greater Noida West are our primary focus, with Noida and Greater Noida as nearby markets. We also take on residential and commercial projects across Delhi NCR, including Ghaziabad, Delhi, Gurugram, Faridabad, Dadri, Jewar and Yamuna Expressway.'], links: siteAreaGroups.flatMap((g) => g.areas).map(([label, href]) => ({ href, label: 'Interior design in ' + label })).concat([{ href: '/interior-design-delhi-ncr/', label: 'See all of NCR we serve' }]) },
     { heading: 'Start with the property and the scope', paragraphs: ['The right estimate depends on the property condition, measurements, selected materials and work already completed. Share a floor plan and requirements so the scope can be assessed before a proposal is prepared.'], links: [{ href: '/start-your-project/', label: 'Start an interior design project' }, { href: '/interior-design-noida-extension/', label: 'Interior design in Noida Extension' }, { href: '/interior-design-greater-noida-west/', label: 'Interior design in Greater Noida West' }] },
   ],
   '/our-story': [
@@ -364,7 +382,22 @@ const mainPageContent = {
   ],
 };
 
+function renderSiteAreaNav() {
+  const groups = siteAreaGroups.map((group) =>
+    '<div><p style="margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6B5E4E">' + escapeText(group.title) + '</p><ul style="margin:0;padding:0;list-style:none">' +
+    group.areas.map(([label, href]) => '<li style="margin:0 0 6px">' + inlineLink(href, label) + '</li>').join('') + '</ul></div>'
+  ).join('');
+  return '<footer style="margin-top:48px;padding-top:24px;border-top:1px solid #D4CBBB"><nav aria-label="NestArcadia service areas" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px">' +
+    groups + '</nav><p style="margin:20px 0 0">' + inlineLink('/interior-design-delhi-ncr/', 'See all of NCR we serve') + ' · ' +
+    inlineLink('/interior-design-services/', 'Our services') + ' · ' + inlineLink('/start-your-project/', 'Start your project') + '</p></footer>';
+}
+
 function renderStaticRoute(pathname, metadata) {
+  const body = renderStaticRouteBody(pathname, metadata);
+  return body.replace(/<\/main>$/, renderSiteAreaNav() + '</main>');
+}
+
+function renderStaticRouteBody(pathname, metadata) {
   const heading = (metadata.articleTitle || metadata.title || 'NestArcadia').replace(/\s*\|\s*NestArcadia(?: Journal)?\s*$/i, '');
   const header = '<header><p style="margin:0 0 10px;color:#17665B;font-size:12px;letter-spacing:.18em;text-transform:uppercase">' +
     escapeText(metadata.eyebrow || 'NestArcadia · Interior Design') + '</p><h1 style="' + staticHeadingStyle + ';font-size:clamp(2.25rem,6vw,4rem)">' +
