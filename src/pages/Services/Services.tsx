@@ -1,6 +1,7 @@
 import type { Page } from '../../App';
 import { resolveSiteImage } from '../../utils/siteImages';
 import { useNavigate } from 'react-router';
+import { areaGroups } from '../LocalService/localServicePaths';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -71,47 +72,9 @@ const process = [
   { step: '05', title: 'Handover', desc: 'Your home, ready to live in. Perfectly finished.' },
 ];
 
-// Every group maps to a real, published location page (src/pages/LocalService) —
-// this is the only place on the Services page that makes all of them reachable,
-// so the area directory below links every one rather than repeating the same
-// four primary markets.
-const areaGroups = [
-  {
-    title: 'Noida & Greater Noida',
-    areas: [
-      { label: 'Noida Extension', href: '/interior-design-noida-extension/' },
-      { label: 'Greater Noida West', href: '/interior-design-greater-noida-west/' },
-      { label: 'Noida', href: '/interior-design-noida/' },
-      { label: 'Greater Noida', href: '/interior-design-greater-noida/' },
-    ],
-  },
-  {
-    title: 'Ghaziabad & East NCR',
-    areas: [
-      { label: 'Ghaziabad', href: '/interior-design-ghaziabad/' },
-      { label: 'Indirapuram', href: '/interior-design-indirapuram/' },
-      { label: 'Crossing Republik', href: '/interior-design-crossing-republik/' },
-      { label: 'East Delhi', href: '/interior-design-east-delhi/' },
-    ],
-  },
-  {
-    title: 'Delhi & Gurugram',
-    areas: [
-      { label: 'Delhi', href: '/interior-design-delhi/' },
-      { label: 'South Delhi', href: '/interior-design-south-delhi/' },
-      { label: 'Gurugram', href: '/interior-design-gurugram/' },
-      { label: 'Faridabad', href: '/interior-design-faridabad/' },
-    ],
-  },
-  {
-    title: 'Expanding NCR corridor',
-    areas: [
-      { label: 'Dadri', href: '/interior-design-dadri/' },
-      { label: 'Jewar', href: '/interior-design-jewar/' },
-      { label: 'Yamuna Expressway', href: '/interior-design-yamuna-expressway/' },
-    ],
-  },
-];
+// The grouped NCR area directory lives in src/pages/LocalService/localServicePaths.ts
+// (shared with the Footer, see areaGroups there) so this page and the footer strip
+// can't drift out of sync again the way the footer did before this fix.
 
 export default function Services({ setPage }: Props) {
   const navigate = useNavigate();
