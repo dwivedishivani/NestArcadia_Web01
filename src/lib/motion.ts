@@ -58,7 +58,7 @@ export function initMotion(): () => void {
       el.classList.remove('rv', 'rv-in', 'rv-img');
       el.style.removeProperty('--rv-d');
       pending.delete(el);
-    }, 1400);
+    }, 1100);
   };
 
   if ('IntersectionObserver' in window) {
@@ -67,13 +67,13 @@ export function initMotion(): () => void {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const el = entry.target as HTMLElement;
-        el.style.setProperty('--rv-d', `${Math.min(i, 5) * 80}ms`);
+        el.style.setProperty('--rv-d', `${Math.min(i, 3) * 70}ms`);
         el.classList.add('rv-in');
         revealObserver?.unobserve(el);
         finishReveal(el);
         i += 1;
       }
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, { rootMargin: '0px 0px -3% 0px', threshold: 0.04 });
   }
 
   const revealAllNow = () => {
@@ -192,11 +192,11 @@ export function initMotion(): () => void {
         const r = frame.getBoundingClientRect();
         if (r.bottom < -80 || r.top > vh + 80) return;
         const p = (r.top + r.height / 2 - vh / 2) / vh; // -1 … 1 around viewport centre
-        img.style.setProperty('--py', `${(clamp(p, -1, 1) * -28).toFixed(1)}px`);
+        img.style.setProperty('--py', `${(clamp(p, -1, 1) * -16).toFixed(1)}px`);
       });
       if (hero && hero.isConnected) {
         const t = clamp(window.scrollY / vh, 0, 1);
-        hero.style.setProperty('--hero-zoom', (1 + t * 0.08).toFixed(3));
+        hero.style.setProperty('--hero-zoom', (1 + t * 0.05).toFixed(3));
       }
     });
   };
