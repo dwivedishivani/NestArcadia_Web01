@@ -1,6 +1,7 @@
 import type { Page } from '../../App';
 import { Link } from 'react-router';
 import logoImg from '../../assets/images/branding/nestarcadia-logo-transparent.png';
+import MotionLayer from '../common/MotionLayer';
 import { areaGroups } from '../../pages/LocalService/localServicePaths';
 
 interface FooterProps {}
@@ -45,6 +46,7 @@ export default function Footer({}: FooterProps) {
   const currentYear = new Date().getFullYear();
   return (
     <footer style={{ background: '#F2EDE4', borderTop: '1px solid #D4CBBB' }}>
+      <MotionLayer />
       <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
 
