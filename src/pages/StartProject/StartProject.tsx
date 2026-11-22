@@ -144,12 +144,12 @@ function ErrorText({ id, children }: { id: string; children?: string }) {
 
 function StepHeading({ n, title, hint }: { n: string; title: string; hint?: string }) {
   return (
-    <div className="mb-5">
+    <div className="mb-3">
       <div className="flex items-baseline gap-3">
-        <span className="font-display text-[#B2552E] text-lg">{n}</span>
-        <h2 className="font-display text-xl text-[#1A1714]">{title}</h2>
+        <span className="font-display text-[#B2552E] text-base">{n}</span>
+        <h2 className="font-display text-lg text-[#1A1714]">{title}</h2>
       </div>
-      {hint && <p className="text-[13px] text-[#6B5E4E] mt-1.5 leading-relaxed">{hint}</p>}
+      {hint && <p className="text-[12px] text-[#6B5E4E] mt-1 leading-relaxed">{hint}</p>}
     </div>
   );
 }
@@ -358,15 +358,14 @@ export default function StartProject({ setPage }: Props) {
     );
   }
 
-  const selectedTier = budgetOptions.find((b) => b.label === form.budget);
   const hasFieldErrors = Object.values(errors).some(Boolean);
 
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-10 border-b border-[#D4CBBB]">
-        <p className="label-editorial text-[#B2552E] mb-4">Let's begin</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Start Your Project</h1>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-10 pb-6 border-b border-[#D4CBBB]">
+        <p className="label-editorial text-[#B2552E] mb-3">Let's begin</p>
+        <h1 className="font-display text-[clamp(2rem,4.5vw,3.25rem)] text-[#1A1714] leading-[1.05]">Start Your Project</h1>
         <p className="text-[#6B5E4E] text-[15px] mt-3 max-w-xl leading-relaxed">
           Tell us about your home and what matters most to you. Your requirements come first — always.
         </p>
@@ -377,14 +376,14 @@ export default function StartProject({ setPage }: Props) {
         )}
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-12 lg:py-16">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-8 lg:py-10">
         {/* Quick start */}
-        <section aria-labelledby="quick-heading" className="border border-[#D4CBBB] bg-[#EAE4DA] p-6 lg:p-8 mb-14">
+        <section aria-labelledby="quick-heading" className="border border-[#D4CBBB] bg-[#EAE4DA] p-5 lg:p-6 mb-6">
           <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-12 items-start">
             <div>
               <p className="label-editorial text-[#B2552E] mb-2">Fastest way</p>
               <h2 id="quick-heading" className="font-display text-2xl text-[#1A1714]">Just want a call?</h2>
-              <p className="text-[13px] text-[#6B5E4E] mt-2 leading-relaxed">
+              <p className="hidden sm:block text-[13px] text-[#6B5E4E] mt-2 leading-relaxed">
                 Share your name and number. We will call you back, no long form needed. You can add the full brief later.
               </p>
             </div>
@@ -425,7 +424,7 @@ export default function StartProject({ setPage }: Props) {
           </div>
         </section>
 
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-7">
           <span className="h-px flex-1 bg-[#D4CBBB]" />
           <p className="text-[11px] uppercase tracking-[0.25em] text-[#6B5E4E]">Or share your full brief for a tailored plan</p>
           <span className="h-px flex-1 bg-[#D4CBBB]" />
@@ -437,13 +436,13 @@ export default function StartProject({ setPage }: Props) {
             <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
           </div>
 
-          <div className="grid lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-20">
-            <div className="flex flex-col gap-12">
-              {/* 01 About you */}
+          <div className="grid lg:grid-cols-2 gap-x-14 gap-y-8">
+            {/* Left: who + where */}
+            <div className="flex flex-col gap-8">
               <section aria-labelledby="step-1">
                 <span id="step-1" className="sr-only">About you</span>
                 <StepHeading n="01" title="About you" />
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-3">
                   <div>
                     <FieldLabel htmlFor="field-name">Full name</FieldLabel>
                     <input id="field-name" className={inputClass(errors.name)} placeholder="Full Name *" autoComplete="name" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} aria-required="true" />
@@ -469,17 +468,16 @@ export default function StartProject({ setPage }: Props) {
                   </div>
                   <div>
                     <FieldLabel htmlFor="field-society" optional>Society / locality</FieldLabel>
-                    <input id="field-society" className={inputClass()} placeholder="e.g. Gaur City 2, Sector 16B" autoComplete="off" maxLength={120} value={form.society} onChange={setField('society')} />
+                    <input id="field-society" className={inputClass()} placeholder="e.g. Gaur City 2" autoComplete="off" maxLength={120} value={form.society} onChange={setField('society')} />
                   </div>
                 </div>
               </section>
 
-              {/* 02 Your home */}
               <section aria-labelledby="step-2">
                 <span id="step-2" className="sr-only">Your home</span>
-                <StepHeading n="02" title="Your home" hint="Home size decides the budget ranges we show next." />
-                <fieldset className="mb-8">
-                  <legend className="text-[12px] text-[#4F4436] mb-3">Project type</legend>
+                <StepHeading n="02" title="Your home" />
+                <fieldset className="mb-4">
+                  <legend className="text-[12px] text-[#4F4436] mb-2">Project type</legend>
                   <div id="field-projectType" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
                     {projectTypes.map((t) => (
                       <button key={t} type="button" aria-pressed={form.projectType === t} className={chipClass(form.projectType === t)} onClick={() => choose('projectType', t)}>{t}</button>
@@ -487,10 +485,9 @@ export default function StartProject({ setPage }: Props) {
                   </div>
                   <ErrorText id="projectType-error">{errors.projectType}</ErrorText>
                 </fieldset>
-
                 {showConfig && (
                   <fieldset>
-                    <legend className="text-[12px] text-[#4F4436] mb-3">Home size</legend>
+                    <legend className="text-[12px] text-[#4F4436] mb-2">Home size</legend>
                     <div id="field-configuration" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
                       {BHK_OPTIONS.map((c) => (
                         <button key={c} type="button" aria-pressed={form.configuration === c} className={chipClass(form.configuration === c)} onClick={() => choose('configuration', c)}>{c}</button>
@@ -500,8 +497,10 @@ export default function StartProject({ setPage }: Props) {
                   </fieldset>
                 )}
               </section>
+            </div>
 
-              {/* 03 Budget */}
+            {/* Right: budget + timing */}
+            <div className="flex flex-col gap-8">
               <section aria-labelledby="step-3">
                 <span id="step-3" className="sr-only">Budget</span>
                 <StepHeading
@@ -511,32 +510,31 @@ export default function StartProject({ setPage }: Props) {
                 />
                 <fieldset>
                   <legend className="sr-only">Budget range</legend>
-                  <div id="field-budget" tabIndex={-1} className="grid sm:grid-cols-2 gap-3 outline-none">
+                  <div id="field-budget" tabIndex={-1} className="grid grid-cols-2 gap-2 outline-none">
                     {budgetOptions.map((b) => {
                       const active = form.budget === b.label;
                       return (
-                        <button key={b.label} type="button" aria-pressed={active} onClick={() => choose('budget', b.label)} className={`${chipClass(active)} text-left !px-5 !py-4`}>
-                          <span className="block text-[15px] font-medium">{b.label}</span>
-                          {b.tier && <span className={`block text-[12px] mt-0.5 ${active ? 'text-white/80' : 'text-[#6B5E4E]'}`}>{b.tier}</span>}
+                        <button key={b.label} type="button" aria-pressed={active} onClick={() => choose('budget', b.label)} className={`${chipClass(active)} text-left !px-4 !py-2.5`}>
+                          <span className="block text-[14px] font-medium">{b.label}</span>
+                          {b.tier && <span className={`block text-[11px] ${active ? 'text-white/80' : 'text-[#6B5E4E]'}`}>{b.tier}</span>}
                         </button>
                       );
                     })}
-                    <button type="button" aria-pressed={form.budget === NOT_SURE_BUDGET} onClick={() => choose('budget', NOT_SURE_BUDGET)} className={`${chipClass(form.budget === NOT_SURE_BUDGET)} text-left !px-5 !py-4`}>
-                      <span className="block text-[15px] font-medium">Not sure yet</span>
-                      <span aria-hidden="true" className={`block text-[12px] mt-0.5 ${form.budget === NOT_SURE_BUDGET ? 'text-white/80' : 'text-[#6B5E4E]'}`}>Help me plan</span>
+                    <button type="button" aria-pressed={form.budget === NOT_SURE_BUDGET} onClick={() => choose('budget', NOT_SURE_BUDGET)} className={`${chipClass(form.budget === NOT_SURE_BUDGET)} text-left !px-4 !py-2.5`}>
+                      <span className="block text-[14px] font-medium">Not sure yet</span>
+                      <span aria-hidden="true" className={`block text-[11px] ${form.budget === NOT_SURE_BUDGET ? 'text-white/80' : 'text-[#6B5E4E]'}`}>Help me plan</span>
                     </button>
                   </div>
                   <ErrorText id="budget-error">{errors.budget}</ErrorText>
-                  <p className="text-[12px] text-[#6B5E4E] mt-3 leading-relaxed">Indicative ranges for full-home design and execution. The final quote depends on the site visit, scope and material choices.</p>
+                  <p className="text-[11px] text-[#6B5E4E] mt-2 leading-relaxed">Indicative ranges. The final quote depends on the site visit, scope and materials.</p>
                 </fieldset>
               </section>
 
-              {/* 04 Timeline & style */}
               <section aria-labelledby="step-4">
-                <span id="step-4" className="sr-only">Timeline and style</span>
-                <StepHeading n="04" title="Timeline and style" />
-                <fieldset className="mb-8">
-                  <legend className="text-[12px] text-[#4F4436] mb-3">When do you want to start?</legend>
+                <span id="step-4" className="sr-only">Timeline</span>
+                <StepHeading n="04" title="When do you want to start?" />
+                <fieldset>
+                  <legend className="sr-only">Timeline</legend>
                   <div id="field-timeline" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
                     {timelines.map((t) => (
                       <button key={t} type="button" aria-pressed={form.timeline === t} className={chipClass(form.timeline === t)} onClick={() => choose('timeline', t)}>{t}</button>
@@ -544,68 +542,61 @@ export default function StartProject({ setPage }: Props) {
                   </div>
                   <ErrorText id="timeline-error">{errors.timeline}</ErrorText>
                 </fieldset>
-                <fieldset>
-                  <legend className="text-[12px] text-[#4F4436] mb-3">Design style <span className="text-[#6B5E4E]">(optional)</span></legend>
-                  <div className="flex flex-wrap gap-2">
-                    {stylePrefs.map((s) => (
-                      <button key={s} type="button" aria-pressed={form.style === s} className={chipClass(form.style === s)} onClick={() => choose('style', s)}>{s}</button>
-                    ))}
-                  </div>
-                </fieldset>
-              </section>
-
-              {/* 05 Notes */}
-              <section aria-labelledby="step-5">
-                <span id="step-5" className="sr-only">Anything else</span>
-                <StepHeading n="05" title="Anything else?" hint="Vastu needs, storage priorities, a work-from-home corner, reference images, anything that helps." />
-                <FieldLabel htmlFor="field-message" optional>Notes</FieldLabel>
-                <textarea id="field-message" className={`${inputClass()} resize-none`} rows={5} maxLength={2000} placeholder="E.g. 3BHK handover next month. Need a pooja unit, wardrobes in all bedrooms and a study corner." value={form.message} onChange={setField('message')} />
               </section>
             </div>
-
-            {/* Summary + submit */}
-            <aside className="lg:sticky lg:top-28 self-start">
-              <div className="border border-[#D4CBBB] bg-[#EAE4DA] p-6">
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Your brief</p>
-                <dl className="grid gap-3 text-[14px]">
-                  {[
-                    ['Home', [form.projectType, showConfig ? form.configuration : ''].filter(Boolean).join(' · ')],
-                    ['Budget', form.budget ? `${form.budget}${selectedTier?.tier ? ` (${selectedTier.tier})` : ''}` : ''],
-                    ['Start', form.timeline],
-                    ['Where', [form.society, form.city].filter(Boolean).join(', ')],
-                  ].map(([k, v]) => (
-                    <div key={k} className="flex justify-between gap-4 border-b border-[#D4CBBB] pb-2 last:border-b-0">
-                      <dt className="text-[#6B5E4E]">{k}</dt>
-                      <dd className={`text-right ${v ? 'text-[#1A1714]' : 'text-[#6B5E4E]/70'}`}>{v || '—'}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'full'} className="mt-6 w-full min-h-[52px] bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
-                  {isSubmitting === 'full' ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
-                </button>
-                <div role="alert" aria-live="assertive">
-                  {attempted && hasFieldErrors && (
-                    <p className="mt-4 text-center text-[12px] text-[#B64B42]">Please correct the highlighted fields before submitting your brief.</p>
-                  )}
-                  {submissionError && (
-                    <div className="mt-4 text-center">
-                      <p className="text-[12px] text-[#B64B42]">{submissionError}</p>
-                      <a href={whatsappFallback} target="_blank" rel="noopener noreferrer" className="inline-flex mt-3 bg-[#2D8C7E] text-white px-4 py-2.5 text-[12px] hover:bg-[#1C3A5A] transition-colors">Send Brief on WhatsApp</a>
-                    </div>
-                  )}
-                </div>
-                <p className="text-[12px] text-[#6B5E4E] text-center mt-4 leading-relaxed">
-                  We respond within 24 hours. Or{' '}
-                  <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-[#17665B] underline">WhatsApp us directly</a>{' '}
-                  for a faster reply.
-                </p>
-              </div>
-            </aside>
           </div>
+
+          {/* Optional extras, collapsed so they never add scroll */}
+          <details className="mt-6 border border-[#D4CBBB] group">
+            <summary className="min-h-[48px] flex items-center justify-between gap-3 px-4 py-3 cursor-pointer text-[13px] text-[#1C3A5A] list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50">
+              <span>Add design style or notes <span className="text-[#6B5E4E]">(optional)</span></span>
+              <span aria-hidden="true" className="text-[#6B5E4E] transition-transform group-open:rotate-45 text-lg leading-none">+</span>
+            </summary>
+            <div className="px-4 pb-5 pt-2 grid lg:grid-cols-2 gap-6">
+              <fieldset>
+                <legend className="text-[12px] text-[#4F4436] mb-2">Design style</legend>
+                <div className="flex flex-wrap gap-2">
+                  {stylePrefs.map((st) => (
+                    <button key={st} type="button" aria-pressed={form.style === st} className={chipClass(form.style === st)} onClick={() => choose('style', st)}>{st}</button>
+                  ))}
+                </div>
+              </fieldset>
+              <div>
+                <FieldLabel htmlFor="field-message" optional>Notes</FieldLabel>
+                <textarea id="field-message" className={`${inputClass()} resize-none`} rows={4} maxLength={2000} placeholder="E.g. 3BHK handover next month. Need a pooja unit, wardrobes in all bedrooms and a study corner." value={form.message} onChange={setField('message')} />
+              </div>
+            </div>
+          </details>
+
+          {/* Submit bar */}
+          <div className="mt-6 pt-5 border-t border-[#D4CBBB] flex flex-wrap items-center justify-between gap-4">
+            <p className="text-[13px] text-[#4F4436] min-w-0">
+              {[form.projectType, showConfig ? form.configuration : '', form.budget, form.timeline].filter(Boolean).join(' · ') || 'Your brief will appear here as you fill it in.'}
+            </p>
+            <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'full'} className="min-h-[52px] w-full sm:w-auto bg-[#1C3A5A] text-white text-[14px] px-10 py-4 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
+              {isSubmitting === 'full' ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
+            </button>
+          </div>
+          <div role="alert" aria-live="assertive">
+            {attempted && hasFieldErrors && (
+              <p className="mt-3 text-right text-[12px] text-[#B64B42]">Please correct the highlighted fields before submitting your brief.</p>
+            )}
+            {submissionError && (
+              <div className="mt-3 text-right">
+                <p className="text-[12px] text-[#B64B42]">{submissionError}</p>
+                <a href={whatsappFallback} target="_blank" rel="noopener noreferrer" className="inline-flex mt-2 bg-[#2D8C7E] text-white px-4 py-2.5 text-[12px] hover:bg-[#1C3A5A] transition-colors">Send Brief on WhatsApp</a>
+              </div>
+            )}
+          </div>
+          <p className="text-[12px] text-[#6B5E4E] mt-3 sm:text-right">
+            We respond within 24 hours. Or{' '}
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-[#17665B] underline">WhatsApp us directly</a>{' '}
+            for a faster reply.
+          </p>
         </form>
 
         {/* Qualitative credibility — no fake numbers */}
-        <div className="mt-20 pt-16 border-t border-[#D4CBBB]">
+        <div className="mt-14 pt-12 border-t border-[#D4CBBB]">
           <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-10">Why NestArcadia</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[

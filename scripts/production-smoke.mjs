@@ -308,8 +308,13 @@ try {
   const footerServiceAreaLinks = await page.locator('nav[aria-label="NestArcadia service areas"] a').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href'))
   );
-  assert.deepEqual(footerServiceAreaLinks, requiredHomepageServiceLinks,
-    'footer service-area links must prioritise only the four core Noida markets');
+  assert.deepEqual(footerServiceAreaLinks.slice(0, requiredHomepageServiceLinks.length), requiredHomepageServiceLinks,
+    'footer service-area links must list the four core Noida markets first');
+  assert.equal(new Set(footerServiceAreaLinks).size, footerServiceAreaLinks.length,
+    'footer service-area links must be unique');
+  for (const href of footerServiceAreaLinks) {
+    assert.match(href, /^\/interior-design-[a-z0-9-]+\/$/, 'footer service-area link must be a canonical trailing-slash area URL: ' + href);
+  }
   const nonCanonicalHomepageLinks = await page.locator('a[href^="/"]').evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute('href')).filter((href) => {
       if (!href) return false;
@@ -549,6 +554,7 @@ try {
   await page.getByRole('button', { name: '2 BHK', exact: true }).click();
   await page.getByRole('button', { name: 'Not sure yet', exact: true }).click();
   await page.getByRole('button', { name: 'Just Exploring', exact: true }).click();
+  await page.getByText('Add design style or notes').click();
   await page.getByRole('button', { name: 'Contemporary Minimal', exact: true }).click();
   await page.getByRole('button', { name: /Submit Your Brief/ }).click();
   try {

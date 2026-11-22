@@ -100,6 +100,7 @@ try {
   await page.getByRole('button', { name: '2 BHK', exact: true }).click();
   await page.getByRole('button', { name: 'Not sure yet', exact: true }).click();
   await page.getByRole('button', { name: 'Just Exploring', exact: true }).click();
+  await page.getByText('Add design style or notes').click();
   await page.getByRole('button', { name: 'Contemporary Minimal', exact: true }).click();
 
   await page.getByRole('button', { name: /Submit Your Brief/ }).click();
