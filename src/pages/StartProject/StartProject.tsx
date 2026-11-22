@@ -1,7 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import type { Page } from '../../App';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
+import {
+  BHK_OPTIONS,
+  NOT_PROVIDED,
+  NOT_SURE_BUDGET,
+  QUICK_PROJECT_TYPE,
+  QUICK_TIMELINE,
+  budgetTiersFor,
+  buildSource,
+  isValidBudgetFor,
+  isValidIndianMobile,
+  parseConfigurationParam,
+  withSociety,
+} from '../../lib/leadModel';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -14,22 +27,18 @@ const cities = [
   'Other / Not Listed',
 ];
 
-const configurations = [
-  '1 BHK', '2 BHK', '3 BHK', '4 BHK', '5 BHK+',
-  'Villa', 'Penthouse', 'Studio', 'Duplex', 'Other',
-];
-
 const projectTypes = ['Apartment / Flat', 'Independent Villa', 'Penthouse / Duplex', 'Weekend / Holiday Home', 'Commercial Space'];
-const budgets = ['₹10L – ₹25L', '₹25L – ₹50L', '₹50L – ₹1Cr', '₹1Cr+', 'Not sure yet'];
 const timelines = ['Within 3 Months', '3–6 Months', '6+ Months', 'Just Exploring'];
 const stylePrefs = [
   'North Indian Heritage', 'South Indian Elegance', 'East Indian Craft',
   'West Indian Colour', 'Rajasthani Elements', 'Contemporary Minimal',
-  'Japandi / Wabi-sabi', 'Modern Indian', 'Mix & Match',
+  'Japandi / Wabi-sabi', 'Modern Indian', 'Mix & Match', 'Not decided yet',
 ];
 
+const WHATSAPP_NUMBER = '918448061997';
+
 const initialForm = {
-  name: '', email: '', phone: '', city: '', projectType: '',
+  name: '', email: '', phone: '', city: '', society: '', projectType: '',
   configuration: '', budget: '', timeline: '', style: '', message: '',
 };
 
@@ -37,205 +46,309 @@ type FormState = typeof initialForm;
 type FormField = keyof FormState;
 type FormErrors = Partial<Record<FormField, string>>;
 
+const needsConfiguration = (projectType: string) =>
+  projectType === 'Apartment / Flat' || projectType === 'Penthouse / Duplex';
+
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
-  const phoneDigits = form.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
   if (form.name.trim().length < 2) errors.name = 'Please enter your full name.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = 'Enter a valid email address.';
-  if (!/^[6-9]\d{9}$/.test(phoneDigits)) errors.phone = 'Enter a valid 10-digit Indian mobile number.';
+  if (!isValidIndianMobile(form.phone)) errors.phone = 'Enter a valid 10-digit Indian mobile number.';
   if (!form.city) errors.city = 'Please select your city.';
   if (!form.projectType) errors.projectType = 'Please choose a project type.';
-  if ((form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex') && !form.configuration) errors.configuration = 'Please choose a home configuration.';
+  if (needsConfiguration(form.projectType) && !form.configuration) errors.configuration = 'Please choose your home size.';
   if (!form.budget) errors.budget = 'Please choose a budget range.';
   if (!form.timeline) errors.timeline = 'Please choose a timeline.';
-  if (!form.style) errors.style = 'Please choose a design preference.';
   return errors;
+}
+
+interface LeadPayload {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  project_type: string;
+  configuration: string;
+  budget: string;
+  timeline: string;
+  design_style: string;
+  message: string;
+  source: string;
+}
+
+/**
+ * Primary path is a direct PostgREST insert (no cold start). The Edge Function
+ * remains as a fallback; the client-generated id makes a retry idempotent.
+ */
+async function submitLead(payload: LeadPayload): Promise<void> {
+  try {
+    const response = await fetch(`https://${projectId}.supabase.co/rest/v1/enquiries_078be9eb`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${publicAnonKey}`,
+        apikey: publicAnonKey,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) return;
+  } catch {
+    // fall through to the Edge Function
+  }
+
+  const response = await fetch(`https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb/enquiries`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${publicAnonKey}`,
+      apikey: publicAnonKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error('We could not submit your request right now.');
+}
+
+function trackLead(source: string, kind: 'quick' | 'full', extra: Record<string, string> = {}) {
+  // One business-level event, only after the backend confirmed the enquiry.
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'lead_submit', lead_source: source, lead_type: kind, page_path: window.location.pathname, ...extra });
+  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+  gtag?.('event', 'generate_lead', { lead_source: source, lead_type: kind, page_path: window.location.pathname, send_to: 'G-LDM2YL1MP5', ...extra });
+}
+
+const inputClass = (error?: string) =>
+  `w-full min-h-[48px] bg-transparent border px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/40 ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
+
+const chipClass = (active: boolean) =>
+  `min-h-[44px] text-[13px] px-4 py-2.5 border cursor-pointer transition-all select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50 ${
+    active
+      ? 'bg-[#1C3A5A] border-[#1C3A5A] text-white'
+      : 'border-[#D4CBBB] text-[#4F4436] hover:border-[#2D8C7E] hover:text-[#17665B]'
+  }`;
+
+function FieldLabel({ htmlFor, children, optional }: { htmlFor?: string; children: React.ReactNode; optional?: boolean }) {
+  return (
+    <label htmlFor={htmlFor} className="block text-[12px] text-[#4F4436] mb-1.5">
+      {children}
+      {optional && <span className="text-[#6B5E4E]"> (optional)</span>}
+    </label>
+  );
+}
+
+function ErrorText({ id, children }: { id: string; children?: string }) {
+  if (!children) return null;
+  return <p id={id} className="mt-1.5 text-[12px] text-[#B64B42]">{children}</p>;
+}
+
+function StepHeading({ n, title, hint }: { n: string; title: string; hint?: string }) {
+  return (
+    <div className="mb-5">
+      <div className="flex items-baseline gap-3">
+        <span className="font-display text-[#B2552E] text-lg">{n}</span>
+        <h2 className="font-display text-xl text-[#1A1714]">{title}</h2>
+      </div>
+      {hint && <p className="text-[13px] text-[#6B5E4E] mt-1.5 leading-relaxed">{hint}</p>}
+    </div>
+  );
 }
 
 export default function StartProject({ setPage }: Props) {
   const location = useLocation();
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedKind, setSubmittedKind] = useState<'quick' | 'full' | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<'quick' | 'full' | null>(null);
   const [submissionError, setSubmissionError] = useState('');
+  const [attempted, setAttempted] = useState(false);
+  const [quickError, setQuickError] = useState('');
   const [form, setForm] = useState<FormState>(initialForm);
   const [touched, setTouched] = useState<Partial<Record<FormField, boolean>>>({});
   const [errors, setErrors] = useState<FormErrors>({});
+  const [quick, setQuick] = useState({ name: '', phone: '' });
+  const [quickErrors, setQuickErrors] = useState<{ name?: string; phone?: string }>({});
   const [serviceInterest, setServiceInterest] = useState('');
+  const [fromGuide, setFromGuide] = useState('');
   const [website, setWebsite] = useState('');
+  const messageTouched = useRef(false);
 
-  const showConfig = form.projectType === 'Apartment / Flat' || form.projectType === 'Penthouse / Duplex';
+  const showConfig = needsConfiguration(form.projectType);
+  const budgetOptions = useMemo(() => budgetTiersFor(showConfig ? form.configuration : ''), [showConfig, form.configuration]);
+  const isHomeSizedBudget = showConfig && (form.configuration === '2 BHK' || form.configuration === '3 BHK');
 
+  // Context from the URL: ?service=… (services page), ?bhk=2|3 and ?from=… (budget guides).
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const service = params.get('service')?.trim() ?? '';
+    const service = params.get('service')?.trim().slice(0, 80) ?? '';
+    const from = params.get('from')?.trim().replace(/[^a-z0-9-_]/gi, '').slice(0, 60) ?? '';
+    const bhk = parseConfigurationParam(params.get('bhk'));
     setServiceInterest(service);
-    if (service) {
-      setForm((current) => current.message
-        ? current
-        : { ...current, message: `I would like to discuss ${service}.` });
-    }
+    setFromGuide(from);
+    setForm((current) => {
+      let next = current;
+      if (service && !current.message && !messageTouched.current) next = { ...next, message: `I would like to discuss ${service}.` };
+      if (bhk && !current.configuration) next = { ...next, projectType: current.projectType || 'Apartment / Flat', configuration: bhk };
+      return next;
+    });
   }, [location.search]);
+
+  // Keep the budget valid when the home size changes.
+  useEffect(() => {
+    setForm((current) => {
+      if (!current.budget) return current;
+      const configuration = needsConfiguration(current.projectType) ? current.configuration : '';
+      return isValidBudgetFor(configuration, current.budget) ? current : { ...current, budget: '' };
+    });
+  }, [form.configuration, form.projectType]);
 
   useEffect(() => {
     const nextErrors = validateForm(form);
-    setErrors(Object.fromEntries(Object.keys(touched).filter((key) => touched[key as FormField]).map((key) => [key, nextErrors[key as FormField]]).filter(([, error]) => error)) as FormErrors);
+    setErrors(
+      Object.fromEntries(
+        Object.keys(touched)
+          .filter((key) => touched[key as FormField])
+          .map((key) => [key, nextErrors[key as FormField]])
+          .filter(([, error]) => error),
+      ) as FormErrors,
+    );
   }, [form, touched]);
 
   const setField = (key: FormField) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm(f => ({ ...f, [key]: e.target.value }));
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      if (key === 'message') messageTouched.current = true;
+      setForm((f) => ({ ...f, [key]: e.target.value }));
+    };
 
-  const markTouched = (key: FormField) => setTouched(current => ({ ...current, [key]: true }));
+  const markTouched = (key: FormField) => setTouched((current) => ({ ...current, [key]: true }));
 
-  const toggle = (key: FormField, val: string) => {
+  const choose = (key: FormField, val: string) => {
     markTouched(key);
-    setForm(f => ({ ...f, [key]: f[key] === val ? '' : val }));
+    setForm((f) => {
+      const next = { ...f, [key]: f[key] === val ? '' : val };
+      if (key === 'projectType' && !needsConfiguration(next.projectType)) next.configuration = '';
+      return next;
+    });
+  };
+
+  const focusField = (key: string) => {
+    const el = document.getElementById(`field-${key}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      (el as HTMLElement).focus({ preventScroll: true });
+    }
+  };
+
+  const handleQuickSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting || website.trim()) return;
+    const errs: { name?: string; phone?: string } = {};
+    if (quick.name.trim().length < 2) errs.name = 'Please enter your name.';
+    if (!isValidIndianMobile(quick.phone)) errs.phone = 'Enter a valid 10-digit mobile number.';
+    setQuickErrors(errs);
+    if (errs.name || errs.phone) {
+      setQuickError('');
+      focusField(errs.name ? 'quickName' : 'quickPhone');
+      return;
+    }
+    setIsSubmitting('quick');
+    setQuickError('');
+    try {
+      const source = buildSource({ quick: true, service: serviceInterest, from: fromGuide });
+      const context = [serviceInterest && `Interested in: ${serviceInterest}`, fromGuide && `Came from guide: ${fromGuide}`, form.configuration && `Home size: ${form.configuration}`].filter(Boolean).join('\n');
+      await submitLead({
+        id: crypto.randomUUID(),
+        name: quick.name.trim(),
+        email: NOT_PROVIDED,
+        phone: quick.phone.trim(),
+        city: NOT_PROVIDED,
+        project_type: QUICK_PROJECT_TYPE,
+        configuration: form.configuration,
+        budget: NOT_PROVIDED,
+        timeline: QUICK_TIMELINE,
+        design_style: NOT_PROVIDED,
+        message: ['Quick callback request.', context].filter(Boolean).join('\n'),
+        source,
+      });
+      trackLead(source, 'quick');
+      setForm((f) => ({ ...f, name: quick.name.trim() }));
+      setSubmittedKind('quick');
+    } catch (error) {
+      setQuickError(error instanceof Error ? error.message : 'We could not submit your request right now.');
+    } finally {
+      setIsSubmitting(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
-    if (website.trim()) return;
+    if (isSubmitting || website.trim()) return;
 
     const validationErrors = validateForm(form);
-    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true, style: true });
+    setTouched({ name: true, email: true, phone: true, city: true, projectType: true, configuration: true, budget: true, timeline: true });
     setErrors(validationErrors);
-    if (Object.keys(validationErrors).length > 0) {
-      setSubmissionError('Please correct the highlighted fields before submitting your brief.');
+    setAttempted(true);
+    const firstInvalid = (['name', 'email', 'phone', 'city', 'projectType', 'configuration', 'budget', 'timeline'] as FormField[]).find((k) => validationErrors[k]);
+    if (firstInvalid) {
+      setSubmissionError('');
+      focusField(firstInvalid);
       return;
     }
 
-    setIsSubmitting(true);
+    setIsSubmitting('full');
     setSubmissionError('');
-
     try {
-      // Use a stable client-generated ID so a network retry can safely fall back
-      // to the Edge Function without creating a duplicate enquiry.
-      const leadId = crypto.randomUUID();
-      const source = serviceInterest ? `services:${serviceInterest}` : 'start-your-project';
-      const payload = {
-        id: leadId,
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
+      const source = buildSource({ service: serviceInterest, from: fromGuide });
+      const configuration = showConfig ? form.configuration : '';
+      await submitLead({
+        id: crypto.randomUUID(),
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
         city: form.city,
         project_type: form.projectType,
-        configuration: form.configuration,
+        configuration,
         budget: form.budget,
         timeline: form.timeline,
-        design_style: form.style,
-        message: form.message,
+        design_style: form.style || NOT_SURE_BUDGET,
+        message: withSociety(form.message, form.society),
         source,
-      };
-
-      let submittedSuccessfully = false;
-
-      // Primary path: direct PostgREST insert. This avoids Edge Function
-      // cold starts and keeps public lead capture independent of route aliases.
-      try {
-        const response = await fetch(
-          `https://${projectId}.supabase.co/rest/v1/enquiries_078be9eb`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${publicAnonKey}`,
-              apikey: publicAnonKey,
-              'Content-Type': 'application/json',
-              Prefer: 'return=minimal',
-            },
-            body: JSON.stringify(payload),
-          },
-        );
-
-        if (response.ok) {
-          submittedSuccessfully = true;
-        }
-      } catch {
-        // Fall through to the Edge Function fallback below.
-      }
-
-      // Fallback path: the existing Edge Function remains available if
-      // PostgREST is unreachable, blocked, or temporarily unavailable.
-      if (!submittedSuccessfully) {
-        const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
-        const response = await fetch(`${API_BASE}/enquiries`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${publicAnonKey}`,
-            apikey: publicAnonKey,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error('We could not submit your brief right now.');
-        }
-
-        submittedSuccessfully = true;
-      }
-
-      if (!submittedSuccessfully) {
-        throw new Error('We could not submit your brief right now.');
-      }
-
-      // Emit one business-level lead event only after the backend confirms the enquiry.
-      // GTM can use this single event as the trigger for the Google Ads lead conversion.
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'lead_submit',
-        lead_source: source,
-        page_path: window.location.pathname,
       });
-
-      const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
-      gtag?.('event', 'generate_lead', {
-        lead_source: source,
-        page_path: window.location.pathname,
-        send_to: 'G-LDM2YL1MP5',
-      });
-
-      setSubmitted(true);
+      trackLead(source, 'full', { configuration, budget: form.budget });
+      setSubmittedKind('full');
     } catch (error) {
-      setSubmissionError(
-        error instanceof Error
-          ? error.message
-          : 'We could not submit your brief right now.',
-      );
+      setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now.');
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(null);
     }
   };
 
-  const inputClass = (error?: string) => `w-full bg-transparent border px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
-  const chipClass = (active: boolean) =>
-    `text-[13px] px-4 py-2 border cursor-pointer transition-all select-none ${
-      active
-        ? 'bg-[#1C3A5A] border-[#1C3A5A] text-white'
-        : 'border-[#D4CBBB] text-[#6B5E4E] hover:border-[#2D8C7E] hover:text-[#17665B]'
-    }`;
+  const whatsappFallback = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hello NestArcadia, my project brief could not be submitted on the website.\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCity: ${form.city}\nSociety: ${form.society || 'N/A'}\nProject: ${form.projectType}\nHome size: ${form.configuration || 'N/A'}\nBudget: ${form.budget}\nTimeline: ${form.timeline}\nStyle: ${form.style || 'N/A'}\nMessage: ${form.message || 'N/A'}`,
+  )}`;
 
-  if (submitted) {
+  if (submittedKind) {
+    const isQuick = submittedKind === 'quick';
     return (
       <div className="pt-20 lg:pt-[90px] min-h-screen flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#17665B] text-xl">✓</div>
-          <h2 className="font-display text-3xl text-[#1A1714] mb-4">We will be in touch.</h2>
+        <div className="text-center max-w-md" role="status">
+          <div className="w-12 h-12 border border-[#2D8C7E] flex items-center justify-center mx-auto mb-8 text-[#17665B] text-xl" aria-hidden="true">✓</div>
+          <h2 className="font-display text-3xl text-[#1A1714] mb-4">{isQuick ? 'Callback requested.' : 'We will be in touch.'}</h2>
           <p className="text-[#6B5E4E] text-[15px] leading-relaxed mb-8">
-            Thank you{form.name ? `, ${form.name}` : ''}. We have received your brief and will reach out within 24 hours to schedule a discovery call.
+            {isQuick
+              ? `Thank you${form.name ? `, ${form.name}` : ''}. Our team will call you back shortly. If you would rather chat, WhatsApp is the fastest way to reach us.`
+              : `Thank you${form.name ? `, ${form.name}` : ''}. We have received your brief and will reach out within 24 hours to schedule a discovery call.`}
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => setPage('home')}
-              className="text-[14px] text-[#1A1714] border border-[#1A1714] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] hover:text-white transition-all"
+              className="min-h-[48px] text-[14px] text-[#1A1714] border border-[#1A1714] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] hover:text-white transition-all"
             >
               Back to Home
             </button>
             <a
-              href={`https://wa.me/918448061997?text=${encodeURIComponent('Hello NestArcadia, I just submitted a project brief. Looking forward to hearing from you.')}`}
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(isQuick ? 'Hello NestArcadia, I just requested a callback on your website.' : 'Hello NestArcadia, I just submitted a project brief. Looking forward to hearing from you.')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[14px] text-white bg-[#2D8C7E] border border-[#2D8C7E] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] transition-all"
+              className="min-h-[48px] inline-flex items-center text-[14px] text-white bg-[#2D8C7E] border border-[#2D8C7E] px-7 py-3 hover:bg-[#1C3A5A] hover:border-[#1C3A5A] transition-all"
             >
               WhatsApp Us Now
             </a>
@@ -245,184 +358,249 @@ export default function StartProject({ setPage }: Props) {
     );
   }
 
+  const selectedTier = budgetOptions.find((b) => b.label === form.budget);
+  const hasFieldErrors = Object.values(errors).some(Boolean);
+
   return (
     <div className="pt-20 lg:pt-[90px]">
       {/* Header */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-12 border-b border-[#D4CBBB]">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 pt-16 pb-10 border-b border-[#D4CBBB]">
         <p className="label-editorial text-[#B2552E] mb-4">Let's begin</p>
-        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">
-          Start Your Project
-        </h1>
-        <p className="text-[#6B5E4E] text-[15px] mt-3 max-w-md leading-relaxed">
-          Tell us about your space, your life, and what matters most to you. Your requirements come first — always.
+        <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] text-[#1A1714] leading-[1.05]">Start Your Project</h1>
+        <p className="text-[#6B5E4E] text-[15px] mt-3 max-w-xl leading-relaxed">
+          Tell us about your home and what matters most to you. Your requirements come first — always.
         </p>
-        {serviceInterest && (
+        {(serviceInterest || fromGuide) && (
           <p className="mt-5 inline-flex border border-[#2D8C7E]/35 bg-[#2D8C7E]/10 px-3 py-2 text-[12px] text-[#1C3A5A]">
-            Exploring: {serviceInterest}
+            {serviceInterest ? `Exploring: ${serviceInterest}` : 'Continuing from our budget guide'}
           </p>
         )}
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-16">
-        <form onSubmit={handleSubmit}>
-        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-          <label htmlFor="website">Website</label>
-          <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
-        </div>
-          <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
-
-            {/* Left: Contact + Type */}
-            <div className="flex flex-col gap-8">
-              <div>
-                <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Details</h2>
-                <div className="flex flex-col gap-4">
-                  <div><input className={inputClass(errors.name)} placeholder="Full Name *" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} required />{errors.name && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.name}</p>}</div>
-                  <div><input className={inputClass(errors.email)} placeholder="Email Address *" type="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} required />{errors.email && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.email}</p>}</div>
-                  <div><input className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} required />{errors.phone && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.phone}</p>}</div>
-
-                  {/* City dropdown */}
-                  <select
-                    className={`${inputClass(errors.city)} appearance-none cursor-pointer`}
-                    value={form.city}
-                    onChange={setField('city')}
-                    onBlur={() => markTouched('city')}
-                    aria-invalid={Boolean(errors.city)}
-                    required
-                  >
-                    <option value="" disabled>Select City</option>
-                    {cities.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                  {errors.city && <p className="mt-1.5 text-[12px] text-[#B64B42]">{errors.city}</p>}
-                </div>
-              </div>
-
-              {/* Project Type */}
-              <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Project Type</h3>
-                <div className="flex flex-wrap gap-2">
-                  {projectTypes.map(t => (
-                    <button key={t} type="button" className={chipClass(form.projectType === t)} onClick={() => toggle('projectType', t)}>
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                {errors.projectType && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.projectType}</p>}
-              </div>
-
-              {/* Configuration — only for apartment/penthouse */}
-              {showConfig && (
-                <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Home Configuration</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {configurations.map(c => (
-                      <button key={c} type="button" className={chipClass(form.configuration === c)} onClick={() => toggle('configuration', c)}>
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                  {errors.configuration && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.configuration}</p>}
-                </div>
-              )}
-
-              {/* Budget */}
-              <div>
-                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Budget Range</h3>
-                <div className="flex flex-wrap gap-2">
-                  {budgets.map(b => (
-                    <button key={b} type="button" className={chipClass(form.budget === b)} onClick={() => toggle('budget', b)}>
-                      {b}
-                    </button>
-                  ))}
-                </div>
-                {errors.budget && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.budget}</p>}
-              </div>
-            </div>
-
-            {/* Right: Preferences + Message */}
-            <div className="flex flex-col gap-8">
-              <div>
-                <h2 className="font-display text-xl text-[#1A1714] mb-6">Your Preferences</h2>
-
-                {/* Timeline */}
-                <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Timeline</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {timelines.map(t => (
-                      <button key={t} type="button" className={chipClass(form.timeline === t)} onClick={() => toggle('timeline', t)}>
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                  {errors.timeline && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.timeline}</p>}
-                </div>
-
-                {/* Style preference */}
-                <div className="mb-8">
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Design Style Preference</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {stylePrefs.map(s => (
-                      <button key={s} type="button" className={chipClass(form.style === s)} onClick={() => toggle('style', s)}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                  {errors.style && <p className="mt-2 text-[12px] text-[#B64B42]">{errors.style}</p>}
-                </div>
-
-                {/* Open message */}
-                <div>
-                  <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">Tell Us Anything Else</h3>
-                  <p className="text-[13px] text-[#6B5E4E] mb-3 leading-relaxed">
-                    Vastu requirements, specific materials, a reference image, a feeling you want to capture — anything helps.
-                  </p>
-                  <textarea
-                    className={`${inputClass()} resize-none`}
-                    rows={6}
-                    placeholder="E.g. We want South Indian traditional influence with modern storage solutions. Work-from-home area needed. Vastu compliance important..."
-                    value={form.message}
-                    onChange={setField('message')}
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                aria-busy={isSubmitting}
-                className="w-full bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#17665B] transition-colors font-medium"
-              >
-                {isSubmitting ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
-              </button>
-              {submissionError && (
-                <div role="alert" className="text-center -mt-4">
-                  <p className="text-[12px] text-[#6B5E4E]">
-                    {submissionError}
-                  </p>
-                  <a
-                    href={`https://wa.me/918448061997?text=${encodeURIComponent(
-                      `Hello NestArcadia, my project brief could not be submitted on the website.\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nCity: ${form.city}\nProject: ${form.projectType}\nConfiguration: ${form.configuration || 'N/A'}\nBudget: ${form.budget}\nTimeline: ${form.timeline}\nStyle: ${form.style}\nMessage: ${form.message || 'N/A'}`,
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex mt-3 bg-[#2D8C7E] text-white px-4 py-2 text-[12px] hover:bg-[#1C3A5A] transition-colors"
-                  >
-                    Send Brief on WhatsApp
-                  </a>
-                </div>
-              )}
-              <p className="text-[12px] text-[#6B5E4E] text-center -mt-4">
-                We respond within 24 hours. Or{' '}
-                <a
-                  href={`https://wa.me/918448061997`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#17665B] underline"
-                >
-                  WhatsApp us directly
-                </a>{' '}
-                for a faster response.
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-12 lg:py-16">
+        {/* Quick start */}
+        <section aria-labelledby="quick-heading" className="border border-[#D4CBBB] bg-[#EAE4DA] p-6 lg:p-8 mb-14">
+          <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-12 items-start">
+            <div>
+              <p className="label-editorial text-[#B2552E] mb-2">Fastest way</p>
+              <h2 id="quick-heading" className="font-display text-2xl text-[#1A1714]">Just want a call?</h2>
+              <p className="text-[13px] text-[#6B5E4E] mt-2 leading-relaxed">
+                Share your name and number. We will call you back, no long form needed. You can add the full brief later.
               </p>
             </div>
+            <form onSubmit={handleQuickSubmit} noValidate className="relative">
+              <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                <label htmlFor="website-quick">Website</label>
+                <input id="website-quick" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <FieldLabel htmlFor="field-quickName">Your name</FieldLabel>
+                  <input id="field-quickName" className={inputClass(quickErrors.name)} placeholder="Full name" autoComplete="name" value={quick.name} onChange={(e) => setQuick((q) => ({ ...q, name: e.target.value }))} aria-invalid={Boolean(quickErrors.name)} aria-describedby={quickErrors.name ? 'quickName-error' : undefined} />
+                  <ErrorText id="quickName-error">{quickErrors.name}</ErrorText>
+                </div>
+                <div>
+                  <FieldLabel htmlFor="field-quickPhone">Mobile number</FieldLabel>
+                  <input id="field-quickPhone" className={inputClass(quickErrors.phone)} placeholder="10-digit mobile" type="tel" inputMode="numeric" autoComplete="tel" value={quick.phone} onChange={(e) => setQuick((q) => ({ ...q, phone: e.target.value }))} aria-invalid={Boolean(quickErrors.phone)} aria-describedby={quickErrors.phone ? 'quickPhone-error' : undefined} />
+                  <ErrorText id="quickPhone-error">{quickErrors.phone}</ErrorText>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'quick'} className="min-h-[48px] bg-[#1C3A5A] text-white text-[14px] px-7 py-3 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
+                  {isSubmitting === 'quick' ? 'Requesting…' : 'Request a Callback →'}
+                </button>
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello NestArcadia, I would like to discuss my home interiors.')}`} target="_blank" rel="noopener noreferrer" className="min-h-[48px] inline-flex items-center text-[14px] text-[#17665B] border border-[#2D8C7E] px-6 py-3 hover:bg-[#2D8C7E] hover:text-white transition-colors">
+                  Chat on WhatsApp
+                </a>
+              </div>
+              <div role="alert" aria-live="assertive">
+                {quickError && (
+                  <p className="mt-3 text-[12px] text-[#B64B42]">
+                    {quickError}{' '}
+                    <a className="underline" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hello NestArcadia, please call me back.\nName: ${quick.name}\nPhone: ${quick.phone}`)}`} target="_blank" rel="noopener noreferrer">Send it on WhatsApp instead</a>
+                  </p>
+                )}
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <div className="flex items-center gap-4 mb-10">
+          <span className="h-px flex-1 bg-[#D4CBBB]" />
+          <p className="text-[11px] uppercase tracking-[0.25em] text-[#6B5E4E]">Or share your full brief for a tailored plan</p>
+          <span className="h-px flex-1 bg-[#D4CBBB]" />
+        </div>
+
+        <form onSubmit={handleSubmit} noValidate className="relative">
+          <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+            <label htmlFor="website">Website</label>
+            <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </div>
+
+          <div className="grid lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-20">
+            <div className="flex flex-col gap-12">
+              {/* 01 About you */}
+              <section aria-labelledby="step-1">
+                <span id="step-1" className="sr-only">About you</span>
+                <StepHeading n="01" title="About you" />
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <FieldLabel htmlFor="field-name">Full name</FieldLabel>
+                    <input id="field-name" className={inputClass(errors.name)} placeholder="Full Name *" autoComplete="name" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} aria-required="true" />
+                    <ErrorText id="name-error">{errors.name}</ErrorText>
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor="field-phone">Mobile number</FieldLabel>
+                    <input id="field-phone" className={inputClass(errors.phone)} placeholder="Phone Number *" type="tel" inputMode="numeric" autoComplete="tel" value={form.phone} onChange={setField('phone')} onBlur={() => markTouched('phone')} aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? 'phone-error' : undefined} aria-required="true" />
+                    <ErrorText id="phone-error">{errors.phone}</ErrorText>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <FieldLabel htmlFor="field-email">Email address</FieldLabel>
+                    <input id="field-email" className={inputClass(errors.email)} placeholder="Email Address *" type="email" autoComplete="email" value={form.email} onChange={setField('email')} onBlur={() => markTouched('email')} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} aria-required="true" />
+                    <ErrorText id="email-error">{errors.email}</ErrorText>
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor="field-city">City</FieldLabel>
+                    <select id="field-city" className={`${inputClass(errors.city)} appearance-none cursor-pointer`} value={form.city} onChange={setField('city')} onBlur={() => markTouched('city')} aria-invalid={Boolean(errors.city)} aria-describedby={errors.city ? 'city-error' : undefined} aria-required="true">
+                      <option value="" disabled>Select city</option>
+                      {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                    <ErrorText id="city-error">{errors.city}</ErrorText>
+                  </div>
+                  <div>
+                    <FieldLabel htmlFor="field-society" optional>Society / locality</FieldLabel>
+                    <input id="field-society" className={inputClass()} placeholder="e.g. Gaur City 2, Sector 16B" autoComplete="off" maxLength={120} value={form.society} onChange={setField('society')} />
+                  </div>
+                </div>
+              </section>
+
+              {/* 02 Your home */}
+              <section aria-labelledby="step-2">
+                <span id="step-2" className="sr-only">Your home</span>
+                <StepHeading n="02" title="Your home" hint="Home size decides the budget ranges we show next." />
+                <fieldset className="mb-8">
+                  <legend className="text-[12px] text-[#4F4436] mb-3">Project type</legend>
+                  <div id="field-projectType" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
+                    {projectTypes.map((t) => (
+                      <button key={t} type="button" aria-pressed={form.projectType === t} className={chipClass(form.projectType === t)} onClick={() => choose('projectType', t)}>{t}</button>
+                    ))}
+                  </div>
+                  <ErrorText id="projectType-error">{errors.projectType}</ErrorText>
+                </fieldset>
+
+                {showConfig && (
+                  <fieldset>
+                    <legend className="text-[12px] text-[#4F4436] mb-3">Home size</legend>
+                    <div id="field-configuration" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
+                      {BHK_OPTIONS.map((c) => (
+                        <button key={c} type="button" aria-pressed={form.configuration === c} className={chipClass(form.configuration === c)} onClick={() => choose('configuration', c)}>{c}</button>
+                      ))}
+                    </div>
+                    <ErrorText id="configuration-error">{errors.configuration}</ErrorText>
+                  </fieldset>
+                )}
+              </section>
+
+              {/* 03 Budget */}
+              <section aria-labelledby="step-3">
+                <span id="step-3" className="sr-only">Budget</span>
+                <StepHeading
+                  n="03"
+                  title="Your budget"
+                  hint={isHomeSizedBudget ? `Ranges for a complete ${form.configuration} interior. Our full-home interiors start at ₹5 lakh. We would rather be upfront than quote a number that changes later.` : 'Pick the range closest to your plan. We will refine it together after a site visit.'}
+                />
+                <fieldset>
+                  <legend className="sr-only">Budget range</legend>
+                  <div id="field-budget" tabIndex={-1} className="grid sm:grid-cols-2 gap-3 outline-none">
+                    {budgetOptions.map((b) => {
+                      const active = form.budget === b.label;
+                      return (
+                        <button key={b.label} type="button" aria-pressed={active} onClick={() => choose('budget', b.label)} className={`${chipClass(active)} text-left !px-5 !py-4`}>
+                          <span className="block text-[15px] font-medium">{b.label}</span>
+                          {b.tier && <span className={`block text-[12px] mt-0.5 ${active ? 'text-white/80' : 'text-[#6B5E4E]'}`}>{b.tier}</span>}
+                        </button>
+                      );
+                    })}
+                    <button type="button" aria-pressed={form.budget === NOT_SURE_BUDGET} onClick={() => choose('budget', NOT_SURE_BUDGET)} className={`${chipClass(form.budget === NOT_SURE_BUDGET)} text-left !px-5 !py-4`}>
+                      <span className="block text-[15px] font-medium">Not sure yet</span>
+                      <span aria-hidden="true" className={`block text-[12px] mt-0.5 ${form.budget === NOT_SURE_BUDGET ? 'text-white/80' : 'text-[#6B5E4E]'}`}>Help me plan</span>
+                    </button>
+                  </div>
+                  <ErrorText id="budget-error">{errors.budget}</ErrorText>
+                  <p className="text-[12px] text-[#6B5E4E] mt-3 leading-relaxed">Indicative ranges for full-home design and execution. The final quote depends on the site visit, scope and material choices.</p>
+                </fieldset>
+              </section>
+
+              {/* 04 Timeline & style */}
+              <section aria-labelledby="step-4">
+                <span id="step-4" className="sr-only">Timeline and style</span>
+                <StepHeading n="04" title="Timeline and style" />
+                <fieldset className="mb-8">
+                  <legend className="text-[12px] text-[#4F4436] mb-3">When do you want to start?</legend>
+                  <div id="field-timeline" tabIndex={-1} className="flex flex-wrap gap-2 outline-none">
+                    {timelines.map((t) => (
+                      <button key={t} type="button" aria-pressed={form.timeline === t} className={chipClass(form.timeline === t)} onClick={() => choose('timeline', t)}>{t}</button>
+                    ))}
+                  </div>
+                  <ErrorText id="timeline-error">{errors.timeline}</ErrorText>
+                </fieldset>
+                <fieldset>
+                  <legend className="text-[12px] text-[#4F4436] mb-3">Design style <span className="text-[#6B5E4E]">(optional)</span></legend>
+                  <div className="flex flex-wrap gap-2">
+                    {stylePrefs.map((s) => (
+                      <button key={s} type="button" aria-pressed={form.style === s} className={chipClass(form.style === s)} onClick={() => choose('style', s)}>{s}</button>
+                    ))}
+                  </div>
+                </fieldset>
+              </section>
+
+              {/* 05 Notes */}
+              <section aria-labelledby="step-5">
+                <span id="step-5" className="sr-only">Anything else</span>
+                <StepHeading n="05" title="Anything else?" hint="Vastu needs, storage priorities, a work-from-home corner, reference images, anything that helps." />
+                <FieldLabel htmlFor="field-message" optional>Notes</FieldLabel>
+                <textarea id="field-message" className={`${inputClass()} resize-none`} rows={5} maxLength={2000} placeholder="E.g. 3BHK handover next month. Need a pooja unit, wardrobes in all bedrooms and a study corner." value={form.message} onChange={setField('message')} />
+              </section>
+            </div>
+
+            {/* Summary + submit */}
+            <aside className="lg:sticky lg:top-28 self-start">
+              <div className="border border-[#D4CBBB] bg-[#EAE4DA] p-6">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-4">Your brief</p>
+                <dl className="grid gap-3 text-[14px]">
+                  {[
+                    ['Home', [form.projectType, showConfig ? form.configuration : ''].filter(Boolean).join(' · ')],
+                    ['Budget', form.budget ? `${form.budget}${selectedTier?.tier ? ` (${selectedTier.tier})` : ''}` : ''],
+                    ['Start', form.timeline],
+                    ['Where', [form.society, form.city].filter(Boolean).join(', ')],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex justify-between gap-4 border-b border-[#D4CBBB] pb-2 last:border-b-0">
+                      <dt className="text-[#6B5E4E]">{k}</dt>
+                      <dd className={`text-right ${v ? 'text-[#1A1714]' : 'text-[#6B5E4E]/70'}`}>{v || '—'}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'full'} className="mt-6 w-full min-h-[52px] bg-[#1C3A5A] text-white text-[14px] py-4 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
+                  {isSubmitting === 'full' ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
+                </button>
+                <div role="alert" aria-live="assertive">
+                  {attempted && hasFieldErrors && (
+                    <p className="mt-4 text-center text-[12px] text-[#B64B42]">Please correct the highlighted fields before submitting your brief.</p>
+                  )}
+                  {submissionError && (
+                    <div className="mt-4 text-center">
+                      <p className="text-[12px] text-[#B64B42]">{submissionError}</p>
+                      <a href={whatsappFallback} target="_blank" rel="noopener noreferrer" className="inline-flex mt-3 bg-[#2D8C7E] text-white px-4 py-2.5 text-[12px] hover:bg-[#1C3A5A] transition-colors">Send Brief on WhatsApp</a>
+                    </div>
+                  )}
+                </div>
+                <p className="text-[12px] text-[#6B5E4E] text-center mt-4 leading-relaxed">
+                  We respond within 24 hours. Or{' '}
+                  <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-[#17665B] underline">WhatsApp us directly</a>{' '}
+                  for a faster reply.
+                </p>
+              </div>
+            </aside>
           </div>
         </form>
 
@@ -431,23 +609,11 @@ export default function StartProject({ setPage }: Props) {
           <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-10">Why NestArcadia</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              {
-                title: 'Experience Across Diverse Spaces',
-                desc: 'From compact 1BHK apartments in NCR to sprawling villas and commercial environments — our experience spans a wide range of residential and commercial projects.',
-              },
-              {
-                title: 'Your Requirement Comes First',
-                desc: 'We do not impose a house style. If you want minimal luxury, we build that. If you want South Indian influence, we interpret it. The brief always belongs to you.',
-              },
-              {
-                title: 'Heritage Craft + Modern Function',
-                desc: 'We work directly with Indian artisans — weavers, carpenters, plaster specialists — to bring authentic craft into every project without sacrificing modern liveability.',
-              },
-              {
-                title: 'One Team, Entire Journey',
-                desc: 'Design, execution, furniture, lighting, decor — one team manages all of it, from your first call to the day you move in.',
-              },
-            ].map(c => (
+              { title: 'Experience Across Diverse Spaces', desc: 'From compact 1BHK apartments in NCR to sprawling villas and commercial environments — our experience spans a wide range of residential and commercial projects.' },
+              { title: 'Your Requirement Comes First', desc: 'We do not impose a house style. If you want minimal luxury, we build that. If you want South Indian influence, we interpret it. The brief always belongs to you.' },
+              { title: 'Heritage Craft + Modern Function', desc: 'We work directly with Indian artisans — weavers, carpenters, plaster specialists — to bring authentic craft into every project without sacrificing modern liveability.' },
+              { title: 'One Team, Entire Journey', desc: 'Design, execution, furniture, lighting, decor — one team manages all of it, from your first call to the day you move in.' },
+            ].map((c) => (
               <div key={c.title} className="border-t-2 border-[#2D8C7E] pt-6">
                 <h3 className="font-display text-lg text-[#1A1714] mb-3">{c.title}</h3>
                 <p className="text-[13px] text-[#6B5E4E] leading-relaxed">{c.desc}</p>

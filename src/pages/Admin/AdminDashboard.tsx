@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import HomeForm from './HomeForm';
 import ImageUpload from '../../components/ImageUpload';
 import RichArticleEditor from '../../components/admin/RichArticleEditor';
 import ArticlePreview from '../../components/admin/ArticlePreview';
 import MediaLibrary from './MediaLibrary';
+import EnquiriesPanel, { type Enquiry } from './EnquiriesPanel';
 
 interface Props {
   adminPassword: string;
@@ -27,25 +28,6 @@ interface Blog {
   tags: string[];
   created_at: string;
   published_at: string | null;
-}
-
-interface Enquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  city: string;
-  project_type: string;
-  configuration: string;
-  budget: string;
-  timeline: string;
-  design_style: string;
-  message: string;
-  source: string;
-  service?: string | null;
-  status: string;
-  notes: string;
-  created_at: string;
 }
 
 interface Home {
@@ -75,12 +57,6 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
   const [editingHome, setEditingHome] = useState<Home | null>(null);
   const [showHomeForm, setShowHomeForm] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [enquiryStatusFilter, setEnquiryStatusFilter] = useState<string>('all');
-  const [enquiryCityFilter, setEnquiryCityFilter] = useState<string>('all');
-  const [enquiryServiceFilter, setEnquiryServiceFilter] = useState<string>('all');
-  const [enquirySort, setEnquirySort] = useState<'date_desc' | 'date_asc' | 'name_asc' | 'name_desc'>('date_desc');
-  const [enquirySearch, setEnquirySearch] = useState<string>('');
-  const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
 
   const headers = {
     'Content-Type': 'application/json',
@@ -173,75 +149,6 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
       console.error('Failed to delete home:', err);
     }
   };
-
-  // Filter and sort enquiries
-  const filteredEnquiries = useMemo(() => {
-    let filtered = [...enquiries];
-
-    // Search filter
-    if (enquirySearch) {
-      const search = enquirySearch.toLowerCase();
-      filtered = filtered.filter(e => 
-        e.name.toLowerCase().includes(search) ||
-        e.email.toLowerCase().includes(search) ||
-        e.phone.includes(search) ||
-        e.city.toLowerCase().includes(search)
-      );
-    }
-
-    // Status filter
-    if (enquiryStatusFilter !== 'all') {
-      filtered = filtered.filter(e => e.status === enquiryStatusFilter);
-    }
-
-    // City filter
-    if (enquiryCityFilter !== 'all') {
-      filtered = filtered.filter(e => e.city === enquiryCityFilter);
-    }
-
-    // Service filter
-    if (enquiryServiceFilter !== 'all') {
-      filtered = filtered.filter(e => (e.service || 'General enquiry') === enquiryServiceFilter);
-    }
-
-    // Sort
-    filtered.sort((a, b) => {
-      switch (enquirySort) {
-        case 'date_desc':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        case 'date_asc':
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        case 'name_asc':
-          return a.name.localeCompare(b.name);
-        case 'name_desc':
-          return b.name.localeCompare(a.name);
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [enquiries, enquirySearch, enquiryStatusFilter, enquiryCityFilter, enquiryServiceFilter, enquirySort]);
-
-  // Get unique cities and services for filters
-  const uniqueCities = useMemo(() =>
-    Array.from(new Set(enquiries.map(e => e.city).filter(Boolean))).sort(),
-    [enquiries]
-  );
-
-  const uniqueServices = useMemo(() =>
-    Array.from(new Set(enquiries.map(e => e.service || 'General enquiry'))).sort(),
-    [enquiries]
-  );
-
-  const serviceCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    enquiries.forEach((e) => {
-      const service = e.service || 'General enquiry';
-      counts[service] = (counts[service] || 0) + 1;
-    });
-    return counts;
-  }, [enquiries]);
 
   const navItems = [
     { id: 'dashboard' as AdminView, label: 'Dashboard', icon: '◻' },
@@ -482,283 +389,13 @@ export default function AdminDashboard({ adminPassword, onLogout }: Props) {
 
           {/* Enquiries View */}
           {view === 'enquiries' && (
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-[#6B5E4E]">Lead pipeline</p>
-                  <p className="text-[13px] text-[#6B5E4E] mt-1">Track incoming project enquiries and move them through the pipeline.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={fetchEnquiries}
-                  disabled={loading}
-                  className="border border-[#D4CBBB] bg-[#EAE4DA] text-[#1A1714] text-[13px] px-4 py-2 hover:border-[#2D8C7E] disabled:opacity-50 transition-colors"
-                >
-                  {loading ? 'Refreshing…' : '↻ Refresh'}
-                </button>
-              </div>
-              {loading ? (
-                <div className="text-center py-20 text-[#6B5E4E]">Loading enquiries...</div>
-              ) : enquiries.length === 0 ? (
-                <div className="text-center py-20 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
-                  <p className="text-[#6B5E4E]">No enquiries yet</p>
-                </div>
-              ) : (
-                <div>
-                  {/* Filter Controls */}
-                  <div className="mb-6 p-4 border border-[#D4CBBB]" style={{ background: '#EAE4DA' }}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                      {/* Search */}
-                      <input
-                        type="text"
-                        placeholder="Search name, email, phone, city..."
-                        value={enquirySearch}
-                        onChange={(e) => setEnquirySearch(e.target.value)}
-                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
-                      />
-                      
-                      {/* Status Filter */}
-                      <select
-                        value={enquiryStatusFilter}
-                        onChange={(e) => setEnquiryStatusFilter(e.target.value)}
-                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
-                      >
-                        <option value="all">All Status</option>
-                        <option value="new">New</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="qualified">Qualified</option>
-                        <option value="site_visit">Site Visit</option>
-                        <option value="proposal">Proposal</option>
-                        <option value="won">Won</option>
-                        <option value="lost">Lost</option>
-                      </select>
-
-                      {/* City Filter */}
-                      <select
-                        value={enquiryCityFilter}
-                        onChange={(e) => setEnquiryCityFilter(e.target.value)}
-                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
-                      >
-                        <option value="all">All Cities</option>
-                        {uniqueCities.map(city => (
-                          <option key={city} value={city}>{city}</option>
-                        ))}
-                      </select>
-
-                      {/* Service Filter */}
-                      <select
-                        value={enquiryServiceFilter}
-                        onChange={(e) => setEnquiryServiceFilter(e.target.value)}
-                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
-                      >
-                        <option value="all">All Services</option>
-                        {uniqueServices.map(service => (
-                          <option key={service} value={service}>{service}</option>
-                        ))}
-                      </select>
-
-                      {/* Sort */}
-                      <select
-                        value={enquirySort}
-                        onChange={(e) => setEnquirySort(e.target.value as any)}
-                        className="text-[13px] px-3 py-2 border border-[#D4CBBB] bg-white outline-none focus:border-[#2D8C7E]"
-                      >
-                        <option value="date_desc">Newest First</option>
-                        <option value="date_asc">Oldest First</option>
-                        <option value="name_asc">Name A-Z</option>
-                        <option value="name_desc">Name Z-A</option>
-                      </select>
-                    </div>
-                    
-                    {/* Results Count */}
-                    <div className="mt-3 flex justify-between items-center text-[12px] text-[#6B5E4E]">
-                      <span>Showing {filteredEnquiries.length} of {enquiries.length} enquiries</span>
-                      {(enquirySearch || enquiryStatusFilter !== 'all' || enquiryCityFilter !== 'all' || enquiryServiceFilter !== 'all') && (
-                        <button
-                          onClick={() => {
-                            setEnquirySearch('');
-                            setEnquiryStatusFilter('all');
-                            setEnquiryCityFilter('all');
-                            setEnquiryServiceFilter('all');
-                          }}
-                          className="text-[#2D8C7E] hover:text-[#1C3A5A]"
-                        >
-                          Clear Filters
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
-                    <button
-                      type="button"
-                      onClick={() => setEnquiryServiceFilter('all')}
-                      className="text-left border border-[#D4CBBB] px-4 py-3 hover:border-[#2D8C7E] transition-colors"
-                      style={{ background: '#EAE4DA' }}
-                    >
-                      <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">All enquiries</p>
-                      <p className="font-display text-xl text-[#1A1714] mt-1">{enquiries.length}</p>
-                    </button>
-                    {Object.entries(serviceCounts).map(([service, count]) => (
-                      <button
-                        key={service}
-                        type="button"
-                        onClick={() => setEnquiryServiceFilter(service)}
-                        className="text-left border border-[#D4CBBB] px-4 py-3 hover:border-[#2D8C7E] transition-colors"
-                        style={{ background: '#EAE4DA' }}
-                      >
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E] truncate">{service}</p>
-                        <p className="font-display text-xl text-[#1A1714] mt-1">{count}</p>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="border border-[#D4CBBB] overflow-hidden" style={{ background: '#EAE4DA' }}>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-[#D4CBBB]">
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Client</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Contact</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Service</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Project</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Budget</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Status</th>
-                          <th className="text-left text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Date</th>
-                          <th className="text-right text-[11px] uppercase tracking-[0.15em] text-[#6B5E4E] px-6 py-4">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredEnquiries.map((enquiry) => (
-                          <tr
-  key={enquiry.id}
-  onClick={() => setSelectedEnquiry(enquiry)}
-  className="border-b border-[#D4CBBB] last:border-b-0 cursor-pointer hover:bg-[#F2EDE4] transition-colors"
->
-                            <td className="px-6 py-4">
-                              <p className="text-[14px] text-[#1A1714] font-medium">{enquiry.name}</p>
-                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.city}</p>
-                            </td>
-                            <td className="px-6 py-4">
-                              <p className="text-[13px] text-[#1A1714]">{enquiry.email}</p>
-                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.phone}</p>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="inline-block text-[11px] px-2.5 py-1 bg-[#2D8C7E]/10 text-[#1C3A5A] border border-[#2D8C7E]/20">
-                                {enquiry.service || 'General enquiry'}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <p className="text-[13px] text-[#1A1714]">{enquiry.project_type}</p>
-                              <p className="text-[12px] text-[#6B5E4E] mt-0.5">{enquiry.configuration}</p>
-                            </td>
-                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">{enquiry.budget}</td>
-                            <td className="px-6 py-4">
-                              <select
-                                value={enquiry.status}
-                                onChange={(e) => updateEnquiryStatus(enquiry.id, e.target.value)}
-                                className="text-[12px] bg-transparent border border-[#D4CBBB] px-2 py-1 outline-none focus:border-[#2D8C7E]"
-                              >
-                                <option value="new">New</option>
-                                <option value="contacted">Contacted</option>
-                                <option value="qualified">Qualified</option>
-                                <option value="site_visit">Site Visit</option>
-                                <option value="proposal">Proposal</option>
-                                <option value="won">Won</option>
-                                <option value="lost">Lost</option>
-                              </select>
-                            </td>
-                            <td className="px-6 py-4 text-[13px] text-[#6B5E4E]">
-                              {new Date(enquiry.created_at).toLocaleDateString()}
-                            </td>
-                            <td className="px-6 py-4 text-right">
-                              <button
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  deleteEnquiry(enquiry.id);
-                                }}
-                                className="text-[13px] text-red-600 hover:text-red-700"
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {selectedEnquiry && (
-            <div
-              className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4"
-              onClick={() => setSelectedEnquiry(null)}
-            >
-              <div
-                className="w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#D4CBBB] p-6 lg:p-8"
-                style={{ background: '#F2EDE4' }}
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#6B5E4E]">Enquiry</p>
-                    <h3 className="font-display text-2xl text-[#1A1714] mt-1">{selectedEnquiry.name}</h3>
-                    <p className="text-[12px] text-[#6B5E4E] mt-1">
-                      {new Date(selectedEnquiry.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEnquiry(null)}
-                    className="text-[#6B5E4E] hover:text-[#1A1714] text-xl"
-                    aria-label="Close enquiry"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="text-[11px] px-2.5 py-1 bg-[#2D8C7E]/10 text-[#1C3A5A] border border-[#2D8C7E]/20">
-                    {selectedEnquiry.service || 'General enquiry'}
-                  </span>
-                  <span className="text-[11px] px-2.5 py-1 border border-[#D4CBBB]">
-                    {selectedEnquiry.status}
-                  </span>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-5">
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Email</p><a className="text-[14px] text-[#1C3A5A] hover:text-[#2D8C7E]" href={`mailto:${selectedEnquiry.email}`}>{selectedEnquiry.email}</a></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Phone</p><a className="text-[14px] text-[#1C3A5A] hover:text-[#2D8C7E]" href={`tel:${selectedEnquiry.phone}`}>{selectedEnquiry.phone}</a></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">City</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.city || '—'}</p></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Project</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.project_type || '—'} {selectedEnquiry.configuration ? `• ${selectedEnquiry.configuration}` : ''}</p></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Budget</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.budget || '—'}</p></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Timeline</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.timeline || '—'}</p></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Design style</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.design_style || '—'}</p></div>
-                  <div><p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E]">Source</p><p className="text-[14px] text-[#1A1714]">{selectedEnquiry.source || '—'}</p></div>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-[#D4CBBB]">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-[#6B5E4E] mb-2">Message</p>
-                  <p className="text-[14px] leading-relaxed text-[#1A1714] whitespace-pre-wrap">{selectedEnquiry.message || 'No message provided.'}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-3 mt-7">
-                  <a href={`mailto:${selectedEnquiry.email}`} className="bg-[#1C3A5A] text-white text-[13px] px-5 py-2.5 hover:bg-[#2D8C7E] transition-colors">Email client</a>
-                  <a href={`tel:${selectedEnquiry.phone}`} className="border border-[#D4CBBB] text-[#1A1714] text-[13px] px-5 py-2.5 hover:border-[#2D8C7E] transition-colors">Call client</a>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEnquiry(null)}
-                    className="border border-[#D4CBBB] text-[#6B5E4E] text-[13px] px-5 py-2.5 hover:border-[#1A1714] transition-colors"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
+            <EnquiriesPanel
+              enquiries={enquiries}
+              loading={loading}
+              onRefresh={fetchEnquiries}
+              onStatusChange={updateEnquiryStatus}
+              onDelete={deleteEnquiry}
+            />
           )}
 
           {/* Homes View */}
