@@ -94,7 +94,7 @@ const pagePaths: Record<Page, string> = {
 const pageMeta: Record<Page, { title: string; description: string }> = {
   home: {
     title: 'Interior Designers in Noida Extension & Greater Noida West | NestArcadia',
-    description: '2BHK from ₹6.5L · 3BHK from ₹9L · Turnkey execution. Plan your Noida Extension or Greater Noida West home interior with NestArcadia — practical space planning, custom furniture and complete handover.',
+    description: '2BHK ₹5–12L · 3BHK ₹7–22L · Turnkey execution. Plan your Noida Extension or Greater Noida West home interior with NestArcadia — practical space planning, custom furniture and complete handover.',
   },
   cultures: { title: 'Indian Design Cultures for Modern Homes', description: 'Discover how North, South, East, West and Central Indian design traditions shape contemporary homes in Noida, Greater Noida and NCR.' },
   services: { title: 'Interior Design Services in Noida, Greater Noida & NCR', description: 'Residential and commercial interior design, turnkey execution, custom furniture, Vastu-led planning and decor for Noida, Greater Noida West, Noida Extension, Ghaziabad, Faridabad, Delhi and Gurugram.' },
@@ -103,8 +103,8 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
   homes: { title: 'Our Projects | NestArcadia Interior Design', description: 'Explore NestArcadia\'s selected interior design projects and residential design studies across India.' },
   project: { title: 'Start an Interior Design Project in Noida & NCR', description: 'Talk to NestArcadia about a 2BHK, 3BHK, 4BHK, villa, farmhouse, office or commercial interior project in Noida, Greater Noida, Greater Noida West and NCR.' },
   faq: {
-    title: 'Interior Design Cost in Noida: 2BHK ₹6.5L, 3BHK ₹9L — FAQs | NestArcadia',
-    description: '2BHK interior from ₹6.5L, 3BHK from ₹9L in Noida & Greater Noida West. Plain answers on cost, timeline, turnkey execution, modular kitchens and Vastu — no jargon.',
+    title: 'Interior Design Cost in Noida: 2BHK ₹5–12L, 3BHK ₹7–22L — FAQs | NestArcadia',
+    description: '2BHK interior ₹5–12L, 3BHK ₹7–22L in Noida & Greater Noida West. Plain answers on cost, timeline, turnkey execution, modular kitchens and Vastu — no jargon.',
   },
   privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
   terms: { title: 'Terms of Use | NestArcadia', description: 'Terms of use for nestarcadia.com: website content, project enquiries, estimates, third-party links and how NestArcadia engagements are agreed in writing.' },
@@ -355,7 +355,7 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       mainEntity: [
         { '@type': 'Question', name: 'Which areas does NestArcadia serve?', acceptedAnswer: { '@type': 'Answer', text: "NestArcadia's primary service focus is Noida Extension and Greater Noida West, with nearby Noida and Greater Noida as secondary markets. For projects elsewhere in NCR, availability is assessed based on the property's location and scope." } },
         { '@type': 'Question', name: 'Do you design 2BHK, 3BHK and 4BHK interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. NestArcadia plans interiors for 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the scope adapted to the property and household requirements.' } },
-        { '@type': 'Question', name: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', acceptedAnswer: { '@type': 'Answer', text: 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' } },
+        { '@type': 'Question', name: 'How much does a 2BHK or 3BHK interior cost in Greater Noida West?', acceptedAnswer: { '@type': 'Answer', text: 'For a raw or newly handed-over apartment, a complete interior project typically ranges from ₹5–12 lakh for a 2BHK and ₹7–22 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost may sit at the lower end of the range. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.' } },
         { '@type': 'Question', name: 'Do you provide turnkey interior design and execution?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Depending on the project, NestArcadia can manage planning and design through materials, site execution and final handover.' } },
         { '@type': 'Question', name: 'Do you design commercial office interiors?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Commercial work can include office space planning, reception, meeting rooms, workstations, storage, lighting, acoustics and execution coordination.' } },
         { '@type': 'Question', name: 'When should I contact an interior designer?', acceptedAnswer: { '@type': 'Answer', text: 'Ideally before possession or before major civil and electrical work begins. Planning early gives more flexibility with kitchen layouts, wardrobes, storage, lighting and electrical points.' } },

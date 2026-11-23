@@ -20,7 +20,7 @@ export const faqGroups = [
     label: 'Homes, layouts and budgets',
     items: [
       ['Do you design 2BHK, 3BHK and 4BHK interiors?', 'Yes. We work on 2BHK, 3BHK and 4BHK apartments, villas and farmhouses, with the design adapted to the layout, carpet area, storage needs and level of customisation.'],
-      ['How much does a 2BHK or 3BHK interior cost in Greater Noida West?', 'For a raw or newly handed-over apartment, a complete interior project typically starts around ₹6.5–7 lakh for a 2BHK and ₹9–10 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost can be lower. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.'],
+      ['How much does a 2BHK or 3BHK interior cost in Greater Noida West?', 'For a raw or newly handed-over apartment, a complete interior project typically ranges from ₹5–12 lakh for a 2BHK and ₹7–22 lakh for a 3BHK. If flooring, electrical or some civil work is already completed, the cost may sit at the lower end of the range. More customised furniture, premium materials or extensive décor can increase the budget depending on the scope.'],
       ['Can you plan space-saving interiors for a compact Noida apartment?', 'Yes. We focus on practical circulation, well-planned storage and furniture that fits the actual space, so the home feels useful without feeling overcrowded.'],
       ['Do you work on newly handed-over apartments in Noida Extension?', 'Yes. New-possession homes are a good time to plan interiors because electrical, lighting, storage and finish decisions can be addressed before you move in.'],
     ],
