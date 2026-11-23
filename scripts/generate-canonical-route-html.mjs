@@ -242,6 +242,8 @@ const mainRouteMeta = new Map([
   ['/start-your-project', pageMeta.get('project')],
   ['/faqs', pageMeta.get('faq')],
   ['/privacy-policy', pageMeta.get('privacy')],
+  ['/terms', pageMeta.get('terms')],
+  ['/contact', pageMeta.get('contact')],
 ]);
 
 function routeMetadata(pathname) {
@@ -380,6 +382,22 @@ const mainPageContent = {
     { heading: 'What happens next', bullets: ['Review the floor plan, site condition and household requirements','Clarify design scope, priorities and budget direction','Identify the drawings, materials and execution decisions required','Prepare the next-step proposal around the agreed brief'] },
     { heading: 'Make the first conversation useful', paragraphs: ['If you have a floor plan, share it with your enquiry. For a quick starting conversation, you can also contact NestArcadia on WhatsApp at +91 8448061997.'], links: [{ href: 'https://wa.me/918448061997', label: 'Contact NestArcadia on WhatsApp' }, { href: '/interior-design-services/', label: 'Review services before you enquire' }] },
   ],
+  '/privacy-policy': [
+    { heading: 'What this policy covers', paragraphs: ['NestArcadia respects your privacy. This notice explains what information may be collected through nestarcadia.com, why it is used, the external services involved (including Google Analytics, Google Tag Manager, Supabase and WhatsApp links), and the choices available to you.'] },
+    { heading: 'Your choices', bullets: ['Analytics and advertising storage are denied by default and change only when you make a privacy choice','You can reopen Privacy Choices from the control at the bottom-left of the website','You can ask NestArcadia what information it holds, or request correction or deletion, at info@nestarcadia.com'] },
+    { heading: 'Related pages', links: [{ href: '/terms/', label: 'Terms of Use' }, { href: '/contact/', label: 'Contact NestArcadia' }] },
+  ],
+  '/terms': [
+    { heading: 'About these terms', paragraphs: ['These Terms of Use apply to your use of nestarcadia.com, operated by NestArcadia, an interior design and turnkey execution studio serving Noida Extension, Greater Noida West and the wider Delhi NCR region.'] },
+    { heading: 'Estimates and enquiries', paragraphs: ['Cost ranges, timelines and examples on the website are indicative and are not a quotation or guarantee. A project enquiry does not create a contract; an engagement begins only when scope, fees, payment schedule and timeline are agreed in writing.'] },
+    { heading: 'Content, links and liability', bullets: ['Website text, images and designs belong to NestArcadia or its licensors and may not be reused commercially without written permission','Third-party links such as WhatsApp and social media follow their own terms','The website is provided as is, and liability is limited to the extent permitted by Indian law'] },
+    { heading: 'Related pages', links: [{ href: '/privacy-policy/', label: 'Privacy Policy' }, { href: '/contact/', label: 'Contact NestArcadia' }, { href: '/our-story/', label: 'About NestArcadia' }] },
+  ],
+  '/contact': [
+    { heading: 'Reach the studio', bullets: ['Phone: +91 84480 61997','WhatsApp: +91 84480 61997','Email: info@nestarcadia.com'], links: [{ href: 'https://wa.me/918448061997', label: 'Message NestArcadia on WhatsApp' }] },
+    { heading: 'Visit our office', paragraphs: ['NestArcadia, G-59, Fusion Ufairia Mall, Sector 16B, Greater Noida West, Uttar Pradesh 201310.'] },
+    { heading: 'Planning a project?', paragraphs: ['Share your property type, location, possession timeline and what you need from the space.'], links: [{ href: '/start-your-project/', label: 'Start your project' }, { href: '/our-story/', label: 'About NestArcadia' }] },
+  ],
 };
 
 function renderSiteAreaNav() {
@@ -389,7 +407,10 @@ function renderSiteAreaNav() {
   ).join('');
   return '<footer style="margin-top:48px;padding-top:24px;border-top:1px solid #D4CBBB"><nav aria-label="NestArcadia service areas" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px">' +
     groups + '</nav><p style="margin:20px 0 0">' + inlineLink('/interior-design-delhi-ncr/', 'See all of NCR we serve') + ' · ' +
-    inlineLink('/interior-design-services/', 'Our services') + ' · ' + inlineLink('/start-your-project/', 'Start your project') + '</p></footer>';
+    inlineLink('/interior-design-services/', 'Our services') + ' · ' + inlineLink('/start-your-project/', 'Start your project') + '</p>' +
+    '<nav aria-label="About, contact and legal" style="margin:20px 0 0;font-size:14px">' +
+    [['/our-story/', 'About Us'], ['/contact/', 'Contact'], ['/terms/', 'Terms of Use'], ['/privacy-policy/', 'Privacy Policy']]
+      .map(([href, label]) => inlineLink(href, label)).join(' · ') + '</nav></footer>';
 }
 
 function renderStaticRoute(pathname, metadata) {
