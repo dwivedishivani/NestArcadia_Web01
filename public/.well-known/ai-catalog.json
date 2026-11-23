@@ -31,6 +31,18 @@
         "Find interior design guidance for homes and offices in Delhi NCR."
       ],
       "version": "1.0"
+    },
+    {
+      "identifier": "urn:air:nestarcadia.com:mcp:server-card",
+      "displayName": "NestArcadia MCP Server Card",
+      "type": "application/json",
+      "url": "https://nestarcadia.com/.well-known/mcp/server-card.json",
+      "description": "MCP Server Card for NestArcadia's public, read-only MCP server (costs, service areas, enquiry link).",
+      "tags": [
+        "mcp",
+        "server-card"
+      ],
+      "version": "1.0"
     }
   ]
 }
