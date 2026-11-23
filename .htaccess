@@ -1,0 +1,168 @@
+# ============================================================
+# NestArcadia — Apache configuration
+# Hostinger shared hosting, mod_rewrite + mod_headers confirmed
+# ============================================================
+
+# ----- Security headers -----
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ----- MIME types -----
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType application/json .json
+  AddType text/markdown .md .txt
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ----- Compression -----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json text/xml application/xml text/plain
+</IfModule>
+
+# ----- Cache control -----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/json "access plus 1 day"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Cache hashed JS/CSS bundles aggressively
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Images — 1 year
+  <FilesMatch "\.(webp|jpg|jpeg|png|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  # HTML — always revalidate
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Markdown representations: correct type, keep them out of search indexes, vary on Accept
+  <FilesMatch "\.md$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set X-Robots-Tag "noindex, follow"
+    Header append Vary Accept
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header append Vary Accept
+  </FilesMatch>
+  # Well-known files — short cache
+  <FilesMatch "(robots\.txt|sitemap\.xml|llms\.txt|site\.webmanifest)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  # RFC 8288 Link header — point agents at the llms.txt publisher guide
+  Header always set Link "<https://nestarcadia.com/llms.txt>; rel=\"describedby\"; type=\"text/plain\""
+
+  # Content-Type for llms.txt served as markdown
+  <FilesMatch "llms\.txt$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+  </FilesMatch>
+
+  # robots.txt must be plain text (the global .txt mapping above is for llms.txt)
+  <FilesMatch "^robots\.txt$">
+    Header set Content-Type "text/plain; charset=UTF-8"
+  </FilesMatch>
+
+  # The 404 page is never indexable
+  <FilesMatch "^404\.html$">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </FilesMatch>
+
+  # Proper JSON content-type for well-known JSON files
+  <FilesMatch "\.json$">
+    Header set Content-Type "application/json; charset=UTF-8"
+  </FilesMatch>
+</IfModule>
+
+# ----- Rewrite rules -----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # HTTPS itself is enforced at Hostinger's edge, so no scheme rule here (and therefore no
+  # redirect-loop risk when TLS is terminated in front of Apache). Redirects below run before
+  # Apache's own directory-slash redirect, so /journal and friends get a single clean 301.
+  # Rules are limited to the production hostnames, so Hostinger preview domains
+  # (*.hostingersite.com) are never redirected to production.
+
+  # Legacy portfolio route
+  RewriteCond %{HTTP_HOST} ^(www\.)?nestarcadia\.com$ [NC]
+  RewriteRule ^homes/?$ https://nestarcadia.com/our-projects/ [R=301,L]
+
+  # www -> apex, adding the trailing slash in the same hop for extensionless routes
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteCond %{REQUEST_URI} !\.[^/]+$
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
+  RewriteCond %{HTTP_HOST} ^www\.nestarcadia\.com$ [NC]
+  RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
+
+  # Apex, missing trailing slash -> https + slash in ONE hop. Static files (anything with a
+  # file extension: .js .css .png .webp .svg .woff2 .xml .json ...) are left alone. Only real
+  # route folders (plus /admin and journal article slugs) are redirected; unknown paths fall
+  # through to the real 404 below instead of being redirected first.
+  RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteCond %{REQUEST_URI} !\.[^/]+$
+  RewriteCond %{REQUEST_FILENAME} -d [OR]
+  RewriteCond %{REQUEST_URI} ^/(admin|journal/[^/]+)$
+  RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
+  # Markdown for agents: a prerendered route requested with "Accept: text/markdown" is answered
+  # from its generated index.md (see scripts/generate-agent-assets.mjs). Responses carry
+  # "Vary: Accept" so caches keep the HTML and Markdown variants apart.
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteCond %{HTTP_ACCEPT} text/markdown [NC]
+  RewriteCond %{REQUEST_URI} /$
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}index.md -f
+  RewriteRule ^ %{REQUEST_URI}index.md [L]
+
+  # The SSH deploy never uploads .well-known (Hostinger manages that folder), so the agent-discovery
+  # documents are published as regular files under /agent-discovery/ and served at their
+  # well-known URLs from there (copied by scripts/generate-agent-assets.mjs).
+  RewriteRule ^\.well-known/mcp/server-card\.json$ /agent-discovery/mcp-server-card.json [L]
+  RewriteRule ^\.well-known/ai-catalog\.json$ /agent-discovery/ai-catalog.json [L]
+
+  # Serve real files and directories (prerendered route folders) as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Client-rendered routes without a prerendered folder: the admin console, and journal articles
+  # published from the admin after the last build (Journal.tsx loads those from Supabase; the app
+  # marks unknown article slugs noindex itself).
+  RewriteRule ^admin/?$ /index.html [L]
+  RewriteRule ^journal/[^/]+/$ /index.html [L]
+
+  # Everything else that does not exist is a real HTTP 404 (served with 404.html), so agents and
+  # crawlers never see "200 OK" for a missing page. Every other public route is prerendered at
+  # build time, so no other path needs the SPA shell.
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
+# Canonical URLs are emitted in the prerendered HTML of every route
+# (<link rel="canonical"> and og:url, always the trailing-slash URL listed in sitemap.xml).
+# The previous per-route "Link: rel=canonical" header block was removed: it never emitted a
+# header (the CANONICAL env var is renamed REDIRECT_CANONICAL after Apache's internal
+# redirect) and used %1 where $1 was needed, so it could only ever have produced wrong
+# values for /journal/<article>/.
+
+# ----- Real 404 for truly missing paths -----
+ErrorDocument 404 /404.html

@@ -1,0 +1,48 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "NestArcadia",
+    "identifier": "https://nestarcadia.com"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:nestarcadia.com:website:interior-design-information",
+      "displayName": "NestArcadia Interior Design Information",
+      "type": "text/html",
+      "url": "https://nestarcadia.com/",
+      "description": "Official website for NestArcadia interior design services, projects, and journal guidance in Noida Extension, Greater Noida West, and Delhi NCR.",
+      "tags": [
+        "interior design",
+        "turnkey interiors",
+        "Noida Extension",
+        "Greater Noida West",
+        "Delhi NCR",
+        "residential interiors",
+        "commercial interiors"
+      ],
+      "capabilities": [
+        "website-information",
+        "interior-design-service-discovery",
+        "project-and-journal-discovery"
+      ],
+      "representativeQueries": [
+        "Find interior design services in Noida Extension.",
+        "Explore NestArcadia interior design projects and services in Greater Noida West.",
+        "Find interior design guidance for homes and offices in Delhi NCR."
+      ],
+      "version": "1.0"
+    },
+    {
+      "identifier": "urn:air:nestarcadia.com:mcp:server-card",
+      "displayName": "NestArcadia MCP Server Card",
+      "type": "application/json",
+      "url": "https://nestarcadia.com/.well-known/mcp/server-card.json",
+      "description": "MCP Server Card for NestArcadia's public, read-only MCP server (costs, service areas, enquiry link).",
+      "tags": [
+        "mcp",
+        "server-card"
+      ],
+      "version": "1.0"
+    }
+  ]
+}
