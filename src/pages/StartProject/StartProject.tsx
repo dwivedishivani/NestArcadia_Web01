@@ -119,10 +119,10 @@ function trackLead(source: string, kind: 'quick' | 'full', extra: Record<string,
 }
 
 const inputClass = (error?: string) =>
-  `w-full min-h-[48px] bg-transparent border px-4 py-3 text-[15px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/40 ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
+  `w-full min-h-[42px] bg-transparent border px-3 py-2 text-[14px] text-[#1A1714] placeholder:text-[#6B5E4E] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/40 ${error ? 'border-[#B64B42] focus:border-[#B64B42]' : 'border-[#D4CBBB] focus:border-[#2D8C7E]'}`;
 
 const chipClass = (active: boolean) =>
-  `min-h-[44px] text-[13px] px-4 py-2.5 border cursor-pointer transition-all select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50 ${
+  `min-h-[38px] text-[12.5px] px-3 py-1.5 border cursor-pointer transition-all select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50 ${
     active
       ? 'bg-[#1C3A5A] border-[#1C3A5A] text-white'
       : 'border-[#D4CBBB] text-[#4F4436] hover:border-[#2D8C7E] hover:text-[#17665B]'
@@ -130,7 +130,7 @@ const chipClass = (active: boolean) =>
 
 function FieldLabel({ htmlFor, children, optional }: { htmlFor?: string; children: React.ReactNode; optional?: boolean }) {
   return (
-    <label htmlFor={htmlFor} className="block text-[12px] text-[#4F4436] mb-1.5">
+    <label htmlFor={htmlFor} className="block text-[12px] text-[#4F4436] mb-1">
       {children}
       {optional && <span className="text-[#6B5E4E]"> (optional)</span>}
     </label>
@@ -358,6 +358,7 @@ export default function StartProject({ setPage }: Props) {
     );
   }
 
+  const selectedTier = budgetOptions.find((b) => b.label === form.budget);
   const hasFieldErrors = Object.values(errors).some(Boolean);
 
   return (
@@ -436,13 +437,13 @@ export default function StartProject({ setPage }: Props) {
             <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-x-14 gap-y-8">
-            {/* Left: who + where */}
-            <div className="flex flex-col gap-8">
+          <div className="grid lg:grid-cols-[1.7fr_1fr] gap-6 lg:gap-8 items-start">
+            {/* Form canvas */}
+            <div className="border border-[#D4CBBB] bg-white/50 p-5 lg:p-7 flex flex-col gap-6">
               <section aria-labelledby="step-1">
                 <span id="step-1" className="sr-only">About you</span>
                 <StepHeading n="01" title="About you" />
-                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-3">
+                <div className="grid sm:grid-cols-2 gap-x-3 gap-y-2.5">
                   <div>
                     <FieldLabel htmlFor="field-name">Full name</FieldLabel>
                     <input id="field-name" className={inputClass(errors.name)} placeholder="Full Name *" autoComplete="name" value={form.name} onChange={setField('name')} onBlur={() => markTouched('name')} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'name-error' : undefined} aria-required="true" />
@@ -497,10 +498,6 @@ export default function StartProject({ setPage }: Props) {
                   </fieldset>
                 )}
               </section>
-            </div>
-
-            {/* Right: budget + timing */}
-            <div className="flex flex-col gap-8">
               <section aria-labelledby="step-3">
                 <span id="step-3" className="sr-only">Budget</span>
                 <StepHeading
@@ -514,14 +511,14 @@ export default function StartProject({ setPage }: Props) {
                     {budgetOptions.map((b) => {
                       const active = form.budget === b.label;
                       return (
-                        <button key={b.label} type="button" aria-pressed={active} onClick={() => choose('budget', b.label)} className={`${chipClass(active)} text-left !px-4 !py-2.5`}>
-                          <span className="block text-[14px] font-medium">{b.label}</span>
+                        <button key={b.label} type="button" aria-pressed={active} onClick={() => choose('budget', b.label)} className={`${chipClass(active)} text-left !px-3 !py-2`}>
+                          <span className="block text-[13px] font-medium">{b.label}</span>
                           {b.tier && <span className={`block text-[11px] ${active ? 'text-white/80' : 'text-[#6B5E4E]'}`}>{b.tier}</span>}
                         </button>
                       );
                     })}
-                    <button type="button" aria-pressed={form.budget === NOT_SURE_BUDGET} onClick={() => choose('budget', NOT_SURE_BUDGET)} className={`${chipClass(form.budget === NOT_SURE_BUDGET)} text-left !px-4 !py-2.5`}>
-                      <span className="block text-[14px] font-medium">Not sure yet</span>
+                    <button type="button" aria-pressed={form.budget === NOT_SURE_BUDGET} onClick={() => choose('budget', NOT_SURE_BUDGET)} className={`${chipClass(form.budget === NOT_SURE_BUDGET)} text-left !px-3 !py-2`}>
+                      <span className="block text-[13px] font-medium">Not sure yet</span>
                       <span aria-hidden="true" className={`block text-[11px] ${form.budget === NOT_SURE_BUDGET ? 'text-white/80' : 'text-[#6B5E4E]'}`}>Help me plan</span>
                     </button>
                   </div>
@@ -543,12 +540,9 @@ export default function StartProject({ setPage }: Props) {
                   <ErrorText id="timeline-error">{errors.timeline}</ErrorText>
                 </fieldset>
               </section>
-            </div>
-          </div>
 
-          {/* Optional extras, collapsed so they never add scroll */}
-          <details className="mt-6 border border-[#D4CBBB] group">
-            <summary className="min-h-[48px] flex items-center justify-between gap-3 px-4 py-3 cursor-pointer text-[13px] text-[#1C3A5A] list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50">
+          <details className="border border-[#D4CBBB] group">
+            <summary className="min-h-[42px] flex items-center justify-between gap-3 px-3 py-2 cursor-pointer text-[13px] text-[#1C3A5A] list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D8C7E]/50">
               <span>Add design style or notes <span className="text-[#6B5E4E]">(optional)</span></span>
               <span aria-hidden="true" className="text-[#6B5E4E] transition-transform group-open:rotate-45 text-lg leading-none">+</span>
             </summary>
@@ -568,31 +562,48 @@ export default function StartProject({ setPage }: Props) {
             </div>
           </details>
 
-          {/* Submit bar */}
-          <div className="mt-6 pt-5 border-t border-[#D4CBBB] flex flex-wrap items-center justify-between gap-4">
-            <p className="text-[13px] text-[#4F4436] min-w-0">
-              {[form.projectType, showConfig ? form.configuration : '', form.budget, form.timeline].filter(Boolean).join(' · ') || 'Your brief will appear here as you fill it in.'}
-            </p>
-            <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'full'} className="min-h-[52px] w-full sm:w-auto bg-[#1C3A5A] text-white text-[14px] px-10 py-4 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
-              {isSubmitting === 'full' ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
-            </button>
-          </div>
-          <div role="alert" aria-live="assertive">
-            {attempted && hasFieldErrors && (
-              <p className="mt-3 text-right text-[12px] text-[#B64B42]">Please correct the highlighted fields before submitting your brief.</p>
-            )}
-            {submissionError && (
-              <div className="mt-3 text-right">
-                <p className="text-[12px] text-[#B64B42]">{submissionError}</p>
-                <a href={whatsappFallback} target="_blank" rel="noopener noreferrer" className="inline-flex mt-2 bg-[#2D8C7E] text-white px-4 py-2.5 text-[12px] hover:bg-[#1C3A5A] transition-colors">Send Brief on WhatsApp</a>
+            </div>
+
+            {/* Live summary + submit */}
+            <aside className="lg:sticky lg:top-28">
+              <div className="border border-[#D4CBBB] bg-[#EAE4DA] p-5">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[#6B5E4E] mb-3">Your brief</p>
+                <dl className="grid gap-2.5 text-[13px]">
+                  {[
+                    ['Home', [form.projectType, showConfig ? form.configuration : ''].filter(Boolean).join(' · ')],
+                    ['Budget', form.budget ? `${form.budget}${selectedTier?.tier ? ` (${selectedTier.tier})` : ''}` : ''],
+                    ['Start', form.timeline],
+                    ['Where', [form.society, form.city].filter(Boolean).join(', ')],
+                    ['Style', form.style],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex justify-between gap-4 border-b border-[#D4CBBB] pb-2 last:border-b-0">
+                      <dt className="text-[#6B5E4E]">{k}</dt>
+                      <dd className={`text-right ${v ? 'text-[#1A1714]' : 'text-[#6B5E4E]/70'}`}>{v || '—'}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <button type="submit" disabled={isSubmitting !== null} aria-busy={isSubmitting === 'full'} className="mt-5 w-full min-h-[48px] bg-[#1C3A5A] text-white text-[14px] py-3 hover:bg-[#17665B] disabled:opacity-60 transition-colors font-medium">
+                  {isSubmitting === 'full' ? 'Submitting Your Brief…' : 'Submit Your Brief →'}
+                </button>
+                <div role="alert" aria-live="assertive">
+                  {attempted && hasFieldErrors && (
+                    <p className="mt-3 text-center text-[12px] text-[#B64B42]">Please correct the highlighted fields before submitting your brief.</p>
+                  )}
+                  {submissionError && (
+                    <div className="mt-3 text-center">
+                      <p className="text-[12px] text-[#B64B42]">{submissionError}</p>
+                      <a href={whatsappFallback} target="_blank" rel="noopener noreferrer" className="inline-flex mt-2 bg-[#2D8C7E] text-white px-4 py-2.5 text-[12px] hover:bg-[#1C3A5A] transition-colors">Send Brief on WhatsApp</a>
+                    </div>
+                  )}
+                </div>
+                <p className="text-[12px] text-[#6B5E4E] text-center mt-3 leading-relaxed">
+                  We respond within 24 hours. Or{' '}
+                  <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-[#17665B] underline">WhatsApp us directly</a>{' '}
+                  for a faster reply.
+                </p>
               </div>
-            )}
+            </aside>
           </div>
-          <p className="text-[12px] text-[#6B5E4E] mt-3 sm:text-right">
-            We respond within 24 hours. Or{' '}
-            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="text-[#17665B] underline">WhatsApp us directly</a>{' '}
-            for a faster reply.
-          </p>
         </form>
 
         {/* Qualitative credibility — no fake numbers */}
