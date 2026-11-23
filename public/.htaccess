@@ -115,12 +115,14 @@
   RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
   # Apex, missing trailing slash -> https + slash in ONE hop. Static files (anything with a
-  # file extension: .js .css .png .webp .svg .woff2 .xml .json ...) are left alone.
+  # file extension: .js .css .png .webp .svg .woff2 .xml .json ...) are left alone. Only real
+  # route folders (plus /admin and journal article slugs) are redirected; unknown paths fall
+  # through to the real 404 below instead of being redirected first.
   RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_URI} !/$
   RewriteCond %{REQUEST_URI} !\.[^/]+$
   RewriteCond %{REQUEST_FILENAME} -d [OR]
-  RewriteCond %{REQUEST_URI} ^/admin$
+  RewriteCond %{REQUEST_URI} ^/(admin|journal/[^/]+)$
   RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
 
   # Markdown for agents: a prerendered route requested with "Accept: text/markdown" is answered
@@ -137,12 +139,15 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # The admin console is the only client-rendered route without a prerendered folder.
+  # Client-rendered routes without a prerendered folder: the admin console, and journal articles
+  # published from the admin after the last build (Journal.tsx loads those from Supabase; the app
+  # marks unknown article slugs noindex itself).
   RewriteRule ^admin/?$ /index.html [L]
+  RewriteRule ^journal/[^/]+/$ /index.html [L]
 
   # Everything else that does not exist is a real HTTP 404 (served with 404.html), so agents and
-  # crawlers never see "200 OK" for a missing page. Every public route is prerendered at build
-  # time, so no other path needs the SPA shell.
+  # crawlers never see "200 OK" for a missing page. Every other public route is prerendered at
+  # build time, so no other path needs the SPA shell.
   RewriteRule ^ - [R=404,L]
 </IfModule>
 
