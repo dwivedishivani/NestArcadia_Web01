@@ -91,38 +91,68 @@
     <meta name="twitter:image:alt" content="NestArcadia heritage-inspired modern interior design" />
     <script id="nestarcadia-schema" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["LocalBusiness","ProfessionalService"],"@id":"https://nestarcadia.com/#business","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida"],"url":"https://nestarcadia.com/","telephone":"+918448061997","priceRange":"₹₹–₹₹₹","openingHours":["Mo-Sa 10:00-19:00"],"contactPoint":{"@type":"ContactPoint","telephone":"+918448061997","contactType":"customer service","areaServed":"IN","email":"info@nestarcadia.com"},"description":"Heritage-inspired interior design for homes and businesses in Greater Noida West, Noida Extension, Noida and nearby NCR locations.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Interior Design Services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Interior Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Turnkey Interior Execution"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Custom Furniture Design"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Commercial Office Interior Design"}}]},"areaServed":["Greater Noida West","Noida Extension","Greater Noida","Noida"],"sameAs":["https://www.instagram.com/nestarcadia/","https://www.facebook.com/people/Nest-Arcadia/61577890484320/","https://www.linkedin.com/company/nest-arcadia","https://www.youtube.com/@NestArcadiaOfficial"],"email":"info@nestarcadia.com","address":{"@type":"PostalAddress","streetAddress":"G-59, Fusion Ufairia Mall, Sector 16B","addressLocality":"Greater Noida West","addressRegion":"Uttar Pradesh","postalCode":"201310","addressCountry":"IN"}},{"@type":"WebSite","@id":"https://nestarcadia.com/#website","name":"NestArcadia","alternateName":["Nest Arcadia","Nest Arcadia Interiors","Nest Arcadia Noida","Nest Arcadia Greater Noida"],"url":"https://nestarcadia.com/","publisher":{"@id":"https://nestarcadia.com/#business"}}]}</script>
     <!-- figma:head-end -->
-    <!-- WebMCP: register agent-callable tools for AI assistants that support navigator.modelContext -->
+    <!-- WebMCP: tools for in-browser agents (navigator.modelContext / document.modelContext) -->
     <script>
       (function () {
-        if (typeof navigator === 'undefined' || !navigator.modelContext || typeof navigator.modelContext.registerTool !== 'function') return;
-        try {
-          navigator.modelContext.registerTool({
-            name: 'get_interior_cost_noida',
-            description: 'Returns interior design cost ranges for 2BHK, 3BHK and 4BHK flats in Noida and NCR.',
-            parameters: {},
-            handler: function () {
-              return { url: 'https://nestarcadia.com/interior-design-cost-noida/', data: { '2bhk': '₹6.5–7L', '3bhk': '₹9–10L', '4bhk_villa': '₹14–17L+' } };
-            }
-          });
-          navigator.modelContext.registerTool({
-            name: 'get_service_areas',
-            description: 'Returns the list of locations served by NestArcadia for interior design projects.',
-            parameters: {},
-            handler: function () {
-              return { areas: ['Greater Noida West', 'Noida Extension', 'Noida', 'Greater Noida', 'Ghaziabad', 'Delhi NCR'] };
-            }
-          });
-          navigator.modelContext.registerTool({
-            name: 'start_project_enquiry',
-            description: 'Returns the URL for starting an interior design project enquiry with NestArcadia.',
-            parameters: {},
-            handler: function () {
-              return { url: 'https://nestarcadia.com/start-your-project/' };
-            }
-          });
-        } catch (e) {
-          // WebMCP not supported — fail silently
+        var mc = (typeof document !== 'undefined' && document.modelContext) || (typeof navigator !== 'undefined' && navigator.modelContext);
+        if (!mc || typeof mc.registerTool !== 'function') return;
+        var SITE = 'https://nestarcadia.com';
+        var COSTS = {
+          '2bhk': { range: '₹5–12 lakh', note: 'Depends on scope, materials and finish level.' },
+          '3bhk': { range: '₹7–22 lakh', note: 'Depends on scope, materials and finish level.' },
+          '4bhk': { range: 'Quoted after a brief', note: 'Larger homes and villas are priced from the floor plan and specification.' }
+        };
+        var AREAS = ['Greater Noida West', 'Noida Extension', 'Noida', 'Greater Noida', 'Ghaziabad', 'Indirapuram', 'Crossing Republik', 'East Delhi', 'Delhi', 'South Delhi', 'Gurugram', 'Faridabad', 'Dadri', 'Jewar', 'Yamuna Expressway'];
+        function reply(data) {
+          return { content: [{ type: 'text', text: JSON.stringify(data) }] };
         }
+        var tools = [
+          {
+            name: 'get_interior_cost_noida',
+            description: 'Returns indicative full-interior budget ranges in INR for 2BHK and 3BHK homes in Noida, Greater Noida and NCR. NestArcadia projects do not start below ₹5 lakh.',
+            inputSchema: {
+              type: 'object',
+              properties: { bhk: { type: 'string', enum: ['2bhk', '3bhk', '4bhk'], description: 'Optional home size. Omit to get all sizes.' } },
+              additionalProperties: false
+            },
+            annotations: { readOnlyHint: true },
+            execute: function (input) {
+              var key = input && typeof input.bhk === 'string' ? input.bhk.toLowerCase().replace(/\s+/g, '') : '';
+              if (key && !COSTS[key]) return reply({ error: 'Unknown bhk. Use 2bhk, 3bhk or 4bhk.' });
+              var ranges = {};
+              if (key) { ranges[key] = COSTS[key]; } else { ranges = COSTS; }
+              return reply({ currency: 'INR', minimum_project_budget: '₹5 lakh', indicative: true, ranges: ranges, source: SITE + '/interior-design-cost-noida/' });
+            }
+          },
+          {
+            name: 'get_service_areas',
+            description: 'Returns the cities and localities where NestArcadia takes interior design projects, primary focus areas first.',
+            inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+            annotations: { readOnlyHint: true },
+            execute: function () {
+              return reply({ primary: ['Greater Noida West', 'Noida Extension'], areas: AREAS, source: SITE + '/interior-design-delhi-ncr/' });
+            }
+          },
+          {
+            name: 'start_project_enquiry',
+            description: 'Returns the link and contact details for starting an interior design enquiry with NestArcadia. It does not submit anything; set open to true to take the visitor to the enquiry form.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                open: { type: 'boolean', description: 'When true, navigates this tab to the enquiry form.' }
+              },
+              additionalProperties: false
+            },
+            execute: function (input) {
+              var url = SITE + '/start-your-project/';
+              if (input && input.open === true) { window.location.assign('/start-your-project/'); }
+              return reply({ url: url, phone: '+91 84480 61997', whatsapp: 'https://wa.me/918448061997', email: 'info@nestarcadia.com', submitted: false });
+            }
+          }
+        ];
+        tools.forEach(function (tool) {
+          try { mc.registerTool(tool); } catch (e) { /* already registered or unsupported */ }
+        });
       })();
     </script>
   <style>

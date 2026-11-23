@@ -53,6 +53,15 @@
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
+  # Markdown representations: correct type, keep them out of search indexes, vary on Accept
+  <FilesMatch "\.md$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set X-Robots-Tag "noindex, follow"
+    Header append Vary Accept
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header append Vary Accept
+  </FilesMatch>
   # Well-known files — short cache
   <FilesMatch "(robots\.txt|sitemap\.xml|llms\.txt|site\.webmanifest)$">
     Header set Cache-Control "public, max-age=86400"
@@ -64,6 +73,16 @@
   # Content-Type for llms.txt served as markdown
   <FilesMatch "llms\.txt$">
     Header set Content-Type "text/markdown; charset=UTF-8"
+  </FilesMatch>
+
+  # robots.txt must be plain text (the global .txt mapping above is for llms.txt)
+  <FilesMatch "^robots\.txt$">
+    Header set Content-Type "text/plain; charset=UTF-8"
+  </FilesMatch>
+
+  # The 404 page is never indexable
+  <FilesMatch "^404\.html$">
+    Header set X-Robots-Tag "noindex, nofollow"
   </FilesMatch>
 
   # Proper JSON content-type for well-known JSON files
@@ -96,23 +115,46 @@
   RewriteRule ^(.*)$ https://nestarcadia.com/$1 [R=301,L]
 
   # Apex, missing trailing slash -> https + slash in ONE hop. Static files (anything with a
-  # file extension: .js .css .png .webp .svg .woff2 .xml .json ...) are left alone.
+  # file extension: .js .css .png .webp .svg .woff2 .xml .json ...) are left alone. Only real
+  # route folders (plus /admin and journal article slugs) are redirected; unknown paths fall
+  # through to the real 404 below instead of being redirected first.
   RewriteCond %{HTTP_HOST} ^nestarcadia\.com$ [NC]
   RewriteCond %{REQUEST_URI} !/$
   RewriteCond %{REQUEST_URI} !\.[^/]+$
+  RewriteCond %{REQUEST_FILENAME} -d [OR]
+  RewriteCond %{REQUEST_URI} ^/(admin|journal/[^/]+)$
   RewriteRule ^(.+)$ https://nestarcadia.com/$1/ [R=301,L]
+
+  # Markdown for agents: a prerendered route requested with "Accept: text/markdown" is answered
+  # from its generated index.md (see scripts/generate-agent-assets.mjs). Responses carry
+  # "Vary: Accept" so caches keep the HTML and Markdown variants apart.
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteCond %{HTTP_ACCEPT} text/markdown [NC]
+  RewriteCond %{REQUEST_URI} /$
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}index.md -f
+  RewriteRule ^ %{REQUEST_URI}index.md [L]
+
+  # The SSH deploy never uploads .well-known (Hostinger manages that folder), so the agent-discovery
+  # documents are published as regular files under /agent-discovery/ and served at their
+  # well-known URLs from there (copied by scripts/generate-agent-assets.mjs).
+  RewriteRule ^\.well-known/mcp/server-card\.json$ /agent-discovery/mcp-server-card.json [L]
+  RewriteRule ^\.well-known/ai-catalog\.json$ /agent-discovery/ai-catalog.json [L]
 
   # Serve real files and directories (prerendered route folders) as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Missing files that have an extension (.js .css .png ...) are real 404s, not the app shell
-  RewriteCond %{REQUEST_URI} \.[a-zA-Z0-9]+$
-  RewriteRule ^ - [R=404,L]
+  # Client-rendered routes without a prerendered folder: the admin console, and journal articles
+  # published from the admin after the last build (Journal.tsx loads those from Supabase; the app
+  # marks unknown article slugs noindex itself).
+  RewriteRule ^admin/?$ /index.html [L]
+  RewriteRule ^journal/[^/]+/$ /index.html [L]
 
-  # SPA fallback for client-side routes
-  RewriteRule ^ /index.html [L]
+  # Everything else that does not exist is a real HTTP 404 (served with 404.html), so agents and
+  # crawlers never see "200 OK" for a missing page. Every other public route is prerendered at
+  # build time, so no other path needs the SPA shell.
+  RewriteRule ^ - [R=404,L]
 </IfModule>
 
 # Canonical URLs are emitted in the prerendered HTML of every route
@@ -123,4 +165,4 @@
 # values for /journal/<article>/.
 
 # ----- Real 404 for truly missing paths -----
-ErrorDocument 404 /index.html
+ErrorDocument 404 /404.html

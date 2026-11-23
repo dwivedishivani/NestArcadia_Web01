@@ -39,6 +39,8 @@ const pagePaths: Record<Page, string> = {
   project: '/start-your-project/',
   faq: '/faqs/',
   privacy: '/privacy-policy/',
+  terms: '/terms/',
+  contact: '/contact/',
   admin: '/admin/',
 };
 
@@ -163,12 +165,13 @@ export default function Footer({}: FooterProps) {
 
         <div className="mt-8 pt-6 border-t border-[#D4CBBB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-[12px] text-[#6B5E4E]">&copy; {currentYear} NestArcadia. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
+          <nav aria-label="About, contact and legal" className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link to="/our-story/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">About Us</Link>
-            <Link to="/start-your-project/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Contact</Link>
+            <Link to="/contact/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Contact</Link>
+            <Link to="/terms/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Terms of Use</Link>
+            <Link to="/privacy-policy/" className="text-[12px] text-[#6B5E4E] hover:text-[#17665B] transition-colors">Privacy Policy</Link>
             <span className="text-[12px] text-[#6B5E4E]">Crafted with care.</span>
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

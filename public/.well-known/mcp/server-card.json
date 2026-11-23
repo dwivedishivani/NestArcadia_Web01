@@ -1,46 +1,48 @@
 {
-  "schema_version": "1.0",
-  "name": "NestArcadia",
-  "description": "Interior design studio for homes and businesses across Noida, Greater Noida West, Noida Extension and NCR. Specialising in 2BHK, 3BHK and villa turnkey execution with heritage-inspired modern aesthetics.",
-  "url": "https://nestarcadia.com/",
-  "contact_email": "info@nestarcadia.com",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "com.nestarcadia/website",
   "version": "1.0.0",
-  "capabilities": [
+  "title": "NestArcadia",
+  "description": "Public, read-only information about NestArcadia, an interior design and turnkey execution studio in Noida Extension, Greater Noida West and Delhi NCR: indicative costs, service areas and how to start an enquiry.",
+  "websiteUrl": "https://nestarcadia.com/",
+  "remotes": [
     {
-      "id": "get_service_info",
-      "name": "Get service information",
-      "description": "Returns details about interior design services, pricing ranges, and service areas covered by NestArcadia.",
-      "endpoint": "https://nestarcadia.com/interior-design-services/"
-    },
-    {
-      "id": "get_cost_estimates",
-      "name": "Get interior design cost estimates",
-      "description": "Returns 2BHK, 3BHK and 4BHK interior design cost ranges for Noida and NCR. 2BHK: ₹6.5–7L, 3BHK: ₹9–10L, 4BHK/villa: ₹14–17L+",
-      "endpoint": "https://nestarcadia.com/interior-design-cost-noida/"
-    },
-    {
-      "id": "start_project",
-      "name": "Start a project enquiry",
-      "description": "Allows users to submit their interior design project brief and get a callback from NestArcadia.",
-      "endpoint": "https://nestarcadia.com/start-your-project/"
-    },
-    {
-      "id": "browse_journal",
-      "name": "Browse design journal",
-      "description": "Returns a list of published articles on interior design, materials, cost guides and design trends for Indian homes.",
-      "endpoint": "https://nestarcadia.com/journal/"
+      "type": "streamable-http",
+      "url": "https://etmrhxapfvyaispuvnft.supabase.co/functions/v1/nestarcadia-mcp"
     }
   ],
-  "publisher_guide": "https://nestarcadia.com/llms.txt",
-  "sitemap": "https://nestarcadia.com/sitemap.xml",
-  "schema_org_id": "https://nestarcadia.com/#business",
-  "locale": "en-IN",
-  "service_area": [
-    "Greater Noida West",
-    "Noida Extension",
-    "Noida",
-    "Greater Noida",
-    "Ghaziabad",
-    "Delhi NCR"
-  ]
+  "supportedProtocolVersions": [
+    "2025-11-25",
+    "2025-06-18",
+    "2025-03-26"
+  ],
+  "serverInfo": {
+    "name": "nestarcadia",
+    "title": "NestArcadia",
+    "version": "1.0.0"
+  },
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "https://etmrhxapfvyaispuvnft.supabase.co/functions/v1/nestarcadia-mcp"
+  },
+  "endpoint": "https://etmrhxapfvyaispuvnft.supabase.co/functions/v1/nestarcadia-mcp",
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    }
+  },
+  "_meta": {
+    "com.nestarcadia/site": {
+      "tools": [
+        "get_interior_cost_noida",
+        "get_service_areas",
+        "start_project_enquiry"
+      ],
+      "contact_email": "info@nestarcadia.com",
+      "publisher_guide": "https://nestarcadia.com/llms.txt",
+      "sitemap": "https://nestarcadia.com/sitemap.xml",
+      "schema_org_id": "https://nestarcadia.com/#business",
+      "locale": "en-IN"
+    }
+  }
 }

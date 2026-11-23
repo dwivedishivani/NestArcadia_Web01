@@ -15,6 +15,8 @@ import { projectId, publicAnonKey } from '../utils/supabase/info';
 import type { LocalServiceConfig } from './pages/LocalService/LocalServicePage';
 import { localServicePaths } from './pages/LocalService/localServicePaths';
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
+const Terms = lazy(() => import('./pages/Terms/Terms'));
+const Contact = lazy(() => import('./pages/Contact/Contact'));
 import { resolveSiteImageReference, setSiteImageOverrides } from './utils/siteImages';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
@@ -25,7 +27,7 @@ const Homes = lazy(() => import('./pages/Homes/Homes'));
 const StartProject = lazy(() => import('./pages/StartProject/StartProject'));
 const FAQs = lazy(() => import('./pages/FAQs/FAQs'));
 
-export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'privacy' | 'admin';
+export type Page = 'home' | 'cultures' | 'services' | 'story' | 'journal' | 'homes' | 'project' | 'faq' | 'privacy' | 'terms' | 'contact' | 'admin';
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/bright-api/make-server-078be9eb`;
 
@@ -84,6 +86,8 @@ const pagePaths: Record<Page, string> = {
   project: '/start-your-project/',
   faq: '/faqs/',
   privacy: '/privacy-policy/',
+  terms: '/terms/',
+  contact: '/contact/',
   admin: '/admin/',
 };
 
@@ -103,6 +107,8 @@ const pageMeta: Record<Page, { title: string; description: string }> = {
     description: '2BHK interior from ₹6.5L, 3BHK from ₹9L in Noida & Greater Noida West. Plain answers on cost, timeline, turnkey execution, modular kitchens and Vastu — no jargon.',
   },
   privacy: { title: 'Privacy Policy | NestArcadia', description: 'NestArcadia privacy policy covering website data, analytics, advertising, enquiries, cookies and third-party services.' },
+  terms: { title: 'Terms of Use | NestArcadia', description: 'Terms of use for nestarcadia.com: website content, project enquiries, estimates, third-party links and how NestArcadia engagements are agreed in writing.' },
+  contact: { title: 'Contact NestArcadia | Interior Designers in Greater Noida West', description: 'Call, WhatsApp or email NestArcadia, or visit the studio at Fusion Ufairia Mall, Sector 16B, Greater Noida West. Share your project brief for a callback.' },
   admin: { title: 'Admin Dashboard', description: 'NestArcadia admin dashboard for managing content and enquiries.' },
 };
 
@@ -122,6 +128,8 @@ function pageFromPath(pathname: string): Page {
   if (path === '/start-your-project') return 'project';
   if (path === '/faqs') return 'faq';
   if (path === '/privacy-policy') return 'privacy';
+  if (path === '/terms') return 'terms';
+  if (path === '/contact') return 'contact';
   return 'home';
 }
 
@@ -137,6 +145,8 @@ function isKnownPath(pathname: string) {
   if (path === '/start-your-project') return true;
   if (path === '/faqs') return true;
   if (path === '/privacy-policy') return true;
+  if (path === '/terms') return true;
+  if (path === '/contact') return true;
   return localServicePaths.some((servicePath) => servicePath === path);
 }
 
@@ -728,8 +738,10 @@ function SiteShell() {
           {page === 'project' && <StartProject setPage={setPage} />}
           {page === 'faq' && <FAQs setPage={setPage} />}
           {page === 'privacy' && <PrivacyPolicy />}
+          {page === 'terms' && <Terms />}
+          {page === 'contact' && <Contact />}
         </Suspense>
-        {!localService && page !== 'privacy' && (
+        {!localService && page !== 'privacy' && page !== 'terms' && page !== 'contact' && (
           <Suspense fallback={null}>
             <EditorialContext page={page} />
           </Suspense>

@@ -1,6 +1,6 @@
 import type { Page } from '../../App';
 
-const content: Record<Page, { title: string; label: string; paragraphs: string[] }> = {
+const content: Partial<Record<Page, { title: string; label: string; paragraphs: string[] }>> = {
   home: {
     label: 'The NestArcadia approach',
     title: 'Indian interior design that begins with the way you live',
@@ -77,6 +77,7 @@ const content: Record<Page, { title: string; label: string; paragraphs: string[]
 
 export default function EditorialContext({ page }: { page: Page }) {
   const item = content[page];
+  if (!item) return null;
   return (
     <section className="max-w-[1440px] mx-auto px-6 lg:px-20 pb-20" aria-labelledby={`editorial-${page}`}>
       <details className="group border-t border-[#B8D8D1] pt-6">

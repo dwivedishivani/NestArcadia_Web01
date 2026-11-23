@@ -28,6 +28,8 @@ export default function Nav({ page, forceSolid = false }: NavProps) {
     project: '/start-your-project/',
     faq: '/faqs/',
     privacy: '/privacy-policy/',
+    terms: '/terms/',
+    contact: '/contact/',
     admin: '/admin/',
   };
   const [scrolled, setScrolled] = useState(false);
