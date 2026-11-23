@@ -134,6 +134,12 @@
   RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}index.md -f
   RewriteRule ^ %{REQUEST_URI}index.md [L]
 
+  # The SSH deploy never uploads .well-known (Hostinger manages that folder), so the agent-discovery
+  # documents are published as regular files under /agent-discovery/ and served at their
+  # well-known URLs from there (copied by scripts/generate-agent-assets.mjs).
+  RewriteRule ^\.well-known/mcp/server-card\.json$ /agent-discovery/mcp-server-card.json [L]
+  RewriteRule ^\.well-known/ai-catalog\.json$ /agent-discovery/ai-catalog.json [L]
+
   # Serve real files and directories (prerendered route folders) as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
