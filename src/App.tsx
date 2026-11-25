@@ -615,7 +615,7 @@ function ConsentManager() {
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#17665B]">Privacy choices</p>
             <h2 className="font-display text-xl text-[#1C3A5A] sm:text-2xl">A little control stays with you.</h2>
             <p className="mt-2 text-sm leading-6 text-[#52677E]">
-              NestArcadia uses Google Analytics and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
+              NestArcadia uses Google Analytics, Mixpanel and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
             </p>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:min-w-[220px]">
@@ -627,7 +627,7 @@ function ConsentManager() {
         {settingsOpen && (
           <div className="mt-5 grid gap-3 border-t border-[#D4CBBB] pt-5 text-xs leading-5 text-[#52677E] sm:grid-cols-2">
             <div><strong className="text-[#1C3A5A]">Essential:</strong> required for the website to function and cannot be switched off here.</div>
-            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics helps us understand visits, engagement and page performance.</div>
+            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics and Mixpanel help us understand visits, engagement, page performance and enquiry journeys.</div>
             <div><strong className="text-[#1C3A5A]">Advertising:</strong> Google Ads measurement helps us understand campaign performance and enquiries.</div>
             <div><strong className="text-[#1C3A5A]">Your choice:</strong> you can reopen Privacy choices at any time from the button at the bottom-left.</div>
           </div>
