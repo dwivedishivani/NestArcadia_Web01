@@ -21,6 +21,7 @@ const sections = [
     title: '3. Services and third parties',
     body: [
       'Google Analytics: NestArcadia uses Google Analytics 4 to understand website traffic, engagement and page performance. Analytics storage is initially denied and is enabled only according to your consent choice.',
+      'Mixpanel: NestArcadia uses Mixpanel to understand consent-approved website journeys, service interest and enquiry conversion. Mixpanel tracking is disabled unless you allow analytics in Privacy Choices; events are sent to the Mixpanel EU data endpoint. We do not send names, email addresses, phone numbers or free-text enquiry messages to Mixpanel.',
       'Google Tag Manager and Google Ads: the website uses Google Tag Manager to manage measurement tags and Google Ads measurement to understand advertising performance and enquiries. Advertising-related storage and signals are controlled through Google Consent Mode.',
       'Supabase: NestArcadia uses Supabase for website data infrastructure, including enquiry records, published content and website media. Information submitted through the project form is transmitted to our Supabase-hosted backend/database so we can process the enquiry.',
       'Google Fonts: the website loads Playfair Display and DM Sans from Google Fonts. Your browser may connect to Google infrastructure to retrieve these font files.',
