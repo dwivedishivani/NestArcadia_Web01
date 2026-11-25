@@ -2,7 +2,7 @@
 
 ## Configuration
 
-Set `VITE_MIXPANEL_TOKEN` in the build environment (Hostinger build environment or the deployment workflow secret). Do not commit the project token. The website sends browser events to the Mixpanel EU ingestion endpoint:
+Set `VITE_MIXPANEL_TOKEN` as a GitHub Actions repository secret at **Settings → Secrets and variables → Actions → New repository secret**. Use the exact secret name `VITE_MIXPANEL_TOKEN`. The build and Hostinger deployment workflows pass it into Vite at build time. Do not commit the project token. The website sends browser events to the Mixpanel EU ingestion endpoint:
 
 - SDK: `https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js`
 - API host: `https://api-eu.mixpanel.com`
