@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import type { Page } from '../../App';
+import { appendAttributionToSource, trackAnalyticsEvent } from '../../lib/analytics';
 import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 import {
   BHK_OPTIONS,
@@ -112,6 +113,7 @@ async function submitLead(payload: LeadPayload): Promise<void> {
 
 function trackLead(source: string, kind: 'quick' | 'full', extra: Record<string, string> = {}) {
   // One business-level event, only after the backend confirmed the enquiry.
+  trackAnalyticsEvent('lead_submit', { lead_type: kind, ...extra });
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event: 'lead_submit', lead_source: source, lead_type: kind, page_path: window.location.pathname, ...extra });
   const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
@@ -245,6 +247,7 @@ export default function StartProject({ setPage }: Props) {
     if (!isValidIndianMobile(quick.phone)) errs.phone = 'Enter a valid 10-digit mobile number.';
     setQuickErrors(errs);
     if (errs.name || errs.phone) {
+      trackAnalyticsEvent('form_error', { form_type: 'quick', error_type: 'validation', invalid_fields: Object.keys(errs) });
       setQuickError('');
       focusField(errs.name ? 'quickName' : 'quickPhone');
       return;
@@ -252,7 +255,7 @@ export default function StartProject({ setPage }: Props) {
     setIsSubmitting('quick');
     setQuickError('');
     try {
-      const source = buildSource({ quick: true, service: serviceInterest, from: fromGuide });
+      const source = appendAttributionToSource(buildSource({ quick: true, service: serviceInterest, from: fromGuide }));
       const context = [serviceInterest && `Interested in: ${serviceInterest}`, fromGuide && `Came from guide: ${fromGuide}`, form.configuration && `Home size: ${form.configuration}`].filter(Boolean).join('\n');
       await submitLead({
         id: crypto.randomUUID(),
@@ -268,10 +271,11 @@ export default function StartProject({ setPage }: Props) {
         message: ['Quick callback request.', context].filter(Boolean).join('\n'),
         source,
       });
-      trackLead(source, 'quick');
+      trackLead(source, 'quick', { ...(serviceInterest ? { service_interest: serviceInterest } : {}), ...(form.configuration ? { configuration: form.configuration } : {}) });
       setForm((f) => ({ ...f, name: quick.name.trim() }));
       setSubmittedKind('quick');
     } catch (error) {
+      trackAnalyticsEvent('form_submit_failed', { form_type: 'quick', failure_type: 'backend' });
       setQuickError(error instanceof Error ? error.message : 'We could not submit your request right now.');
     } finally {
       setIsSubmitting(null);
@@ -288,6 +292,7 @@ export default function StartProject({ setPage }: Props) {
     setAttempted(true);
     const firstInvalid = (['name', 'email', 'phone', 'city', 'projectType', 'configuration', 'budget', 'timeline'] as FormField[]).find((k) => validationErrors[k]);
     if (firstInvalid) {
+      trackAnalyticsEvent('form_error', { form_type: 'full', error_type: 'validation', invalid_fields: Object.keys(validationErrors) });
       setSubmissionError('');
       focusField(firstInvalid);
       return;
@@ -296,7 +301,7 @@ export default function StartProject({ setPage }: Props) {
     setIsSubmitting('full');
     setSubmissionError('');
     try {
-      const source = buildSource({ service: serviceInterest, from: fromGuide });
+      const source = appendAttributionToSource(buildSource({ service: serviceInterest, from: fromGuide }));
       const configuration = showConfig ? form.configuration : '';
       await submitLead({
         id: crypto.randomUUID(),
@@ -312,9 +317,10 @@ export default function StartProject({ setPage }: Props) {
         message: withSociety(form.message, form.society),
         source,
       });
-      trackLead(source, 'full', { configuration, budget: form.budget });
+      trackLead(source, 'full', { configuration, budget: form.budget, ...(serviceInterest ? { service_interest: serviceInterest } : {}) });
       setSubmittedKind('full');
     } catch (error) {
+      trackAnalyticsEvent('form_submit_failed', { form_type: 'full', failure_type: 'backend' });
       setSubmissionError(error instanceof Error ? error.message : 'We could not submit your brief right now.');
     } finally {
       setIsSubmitting(null);
@@ -388,7 +394,7 @@ export default function StartProject({ setPage }: Props) {
                 Share your name and number. We will call you back, no long form needed. You can add the full brief later.
               </p>
             </div>
-            <form onSubmit={handleQuickSubmit} noValidate className="relative">
+            <form onSubmit={handleQuickSubmit} noValidate data-analytics-form="quick" className="relative">
               <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
                 <label htmlFor="website-quick">Website</label>
                 <input id="website-quick" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
@@ -431,7 +437,7 @@ export default function StartProject({ setPage }: Props) {
           <span className="h-px flex-1 bg-[#D4CBBB]" />
         </div>
 
-        <form onSubmit={handleSubmit} noValidate className="relative">
+        <form onSubmit={handleSubmit} noValidate data-analytics-form="full" className="relative">
           <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
             <label htmlFor="website">Website</label>
             <input id="website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
