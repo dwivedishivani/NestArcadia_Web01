@@ -103,7 +103,7 @@ export function captureAttribution(): Attribution {
 export function getLeadAttribution(): Attribution {
   if (hasAnalyticsConsent()) return captureAttribution();
   const params = new URLSearchParams(window.location.search);
-  const current: Attribution = { last_touch_landing_page: window.location.pathname.slice(0, 300) };
+  const current: Attribution = {};
   for (const key of UTM_KEYS) {
     const value = clean(params.get(key), 120);
     if (value) current[`last_touch_${key}` as keyof Attribution] = value;
