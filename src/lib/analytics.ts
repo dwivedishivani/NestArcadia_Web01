@@ -106,7 +106,7 @@ export function getLeadAttribution(): Attribution {
   const current: Attribution = { last_touch_landing_page: window.location.pathname.slice(0, 300) };
   for (const key of UTM_KEYS) {
     const value = clean(params.get(key), 120);
-    if (value) current[`last_touch_${key}`] = value;
+    if (value) current[`last_touch_${key}` as keyof Attribution] = value;
   }
   return current;
 }
@@ -136,6 +136,20 @@ export function initializeAnalytics(): void {
     return;
   }
   if (window.__nestArcadiaMixpanelLoading) return;
+
+  // The SDK may have finished downloading while consent was denied. Initialise
+  // it now if the visitor later opts in, rather than leaving the existing script idle.
+  if (window.mixpanel && !window.__nestArcadiaMixpanelInitialized) {
+    window.mixpanel.init(MIXPANEL_TOKEN, {
+      api_host: 'https://api-eu.mixpanel.com',
+      autocapture: false,
+      track_pageview: false,
+      persistence: 'localStorage',
+    });
+    window.__nestArcadiaMixpanelInitialized = true;
+    flushQueue();
+    return;
+  }
 
   const existingScript = document.getElementById(MIXPANEL_SCRIPT_ID) as HTMLScriptElement | null;
   if (existingScript) return;
