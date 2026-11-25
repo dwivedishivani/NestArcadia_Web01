@@ -120,11 +120,25 @@ export function appendAttributionToSource(source: string): string {
 }
 
 function flushQueue() {
-  const client = window.mixpanel;
-  if (!client) return;
   const queue = window.__nestArcadiaMixpanelQueue || [];
   window.__nestArcadiaMixpanelQueue = [];
-  queue.forEach(({ event, properties }) => client.track(event, properties));
+  queue.forEach(({ event, properties }) => window.mixpanel?.track(event, properties));
+}
+
+function createMixpanelStub(): MixpanelClient {
+  const stub = [] as unknown as MixpanelClient & { _i: unknown[]; push: (...args: unknown[]) => number };
+  stub._i = [];
+  stub.push = Array.prototype.push.bind(stub);
+  stub.init = (token: string, options: Record<string, unknown>) => {
+    stub._i.push([token, options, undefined]);
+  };
+  stub.track = (event: string, properties?: Record<string, unknown>) => {
+    stub.push(['track', event, properties || {}]);
+  };
+  stub.opt_in_tracking = () => { stub.push(['opt_in_tracking']); };
+  stub.opt_out_tracking = () => { stub.push(['opt_out_tracking']); };
+  window.mixpanel = stub;
+  return stub;
 }
 
 export function initializeAnalytics(): void {
@@ -154,6 +168,7 @@ export function initializeAnalytics(): void {
   const existingScript = document.getElementById(MIXPANEL_SCRIPT_ID) as HTMLScriptElement | null;
   if (existingScript) return;
 
+  const client = createMixpanelStub();
   window.__nestArcadiaMixpanelLoading = true;
   const script = document.createElement('script');
   script.id = MIXPANEL_SCRIPT_ID;
@@ -161,15 +176,13 @@ export function initializeAnalytics(): void {
   script.src = 'https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js';
   script.onload = () => {
     window.__nestArcadiaMixpanelLoading = false;
-    const client = window.mixpanel;
-    if (!client || !hasAnalyticsConsent()) return;
-    client.init(MIXPANEL_TOKEN, {
-      api_host: 'https://api-eu.mixpanel.com',
-      autocapture: false,
-      track_pageview: false,
-      persistence: 'localStorage',
-    });
+    if (!window.mixpanel) return;
     window.__nestArcadiaMixpanelInitialized = true;
+    if (!hasAnalyticsConsent()) {
+      window.mixpanel.opt_out_tracking();
+      window.__nestArcadiaMixpanelQueue = [];
+      return;
+    }
     flushQueue();
   };
   script.onerror = () => {
@@ -177,6 +190,12 @@ export function initializeAnalytics(): void {
     script.remove();
   };
   document.head.appendChild(script);
+  client.init(MIXPANEL_TOKEN, {
+    api_host: 'https://api-eu.mixpanel.com',
+    autocapture: false,
+    track_pageview: false,
+    persistence: 'localStorage',
+  });
 }
 
 export function setAnalyticsConsent(granted: boolean): void {
