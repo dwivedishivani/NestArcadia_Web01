@@ -5,6 +5,7 @@ type MixpanelClient = {
   track: (event: string, properties?: Record<string, unknown>) => void;
   opt_out_tracking: () => void;
   opt_in_tracking: () => void;
+  __SV?: number;
 };
 
 declare global {
@@ -128,6 +129,7 @@ function flushQueue() {
 function createMixpanelStub(): MixpanelClient {
   const stub = [] as unknown as MixpanelClient & { _i: unknown[]; push: (...args: unknown[]) => number };
   stub._i = [];
+  stub.__SV = 1.2;
   stub.push = Array.prototype.push.bind(stub);
   stub.init = (token: string, options: Record<string, unknown>) => {
     stub._i.push([token, options, undefined]);
