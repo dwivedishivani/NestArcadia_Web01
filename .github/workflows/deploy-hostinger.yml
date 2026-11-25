@@ -66,6 +66,8 @@ jobs:
 
       - name: Build production site
         run: pnpm build
+        env:
+          VITE_MIXPANEL_TOKEN: ${{ secrets.VITE_MIXPANEL_TOKEN }}
 
       - name: Validate production output
         run: |

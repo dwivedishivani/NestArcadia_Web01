@@ -4,6 +4,7 @@ export default function WhatsApp() {
   return (
     <a
       href={WA_URL}
+      data-analytics-placement="floating_whatsapp"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with a NestArcadia designer on WhatsApp"

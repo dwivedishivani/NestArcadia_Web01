@@ -18,6 +18,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'));
 const Terms = lazy(() => import('./pages/Terms/Terms'));
 const Contact = lazy(() => import('./pages/Contact/Contact'));
 import { resolveSiteImageReference, setSiteImageOverrides } from './utils/siteImages';
+import { installAnalyticsListeners, setAnalyticsConsent, trackAnalyticsEvent } from './lib/analytics';
 
 const DesignCultures = lazy(() => import('./pages/DesignCultures/DesignCultures'));
 const Services = lazy(() => import('./pages/Services/Services'));
@@ -396,14 +397,20 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
     if (articleReady && lastTrackedPathRef.current !== pathname) {
       lastTrackedPathRef.current = pathname;
       window.dataLayer = window.dataLayer || [];
+      const pageType = localService ? 'local_service' : page;
+      const contentGroup = localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page);
       window.dataLayer.push({
         event: 'page_view',
         page_path: pathname,
         page_location: window.location.href,
         page_title: document.title,
-        page_type: localService ? 'local_service' : page,
-        content_group: localService ? 'local_service' : (page === 'journal' && location.pathname !== '/journal' ? 'journal_article' : page),
+        page_type: pageType,
+        content_group: contentGroup,
       });
+      trackAnalyticsEvent('page_view', { page_type: pageType, content_group: contentGroup });
+      if (localService || page === 'services') {
+        trackAnalyticsEvent('service_view', { service_name: localService?.title || 'Interior Design Services', service_area: localService?.area || 'NCR' });
+      }
     }
   }, [location.pathname, page, article, articleSlug, articleMetaLoaded, localService]);
 
@@ -424,14 +431,17 @@ function SeoManager({ page, localService }: { page: Page; localService?: LocalSe
       const pathname = normalizePathname(window.location.pathname);
       lastTrackedPathRef.current = pathname;
       window.dataLayer = window.dataLayer || [];
+      const pageType = localService ? 'local_service' : page;
+      const contentGroup = localService ? 'local_service' : (page === 'journal' && pathname !== '/journal' ? 'journal_article' : page);
       window.dataLayer.push({
         event: 'page_view',
         page_path: pathname,
         page_location: window.location.href,
         page_title: document.title,
-        page_type: localService ? 'local_service' : page,
-        content_group: localService ? 'local_service' : (page === 'journal' && pathname !== '/journal' ? 'journal_article' : page),
+        page_type: pageType,
+        content_group: contentGroup,
       });
+      trackAnalyticsEvent('page_view', { page_type: pageType, content_group: contentGroup });
     };
 
     window.addEventListener('pagehide', resetRestoreGuard);
@@ -550,6 +560,8 @@ function ConsentManager() {
   const [visible, setVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  useEffect(() => installAnalyticsListeners(), []);
+
   useEffect(() => {
     const stored = localStorage.getItem('nestarcadia_consent_v2');
     if (!stored) {
@@ -564,6 +576,7 @@ function ConsentManager() {
       ad_personalization: granted ? 'granted' : 'denied',
       analytics_storage: granted ? 'granted' : 'denied',
     });
+    setAnalyticsConsent(granted);
   }, []);
 
   const saveConsent = (granted: boolean) => {
@@ -575,6 +588,11 @@ function ConsentManager() {
       ad_personalization: granted ? 'granted' : 'denied',
       analytics_storage: granted ? 'granted' : 'denied',
     });
+    setAnalyticsConsent(granted);
+    if (granted) {
+      trackAnalyticsEvent('page_view', { page_type: 'consent_granted' });
+      trackAnalyticsEvent('analytics_consent_granted', { consent_action: 'accepted' });
+    }
     setSettingsOpen(false);
     setVisible(false);
   };
@@ -600,7 +618,7 @@ function ConsentManager() {
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#17665B]">Privacy choices</p>
             <h2 className="font-display text-xl text-[#1C3A5A] sm:text-2xl">A little control stays with you.</h2>
             <p className="mt-2 text-sm leading-6 text-[#52677E]">
-              NestArcadia uses Google Analytics and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
+              NestArcadia uses Google Analytics, Mixpanel and Google Ads to understand site usage and measure enquiries. You can allow these measurement and advertising technologies or keep them disabled.
             </p>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:min-w-[220px]">
@@ -612,7 +630,7 @@ function ConsentManager() {
         {settingsOpen && (
           <div className="mt-5 grid gap-3 border-t border-[#D4CBBB] pt-5 text-xs leading-5 text-[#52677E] sm:grid-cols-2">
             <div><strong className="text-[#1C3A5A]">Essential:</strong> required for the website to function and cannot be switched off here.</div>
-            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics helps us understand visits, engagement and page performance.</div>
+            <div><strong className="text-[#1C3A5A]">Analytics:</strong> Google Analytics and Mixpanel help us understand visits, engagement, page performance and enquiry journeys.</div>
             <div><strong className="text-[#1C3A5A]">Advertising:</strong> Google Ads measurement helps us understand campaign performance and enquiries.</div>
             <div><strong className="text-[#1C3A5A]">Your choice:</strong> you can reopen Privacy choices at any time from the button at the bottom-left.</div>
           </div>

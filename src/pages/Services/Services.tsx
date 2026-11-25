@@ -2,6 +2,7 @@ import type { Page } from '../../App';
 import { resolveSiteImage } from '../../utils/siteImages';
 import { useNavigate } from 'react-router';
 import { areaGroups } from '../LocalService/localServicePaths';
+import { trackAnalyticsEvent } from '../../lib/analytics';
 
 interface Props { setPage: (p: Page) => void; }
 
@@ -80,6 +81,7 @@ export default function Services({ setPage }: Props) {
   const navigate = useNavigate();
 
   const beginServiceBrief = (service: string, cta: string) => {
+    trackAnalyticsEvent('cta_click', { cta_label: cta, cta_placement: 'service_detail', service_interest: service, destination: '/start-your-project' });
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'cta_click',
