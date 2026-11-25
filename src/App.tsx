@@ -589,7 +589,10 @@ function ConsentManager() {
       analytics_storage: granted ? 'granted' : 'denied',
     });
     setAnalyticsConsent(granted);
-    if (granted) trackAnalyticsEvent('analytics_consent_granted', { consent_action: 'accepted' });
+    if (granted) {
+      trackAnalyticsEvent('page_view', { page_type: 'consent_granted' });
+      trackAnalyticsEvent('analytics_consent_granted', { consent_action: 'accepted' });
+    }
     setSettingsOpen(false);
     setVisible(false);
   };
