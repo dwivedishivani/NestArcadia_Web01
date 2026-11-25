@@ -145,10 +145,7 @@ export function initializeAnalytics(): void {
   if (!hasAnalyticsConsent() || !MIXPANEL_TOKEN || typeof window === 'undefined') return;
   captureAttribution();
 
-  if (window.mixpanel && window.__nestArcadiaMixpanelInitialized) {
-    window.mixpanel.opt_in_tracking();
-    return;
-  }
+  if (window.mixpanel && window.__nestArcadiaMixpanelInitialized) return;
   if (window.__nestArcadiaMixpanelLoading) return;
 
   // The SDK may have finished downloading while consent was denied. Initialise
@@ -201,6 +198,7 @@ export function initializeAnalytics(): void {
 
 export function setAnalyticsConsent(granted: boolean): void {
   if (granted) {
+    if (window.__nestArcadiaMixpanelInitialized) window.mixpanel?.opt_in_tracking();
     initializeAnalytics();
     return;
   }
