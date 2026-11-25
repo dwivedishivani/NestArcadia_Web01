@@ -11,6 +11,7 @@ declare global {
   interface Window {
     mixpanel?: MixpanelClient;
     __nestArcadiaMixpanelLoading?: boolean;
+    __nestArcadiaMixpanelInitialized?: boolean;
     __nestArcadiaMixpanelQueue?: Array<{ event: string; properties: Record<string, unknown> }>;
   }
 }
@@ -56,7 +57,7 @@ function currentTouch(): Attribution {
   };
   for (const key of UTM_KEYS) {
     const value = clean(params.get(key), 120);
-    if (value) touch[`last_touch_${key}`] = value;
+    if (value) touch[`last_touch_${key}` as keyof Attribution] = value;
   }
   return touch;
 }
@@ -130,7 +131,7 @@ export function initializeAnalytics(): void {
   if (!hasAnalyticsConsent() || !MIXPANEL_TOKEN || typeof window === 'undefined') return;
   captureAttribution();
 
-  if (window.mixpanel && !window.__nestArcadiaMixpanelLoading) {
+  if (window.mixpanel && window.__nestArcadiaMixpanelInitialized) {
     window.mixpanel.opt_in_tracking();
     return;
   }
@@ -153,8 +154,8 @@ export function initializeAnalytics(): void {
       autocapture: false,
       track_pageview: false,
       persistence: 'localStorage',
-      ignore_dnt: false,
     });
+    window.__nestArcadiaMixpanelInitialized = true;
     flushQueue();
   };
   script.onerror = () => {
