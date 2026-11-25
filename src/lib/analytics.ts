@@ -187,6 +187,7 @@ export function initializeAnalytics(): void {
   };
   script.onerror = () => {
     window.__nestArcadiaMixpanelLoading = false;
+    if (!window.__nestArcadiaMixpanelInitialized) window.mixpanel = undefined;
     script.remove();
   };
   document.head.appendChild(script);
