@@ -11,6 +11,7 @@ export default function MobileConversionBar({ setPage }: Props) {
     >
       <a
         href={`https://wa.me/918448061997?text=${message}`}
+        data-analytics-placement="mobile_bottom_bar"
         target="_blank"
         rel="noopener noreferrer"
         className="flex min-h-12 items-center justify-center bg-[#17665B] px-3 text-center text-[13px] font-semibold text-white active:bg-[#0f4f46]"
@@ -18,7 +19,9 @@ export default function MobileConversionBar({ setPage }: Props) {
         WhatsApp Us
       </a>
       <button
-        onClick={() => setPage('project')}
+        data-analytics-event="cta_click"
+        data-analytics-placement="mobile_bottom_bar"
+        onClick={() => setPage('project')
         className="min-h-12 bg-[#1C3A5A] px-3 text-center text-[13px] font-semibold text-white active:bg-[#152a44]"
       >
         Plan Your Interior
