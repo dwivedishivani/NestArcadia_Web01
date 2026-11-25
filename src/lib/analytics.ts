@@ -41,8 +41,14 @@ type Attribution = {
   last_touch_utm_term?: string;
 };
 
-const hasAnalyticsConsent = () =>
-  typeof window !== 'undefined' && window.localStorage.getItem(CONSENT_KEY) === 'granted';
+const hasAnalyticsConsent = () => {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage.getItem(CONSENT_KEY) === 'granted';
+  } catch {
+    return false;
+  }
+};
 
 const clean = (value: unknown, max = 120): string | undefined => {
   if (typeof value !== 'string') return undefined;
