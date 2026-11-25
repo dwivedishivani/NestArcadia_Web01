@@ -206,6 +206,11 @@ export function setAnalyticsConsent(granted: boolean): void {
   }
   window.mixpanel?.opt_out_tracking();
   window.__nestArcadiaMixpanelQueue = [];
+  try {
+    window.localStorage.removeItem(ATTRIBUTION_KEY);
+  } catch {
+    // Storage may be unavailable; opt-out still prevents future tracking.
+  }
 }
 
 export function trackAnalyticsEvent(event: string, properties: AnalyticsProperties = {}): void {
